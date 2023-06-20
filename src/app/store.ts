@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import themelReducer from './slice/themeSlice'
-import competitionReducer from '../components/Competition/competitionSlice'
+import competitionReducer from '../views/Competition/competitionSlice'
 const stroe = configureStore({
   reducer: {
     theme: themelReducer,

@@ -1,169 +1,167 @@
-import { createBrowserRouter, Link, Navigate, NavLink } from 'react-router-dom'
-import ErrorPage from '../components/error-page'
+import { createBrowserRouter } from 'react-router-dom'
+import ErrorPage from '@/components/error-page'
 import { Suspense, lazy } from 'react'
 import Loading from '@/components/Loading/Loading'
-import Answer from '@/components/Competition/Detail/Content/Problem/Answer/Answer'
-import App from '../App'
+import Root from '@/views/Root'
 
-export const lazyload = (path: string, to: string) => {
-  // const token: string = localStorage.getItem('token') as string
-  // if (!token && to !== '/login' && to !== '/register') {
-  //   return <Navigate to={'/login'}></Navigate>
-  // } else {
-  const Result = lazy(() => import(path))
+const Home = lazy(() => import('@/views/Home/Root'))
+const Problem = lazy(() => import('@/views/Problem/Root'))
+const ProblemList = lazy(() => import('@/views/Problem/List/List'))
+const ProblemId = lazy(() => import('@/views/Problem/Detail/Detail'))
+const ProblemDescription = lazy(
+  () => import('@/views/Problem/Detail/Description')
+)
+const ProblemSubmitrecord = lazy(
+  () => import('@/views/Problem/Detail/Record/SubmitRecords')
+)
+const ProblemCreate = lazy(() => import('@/views/Problem/Create/Create'))
+const Competition = lazy(() => import('@/views/Competition/Root'))
+const CompetitionList = lazy(() => import('@/views/Competition/List/List'))
+const CompetitionId = lazy(
+  () => import('@/views/Competition/Detail//Detail/Detail')
+)
+const CompetitionOverview = lazy(
+  () => import('@/views/Competition/Detail/Content/Overview')
+)
+const CompetitionProblem = lazy(
+  () => import('@/views/Competition/Detail/Content/Problem/Problem')
+)
+const CompetitionProblemList = lazy(
+  () => import('@/views/Competition/Detail/Content/Problem/List/List')
+)
+const CompetitionProblemId = lazy(
+  () => import('@/views/Competition/Detail/Content/Problem/Answer/Answer')
+)
+const CompetitionRank = lazy(
+  () => import('@/views/Competition/Detail/Content/Rank/Rank')
+)
+const CompetitionRecord = lazy(
+  () => import('@/views/Competition/Detail/Content/Record/Record')
+)
+const CompetitionCreate = lazy(
+  () => import('@/views/Competition/Create/Create')
+)
+const CompetitionCreateDeclare = lazy(
+  () => import('@/views/Competition/Create/Declare')
+)
+const CompetitionCreateCompetition = lazy(
+  () => import('@/views/Competition/Create/Competition')
+)
+const CompetitionCreateProblem = lazy(
+  () => import('@/views/Competition/Create/Problem')
+)
+const CompetitionRandom = lazy(
+  () => import('@/views/Competition/CompetitionRandom/CompetitionRandom')
+)
+
+export const lazyload = (Result: any) => {
   return (
     <Suspense fallback={<Loading></Loading>}>
       <Result></Result>
     </Suspense>
   )
-  // }
 }
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: <Root />,
     children: [
       {
         path: 'home',
-        element: lazyload('../components/Homepage/Homepage.tsx', ''),
+        element: lazyload(Home),
         errorElement: <ErrorPage />
       },
       {
         path: 'problem',
-        element: lazyload('../components/Problem/Root.tsx', ''),
+        element: lazyload(Problem),
         children: [
           {
             path: 'list',
-            element: lazyload('../components/Problem/List/List.tsx', '')
+            element: lazyload(ProblemList)
           },
           {
             path: ':id',
-            element: lazyload('../components/Problem/Detail/Detail.tsx', ''),
+            element: lazyload(ProblemId),
             children: [
               {
                 path: '',
-                element: lazyload(
-                  '../components/Problem/Detail/Description.tsx',
-                  ''
-                )
+                element: lazyload(ProblemDescription)
               },
               {
                 path: 'submit-records',
-                element: lazyload(
-                  '../components/Problem/Detail/Record/SubmitRecords.tsx',
-                  ''
-                )
+                element: lazyload(ProblemSubmitrecord)
               }
             ]
           },
           {
             path: 'create',
-            element: lazyload(
-              '../components/Problem/Create/Create.tsx',
-              '/problem'
-            )
+            element: lazyload(ProblemCreate)
           }
         ]
       },
       {
         path: 'competition',
-        element: lazyload('../components/Competition/Competition.tsx', ''),
+        element: lazyload(Competition),
         children: [
           {
             path: 'list',
-            element: lazyload('../components/Competition/List/List.tsx', '')
+            element: lazyload(CompetitionList)
           },
           {
             path: ':competition_id',
-            element: lazyload(
-              '../components/Competition/Detail//Detail/Detail.tsx',
-              ''
-            ),
+            element: lazyload(CompetitionId),
             children: [
               {
                 path: '',
-                element: lazyload(
-                  '../components/Competition/Detail/Content/Overview.tsx',
-                  ''
-                )
+                element: lazyload(CompetitionOverview)
               },
               {
                 path: 'problem',
-                element: lazyload(
-                  '../components/Competition/Detail/Content/Problem/Problem.tsx',
-                  ''
-                ),
+                element: lazyload(CompetitionProblem),
                 children: [
                   {
                     path: '',
-                    element: lazyload(
-                      '../components/Competition/Detail/Content/Problem/List/List.tsx',
-                      ''
-                    )
+                    element: lazyload(CompetitionProblemList)
                   },
                   {
                     path: ':problem_id',
-                    element: lazyload(
-                      '../components/Competition/Detail/Content/Problem/Answer/Answer.tsx',
-                      ''
-                    )
+                    element: lazyload(CompetitionProblemId)
                   }
                 ]
               },
               {
                 path: 'rank',
-                element: lazyload(
-                  '../components/Competition/Detail/Content/Rank/Rank.tsx',
-                  ''
-                )
+                element: lazyload(CompetitionRank)
               },
               {
                 path: 'record',
-                element: lazyload(
-                  '../components/Competition/Detail/Content/Record/Record.tsx',
-                  ''
-                )
+                element: lazyload(CompetitionRecord)
               }
             ]
           },
           {
             path: 'create',
-            element: lazyload(
-              '../components/Competition/Create/Create.tsx',
-              ''
-            ),
+            element: lazyload(CompetitionCreate),
             children: [
               {
                 path: '',
-                element: lazyload(
-                  '../components/Competition/Create/Declare.tsx',
-                  ''
-                )
+                element: lazyload(CompetitionCreateDeclare)
               },
 
               {
                 path: 'competition',
-                element: lazyload(
-                  '../components/Competition/Create/Competition.tsx',
-                  ''
-                )
+                element: lazyload(CompetitionCreateCompetition)
               },
               {
                 path: 'problem',
-                element: lazyload(
-                  '../components/Competition/Create/Problem.tsx',
-                  ''
-                )
+                element: lazyload(CompetitionCreateProblem)
               }
             ]
           },
           {
             path: 'random/:competition_type',
-            element: lazyload(
-              '../components/Competition/CompetitionRandom/CompetitionRandom.tsx',
-              ''
-            )
+            element: lazyload(CompetitionRandom)
           }
         ]
       }

@@ -1,5 +1,5 @@
 import React from 'react'
-import Text from '../../Editor/Text'
+import Text from '../../../components/Editor/Text'
 import { Button, Form, Input, Select, Col, Row, InputNumber } from 'antd'
 import { IProblem } from '@/vite-env'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'

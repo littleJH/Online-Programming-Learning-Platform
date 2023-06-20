@@ -1,5 +1,6 @@
-export const baseURL = '/api'
-
+export const baseURL = import.meta.env.DEV
+  ? '/api'
+  : 'http://api_oj.mgaronya.com'
 interface IConfig {
   headers: {
     Authorization: string

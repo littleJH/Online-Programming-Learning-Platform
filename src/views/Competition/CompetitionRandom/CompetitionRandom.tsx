@@ -15,6 +15,7 @@ import { getCurrentUserinfo, getUserInfoApi } from '@/api/user'
 import style from './style.module.scss'
 
 type State = 'enter' | 'notEnter' | 'undetermined'
+
 interface Member {
   enter_time: string
   member: User

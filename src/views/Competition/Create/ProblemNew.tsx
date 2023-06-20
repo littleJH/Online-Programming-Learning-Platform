@@ -1,13 +1,13 @@
 import { Button, Form, Modal, Result, Steps, notification } from 'antd'
 import React, { Fragment, useLayoutEffect } from 'react'
 import { Descendant } from 'slate'
-import { ProgramMode } from '../ICompetition'
-import { IProblem } from '@/components/Problem/IProblem'
+import { ProgramMode } from '@/vite-env'
+import { IProblem } from '@/vite-env'
 import { createProgramApi } from '@/api/program'
 import { createProblemNewApi } from '@/api/problemNew'
-import Problem from '@/components/Problem/Create/Problem'
-import Program from '@/components/Problem/Create/Program'
-import Submit from '@/components/Problem/Create/submit'
+import Problem from '@/views/Problem/Create/Problem'
+import Program from '@/views/Problem/Create/Program'
+import Submit from '@/views/Problem/Create/submit'
 
 interface IProps {
   open: boolean

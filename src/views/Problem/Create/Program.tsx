@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import Code from '../../Editor/Code'
+import Code from '../../../components/Editor/Code'
 import { languageList } from '@/components/Editor/LanguageList'
 import { Segmented, Timeline, Button, Radio } from 'antd'
 import { ProgramMode } from '@/vite-env'

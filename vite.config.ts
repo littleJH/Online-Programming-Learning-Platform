@@ -4,6 +4,7 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: './',
   plugins: [react()],
   resolve: {
     alias: {
@@ -13,7 +14,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://10.60.37.43:2000',
+        target: 'http://api_oj.mgaronya.com',
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, '')
       },

@@ -50,12 +50,10 @@ export default function Detail() {
 
   useLayoutEffect(() => {
     setcodeHeight(`${resizeEditorHeight()}px`)
-    // console.log('route go or back!!!')
   }, [consoleMode, currentState, showConsole])
 
   useEffect(() => {
     loaction.pathname.indexOf('submit') > 0 ? 'records' : 'problem'
-    // console.log('route go or back!!!')
   }, [])
 
   useEffect(() => {

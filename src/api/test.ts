@@ -1,7 +1,6 @@
 import axios from 'axios'
-import { baseURL } from './baseConfig'
 const request = axios.create({
-  baseURL: `/test/test`
+  baseURL: import.meta.env.DEV ? '/test' : `http://test_oj.mgaronya.com/test`
 })
 
 export const createTestApi = (data: any) => {
