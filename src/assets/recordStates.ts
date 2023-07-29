@@ -1,6 +1,11 @@
 import { IRecordState } from '@/vite-env'
 export const recordStates: IRecordState[] = [
   {
+    value: 'Running',
+    label: '运行中',
+    state: 'info'
+  },
+  {
     value: 'Code is empty',
     label: '代码为空',
     state: 'error'
@@ -8,7 +13,7 @@ export const recordStates: IRecordState[] = [
   {
     value: 'Waiting',
     label: '等待',
-    state: 'waiting'
+    state: 'info'
   },
   {
     value: "Input Doesn't Exist",
@@ -88,6 +93,11 @@ export const recordStates: IRecordState[] = [
   {
     value: 'Language Error',
     label: '语言错误',
+    state: 'error'
+  },
+  {
+    value: 'Presentation Error',
+    label: '答案格式错误',
     state: 'error'
   }
 ]

@@ -1,4 +1,4 @@
-import { Layout, ConfigProvider, Modal } from 'antd'
+import { Layout, ConfigProvider, Modal, Button } from 'antd'
 import React, { Fragment, useState } from 'react'
 
 import Navbar from '@/components/Navbar/Navbar'
@@ -11,6 +11,11 @@ const Root: React.FC = () => {
 
   return (
     <ConfigProvider
+      form={{
+        validateMessages: {
+          required: '"${label}"是必选字段'
+        }
+      }}
       theme={{
         token: {
           colorPrimary: '#6366f1',
@@ -18,7 +23,7 @@ const Root: React.FC = () => {
           colorWarning: '#f59e0b',
           colorError: '#ef4444',
           colorInfo: '#3b82f6',
-          fontSize: 14,
+          fontSize: 12,
           borderRadius: 4,
           wireframe: false
         }
@@ -29,7 +34,10 @@ const Root: React.FC = () => {
           <Navbar></Navbar>
           <MyLogin></MyLogin>
         </Header>
-        <Content className="p-0 bg-white">
+        <Content
+          id="mainContent"
+          className="bg-white overflow-y-auto scroll-smooth"
+        >
           <Outlet></Outlet>
         </Content>
         <Footer></Footer>
@@ -51,7 +59,10 @@ const MyLogin: React.FC = () => {
   return (
     <Fragment>
       <div className="bg-white h-full flex items-center">
-        <div className="avatar-small bg-gray-300" onClick={() => handleClick()}>
+        <div
+          className="avatar-small bg-slate-300"
+          onClick={() => handleClick()}
+        >
           {}
         </div>
       </div>

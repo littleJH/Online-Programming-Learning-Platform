@@ -5,12 +5,13 @@ import { useOutletContext, useParams } from 'react-router-dom'
 import { IRecordTableDataSource } from '@/vite-env'
 import { Table, Modal, Switch, Input, notification } from 'antd'
 import Column from 'antd/es/table/Column'
-import LanaugeLabel from '@/components/Problem/Detail/RecordLabel.tsx/LanaugeLabel'
+import LanaugeLabel from '@/views/Problem/Detail/RecordLabel.tsx/LanaugeLabel'
 import { getProblemNewApi } from '@/api/problemNew'
 import Hack from './Hack'
 import { getUserInfoApi } from '@/api/user'
-import RecordStateLabel from '@/components/Problem/Detail/RecordLabel.tsx/RecordStateLabel'
+import RecordStateLabel from '@/views/Problem/Detail/RecordLabel.tsx/RecordStateLabel'
 import { getHackApi } from '@/api/hack'
+import NoData from '@/components/Empty/NoData'
 
 interface Filter {
   text: string
@@ -70,10 +71,7 @@ const Record: React.FC = () => {
           key: record.id,
           index,
           condition: (
-            <RecordStateLabel
-              setopenModal={setopenRecordModal}
-              value={record.condition}
-            ></RecordStateLabel>
+            <RecordStateLabel value={record.condition}></RecordStateLabel>
           ),
           create_at: record.created_at,
           language: <LanaugeLabel value={record.language}></LanaugeLabel>,
@@ -131,7 +129,12 @@ const Record: React.FC = () => {
       {/* <div>
         <Switch checkedChildren={'个人'} unCheckedChildren={'全部'}  checked={ mode === 'all' ? true : false}></Switch>
       </div> */}
-      <Table dataSource={dataSource}>
+      <Table
+        dataSource={dataSource}
+        locale={{
+          emptyText: <NoData text="暂无数据" />
+        }}
+      >
         <Column
           align="center"
           dataIndex={['problem', 'title']}

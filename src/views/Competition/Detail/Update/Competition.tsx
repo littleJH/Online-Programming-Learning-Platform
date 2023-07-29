@@ -9,11 +9,10 @@ import {
   InputNumber,
   DatePicker
 } from 'antd'
-import Text from '@/components/Editor/Text'
 import { ICompetition } from '@/vite-env'
 import dayjs from 'dayjs'
-import { Descendant } from 'slate'
 import { updateCompetitionApi } from '@/api/competition'
+import TextEditor from '@/components/Editor/TextEditor'
 
 interface Iprops {
   competition: ICompetition | undefined
@@ -142,12 +141,10 @@ const Competition: React.FC<Iprops> = props => {
           required
           rules={[{ required: true }]}
         >
-          <Text
-            initialValue={
-              JSON.parse(competition?.content as string) as Descendant[]
-            }
-            textChange={(value: any) => textChange(value, 'content')}
-          ></Text>
+          <TextEditor
+            defaultHtml={competition?.content}
+            htmlChange={(value: any) => textChange(value, 'content')}
+          ></TextEditor>
         </Form.Item>
         <Form.Item label="Hack">
           <Switch onChange={value => setisHack(value)}></Switch>

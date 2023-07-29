@@ -4,8 +4,7 @@ import { getRecordListApi } from '@/api/competitionMixture'
 import { CompetitionType, ICompetition } from '@/vite-env'
 import { Outlet, useOutletContext } from 'react-router-dom'
 import ProblemStateLabel from '../../Label.tsx/ProblemStateLabel'
-
-type CompetitionState = 'notEnter' | 'underway' | 'enter' | 'finished'
+import { CompetitionState } from '@/vite-env'
 
 interface Problems {
   key: string
@@ -20,10 +19,13 @@ const getProblem = (
   setproblems: Function,
   type: CompetitionType
 ) => {
-  getProblemNewListApi(competition.id as string).then(res => {
-    const problemIds: string[] = res.data.data.problemIds
-    if (problemIds) {
-      problemIds.forEach(async (id, index) => {
+  getProblemNewListApi(competition.id as string)
+    .then(res => {
+      return res.data.data.problemIds
+    })
+    .then(async (problemIds: string[]) => {
+      const list = []
+      for (let id of problemIds) {
         const res = await Promise.all([
           getProblemNewApi(id),
           getRecordListApi(type, competition.id, {
@@ -36,7 +38,7 @@ const getProblem = (
           ...value,
           {
             key: id,
-            index: index + 1,
+            index: value.length ? value[value.length - 1].index + 1 : 1,
             score: '',
             title: problem.title,
             state: (
@@ -47,9 +49,8 @@ const getProblem = (
             )
           }
         ])
-      })
-    }
-  })
+      }
+    })
 }
 const Element: React.FC = () => {
   const [competition, comptitionState, setanswering, type] =
@@ -64,12 +65,17 @@ const Element: React.FC = () => {
         break
 
       default:
-        getProblem(competition, setproblems, type)
+        if (competition && comptitionState && type)
+          getProblem(competition, setproblems, type)
         break
     }
   }, [competition, comptitionState, type])
 
-  return <Outlet context={[problems, setanswering, competition, type]}></Outlet>
+  return (
+    <Outlet
+      context={[problems, setanswering, competition, type, comptitionState]}
+    ></Outlet>
+  )
 }
 
 export default Element

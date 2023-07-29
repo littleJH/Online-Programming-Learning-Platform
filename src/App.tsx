@@ -1,13 +1,12 @@
-import { RouterProvider, Routes } from 'react-router-dom'
+import { RouterProvider } from 'react-router-dom'
 import router from './router/router'
-import { Provider } from 'react-redux'
-import store from '@/app/store'
+import { RecoilRoot, useSetRecoilState } from 'recoil'
 
 function App() {
   return (
-    <Provider store={store}>
+    <RecoilRoot>
       <RouterProvider router={router} />
-    </Provider>
+    </RecoilRoot>
   )
 }
 

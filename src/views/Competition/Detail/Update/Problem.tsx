@@ -6,9 +6,9 @@ import {
   deleteProblemNewApi
 } from '@/api/problemNew'
 import { MinusCircleOutlined } from '@ant-design/icons'
-import { searthProblemByTextApi, showProblemApi } from '@/api/problem'
+import { searchProblemByTextApi, showProblemApi } from '@/api/problem'
 import { Button, InputNumber, List, Select, Spin, notification } from 'antd'
-import ProblemNew from '../../Create/ProblemNew'
+import ProblemNew from '../../../Creation/CreateCompetition/ProblemNew'
 import ReadOnly from '@/components/Editor/ReadOnly'
 import { ICompetition } from '@/vite-env'
 interface IProblem {
@@ -32,7 +32,7 @@ const fetch = (value: string, setoptions: Function) => {
   }
   currentValue = value
   const fake = () => {
-    searthProblemByTextApi(value).then(res => {
+    searchProblemByTextApi(value).then((res: any) => {
       console.log(res)
       if (!res.data.data.problems) {
         setoptions([])
@@ -185,9 +185,7 @@ const Problem: React.FC<Iprops> = props => {
             >
               <List.Item.Meta
                 title={item.title}
-                description={
-                  <ReadOnly value={JSON.parse(item.description)}></ReadOnly>
-                }
+                description={<ReadOnly html={item.description}></ReadOnly>}
               ></List.Item.Meta>
               <div className="">
                 <span>分数：</span>

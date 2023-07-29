@@ -4,10 +4,17 @@ import { Table } from 'antd'
 import Column from 'antd/es/table/Column'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useOutletContext, useParams } from 'react-router-dom'
+import { rollingRanklistWs } from '@/api/competition'
+import { getUserInfoApi } from '@/api/user'
+import NoData from '@/components/Empty/NoData'
 
 interface DataSource extends IRank {
   key: string
+  index: number
+  name: string
 }
+
+let ws: WebSocket
 
 const Rank: React.FC = () => {
   const { competition_id } = useParams()
@@ -21,41 +28,62 @@ const Rank: React.FC = () => {
   // }, [competition_id])
 
   useEffect(() => {
-    getCompetitionRankListApi(competition_id as string).then(res => {
-      console.log('competitionRank', res)
-      setrankList(res.data.data.members)
-      res.data.data.members.forEach((item: IRank, index: number) => {
-        setdataSource(value => [
-          ...value,
-          Object.assign(
-            { key: res.data.data.members[index].member_id },
-            res.data.data.members
-          )
-        ])
+    getCompetitionRankListApi(competition_id as string)
+      .then(res => {
+        console.log('competitionRank', res)
+        return res.data.data.members
       })
-    })
-    const socket = new WebSocket(
-      `ws://10.60.37.43:2000/competition/rolling/list/${competition_id}`
-    )
-    socket.onopen = e => {
-      console.log('Connection open...')
-      socket.send('hello')
-    }
-    socket.onmessage = e => {
-      console.log('Received Message : ' + e.data)
-    }
-    socket.onclose = e => {
-      console.log('Connection Closed...')
+      .then(async (members: IRank[]) => {
+        setrankList(members)
+        let index = 0
+        for (let member of members) {
+          const { data } = await getUserInfoApi(member.member_id)
+          setdataSource(value => [
+            ...value,
+            Object.assign(
+              {
+                key: member.member_id,
+                name: data.data.user.name,
+                index: value.length ? value[value.length - 1].index + 1 : 1
+              },
+              member
+            )
+          ])
+        }
+      })
+    openConnect()
+    return () => {
+      closeConnnect()
     }
   }, [])
 
+  const openConnect = () => {
+    ws = rollingRanklistWs(competition_id as string)
+    ws.onopen = e => console.log('Connection open...')
+    ws.onmessage = e => receiveData(e)
+    ws.onclose = e => console.log('Connection Closed...')
+  }
+
+  const closeConnnect = () => {
+    ws.close()
+  }
+
+  const receiveData = (e: MessageEvent) => {}
+
   return (
     <div>
-      <Table dataSource={dataSource}>
-        <Column align="center" dataIndex={'member_id'} title="选手"></Column>
+      <Table
+        dataSource={dataSource}
+        locale={{
+          emptyText: <NoData text="暂无数据" />
+        }}
+      >
+        <Column align="center" dataIndex={'index'} title="排名"></Column>
+
+        <Column align="center" dataIndex={'name'} title="选手"></Column>
         <Column align="center" dataIndex={'score'} title="得分"></Column>
         <Column align="center" dataIndex={'penalties'} title="罚时"></Column>
-        <Column align="center" dataIndex={'create_at'} title="时间"></Column>
+        <Column align="center" dataIndex={'created_at'} title="时间"></Column>
       </Table>
     </div>
   )

@@ -1,17 +1,34 @@
-import React from 'react'
+import React, { useEffect, useMemo } from 'react'
 import ReadOnly from '@/components/Editor/ReadOnly'
 import { useOutletContext } from 'react-router-dom'
 import { ICompetition } from '@/vite-env'
 
 const Overview: React.FC = () => {
   const [competition] = useOutletContext<[ICompetition]>()
+
+  const content = useMemo(() => {
+    if (competition) {
+      const content = competition.content as string
+      let obj: { type: 'String' | 'Descendant'; value: string } = {
+        type: 'String',
+        value: content
+      }
+      if (content.includes('[{')) {
+        obj.type = 'Descendant'
+      }
+      return obj
+    }
+  }, [competition])
   return (
     <div>
-      {competition && (
+      {content && content.type === 'Descendant' && (
         <ReadOnly
           className="p-4"
-          value={JSON.parse(competition.content as string)}
+          html={JSON.parse(content.value as string)}
         ></ReadOnly>
+      )}
+      {content && content.type === 'String' && (
+        <ReadOnly className="p-4" html={content.value}></ReadOnly>
       )}
     </div>
   )

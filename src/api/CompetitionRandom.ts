@@ -1,20 +1,20 @@
 import axios from 'axios'
-import { baseConfig, baseURL, jsonConfig } from './baseConfig'
+import { baseConfig, baseURL, wsBaseUrl } from './baseConfig'
 import { CompetitionType } from '@/vite-env'
 const request = axios.create({
   baseURL: `${baseURL}/competition/random/`
 })
 
 export const enterRandomCompetitionApi = (type: CompetitionType) => {
-  return request.post(`${type}/enter`, {}, baseConfig)
+  return request.post(`${type}/enter`, {}, baseConfig())
 }
 
 export const getRandomEnterConditionApi = (type: CompetitionType) => {
-  return request.get(`${type}/enter/condition`, baseConfig)
+  return request.get(`${type}/enter/condition`, baseConfig())
 }
 
 export const cancelEnterRandomCompetitionApi = (type: CompetitionType) => {
-  return request.delete(`${type}/cancel/enter`, baseConfig)
+  return request.delete(`${type}/cancel/enter`, baseConfig())
 }
 
 export const getEnterRandomCompetitionListApi = (type: CompetitionType) => {

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { baseURL, baseConfig, jsonConfig } from './baseConfig'
+import { baseURL, baseConfig, jsonConfig, wsBaseUrl } from './baseConfig'
 
 const request = axios.create({
   baseURL: `${baseURL}/record`
@@ -14,7 +14,7 @@ export const createRecordApi = (data: any) => {
   })
 }
 
-export const getRecordApi = (id: string, config = baseConfig) => {
+export const getRecordApi = (id: string, config = baseConfig()) => {
   return request.get(`/show/${id}`, config)
 }
 
@@ -44,14 +44,14 @@ export const getRecordListApi = (paramsObj: {
   return request.get(`/list?${params}`)
 }
 
-export const getRecordCaseApi = (id: string) => {
-  return request.get(`/list/case/${id}`)
-}
-
-export const getTestCaseApi = (id: string) => {
-  return request.get(`/case/${id}`)
+export const getRecordCaseListApi = (id: string) => {
+  return request.get(`/list/case/${id}`, baseConfig())
 }
 
 export const hackRecordApi = (id: string, data: any) => {
-  return request.post(`/hack/${id}`, data, jsonConfig)
+  return request.post(`/hack/${id}`, data, jsonConfig())
+}
+
+export const enterPublishRecordWs = (id: string) => {
+  return new WebSocket(`${wsBaseUrl}/record/publish/${id}`)
 }

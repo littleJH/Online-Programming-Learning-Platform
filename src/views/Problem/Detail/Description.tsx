@@ -1,15 +1,21 @@
 import React, { Fragment, useEffect, useLayoutEffect, useState } from 'react'
 import ReadOnly from '@/components/Editor/ReadOnly'
-import { Table } from 'antd'
+import { Divider, Space, Table } from 'antd'
 import Column from 'antd/es/table/Column'
 import { useOutletContext } from 'react-router-dom'
-import { ICaseSample } from '@/vite-env'
+import { ICaseSample, IProblem } from '@/vite-env'
+
+const ctnClassname = 'py-4'
+const roClassname = ''
+const titleClassname = 'font-semibold'
 
 const Description: React.FC = () => {
-  const [problem, caseSamples] = useOutletContext<[any, ICaseSample[]]>()
+  const [problem, caseSamples] = useOutletContext<[IProblem, ICaseSample[]]>()
   const [dataSource, setdataSource] = useState<
     { key: string; input: string; output: string }[]
   >([])
+  const [fetchDone, setfetchDone] = useState(false)
+  const [mouseoverLike, setmouseoverLike] = useState(false)
 
   useLayoutEffect(() => {
     caseSamples
@@ -25,45 +31,124 @@ const Description: React.FC = () => {
         })
       : null
   }, [caseSamples])
+
   return (
-    <div className="p-8">
+    <div className="px-8">
       {problem && (
-        <Fragment>
+        <>
+          <div>
+            <h1>{problem.title}</h1>
+          </div>
+          <div className="h-4 flex text-xs text-slate-500">
+            <Space split={<Divider type="vertical"></Divider>}>
+              <div
+                onMouseOver={() => setmouseoverLike(true)}
+                onMouseLeave={() => setmouseoverLike(false)}
+              >
+                {/* <svg className="icon">
+                    <use href="#icon-like"></use>
+                  </svg> */}
+                <span>点赞：</span>
+                <span>{problem.likeNum}</span>
+              </div>
+              <div>
+                {/* <svg className="icon">
+                <use href="#icon-dislike"></use>
+              </svg> */}
+                <span>点踩：</span>
+                <span>{problem.dislikeNum}</span>
+              </div>
+              <div>
+                {/* <svg className="icon">
+                <use
+                  href={`#icon-${problem.collected ? 'collected' : 'collect'}`}
+                ></use>
+              </svg> */}
+                <span>收藏：</span>
+                <span>{problem.collectNum}</span>
+              </div>
+              <div>
+                {/* <svg className="icon">
+                <use href="#icon-visible"></use>
+              </svg> */}
+                <span>浏览：</span>
+                <span>{problem.visibleNum}</span>
+              </div>
+            </Space>
+            <div className="grow text-end">
+              <span>{problem.created_at}</span>
+            </div>
+          </div>
+          <Divider
+            style={{
+              margin: '1rem'
+            }}
+          ></Divider>
           <ReadOnly
-            className="my-4"
-            editableClassName="text-base bg-gray-100 rounded px-8 py-2"
-            title="题目描述"
-            value={JSON.parse(problem?.description)}
+            ctnClassName={ctnClassname}
+            className={roClassname}
+            title={<div className={titleClassname}>题目描述</div>}
+            html={problem?.description}
+          ></ReadOnly>
+
+          <ReadOnly
+            ctnClassName={ctnClassname}
+            title={<div className={titleClassname}>输入格式</div>}
+            html={problem?.input}
           ></ReadOnly>
           <ReadOnly
-            title="时间限制"
-            text={[`${problem?.time_limit} ms`]}
+            ctnClassName={ctnClassname}
+            title={<div className={titleClassname}>输出格式</div>}
+            html={problem?.output}
+          ></ReadOnly>
+          <div className={ctnClassname}>
+            <div className="font-bold">示例</div>
+            <Table
+              size="small"
+              className="m-4 "
+              bordered
+              dataSource={dataSource}
+              pagination={false}
+            >
+              <Column
+                title="input"
+                key="input"
+                dataIndex={'input'}
+                render={value => {
+                  return <div className="mx-4 min-w-max ">{value}</div>
+                }}
+              ></Column>
+              <Column
+                title="output"
+                key="output"
+                dataIndex={'output'}
+                render={value => {
+                  return <div className="mx-4 min-w-max ">{value}</div>
+                }}
+              ></Column>
+            </Table>
+          </div>
+          <ReadOnly
+            ctnClassName={ctnClassname}
+            title={<div className={titleClassname}>时间限制</div>}
+            html={`${problem?.time_limit} ms`}
           ></ReadOnly>
           <ReadOnly
-            title="空间限制"
-            text={[`${problem?.memory_limit} kb`]}
+            ctnClassName={ctnClassname}
+            title={<div className={titleClassname}>空间限制</div>}
+            html={`${problem?.memory_limit} kb`}
           ></ReadOnly>
           <ReadOnly
-            title={'输入格式'}
-            value={JSON.parse(problem?.input)}
+            ctnClassName={ctnClassname}
+            title={<div className={titleClassname}>提示</div>}
+            html={problem?.hint}
           ></ReadOnly>
           <ReadOnly
-            title={'输出格式'}
-            value={JSON.parse(problem?.output)}
+            ctnClassName={ctnClassname}
+            title={<div className={titleClassname}>来源</div>}
+            html={problem?.source}
           ></ReadOnly>
-          <div className="font-bold">示例</div>
-          <Table
-            className="m-4"
-            bordered
-            dataSource={dataSource}
-            pagination={false}
-          >
-            <Column title="input" dataIndex={'input'}></Column>
-            <Column title="output" dataIndex={'output'}></Column>
-          </Table>
-          <ReadOnly title="提示" value={JSON.parse(problem?.hint)}></ReadOnly>
-          <ReadOnly title="来源" value={JSON.parse(problem?.source)}></ReadOnly>
-        </Fragment>
+        </>
       )}
     </div>
   )

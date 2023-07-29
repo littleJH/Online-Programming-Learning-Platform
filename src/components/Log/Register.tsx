@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { Form, Select, Button, Input, Row, Col, message, Upload } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
-import { useCountdown } from '@/hooks/myHooks'
+import useCountdown from '@/tool/myHooks/useCountDown'
 import { registerApi, getVerifyApi } from '@/api/user'
 import { useNavigate } from 'react-router-dom'
 

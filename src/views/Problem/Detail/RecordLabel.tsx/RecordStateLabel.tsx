@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { recordStates } from '@/assets/recordStates'
+import { Tooltip } from 'antd'
 
 const RecordStateLabel: React.FC<{
   value: string
-  setopenModal: Function
 }> = props => {
-  const [classname, setclassname] = useState<string>('bg-gray-500')
+  const [classname, setclassname] = useState<string>('bg-slate-500')
+  const [tooltipTitle, settooltipTitle] = useState('')
 
   useEffect(() => {
     recordStates.forEach(item => {
       if (props.value === item.value) {
+        settooltipTitle(item.label)
         switch (item.state) {
           case 'error':
             setclassname('bg-red-500')
@@ -28,18 +30,20 @@ const RecordStateLabel: React.FC<{
   }, [])
 
   return (
-    <div
-      className=" flex justify-center"
-      onClick={() => {
-        props.setopenModal(true)
-      }}
-    >
-      <div
-        className={`${classname} p-2 text-gray-200 rounded`}
-        style={{ width: '200px' }}
-      >
-        {props.value}
-      </div>
+    <div className="flex justify-center select-none">
+      <Tooltip title={tooltipTitle}>
+        <div
+          className={`${classname} py-1 px-2 text-white rounded`}
+          style={{
+            width: '128px',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          {props.value}
+        </div>
+      </Tooltip>
     </div>
   )
 }

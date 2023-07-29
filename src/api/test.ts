@@ -1,12 +1,9 @@
 import axios from 'axios'
+import { jsonConfig, testBaseUrl } from './baseConfig'
 const request = axios.create({
-  baseURL: import.meta.env.DEV ? '/test' : `http://test_oj.mgaronya.com/test`
+  baseURL: `${testBaseUrl}/test`
 })
 
 export const createTestApi = (data: any) => {
-  return request.post('/create', data, {
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
+  return request.post('/create', data, jsonConfig())
 }

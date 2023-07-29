@@ -84,7 +84,7 @@ const CompetitionRandom: React.FC = () => {
       }
     })
     return () => {
-      closeConnnect()
+      if (ws) closeConnnect()
       intervals.forEach(item => {
         clearInterval(item)
       })
@@ -93,7 +93,6 @@ const CompetitionRandom: React.FC = () => {
 
   useEffect(() => {
     memberListRef.current = memberList
-    console.log(memberListRef.current)
     if (matchContainer.current) {
       const container = matchContainer.current as HTMLElement
       ctnHeight = container.clientHeight

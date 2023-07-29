@@ -5,19 +5,19 @@ const request = axios.create({
 })
 
 export const createProblemNewApi = (data: any) => {
-  return request.post('/create', data, jsonConfig)
+  return request.post('/create', data, jsonConfig())
 }
 
 export const getProblemNewApi = (id: string) => {
-  return request.get(`/show/${id}`, baseConfig)
+  return request.get(`/show/${id}`, baseConfig())
 }
 
 export const updateProblemNewApi = (id: string, data: any) => {
-  return request.put(`/update/${id}`, data, jsonConfig)
+  return request.put(`/update/${id}`, data, jsonConfig())
 }
 
 export const deleteProblemNewApi = (id: string) => {
-  return request.delete(`/delete/${id}`, baseConfig)
+  return request.delete(`/delete/${id}`, baseConfig())
 }
 
 export const getProblemNewListApi = (
@@ -36,6 +36,6 @@ export const quoteProblemApi = (
   return request.post(
     `/quote/${competition_id}/${problem_id}/${score}`,
     {},
-    baseConfig
+    baseConfig()
   )
 }

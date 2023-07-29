@@ -12,13 +12,13 @@ export const createRecordApi = (
   id: string,
   data: any
 ) => {
-  return request.post(`${type}/submit/${id}`, data, jsonConfig)
+  return request.post(`${type}/submit/${id}`, data, jsonConfig())
 }
 
 export const getRecordApi = (
   type: CompetitionType,
   id: string,
-  config = baseConfig
+  config = baseConfig()
 ) => {
   return request.get(`${type}/show/${id}`, config)
 }
@@ -51,7 +51,7 @@ export const getRecordListApi = (
     params += `${key}=${paramsObj[key]}`
     index === length - 1 ? (params += '') : (params += '&')
   })
-  return request.get(`${type}/search/list/${id}${params}`, baseConfig)
+  return request.get(`${type}/search/list/${id}${params}`, baseConfig())
 }
 
 export const enterCompetitionApi = (
@@ -63,12 +63,12 @@ export const enterCompetitionApi = (
   return request.post(
     `${type}/enter/${competition_id}${group_id ? `/${group_id}` : ''}`,
     data,
-    baseConfig
+    baseConfig()
   )
 }
 
 export const getEnterConditionApi = (type: CompetitionType, id: string) => {
-  return request.get(`${type}/enter/condition/${id}`, baseConfig)
+  return request.get(`${type}/enter/condition/${id}`, baseConfig())
 }
 
 export const cancelEnterApi = (
@@ -78,7 +78,7 @@ export const cancelEnterApi = (
 ) => {
   return request.delete(
     `${type}/cancel/enter/${competition_id}${group_id ? `/${group_id}` : ''}`,
-    baseConfig
+    baseConfig()
   )
 }
 
@@ -87,5 +87,5 @@ export const getEnterListApi = (type: CompetitionType, id: string) => {
 }
 
 export const hackRecordApi = (type: CompetitionType, id: string, data: any) => {
-  return request.post(`${type}/hack/${id}`, data, jsonConfig)
+  return request.post(`${type}/hack/${id}`, data, jsonConfig())
 }

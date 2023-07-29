@@ -12,29 +12,25 @@ import {
 import ReadOnly from '@/components/Editor/ReadOnly'
 import { Button, Popover, Segmented, Switch, Table, notification } from 'antd'
 import Column from 'antd/es/table/Column'
-import Code from '@/components/Editor/Code'
+import Code from '@/components/Editor/CodeEditor'
 import { languageList } from '@/components/Editor/LanguageList'
 import RunResult from '@/views/Problem/Detail/RunResult'
 import TextArea from 'antd/es/input/TextArea'
 import { createTestApi } from '@/api/test'
 import { createRecordApi } from '@/api/competitionMixture'
 
-const config: IEditorConfig = localStorage.getItem('editorConfig')
-  ? JSON.parse(localStorage.getItem('editorConfig') as string)
-  : {
-      theme: 'vs-dark',
-      language: 'cpp'
-    }
-
 const Answer: React.FC = () => {
   const nav = useNavigate()
   const { competition_id, problem_id } = useParams()
   const [a, b, c, type] = useOutletContext<[any, any, any, CompetitionType]>()
   const [problem, setproblem] = useState<IProblem>()
-  const [editorConfig, seteditorConfig] = useState<IEditorConfig>(config)
   const [dataSource, setdataSource] = useState<
     { key: string; input: string; output: string }[]
   >([])
+  const [editorConfig, setEditorConfig] = useState<IEditorConfig>({
+    language: '',
+    theme: 'vs-dark'
+  })
   const [code, setcode] = useState<string>('')
   const [openLanguageList, setopenLanguageList] = useState(false)
   const [showConsole, setshowConsole] = useState(false)
@@ -46,7 +42,7 @@ const Answer: React.FC = () => {
     {} as IRecordState
   )
 
-  const currentLang: JSX.Element = useMemo(() => {
+  const currentLang: React.ReactNode = useMemo(() => {
     let element: JSX.Element = <div></div>
     languageList.forEach(value => {
       if (value.value === editorConfig.language) element = value.label
@@ -80,7 +76,7 @@ const Answer: React.FC = () => {
     setcurrentState({
       value: 'Running',
       label: '运行中',
-      state: 'waiting'
+      state: 'info'
     })
     setshowConsole(true)
     setconsoleMode('result')
@@ -129,16 +125,15 @@ const Answer: React.FC = () => {
       {problem && (
         <Fragment>
           <ReadOnly
-            className="my-4"
-            editableClassName="text-base bg-gray-100 rounded px-8 py-2"
+            className="text-base bg-slate-100 rounded px-8 py-2"
             title="题目描述"
-            value={JSON.parse(problem?.description as string)}
+            html={`<p>${JSON.parse(problem?.description)}</p>`}
           ></ReadOnly>
-          <ReadOnly
+          {/* <ReadOnly
             title="时间限制"
-            text={[`${problem?.time_limit} ms`]}
-          ></ReadOnly>
-          <ReadOnly
+            html={`${problem?.time_limit} ms`}
+          ></ReadOnly> */}
+          {/* <ReadOnly
             title="空间限制"
             text={[`${problem?.memory_limit} kb`]}
           ></ReadOnly>
@@ -149,7 +144,7 @@ const Answer: React.FC = () => {
           <ReadOnly
             title={'输出格式'}
             value={JSON.parse(problem?.output as string)}
-          ></ReadOnly>
+          ></ReadOnly> */}
           <div className="font-bold">示例</div>
           <Table
             size="small"
@@ -161,20 +156,20 @@ const Answer: React.FC = () => {
             <Column title="input" dataIndex={'input'}></Column>
             <Column title="output" dataIndex={'output'}></Column>
           </Table>
-          <ReadOnly
+          {/* <ReadOnly
             title="提示"
             value={JSON.parse(problem?.hint as string)}
           ></ReadOnly>
           <ReadOnly
             title="来源"
             value={JSON.parse(problem?.source as string)}
-          ></ReadOnly>
+          ></ReadOnly> */}
         </Fragment>
       )}
 
       {/* editor */}
       <div className="shadow">
-        <div className={'bg-gray-100 p-2 flex items-center justify-between '}>
+        <div className={'bg-slate-100 p-2 flex items-center justify-between '}>
           <Popover
             style={{
               width: '4rem',
@@ -188,7 +183,7 @@ const Answer: React.FC = () => {
                   className="px-2 hover:cursor-pointer hover:shadow rounded flex items-center justify-start"
                   onClick={() => {
                     setopenLanguageList(false)
-                    seteditorConfig(value => {
+                    setEditorConfig(value => {
                       return {
                         theme: value.theme,
                         language: languageList[index].value
@@ -213,7 +208,7 @@ const Answer: React.FC = () => {
             <svg
               className="icon hover:cursor-pointer "
               onClick={() => {
-                seteditorConfig(value => {
+                setEditorConfig(value => {
                   return {
                     theme: value.theme === 'light' ? 'vs-dark' : 'light',
                     language: value.language
@@ -232,10 +227,7 @@ const Answer: React.FC = () => {
         <div>
           <Code
             value={code}
-            theme={editorConfig.theme}
-            language={editorConfig.language}
-            height="500px"
-            width="100%"
+            height={500}
             className=" "
             codeChange={(value: string) => {
               localStorage.setItem(`code-${problem_id}`, value)
@@ -270,7 +262,7 @@ const Answer: React.FC = () => {
       </div>
       {/* console */}
       {showConsole && (
-        <div className=" border border-solid border-gray-300 rounded">
+        <div className=" border border-solid border-slate-300 rounded">
           <Segmented
             options={[
               {

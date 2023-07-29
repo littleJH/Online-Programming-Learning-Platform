@@ -5,18 +5,18 @@ const request = axios.create({
   baseURL: `${baseURL}/program`
 })
 
-export const createProgramApi = (data: any, config = jsonConfig) => {
-  return request.post('/create', data, config)
+export const createProgramApi = (data: any) => {
+  return request.post('/create', data, jsonConfig())
 }
 
-export const getProgramApi = (id: any, config = baseConfig) => {
-  return request.get(`/show/${id}`, config)
+export const getProgramApi = (id: any) => {
+  return request.get(`/show/${id}`, jsonConfig())
 }
 
-export const updateProgramApi = (id: any, data: any, config = baseConfig) => {
-  return request.put(`/update/${id}`, data, config)
+export const updateProgramApi = (id: any, data: any) => {
+  return request.put(`/update/${id}`, data, jsonConfig())
 }
 
-export const deleteProgramApi = (id: any, config = baseConfig) => {
-  return request.delete(`/delete/${id}`, config)
+export const deleteProgramApi = (id: any) => {
+  return request.delete(`/delete/${id}`, jsonConfig())
 }

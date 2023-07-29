@@ -146,6 +146,7 @@ const EnterGroup: React.FC<{
   const searchGroup = () => {
     setdataSource([])
     searchGroupByTextApi(searchText).then(res => {
+      console.log(res)
       const groups = res.data.data.groups as IGroup[]
       setdataSource(
         groups.map(item => {
@@ -214,7 +215,7 @@ const EnterGroup: React.FC<{
   return (
     <div>
       <Steps
-        className="py-8 px-24"
+        className="py-8 px-16"
         current={currentStep}
         items={[
           {

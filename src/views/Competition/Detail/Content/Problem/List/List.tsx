@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Table } from 'antd'
+import { Skeleton, Table } from 'antd'
 import Column from 'antd/es/table/Column'
 import { useNavigate, useOutletContext } from 'react-router-dom'
+import { CompetitionState } from '@/vite-env'
+import NoData from '@/components/Empty/NoData'
 
 interface Problems {
   key: string
@@ -25,25 +27,35 @@ const Element: React.FC = () => {
     setanswering(true)
   }
   return (
-    <Table dataSource={dataSource} pagination={false}>
-      <Column align="center" dataIndex={'index'} title={'序号'}></Column>
-      <Column
-        align="center"
-        dataIndex={'title'}
-        title={'标题'}
-        render={(value: any, record: any) => {
-          return (
-            <div
-              className="hover:cursor-pointer"
-              onClick={() => toDetail(value, record)}
-            >
-              {value}
-            </div>
-          )
-        }}
-      ></Column>
-      <Column align="center" dataIndex={'state'} title={'状态'}></Column>
-    </Table>
+    <div>
+      {dataSource && (
+        <Table
+          locale={{
+            emptyText: <NoData text="暂无数据" />
+          }}
+          dataSource={dataSource}
+          pagination={false}
+        >
+          <Column align="center" dataIndex={'index'} title={'序号'}></Column>
+          <Column
+            align="center"
+            dataIndex={'title'}
+            title={'题目'}
+            render={(value: any, record: any) => {
+              return (
+                <div
+                  className="hover:cursor-pointer"
+                  onClick={() => toDetail(value, record)}
+                >
+                  {value}
+                </div>
+              )
+            }}
+          ></Column>
+          <Column align="center" dataIndex={'state'} title={'状态'}></Column>
+        </Table>
+      )}
+    </div>
   )
 }
 

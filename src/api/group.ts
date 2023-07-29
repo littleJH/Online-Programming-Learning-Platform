@@ -5,19 +5,23 @@ const request = axios.create({
 })
 
 export const createUserGroupApi = (data: any) => {
-  return request.post('/create', data, jsonConfig)
+  return request.post('/create', data, jsonConfig())
 }
 
 export const getGroupApi = (id: string) => {
   return request.get(`/show/${id}`)
 }
 
+export const getGroupListApi = (pageNum = 1, pageSize = 20) => {
+  return request.get(`/list?pageNum=${pageNum}&pageSize=${pageSize}`)
+}
+
 export const createStandardUserApi = (id: string, num: number) => {
-  return request.post(`/standard/create/${id}/${num}`, {}, baseConfig)
+  return request.post(`/standard/create/${id}/${num}`, {}, baseConfig())
 }
 
 export const getStandardUserListApi = (id: string) => {
-  return request.get(`/standard/list/${id}`, baseConfig)
+  return request.get(`/standard/list/${id}`, baseConfig())
 }
 
 export const getUserGroupMembersApi = (
@@ -30,7 +34,7 @@ export const getUserGroupMembersApi = (
 
 //apply
 export const applyEnterGroupApi = (id: string, data: any) => {
-  return request.post(`/apply/${id}`, data, jsonConfig)
+  return request.post(`/apply/${id}`, data, jsonConfig())
 }
 
 //search

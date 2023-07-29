@@ -152,7 +152,6 @@ const Detail: React.FC = () => {
       setcompetition(res.data.data.competition)
       switch (type) {
         case 'single':
-          console.log(type)
           fetchSingle(competition)
           break
         case 'group':
@@ -174,6 +173,7 @@ const Detail: React.FC = () => {
   const fetchSingle = async (competition: ICompetition) => {
     const type = 'single'
     const result = await getEnterConditionApi(type, competition.id)
+    console.log(result)
     const state = getState(
       competition.start_time,
       competition.end_time,

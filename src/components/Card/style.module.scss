@@ -1,0 +1,25 @@
+.footer  {
+  user-select: none;
+  div {
+    display: flex;
+    align-items: center;
+
+  } 
+  span {
+    margin: 0 0.5rem;
+  }
+}
+
+.remarkFooter {
+  user-select: none;
+  div {
+    display: flex;
+    align-items: center;
+  } 
+  div:hover {
+    cursor: pointer;
+  }
+  span {
+    margin: 0 0.5rem;
+  }
+}

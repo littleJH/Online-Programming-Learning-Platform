@@ -22,6 +22,11 @@ export default defineConfig({
         target: 'http://test_oj.mgaronya.com',
         changeOrigin: true,
         rewrite: path => path.replace(/^\/test/, '')
+      },
+      '/tag_api': {
+        target: 'http://api_tag.mgaronya.com',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/tag_api/, '')
       }
     }
   }

@@ -1,0 +1,46 @@
+@tailwind base;
+
+.leftBar {
+
+}
+.item {
+  // h-12 w-12 flex justify-center items-center rounded-full bg-slate-200
+  height: 3rem;
+  width: 3rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border-radius: 100%;
+  background-color: #f8fafc;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  transition: all;
+  transition-duration: 150ms;
+  user-select: none;
+}
+
+.item:hover {
+  cursor: pointer;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+  
+.num {
+  position: absolute;
+  top: 0;
+  left: 2rem;
+  height: 1rem;
+  padding: 0.1rem 0.2rem;
+  border-radius: 50%;
+  color: #cbd5e1;
+  background-color: #64748b;
+  display: flex;
+  align-items: center;
+}
+
+.responsiveMargin {
+  @media (min-width: 1150px) {
+    margin-left: 0;
+  }
+}

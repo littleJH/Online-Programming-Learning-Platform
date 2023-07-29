@@ -5,7 +5,7 @@ const request = axios.create({
 })
 
 export const createCompetitionApi = (data: any) => {
-  return request.post(`/create`, data, jsonConfig)
+  return request.post(`/create`, data, jsonConfig())
 }
 
 export const showCompetitionApi = (id: string) => {
@@ -13,11 +13,11 @@ export const showCompetitionApi = (id: string) => {
 }
 
 export const updateCompetitionApi = (id: string, data: any) => {
-  return request.put(`/update/${id}`, data, jsonConfig)
+  return request.put(`/update/${id}`, data, jsonConfig())
 }
 
 export const deleteCompetitionApi = (id: string) => {
-  return request.delete(`/delete/${id}`, jsonConfig)
+  return request.delete(`/delete/${id}`, jsonConfig())
 }
 
 export const getCompetitionListApi = (pageNum = 1, pageSize = 20) => {
@@ -41,4 +41,8 @@ export const getCompetitionRankListApi = (
   pageSize = 20
 ) => {
   return request.get(`/rank/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`)
+}
+
+export const rollingRanklistWs = (id: string) => {
+  return new WebSocket(`ws://10.60.37.43:2000/competition/rolling/list/${id}`)
 }

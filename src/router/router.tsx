@@ -4,18 +4,23 @@ import { Suspense, lazy } from 'react'
 import Loading from '@/components/Loading/Loading'
 import Root from '@/views/Root'
 
-const Home = lazy(() => import('@/views/Home/Root'))
-const Problem = lazy(() => import('@/views/Problem/Root'))
-const ProblemList = lazy(() => import('@/views/Problem/List/List'))
+const Home = lazy(() => import('@/views/Home/HomeRoot'))
+const ProblemRoot = lazy(() => import('@/views/Problem/ProblemRoot'))
+const ProblemSetRoot = lazy(
+  () => import('@/views/Problem/ProblemSet/ProblemSetRoot')
+)
+const PorblemAll = lazy(() => import('@/views/Problem/ProblemSet/Set/All'))
 const ProblemId = lazy(() => import('@/views/Problem/Detail/Detail'))
 const ProblemDescription = lazy(
   () => import('@/views/Problem/Detail/Description')
 )
 const ProblemSubmitrecord = lazy(
-  () => import('@/views/Problem/Detail/Record/SubmitRecords')
+  () => import('@/views/Problem/Detail/Record/Records')
 )
-const ProblemCreate = lazy(() => import('@/views/Problem/Create/Create'))
-const Competition = lazy(() => import('@/views/Competition/Root'))
+const ProblemCreate = lazy(
+  () => import('@/views/Creation/CreateProblem/Create')
+)
+const Competition = lazy(() => import('@/views/Competition/CompetitionRoot'))
 const CompetitionList = lazy(() => import('@/views/Competition/List/List'))
 const CompetitionId = lazy(
   () => import('@/views/Competition/Detail//Detail/Detail')
@@ -39,20 +44,37 @@ const CompetitionRecord = lazy(
   () => import('@/views/Competition/Detail/Content/Record/Record')
 )
 const CompetitionCreate = lazy(
-  () => import('@/views/Competition/Create/Create')
+  () => import('@/views/Creation/CreateCompetition/Create')
 )
 const CompetitionCreateDeclare = lazy(
-  () => import('@/views/Competition/Create/Declare')
+  () => import('@/views/Creation/CreateCompetition/Declare')
 )
 const CompetitionCreateCompetition = lazy(
-  () => import('@/views/Competition/Create/Competition')
+  () => import('@/views/Creation/CreateCompetition/Competition')
 )
 const CompetitionCreateProblem = lazy(
-  () => import('@/views/Competition/Create/Problem')
+  () => import('@/views/Creation/CreateCompetition/Problem')
 )
 const CompetitionRandom = lazy(
   () => import('@/views/Competition/CompetitionRandom/CompetitionRandom')
 )
+const Community = lazy(() => import('@/views/Community/CommunityRoot'))
+const CommunityOverview = lazy(
+  () => import('@/views/Community/Overview/CommunityOverview')
+)
+const ArticleSet = lazy(
+  () => import('@/views/Community/Overview/RecommendSet/ArticleSet')
+)
+const CreationRoot = lazy(() => import('@/views/Creation/CreationRoot'))
+const CreationNavgation = lazy(
+  () => import('@/views/Creation/CreationNavgation')
+)
+const CreateArticle = lazy(() => import('@/views/Creation/CreateArticle'))
+const CreateComment = lazy(() => import('@/views/Creation/CreateComment'))
+const CreatePost = lazy(() => import('@/views/Creation/CreatePost'))
+const CreateTopic = lazy(() => import('@/views/Creation/CreateTopic'))
+const CreateForm = lazy(() => import('@/views/Creation/CreateForm'))
+const ArticleDetail = lazy(() => import('@/views/Community/Article/Detail'))
 
 export const lazyload = (Result: any) => {
   return (
@@ -67,18 +89,26 @@ const router = createBrowserRouter([
     path: '/',
     element: <Root />,
     children: [
+      // home
       {
         path: 'home',
         element: lazyload(Home),
         errorElement: <ErrorPage />
       },
+      // problem
       {
         path: 'problem',
-        element: lazyload(Problem),
+        element: lazyload(ProblemRoot),
         children: [
           {
-            path: 'list',
-            element: lazyload(ProblemList)
+            path: 'set',
+            element: lazyload(ProblemSetRoot),
+            children: [
+              {
+                path: 'all',
+                element: lazyload(PorblemAll)
+              }
+            ]
           },
           {
             path: ':id',
@@ -89,17 +119,14 @@ const router = createBrowserRouter([
                 element: lazyload(ProblemDescription)
               },
               {
-                path: 'submit-records',
+                path: 'records',
                 element: lazyload(ProblemSubmitrecord)
               }
             ]
-          },
-          {
-            path: 'create',
-            element: lazyload(ProblemCreate)
           }
         ]
       },
+      // competition
       {
         path: 'competition',
         element: lazyload(Competition),
@@ -140,8 +167,65 @@ const router = createBrowserRouter([
               }
             ]
           },
+
           {
-            path: 'create',
+            path: 'random/:competition_type',
+            element: lazyload(CompetitionRandom)
+          }
+        ]
+      },
+      // community
+      {
+        path: 'community',
+        element: lazyload(Community),
+        children: [
+          {
+            path: 'overview',
+            element: lazyload(CommunityOverview),
+            children: [
+              {
+                path: 'articleset',
+                element: lazyload(ArticleSet)
+              }
+            ]
+          },
+          {
+            path: 'article',
+            children: [
+              {
+                path: ':article_id',
+                element: lazyload(ArticleDetail)
+              }
+            ]
+          }
+        ]
+      },
+      {
+        path: 'creation',
+        element: lazyload(CreationRoot),
+        children: [
+          {
+            path: '',
+            element: lazyload(CreationNavgation)
+          },
+          {
+            path: 'article',
+            element: lazyload(CreateArticle)
+          },
+          {
+            path: 'comment',
+            element: lazyload(CreateComment)
+          },
+          {
+            path: 'post',
+            element: lazyload(CreatePost)
+          },
+          {
+            path: 'problem',
+            element: lazyload(ProblemCreate)
+          },
+          {
+            path: 'competition',
             element: lazyload(CompetitionCreate),
             children: [
               {
@@ -160,8 +244,12 @@ const router = createBrowserRouter([
             ]
           },
           {
-            path: 'random/:competition_type',
-            element: lazyload(CompetitionRandom)
+            path: 'topic',
+            element: lazyload(CreateTopic)
+          },
+          {
+            path: 'form',
+            element: lazyload(CreateForm)
           }
         ]
       }

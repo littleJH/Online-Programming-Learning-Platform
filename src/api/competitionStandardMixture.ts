@@ -10,18 +10,18 @@ export const enterStandardSingleApi = (
   id: string,
   userNum = 50
 ) => {
-  return request.post(`${type}/enter/${id}?userNum=${userNum}`, baseConfig)
+  return request.post(`${type}/enter/${id}?userNum=${userNum}`, baseConfig())
 }
 
 export const getEnterConditionApi = (type: CompetitionType, id: string) => {
-  return request.get(`${type}/enter/condition/${id}`, baseConfig)
+  return request.get(`${type}/enter/condition/${id}`, baseConfig())
 }
 
 export const cancelEnterStandardSingleApi = (
   type: CompetitionType,
   id: string
 ) => {
-  return request.delete(`${type}/cancel/enter/${id}`, baseConfig)
+  return request.delete(`${type}/cancel/enter/${id}`, baseConfig())
 }
 
 export const getStandardUserListApi = (
@@ -32,6 +32,6 @@ export const getStandardUserListApi = (
 ) => {
   return request.get(
     `${type}/enter/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`,
-    baseConfig
+    baseConfig()
   )
 }
