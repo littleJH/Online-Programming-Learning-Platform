@@ -2,7 +2,7 @@ import Editor from '@monaco-editor/react'
 import React, { useCallback, useEffect, useState } from 'react'
 import Loading from '@/components/Loading/Loading'
 import { Modal, Select } from 'antd'
-import { languageList } from './LanguageList'
+import { languageList, poj_languageList } from './LanguageList'
 import { getCurrentUserinfo, updateInfoApi } from '@/api/user'
 import CodeEditorConfig from '@/components/Editor/CodeEditorConfig'
 import { IMonacoConfig, IPersonalizeConfig, User } from '@/vite-env'
@@ -14,54 +14,71 @@ interface Iprops {
   className?: string
   height: number
   codeChange: Function
-  setCodeLanguage?: Function
+  setCodeLanguage: Function
+  oj: string
 }
 
+const cpp = ['C', 'C++', 'C++11', 'C++14', 'C++17', 'C++20']
+
 const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
-  const { height, value, className, codeChange, setCodeLanguage } = props
+  const { height, value, className, codeChange, setCodeLanguage, oj } = props
+  const [languageOptions, setLanguageOptions] = useState(languageList)
   const [openConfigModal, setopenConfigModal] = useState(false)
   const [info, setInfo] = useRecoilState(userInfoState)
-  const [monacoConfig, setmonacoConfig] = useState(defaultConfig)
   const monacoRecoil = useRecoilValue(monacoConfigState)
-
-  // useEffect(() => {
-  //   getCurrentUserinfo().then(res => {
-  //     const user: User = res.data.data.user
-  //     if (user) {
-  //       let config: IPersonalizeConfig
-  //       config = user.res_long !== '' ? JSON.parse(user.res_long) : null
-  //       config ? setmonacoConfig(config.monacoConfig) : null
-  //     }
-  //   })
-  // }, [])
+  const [monacoConfig, setmonacoConfig] = useState(defaultConfig)
 
   useEffect(() => {
-    console.log(monacoRecoil)
     setmonacoConfig(monacoRecoil)
-  }, [])
-
-  const handleConfigModalClose = useCallback(async () => {
-    const personalizeConfig =
-      info.res_long !== '' ? JSON.parse(info.res_long) : {}
-    console.log('oldInfo', info)
-    const newInfo: User = {
-      ...info,
-      res_long: JSON.stringify({
-        ...personalizeConfig,
-        monacoConfig
-      })
-    }
-    console.log('newInfo', newInfo)
-    const data = newInfo
-    updateInfoApi(JSON.stringify(data)).then(async res => {
-      console.log(res.data)
-      if (res.data.code === 200) {
-        const res = await getCurrentUserinfo()
-        console.log(res.data)
-        setInfo(res.data.data.user)
+    setLanguageOptions(() => {
+      switch (oj) {
+        case 'POJ':
+          return poj_languageList
+        default:
+          return languageList
       }
     })
-  }, [monacoConfig, info])
+  }, [])
+
+  const handleLanguageChange = useCallback(
+    (value: any) => {
+      console.log(value)
+      setCodeLanguage(value)
+      setmonacoConfig({
+        ...monacoConfig,
+        language: value
+      })
+      updateConfig(value)
+    },
+    [monacoConfig]
+  )
+
+  const updateConfig = useCallback(
+    (language?: string) => {
+      const personalizeConfig =
+        info.res_long !== '' ? JSON.parse(info.res_long) : {}
+      const newInfo: User = {
+        ...info,
+        res_long: JSON.stringify({
+          ...personalizeConfig,
+          monacoConfig: {
+            language: language ? language : monacoConfig.language,
+            theme: monacoConfig.theme,
+            options: monacoConfig.options
+          }
+        })
+      }
+      updateInfoApi(JSON.stringify(newInfo)).then(async res => {
+        console.log(res.data)
+        if (res.data.code === 200) {
+          const res = await getCurrentUserinfo()
+          console.log(res.data)
+          setInfo(res.data.data.user)
+        }
+      })
+    },
+    [monacoConfig, info]
+  )
   return (
     <>
       <div
@@ -71,12 +88,13 @@ const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
       >
         <div className={'bg-slate-50 h-12 p-2 flex items-center'}>
           <Select
+            style={{
+              width: '160px'
+            }}
             bordered={false}
-            defaultValue={monacoConfig.language}
-            options={languageList}
-            onSelect={value =>
-              setCodeLanguage ? setCodeLanguage(value) : null
-            }
+            defaultValue={monacoRecoil.language}
+            options={languageOptions}
+            onChange={handleLanguageChange}
           ></Select>
           <div className="grow"></div>
           <div
@@ -93,7 +111,9 @@ const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
           height={`${height - 42}px`}
           width="100%"
           className={`${className} bg-white`}
-          language={monacoConfig.language}
+          language={
+            cpp.includes(monacoConfig.language) ? 'cpp' : monacoConfig.language
+          }
           theme={monacoConfig.theme}
           loading={<Loading></Loading>}
           onChange={value => codeChange(value)}
@@ -104,7 +124,7 @@ const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
         title={<p>代码编辑器配置</p>}
         open={openConfigModal}
         onCancel={() => setopenConfigModal(false)}
-        afterClose={handleConfigModalClose}
+        afterClose={updateConfig}
         footer={[]}
         centered
       >
@@ -120,7 +140,7 @@ const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
 export default CodeEditor
 
 const defaultConfig: IMonacoConfig = {
-  language: 'cpp',
+  language: 'C',
   theme: 'vs-dark',
   options: {
     fontSize: 14,

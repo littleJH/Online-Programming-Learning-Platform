@@ -1,10 +1,12 @@
-import { Layout, ConfigProvider, Modal, Button } from 'antd'
+import { Layout, ConfigProvider, Modal, Button, Avatar } from 'antd'
 import React, { Fragment, useState } from 'react'
 
 import Navbar from '@/components/Navbar/Navbar'
-import Login from '@/components/Log/Login'
-import Register from '@/components/Log/Register'
-import { Outlet } from 'react-router-dom'
+
+import { Outlet, useNavigate } from 'react-router-dom'
+import { iconBaseUrl } from '@/api/baseConfig'
+import { useRecoilValue } from 'recoil'
+import { loginStatusState, userInfoState } from '@/Recoil/store'
 
 const Root: React.FC = () => {
   const { Header, Content, Footer } = Layout
@@ -23,9 +25,18 @@ const Root: React.FC = () => {
           colorWarning: '#f59e0b',
           colorError: '#ef4444',
           colorInfo: '#3b82f6',
-          fontSize: 12,
+          fontSize: 14,
           borderRadius: 4,
           wireframe: false
+        }
+      }}
+      avatar={{
+        style: {
+          border: '1px solid #ccc',
+          opacity: '100%',
+          cursor: 'pointer',
+          transition: 'all',
+          transitionDuration: '300ms'
         }
       }}
     >
@@ -49,36 +60,27 @@ const Root: React.FC = () => {
 export default Root
 
 const MyLogin: React.FC = () => {
-  const [openModal, setOpenModal] = useState(false)
-  const [mode, setmode] = useState<'login' | 'register'>('login')
+  const nav = useNavigate()
+  const myInfo = useRecoilValue(userInfoState)
+  const loginStatus = useRecoilValue(loginStatusState)
 
   const handleClick = async () => {
-    setOpenModal(true)
+    loginStatus ? nav('/profile/info') : nav('/login')
   }
 
   return (
-    <Fragment>
-      <div className="bg-white h-full flex items-center">
-        <div
-          className="avatar-small bg-slate-300"
-          onClick={() => handleClick()}
-        >
-          {}
-        </div>
-      </div>
-      <Modal
-        title="Log"
-        open={openModal}
-        onCancel={() => setOpenModal(false)}
-        footer={[]}
-      >
-        {mode === 'login' && (
-          <Login setOpenModal={setOpenModal} setmode={setmode}></Login>
-        )}
-        {mode === 'register' && (
-          <Register setOpenModal={setOpenModal} setmode={setmode}></Register>
-        )}
-      </Modal>
-    </Fragment>
+    <div
+      className="bg-white h-full flex items-center"
+      onClick={() => handleClick()}
+    >
+      {loginStatus && (
+        <Avatar
+          className="hover:cursor-pointer mr-8"
+          alt="登录"
+          src={`${iconBaseUrl}/${myInfo?.icon}`}
+        ></Avatar>
+      )}
+      {!loginStatus && <Button type="link">登录</Button>}
+    </div>
   )
 }

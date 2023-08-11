@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Problem from './Problem'
 import {
   Button,
@@ -8,7 +8,7 @@ import {
   Result,
   Space,
   Steps,
-  Upload
+  UploadFile
 } from 'antd'
 import Program from './Program'
 import { createProgramApi } from '@/api/program'
@@ -17,14 +17,17 @@ import {
   createProblemLabelApi,
   getProblemLabelsApi,
   getProblemListApi,
-  uploadProblemByFileApi
+  showProblemApi,
+  uploadProblemByFileApi,
+  uploadVjudgeProblemApi
 } from '@/api/problem'
-import { ProgramMode } from '@/vite-env'
+import { IProblem, ProgramMode } from '@/vite-env'
 import { useRecoilState } from 'recoil'
 import { currentProblemState } from '@/Recoil/store'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import Dragger from 'antd/es/upload/Dragger'
 import { createTagApi, createTagAutoApi } from '@/api/tag'
+import { RcFile, UploadChangeParam } from 'antd/es/upload'
 
 const stringArrItem = [
   'test_input',
@@ -34,21 +37,37 @@ const stringArrItem = [
 ]
 
 const Create: React.FC = () => {
+  const [querys, setQuerys] = useSearchParams()
+  const id = useRef(querys.get('id'))
+  const [problem, setProblem] = useState<IProblem>()
   const [stepStatus, setstepStatus] = useState<
     'wait' | 'process' | 'finish' | 'error'
   >('process')
   const nav = useNavigate()
   const [form] = Form.useForm()
-  const [codeLanguage, setcodeLanguage] = useState('cpp')
+  const [codeLanguage, setcodeLanguage] = useState('C')
   const [code1, setcode1] = useState('')
   const [code2, setcode2] = useState('')
   const [openUploadModal, setOpenUploadModal] = useState(false)
+  const [openCreateTagModal, setOpenCreateTagModal] = useState(false)
   const [programMode, setprogramMode] = useState<ProgramMode>('standard')
   const [currentStep, setcurrentStep] = useState(0)
   const [failMessage, setfailMessage] = useState()
   const [loading, setloading] = useState(false)
+  const [fileList, setFileList] = useState<UploadFile[]>([])
+  const [failUploadFileList, setFailUploadFileList] = useState<UploadFile[]>([])
+  const [uploadDone, setUploadDone] = useState(false)
   const [currentProblem, setCurrentProblem] =
     useRecoilState(currentProblemState)
+
+  useEffect(() => {
+    if (id.current) {
+      showProblemApi(id.current).then(res => {
+        const problem = res.data.data.problem
+        setProblem(problem)
+      })
+    }
+  }, [])
 
   useEffect(() => {
     console.log(currentStep, stepStatus)
@@ -228,6 +247,44 @@ const Create: React.FC = () => {
       .catch(err => console.log(err))
   }, [])
 
+  const handleUpload = useCallback(
+    (file: UploadFile) => {
+      setFailUploadFileList([])
+      if (!file.originFileObj) return
+      file.originFileObj.text().then(text => {
+        const data = JSON.parse(text)
+        const index = data.time_limit.search(/[A-z]|[a-z]/)
+        data.time_unit = data.time_limit.slice(index).toLowerCase()
+        data.time_limit = Number(data.time_limit.slice(0, index))
+        const index1 = data.memory_limit.search(/[A-Z]|[a-z]/)
+        data.memory_unit = data.memory_limit.slice(index1).toLowerCase()
+        data.memory_unit.includes('b')
+          ? null
+          : (data.memory_unit = `${data.memory_unit}b`)
+        data.memory_limit = Number(data.memory_limit.slice(0, index1))
+        data.oj = 'POJ'
+        data.problem_id = String(data.id)
+        data.sample_case = [
+          {
+            input: data.sample_case.sample_input,
+            output: data.sample_case.sample_outpit
+          }
+        ]
+        delete data.id
+        uploadVjudgeProblemApi(JSON.stringify(data))
+          .then(res => {
+            console.log(res.data)
+          })
+          .catch(err => {
+            console.log(err)
+            file.status = 'error'
+            setFailUploadFileList(value => [...value, file])
+          })
+      })
+    },
+    [failUploadFileList]
+  )
+
   return (
     <div className="flex">
       <div className="px-8 my-4  overflow-y-scroll" style={{ width: '768px' }}>
@@ -297,20 +354,15 @@ const Create: React.FC = () => {
           <Submit form={form}></Submit>
         )} */}
         {stepStatus === 'process' && (
-          <div className="">
+          <div className="text-end">
             {currentStep === 0 && (
-              <Button
-                size="large"
-                type="primary"
-                onClick={() => handleNextClick()}
-              >
+              <Button type="primary" onClick={() => handleNextClick()}>
                 下一步
               </Button>
             )}
             {currentStep === 1 && (
               <Space>
                 <Button
-                  size="large"
                   onClick={() => {
                     setcurrentStep(currentStep => currentStep - 1)
                   }}
@@ -318,7 +370,6 @@ const Create: React.FC = () => {
                   上一步
                 </Button>
                 <Button
-                  size="large"
                   type="primary"
                   onClick={() => handleNextClick()}
                   loading={loading}
@@ -348,23 +399,53 @@ const Create: React.FC = () => {
           上传题目
         </Button> */}
         <div
-          className="fixed bottom-24"
+          className="fixed bottom-4"
           style={{
             width: '128px',
             height: '128px'
           }}
         >
+          <Space direction="vertical">
+            <Button type="dashed" onClick={() => setOpenUploadModal(true)}>
+              上传题目文件
+            </Button>
+            <Button type="dashed" onClick={() => setOpenCreateTagModal(true)}>
+              自动创建标签
+            </Button>
+          </Space>
+        </div>
+      </div>
+
+      <Modal
+        title={'上传题目文件'}
+        open={openUploadModal}
+        onCancel={() => setOpenUploadModal(false)}
+        footer={
+          [
+            // <Button
+            //   type="primary"
+            //   disabled={fileList.length === 0}
+            //   onClick={handleUpload}
+            // >
+            //   点击上传
+            // </Button>
+          ]
+        }
+        style={{
+          translate: '0 50%'
+        }}
+      >
+        <Space>
           <Dragger
             accept="text/xml"
             directory
             name="file"
             multiple={true}
-            action={'http://api_oj.mgaronya.com/problem/create/by/file'}
-            headers={{
-              Authorization:
-                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiIyNGI0MDQ3MC0xNDI5LTQ4MjctYWUxZS04Yzc2NzYzNzVhMjciLCJleHAiOjE2OTE2NjgxNjIsImlhdCI6MTY4OTA3NjE2MiwiaXNzIjoiTUdBcm9ueWEiLCJzdWIiOiJ1c2VyIHRva2VuIn0.v0fqGUaC6co0STWyse1Acp326Bq1s8xdEF8Jy1Vq1-8',
-              'Content-Type': 'multipart/form-data'
-            }}
+            // action={'http://api_oj.mgaronya.com/problem/create/by/file'}
+            // headers={{
+            //   Authorization: localStorage.getItem('token') as string,
+            //   'Content-Type': 'multipart/form-data'
+            // }}
             beforeUpload={file => {
               console.log(file)
               const form = new FormData()
@@ -378,19 +459,43 @@ const Create: React.FC = () => {
               点击或拖拽批量上传.xml文件(支持上传文件夹)
             </div>
           </Dragger>
-          <Button type="dashed" onClick={() => createTagAuto()}>
-            自动创建标签
-          </Button>
-        </div>
-      </div>
-
-      {/* <Modal
-        open={openUploadModal}
-        onCancel={() => setOpenUploadModal(false)}
-        footer={null}
-      >
-
-      </Modal> */}
+          <Dragger
+            accept="application/json"
+            name="file"
+            multiple={true}
+            // beforeUpload={(file, fileList) => {
+            //   setFileList(fileList)
+            //   return false
+            // }}
+            onRemove={file => {
+              const index = failUploadFileList.findIndex(
+                value => value.uid === file.uid
+              )
+              const newFileList = failUploadFileList.slice()
+              newFileList.splice(index, 1)
+              setFailUploadFileList(newFileList)
+            }}
+            onChange={(info: UploadChangeParam<UploadFile<RcFile>>) => {
+              console.log(info.file.name)
+              handleUpload(info.file)
+            }}
+            fileList={failUploadFileList}
+          >
+            <div className="p-2">
+              点击批量上传外站题目.json文件(支持上传文件夹)
+            </div>
+          </Dragger>
+        </Space>
+      </Modal>
+      <Modal
+        title="自动创建标签"
+        open={openCreateTagModal}
+        footer={[]}
+        onCancel={() => setOpenCreateTagModal(false)}
+        style={{
+          translate: '0 50%'
+        }}
+      ></Modal>
     </div>
   )
 }

@@ -13,7 +13,6 @@ import {
   Collapse,
   Descriptions,
   Input,
-  Modal,
   Popover,
   Select,
   Skeleton,
@@ -40,6 +39,7 @@ import {
 } from '@/api/topic'
 import { getUserInfoApi } from '@/api/user'
 import { iconBaseUrl } from '@/api/baseConfig'
+import ProblemTable from '../ProblemTable'
 
 interface ITag {
   label: string
@@ -61,6 +61,9 @@ interface TopicOptionType {
 }
 
 let first = true
+const setFirst = (bool: boolean) => {
+  first = bool
+}
 
 const ProblemList: React.FC<IProps> = props => {
   const {
@@ -73,7 +76,7 @@ const ProblemList: React.FC<IProps> = props => {
   const [querys, setQuerys] = useSearchParams()
   const nav = useNavigate()
   const { Search } = Input
-  const [problemList, setproblemList] = useState<IPrblemTableDataType[]>([])
+  const [problemList, setproblemList] = useState<IProblem[]>([])
   const [topicList, setTopicList] = useState<ITopic[]>([])
   const [selectedTopic, setSelectedTopic] = useState<ITopic | undefined>()
   const [topic_id, setTopic_id] = useState(
@@ -81,9 +84,9 @@ const ProblemList: React.FC<IProps> = props => {
   )
   const [tagList, setTagList] = useState<ITag[]>([])
   const [fetchDone, setFetchDone] = useState(false)
-  const searchMode = useRef<
-    'default' | 'textSearch' | 'labelSearch' | 'text&label'
-  >('default')
+  // const searchMode = useRef<
+  //   'default' | 'textSearch' | 'labelSearch' | 'text&label'
+  // >('default')
   const [searchText, setSearchText] = useState<string>(
     querys.get('text') ? (querys.get('text') as string) : ''
   )
@@ -91,20 +94,21 @@ const ProblemList: React.FC<IProps> = props => {
     querys.get('labels') ? JSON.parse(querys.get('labels') as string) : []
   )
   const [total, setTotal] = useState(0)
-  const pageNum = useRef(1)
-  const pageSize = useRef(20)
+  const [pageNum, setPageNum] = useState(1)
+  const [pageSize, setPageSize] = useState(20)
   const leftCtn = useRef<HTMLDivElement>(null)
   const searchCtn = useRef<HTMLDivElement>(null)
   const [tableScrollHeight, setTableScrollHeight] = useState(0)
+  // const [first, setFirst] = useState(true)
 
   useEffect(() => {
     if (!topic_id && !searchText.length && !labelGroup.length) {
-      initProblemList()
+      initProblemList(1)
     } else {
       if (!searchText.length && !labelGroup.length && topic_id)
         fetchTopics(topic_id)
       else if (searchText.length) searchProblemByText()
-      else if (labelGroup.length) searchProblemsByLabels()
+      else if (labelGroup.length) searchProblemsByLabels(1)
     }
     if (topic_id) {
       getTopicApi(topic_id).then(res => {
@@ -128,20 +132,20 @@ const ProblemList: React.FC<IProps> = props => {
     })
   }, [])
 
-  useEffect(() => {
-    const resize = () => {
-      if (leftCtn.current && searchCtn.current) {
-        setTableScrollHeight(
-          leftCtn.current.clientHeight - searchCtn.current?.clientHeight - 80
-        )
-      }
-    }
-    resize()
-    window.addEventListener('resize', resize)
-    return () => {
-      window.removeEventListener('reseize', resize)
-    }
-  }, [problemList])
+  // useEffect(() => {
+  //   const resize = () => {
+  //     if (leftCtn && searchCtn) {
+  //       setTableScrollHeight(
+  //         leftCtn.clientHeight - searchCtn?.clientHeight - 80
+  //       )
+  //     }
+  //   }
+  //   resize()
+  //   window.addEventListener('resize', resize)
+  //   return () => {
+  //     window.removeEventListener('reseize', resize)
+  //   }
+  // }, [problemList])
 
   useEffect(() => {
     fetchDone
@@ -153,6 +157,7 @@ const ProblemList: React.FC<IProps> = props => {
   }, [fetchDone])
 
   useEffect(() => {
+    if (first) return
     const list: string[] = []
     tagList.forEach(item => {
       item.checked ? list.push(item.label) : null
@@ -171,11 +176,13 @@ const ProblemList: React.FC<IProps> = props => {
     return list
   }, [topicList])
 
-  // 监听selectedTopic清空
+  // 监听topic_id
   useEffect(() => {
     if (first) return
-    if (!labelGroup.length && !searchText.length) initProblemList()
-    else if (labelGroup.length) searchProblemsByLabels()
+    resetPage()
+    if (!labelGroup.length && !searchText.length) {
+      topic_id ? fetchTopics(topic_id) : initProblemList(2)
+    } else if (labelGroup.length) searchProblemsByLabels(2)
     else if (searchText.length) searchProblemByText()
     else searchProblemByTextAndLabel()
   }, [topic_id])
@@ -183,11 +190,12 @@ const ProblemList: React.FC<IProps> = props => {
   // 监听serachText清空
   useEffect(() => {
     if (first) return
+    resetPage()
     if (!searchText.length)
-      if (!labelGroup.length && !topic_id) initProblemList()
-      else if (labelGroup.length) searchProblemsByLabels()
+      if (!labelGroup.length && !topic_id) initProblemList(3)
+      else if (labelGroup.length) searchProblemsByLabels(3)
       else if (topic_id) fetchTopics(topic_id)
-  }, [searchText, topic_id])
+  }, [searchText])
 
   // 监听labelGroup
   useEffect(() => {
@@ -199,65 +207,67 @@ const ProblemList: React.FC<IProps> = props => {
       ]
     })
     if (first) return
+    resetPage()
     if (labelGroup.length) {
       searchText.length
         ? searchProblemByTextAndLabel()
-        : searchProblemsByLabels()
+        : searchProblemsByLabels(4)
     } else {
-      if (!searchText.length && !topic_id) initProblemList()
+      if (!searchText.length && !topic_id) initProblemList(4)
       else if (searchText.length) searchProblemByText()
       else if (topic_id) fetchTopics(topic_id)
     }
-  }, [labelGroup, topic_id])
+  }, [labelGroup])
 
-  const initProblemList = useCallback(() => {
-    searchMode.current = 'default'
-    getProblemListApi(pageNum.current, pageSize.current).then(problemsRes => {
+  const initProblemList = useCallback((index: number) => {
+    setFetchDone(false)
+    console.log('initProblemList', index)
+    getProblemListApi(pageNum, pageSize).then(problemsRes => {
       console.log(problemsRes.data.data)
       setTotal(problemsRes.data.data.total)
-      fetchProblems(problemsRes.data.data.problems)
+      setproblemList(problemsRes.data.data.problems)
+      // fetchProblems(problemsRes.data.data.problems)
     })
   }, [])
 
-  const fetchProblems = useCallback(async (problems: IProblem[]) => {
-    setFetchDone(false)
-    let index = 0
-    const list: IPrblemTableDataType[] = []
-    for (let problem of problems) {
-      const res = await Promise.all([
-        getRecordListApi({
-          problem_id: problem.id
-        }),
-        getRecordListApi({
-          problem_id: problem.id,
-          condition: 'Accepted'
-        }),
-        getProblemLabelsApi(problem.id)
-      ])
-      list.push({
-        key: problem.id as string,
-        index: (pageNum.current - 1) * pageSize.current + index + 1,
-        title: problem.title,
-        description: problem.description,
-        totaRecords: res[0].data.data.total,
-        accpet: res[1].data.data.total,
-        acPerc: (
-          <AcPercentLabel
-            total={res[0].data.data.total}
-            accept={res[1].data.data.total}
-          ></AcPercentLabel>
-        ),
-        labels: res[2].data.data.problemLabels
-      })
-      index++
-    }
-    setproblemList(list)
-    setFetchDone(true)
-    first = false
-  }, [])
+  // const fetchProblems = useCallback(async (problems: IProblem[]) => {
+  //   setFetchDone(false)
+  //   let index = 0
+  //   const list: IPrblemTableDataType[] = []
+  //   for (let problem of problems) {
+  //     const res = await Promise.all([
+  //       getRecordListApi({
+  //         problem_id: problem.id
+  //       }),
+  //       getRecordListApi({
+  //         problem_id: problem.id,
+  //         condition: 'Accepted'
+  //       }),
+  //       getProblemLabelsApi(problem.id)
+  //     ])
+  //     list.push({
+  //       key: problem.id as string,
+  //       index: (pageNum - 1) * pageSize + index + 1,
+  //       title: problem.title,
+  //       description: problem.description,
+  //       totaRecords: res[0].data.data.total,
+  //       accpet: res[1].data.data.total,
+  //       acPerc: (
+  //         <AcPercentLabel
+  //           total={res[0].data.data.total}
+  //           accept={res[1].data.data.total}
+  //         ></AcPercentLabel>
+  //       ),
+  //       labels: res[2].data.data.problemLabels
+  //     })
+  //     index++
+  //   }
+  //   setproblemList(list)
+  //   setFetchDone(true)
+  //   setFirst(false)
+  // }, [])
 
   const fetchTopics = useCallback(async (topic_id: string) => {
-    searchMode.current = 'default'
     setFetchDone(false)
     const res = await getTopicProblemsApi(topic_id)
     const list = res.data.data.problemLists
@@ -267,135 +277,128 @@ const ProblemList: React.FC<IProps> = props => {
       const res = await showProblemApi(list[index].problem_id)
       problems.push(res.data.data.problem)
     }
-    fetchProblems(problems)
+    setproblemList(problems)
+    // fetchProblems(problems)
   }, [])
 
   const toDetail = (index: number) => {
-    const id = problemList[index].key
+    const id = problemList[index].id
     nav(`/problem/${id}`)
   }
 
   const searchProblemByText = useCallback(() => {
-    searchMode.current === 'textSearch'
+    setFetchDone(false)
     if (topic_id) {
       searchProblemInTopicByTextApi(
         topic_id,
         searchText,
-        pageNum.current,
-        pageSize.current
+        pageNum,
+        pageSize
       ).then(res => {
         console.log(res.data)
         setTotal(res.data.data.total)
-        fetchProblems(res.data.data.problems)
+        setproblemList(res.data.data.problems)
+        // fetchProblems(res.data.data.problems)
       })
     } else {
-      searchProblemByTextApi(
-        searchText,
-        pageNum.current,
-        pageSize.current
-      ).then(res => {
+      searchProblemByTextApi(searchText, pageNum, pageSize).then(res => {
         console.log(res.data)
         setTotal(res.data.data.total)
-        fetchProblems(res.data.data.problems)
+        setproblemList(res.data.data.problems)
+        // fetchProblems(res.data.data.problems)
       })
     }
-  }, [searchText, topic_id])
+  }, [searchText, topic_id, pageNum, pageSize])
 
-  const searchProblemsByLabels = useCallback(() => {
-    searchMode.current = 'labelSearch'
-    if (topic_id) {
-      searchProblemInTopicByLabelApi(
-        topic_id,
-        labelGroup,
-        pageNum.current,
-        pageSize.current
-      ).then(res => {
-        console.log(res.data.data)
-        setTotal(res.data.data.total)
-        fetchProblems(res.data.data.problems)
-      })
-    } else {
-      searchProblemByLabelApi(
-        labelGroup,
-        pageNum.current,
-        pageSize.current
-      ).then(res => {
-        console.log(res.data.data)
-        setTotal(res.data.data.total)
-        fetchProblems(res.data.data.problems)
-      })
-    }
-  }, [labelGroup, topic_id])
+  const searchProblemsByLabels = useCallback(
+    (index: number) => {
+      console.log('searchProblemsByLabels', index, first)
+      setFetchDone(false)
+      if (topic_id) {
+        searchProblemInTopicByLabelApi(
+          topic_id,
+          labelGroup,
+          pageNum,
+          pageSize
+        ).then(res => {
+          console.log(res.data.data)
+          setTotal(res.data.data.total)
+          setproblemList(res.data.data.problems)
+          // fetchProblems(res.data.data.problems)
+        })
+      } else {
+        searchProblemByLabelApi(labelGroup, pageNum, pageSize).then(res => {
+          console.log(res.data.data)
+          setTotal(res.data.data.total)
+          setproblemList(res.data.data.problems)
+          // fetchProblems(res.data.data.problems)
+        })
+      }
+    },
+    [labelGroup, topic_id, pageNum, pageSize]
+  )
 
   const searchProblemByTextAndLabel = useCallback(() => {
-    searchMode.current = 'text&label'
+    setFetchDone(false)
     if (topic_id) {
       searchProblemInTopicByTextLabelApi(
         topic_id,
         searchText,
         labelGroup,
-        pageNum.current,
-        pageSize.current
+        pageNum,
+        pageSize
       ).then(res => {
         console.log(res.data)
         setTotal(res.data.data.total)
-        fetchProblems(res.data.data.problems)
+        console.log(res.data)
+        setproblemList(res.data.data.problems)
+        // fetchProblems(res.data.data.problems)
       })
     } else {
       searchProblemByTextAndLabelApi(
         searchText,
         labelGroup,
-        pageNum.current,
-        pageSize.current
+        pageNum,
+        pageSize
       ).then(res => {
         console.log(res.data)
         setTotal(res.data.data.total)
-        fetchProblems(res.data.data.problems)
+        // fetchProblems(res.data.data.problems)
       })
     }
-  }, [searchText, labelGroup, topic_id])
+  }, [searchText, labelGroup, topic_id, pageNum, pageSize])
 
   const handleTopicChange = useCallback(
     async (value: string) => {
+      console.log('topic change')
       const topic = topicList.find(topic => topic.id === value)
       if (topic) {
         const res = await getUserInfoApi(topic.user_id)
         topic.user = res.data.data.user
       }
+      resetPage()
       setTopic_id(topic ? topic?.id : '')
       setSelectedTopic(topic)
       setQuerys(() => {
         return [
-          ['topic', topic_id],
+          ['topic', topic ? topic?.id : ''],
           ['text', searchText],
           ['labels', JSON.stringify(labelGroup)]
         ]
       })
     },
-    [topicList, searchText, topic_id, labelGroup]
+    [topicList, searchText, labelGroup]
   )
 
   const handleSearch = useCallback(() => {
     if (!searchText.length) return
+    resetPage()
     if (!labelGroup.length) {
-      searchMode.current = 'textSearch'
       searchProblemByText()
     } else {
-      searchMode.current = 'text&label'
       searchProblemByTextAndLabel()
     }
   }, [searchText, labelGroup])
-
-  const handleKyeClick = useCallback((value: string) => {
-    const flag = copy(value)
-    if (flag) {
-      notification.success({
-        message: '已复制到剪切板',
-        placement: 'topRight',
-        duration: 1
-      })
-    }
-  }, [])
 
   const handleTagClick = useCallback(
     (index: number) => {
@@ -424,25 +427,25 @@ const ProblemList: React.FC<IProps> = props => {
 
   const handlePageChange = useCallback(
     (num: number, size: number) => {
-      pageNum.current = num
-      pageSize.current = size
-      switch (searchMode.current) {
-        case 'default':
-          topic_id ? fetchTopics(topic_id) : initProblemList()
-          break
-        case 'textSearch':
-          searchProblemByText()
-          break
-        case 'labelSearch':
-          searchProblemsByLabels()
-          break
-        case 'text&label':
+      console.log('handlePageChange')
+      setPageNum(num)
+      setPageSize(size)
+      if (!topic_id && !searchText.length && !labelGroup.length) {
+        initProblemList(5)
+      } else {
+        if (searchText.length && labelGroup.length)
           searchProblemByTextAndLabel()
-          break
+        else if (searchText.length) searchProblemByText()
+        else if (labelGroup.length) searchProblemsByLabels(5)
+        else fetchTopics(topic_id)
       }
     },
-    [selectedProblems, topic_id]
+    [selectedProblems, searchText, labelGroup, topic_id]
   )
+
+  const resetPage = () => {
+    setPageNum(1)
+  }
 
   return (
     <>
@@ -569,169 +572,23 @@ const ProblemList: React.FC<IProps> = props => {
               ]}
             ></Collapse>
           )}
-          {!fetchDone ? (
-            <Skeleton
-              style={{
-                width: '100%'
-              }}
-              active
-              paragraph={{
-                rows: pageSize.current
-              }}
-            />
-          ) : (
-            <Table
-              scroll={
-                mode === 'select'
-                  ? {
-                      y: tableScrollHeight
-                    }
-                  : undefined
-              }
-              rowSelection={
-                mode === 'select' && setSelectedProblems
-                  ? {
-                      columnWidth: 64,
-                      selectedRowKeys: selectedRowKeys,
-                      onChange: (value, selectedRows, info) => {
-                        if (info.type === 'all') {
-                          value.length
-                            ? setSelectedProblems((prev: any) => [
-                                ...prev,
-                                ...selectedRows
-                              ])
-                            : setSelectedProblems(
-                                (prev: IPrblemTableDataType[]) => [
-                                  ...prev.filter(
-                                    value =>
-                                      problemList.findIndex(
-                                        val => val.key === value.key
-                                      ) === -1
-                                  )
-                                ]
-                              )
-                        }
-                      },
-                      onSelect: (record, selected) => {
-                        selected
-                          ? setSelectedProblems(
-                              (prev: IPrblemTableDataType[]) => [
-                                ...prev,
-                                record
-                              ]
-                            )
-                          : setSelectedProblems(
-                              (prev: IPrblemTableDataType[]) => [
-                                ...prev.filter(
-                                  value => value.key !== record.key
-                                )
-                              ]
-                            )
-                      }
-                    }
-                  : undefined
-              }
-              size="small"
-              pagination={{
-                position: ['bottomCenter'],
-                current: pageNum.current,
-                pageSize: pageSize.current,
-                total: total,
-                showQuickJumper: true,
-                hideOnSinglePage: true,
-                onShowSizeChange: (current, size) => {
-                  pageNum.current = current
-                  pageSize.current = size
-                },
-                onChange: handlePageChange
-              }}
-              dataSource={problemList}
-            >
-              {/* <Column  title="序号" dataIndex={'index'}></Column> */}
-              <Column
-                title="KEY"
-                dataIndex={'key'}
-                width={128}
-                render={value => (
-                  <Tooltip
-                    mouseEnterDelay={0.3}
-                    title={`点击复制${value}`}
-                    color="white"
-                    overlayInnerStyle={{
-                      color: 'black'
-                    }}
-                  >
-                    <div
-                      className="select-none hover:cursor-pointer"
-                      onClick={() => handleKyeClick(value)}
-                    >
-                      <div
-                        className="w-16"
-                        style={{
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap'
-                        }}
-                      >
-                        {value}
-                      </div>
-                    </div>
-                  </Tooltip>
-                )}
-              ></Column>
-              <Column
-                title="标题"
-                dataIndex={'title'}
-                render={(value, _, index) => (
-                  <Popover
-                    mouseEnterDelay={0.3}
-                    title={value}
-                    content={
-                      <ReadOnly
-                        html={problemList[index].description}
-                      ></ReadOnly>
-                    }
-                    overlayStyle={{
-                      maxWidth: '512px'
-                    }}
-                    overlayInnerStyle={{
-                      maxHeight: '256px',
-                      overflow: 'scroll'
-                    }}
-                  >
-                    <div
-                      className="hover:cursor-pointer text-indigo-500 min-w-max"
-                      onClick={() => toDetail(index)}
-                    >
-                      {value}
-                    </div>
-                  </Popover>
-                )}
-              ></Column>
-
-              <Column
-                title="标签"
-                dataIndex={'labels'}
-                render={value => (
-                  <>
-                    {value.map((item: any, index: number) => {
-                      return (
-                        <Tag key={index} bordered={false} color="#f1f5f9">
-                          <div className="text-slate-700">{item.label}</div>
-                        </Tag>
-                      )
-                    })}
-                  </>
-                )}
-              ></Column>
-              <Column
-                title="AC率"
-                dataIndex={'acPerc'}
-                width={128}
-                render={value => <div className="">{value}</div>}
-              ></Column>
-            </Table>
-          )}
+          <ProblemTable
+            mode={mode}
+            problemList={problemList}
+            pageNum={pageNum}
+            pageSize={pageSize}
+            setPageNum={setPageNum}
+            setPageSize={setPageSize}
+            total={total}
+            fetchDone={fetchDone}
+            setFetchDone={setFetchDone}
+            setFirst={setFirst}
+            onPageChange={handlePageChange}
+            onTitleClick={toDetail}
+            tableScrollHeight={tableScrollHeight}
+            setSelectedProblems={setSelectedProblems}
+            selectedRowKeys={selectedRowKeys}
+          ></ProblemTable>
         </div>
       </div>
     </>

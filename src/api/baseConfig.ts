@@ -14,6 +14,10 @@ export const tagBaseUrl = import.meta.env.DEV
 
 export const wsBaseUrl = 'ws://api_oj.mgaronya.com'
 
+export const translateBaseUrl = import.meta.env.DEV
+  ? '/translate_api'
+  : 'http://api_translate.mgaronya.com/translator/translate'
+
 export const baseConfig = () => {
   return {
     headers: {

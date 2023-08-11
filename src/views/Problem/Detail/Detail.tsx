@@ -38,6 +38,7 @@ import CodeEditor from '@/components/Editor/CodeEditor'
 import { useRecoilValue } from 'recoil'
 import { monacoConfigState } from '@/Recoil/store'
 import { recordStates } from '@/assets/recordStates'
+import ojmap from '@/assets/ojmap'
 
 interface IState extends IRecordState {
   case_id: number
@@ -67,10 +68,10 @@ export const Detail: React.FC = () => {
   const nav = useNavigate()
   const loaction = useLocation()
   const { id } = useParams()
-  const monacoConfig = useRecoilValue(monacoConfigState)
   const [problem, setproblem] = useState<IProblem>()
   const [tabHeadMode, settabHeadMode] = useState<TabMode>()
   const [caseSamples, setcaseSamples] = useState<ICaseSample[]>([])
+  const [language, setLanguage] = useState()
   const [code, setcode] = useState('')
   const [showConsole, setshowConsole] = useState(true)
   const [consoleMode, setconsoleMode] = useState<'test' | 'result'>('test')
@@ -127,11 +128,6 @@ export const Detail: React.FC = () => {
       })
     }
   }, [id])
-
-  const language = useMemo(
-    () => (monacoConfig.language === 'cpp' ? 'C++11' : monacoConfig.language),
-    [monacoConfig]
-  )
 
   const resizeEditorHeight = () => {
     const height =
@@ -323,10 +319,12 @@ export const Detail: React.FC = () => {
               <CodeEditor
                 height={codeHeight}
                 value={code}
+                setCodeLanguage={setLanguage}
                 codeChange={(value: string) => {
                   localStorage.setItem(`code_${id}`, value)
                   setcode(value)
                 }}
+                oj={ojmap.get(id?.slice(0, id.indexOf('-')))}
               ></CodeEditor>
             </div>
             {/* console */}

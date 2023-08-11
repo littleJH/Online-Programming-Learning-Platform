@@ -1,18 +1,58 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { iconBaseUrl } from '@/api/baseConfig'
 import { IArticle } from '@/vite-env'
 import { Avatar, Space } from 'antd'
 import style from './style.module.scss'
 import GetTimeago from '@/tool/myFns/GetTimeago'
 import CommunityLabel from '../Label/CommunityLabel/CommunityLabel'
+import { getUserInfoApi } from '@/api/user'
+import {
+  getArticleCollectNumApi,
+  getArticleCollectedApi,
+  getArticleLabelsApi,
+  getArticleLikeNumApi,
+  getArticleLikedApi,
+  getArticleVisibleNumApi
+} from '@/api/article'
+import { getArticleRemarkListApi } from '@/api/remark'
 
 interface IProps {
-  article: IArticle
+  articleProp: IArticle
   onclick: Function
 }
 
 const ArticleCard: React.FC<IProps> = props => {
-  const { article, onclick } = props
+  const { articleProp, onclick } = props
+  const [article, setArticle] = useState<IArticle>(articleProp)
+
+  useEffect(() => {
+    const article = { ...articleProp }
+    Promise.all([
+      getUserInfoApi(articleProp.user_id),
+      getArticleLikedApi(articleProp.id),
+      getArticleLikeNumApi(articleProp.id, 'true'),
+      getArticleCollectedApi(articleProp.id),
+      getArticleCollectNumApi(articleProp.id),
+      getArticleVisibleNumApi(articleProp.id),
+      getArticleLabelsApi(articleProp.id),
+      getArticleRemarkListApi(articleProp.id)
+    ]).then(res => {
+      article.user = res[0].data.data.user
+      article.liked = res[1].data.data.like
+      article.likeNum = res[2].data.data.total
+      article.collected = res[3].data.data.collect
+      article.collectNum = res[4].data.data.total
+      article.visibleNum = res[5].data.data.total
+      article.labels = res[6].data.data.articleLabels
+      article.remark = {
+        remarks: res[7].data.data.remarks,
+        total: res[7].data.data.total
+      }
+      setArticle(article)
+    })
+  }, [])
+
+  useEffect(() => console.log(article), [article])
 
   const ago = useMemo(() => {
     const { num, unit } = GetTimeago(article.created_at)
@@ -21,8 +61,8 @@ const ArticleCard: React.FC<IProps> = props => {
 
   return (
     <div
-      className="w-full p-4  rounded shadow my-4 hover:cursor-pointer hover:shadow-lg transition-all"
-      onClick={() => onclick(article.id)}
+      className="w-full p-4  rounded shadow-sm hover:cursor-pointer hover:shadow-md transition-all"
+      onClick={() => onclick(article)}
     >
       <div className="flex">
         {/* left */}
@@ -30,7 +70,7 @@ const ArticleCard: React.FC<IProps> = props => {
           <div className="flex items-center my-2">
             <Avatar
               className="card-avatar"
-              src={<img src={`${iconBaseUrl}/${article.user?.icon}`}></img>}
+              src={`${iconBaseUrl}/${article.user?.icon}`}
             ></Avatar>
             <div className="card-username">{article.user?.name}</div>
             <div className="card-time">{ago}</div>

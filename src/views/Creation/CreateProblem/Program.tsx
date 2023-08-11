@@ -72,6 +72,7 @@ const Program: React.FC<Iprops> = props => {
           </div>
         )}
         <CodeEditor
+          oj=""
           value={
             localStorage.getItem('code1')
               ? (localStorage.getItem('code1') as string)
@@ -93,6 +94,7 @@ const Program: React.FC<Iprops> = props => {
             <div>&nbsp;创建输入检测程序</div>
           </div>
           <CodeEditor
+            oj=""
             value={
               localStorage.getItem('code2')
                 ? (localStorage.getItem('code2') as string)
@@ -103,6 +105,7 @@ const Program: React.FC<Iprops> = props => {
               localStorage.setItem('code2', value)
             }}
             height={512}
+            setCodeLanguage={setcodeLanguage}
           ></CodeEditor>
         </Fragment>
       )}

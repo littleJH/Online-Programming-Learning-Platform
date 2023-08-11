@@ -43,7 +43,8 @@ const Detail: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    currentArticle?.liked ? null : fetch()
+    console.log(currentArticle)
+    !currentArticle?.liked && fetch()
     if (!visibled) {
       setArticleVisibleApi(article_id).then(res => console.log(res.data))
       visibled = true
@@ -208,12 +209,13 @@ const Detail: React.FC = () => {
                   </Space>
 
                   <Space>
-                    {currentArticle.labels.map((label, index) => (
-                      <CommunityLabel
-                        label={label}
-                        key={index}
-                      ></CommunityLabel>
-                    ))}
+                    {currentArticle.labels &&
+                      currentArticle.labels.map((label, index) => (
+                        <CommunityLabel
+                          label={label}
+                          key={index}
+                        ></CommunityLabel>
+                      ))}
                   </Space>
                 </div>
                 <Divider></Divider>
@@ -232,9 +234,10 @@ const Detail: React.FC = () => {
                   </Button>
                 </div>
                 <div>
-                  {currentArticle.remark.remarks.map(remark => (
-                    <RemarkCard remark={remark} key={remark.id}></RemarkCard>
-                  ))}
+                  {currentArticle.remark &&
+                    currentArticle.remark.remarks.map(remark => (
+                      <RemarkCard remark={remark} key={remark.id}></RemarkCard>
+                    ))}
                 </div>
               </div>
             </div>

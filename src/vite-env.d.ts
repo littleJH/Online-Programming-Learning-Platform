@@ -143,7 +143,7 @@ export interface User {
   collect_num?: number
   email: string
   icon: string
-  id?: string
+  id: string
   level?: string
   like_num?: number
   name: string
@@ -333,4 +333,14 @@ export interface IFormCreate {
 export interface IForm extends IFormCreate {
   id: string
   user_id: string
+}
+
+export interface IChat {
+  created_at: string
+  group_id: string
+  author_id: string
+  content: string
+  res_long: string
+  res_short: string
+  user: User
 }

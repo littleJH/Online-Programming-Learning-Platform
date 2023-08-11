@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { baseURL, baseConfig, jsonConfig } from './baseConfig'
+import { baseURL, baseConfig, jsonConfig, formConfig } from './baseConfig'
 const request = axios.create({
   baseURL: `${baseURL}/user`
 })
@@ -38,4 +38,12 @@ export const getCurrentUserinfo = () => {
 
 export const getUserInfoApi = (id: string) => {
   return request.get(`/show/${id}`)
+}
+
+export const updatePasswordApi = (data: any) => {
+  return request.put('/update/password', data, formConfig())
+}
+
+export const findPasswordApi = (data: any) => {
+  return request.put('/security', data, formConfig())
 }

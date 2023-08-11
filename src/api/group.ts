@@ -24,11 +24,7 @@ export const getStandardUserListApi = (id: string) => {
   return request.get(`/standard/list/${id}`, baseConfig())
 }
 
-export const getUserGroupMembersApi = (
-  id: string,
-  pageNum = 1,
-  pageSize = 20
-) => {
+export const getGroupMembersApi = (id: string, pageNum = 1, pageSize = 20) => {
   return request.get(`/user/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 
@@ -59,8 +55,22 @@ export const searthGroupByTextAndLabelApi = (
 
 //other
 
-export const getUserGroupListApi = (id: string, pageNum = 1, pageSize = 20) => {
+export const getLeaderGroupListApi = (
+  id: string,
+  pageNum = 1,
+  pageSize = 20
+) => {
   return request.get(
     `/leader/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`
+  )
+}
+
+export const getMemberGroupListApi = (
+  id: string,
+  pageNum = 1,
+  pageSize = 20
+) => {
+  return request.get(
+    `/member/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`
   )
 }

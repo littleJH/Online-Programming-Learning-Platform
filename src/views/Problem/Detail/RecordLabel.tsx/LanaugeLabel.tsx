@@ -8,15 +8,15 @@ const LanaugeLabel: React.FC<{
 
   useEffect(() => {
     languageList.forEach(item => {
-      if (['C++11', 'C++', 'C'].includes(props.value)) {
-        setelement(
-          <svg className="icon" aria-hidden="true">
-            <use href="#icon-cpp"></use>
-          </svg>
-        )
-        return
-      }
-      if (item.value === props.value) {
+      // if (['C++11', 'C++', 'C'].includes(props.value)) {
+      //   setelement(
+      //     <svg className="icon" aria-hidden="true">
+      //       <use href="#icon-cpp"></use>
+      //     </svg>
+      //   )
+      //   return
+      // }
+      if (item.language === props.value) {
         setelement(item.label)
       }
     })

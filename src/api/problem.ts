@@ -1,5 +1,11 @@
 import axios from 'axios'
-import { baseURL, baseConfig, jsonConfig, formConfig } from './baseConfig'
+import {
+  baseURL,
+  baseConfig,
+  jsonConfig,
+  formConfig,
+  translateBaseUrl
+} from './baseConfig'
 
 const request = axios.create({
   baseURL: `${baseURL}/problem`
@@ -15,6 +21,10 @@ export const showProblemApi = (id: string) => {
 
 export const updateProblemApi = (id: string, config = baseConfig()) => {
   return request.put(`/update/${id}`, config)
+}
+
+export const deleteProblemApi = (id: string) => {
+  return request.delete(`/delete/${id}`, baseConfig())
 }
 
 export const getProblemListApi = (pageNum = 1, pageSize = 20) => {
@@ -123,15 +133,6 @@ export const getProblemHotRankApi = (pageNum = 1, pageSize = 20) => {
   return request.get(`/hot/rank?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 
-// other
-export const getProblemTestNumApi = (id: string) => {
-  return request.get(`/test/num/${id}`)
-}
-
-export const uploadProblemByFileApi = (data: any) => {
-  return request.post('create/by/file', data, formConfig())
-}
-
 // label
 
 export const createProblemLabelApi = (id: string, label: string) => {
@@ -140,4 +141,34 @@ export const createProblemLabelApi = (id: string, label: string) => {
 
 export const getProblemLabelsApi = (id: string) => {
   return request.get(`/label/${id}`)
+}
+
+// translate
+export const translateProblemApi = (text: string) => {
+  return axios
+    .create({
+      baseURL: translateBaseUrl
+    })
+    .get('')
+}
+
+// other
+export const getUserProblemListApi = (
+  id: string,
+  pageNum = 1,
+  pageSize = 20
+) => {
+  return request.get(`/user/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`)
+}
+
+export const getProblemTestNumApi = (id: string) => {
+  return request.get(`/test/num/${id}`)
+}
+
+export const uploadProblemByFileApi = (data: any) => {
+  return request.post('create/by/file', data, formConfig())
+}
+
+export const uploadVjudgeProblemApi = (data: any) => {
+  return request.post('create/vjudge', data, jsonConfig())
 }

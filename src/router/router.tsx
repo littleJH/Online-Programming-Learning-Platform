@@ -1,10 +1,29 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, redirect } from 'react-router-dom'
 import ErrorPage from '@/components/error-page'
 import { Suspense, lazy } from 'react'
 import Loading from '@/components/Loading/Loading'
 import Root from '@/views/Root'
+import { useRecoilValue } from 'recoil'
+import { loginStatusState } from '@/Recoil/store'
 
-const Home = lazy(() => import('@/views/Home/HomeRoot'))
+const Homepage = lazy(() => import('@/views/Home/HomeRoot'))
+const LoginRoot = lazy(() => import('@/views/Login/LoginRoot'))
+const ProfileRoot = lazy(() => import('@/views/Profile/ProfileRoot'))
+const ProfileFriend = lazy(() => import('@/views/Profile/Friend/Friend'))
+const ProfileMessage = lazy(() => import('@/views/Profile/Message/Message'))
+const ProfileGroup = lazy(() => import('@/views/Profile/Group/GroupRoot'))
+const ProfileInfo = lazy(() => import('@/views/Profile/Info/Info'))
+const ProfileSetting = lazy(() => import('@/views/Profile/Setting/Setting'))
+const ProfileAccount = lazy(() => import('@/views/Profile/Account/Account'))
+const ProfileCretion = lazy(
+  () => import('@/views/Profile/Creation/CreationRoot')
+)
+const ProfileCreationArticle = lazy(
+  () => import('@/views/Profile/Creation/Article/Article')
+)
+const ProfileCreationProblem = lazy(
+  () => import('@/views/Profile/Creation/Problem/Problem')
+)
 const ProblemRoot = lazy(() => import('@/views/Problem/ProblemRoot'))
 const ProblemSetRoot = lazy(
   () => import('@/views/Problem/ProblemSet/ProblemSetRoot')
@@ -88,12 +107,66 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
+    errorElement: <ErrorPage />,
     children: [
       // home
       {
         path: 'home',
-        element: lazyload(Home),
-        errorElement: <ErrorPage />
+        element: lazyload(Homepage)
+      },
+      {
+        path: 'login',
+        element: lazyload(LoginRoot),
+        children: [{}]
+      },
+      //profile
+      {
+        path: 'profile',
+        loader: async () => {
+          if (!localStorage.getItem('token')) return redirect('/login')
+          return null
+        },
+        element: lazyload(ProfileRoot),
+        children: [
+          {
+            path: 'friend',
+            element: lazyload(ProfileFriend)
+          },
+          {
+            path: 'message',
+            element: lazyload(ProfileMessage)
+          },
+          {
+            path: 'group',
+            element: lazyload(ProfileGroup)
+          },
+          {
+            path: 'info',
+            element: lazyload(ProfileInfo)
+          },
+          {
+            path: 'setting',
+            element: lazyload(ProfileSetting)
+          },
+          {
+            path: 'account',
+            element: lazyload(ProfileAccount)
+          },
+          {
+            path: 'creation',
+            element: lazyload(ProfileCretion),
+            children: [
+              {
+                path: 'article',
+                element: lazyload(ProfileCreationArticle)
+              },
+              {
+                path: 'problem',
+                element: lazyload(ProfileCreationProblem)
+              }
+            ]
+          }
+        ]
       },
       // problem
       {

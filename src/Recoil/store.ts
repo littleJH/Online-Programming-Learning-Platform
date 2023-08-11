@@ -1,4 +1,4 @@
-import { getCurrentUserinfo } from '@/api/user'
+import { getCurrentUserinfo, getUserInfoApi } from '@/api/user'
 import {
   IArticle,
   IProblem,
@@ -6,17 +6,34 @@ import {
   User,
   IPersonalizeConfig
 } from '@/vite-env'
-import { select } from 'd3'
-import { atom, atomFamily, selector } from 'recoil'
+import { atom, selector } from 'recoil'
+import { redirect } from 'react-router-dom'
 
-export const userInfoState = selector<User>({
+export const userInfoAtomState = atom<User | null>({
+  key: 'userInfoAtomState',
+  default: getCurrentUserinfo().then(res => {
+    if (res.data.code === 200) return Promise.resolve(res.data.data.user)
+    else return null
+  })
+})
+
+export const userInfoState = selector<User | null>({
   key: 'userInfoState',
-  get: async () => {
-    const res = await getCurrentUserinfo()
-    return res.data.data.user
+  get: ({ get }) => {
+    const info = get(userInfoAtomState)
+    if (info) return get(userInfoAtomState)
+    else return null
   },
   set: ({ set }, newValue) => {
-    set(userInfoState, newValue)
+    set(userInfoAtomState, newValue)
+  }
+})
+
+export const loginStatusState = selector<boolean>({
+  key: 'loginStatusState',
+  get: ({ get }) => {
+    if (get(userInfoState)) return true
+    else return false
   }
 })
 
@@ -26,7 +43,7 @@ export const monacoConfigState = selector<IMonacoConfig>({
     const userInfo = get(userInfoState)
     if (userInfo?.res_long === '' || !userInfo) {
       return {
-        language: 'cpp',
+        language: 'C',
         theme: 'vs-dark',
         options: {
           fontSize: 14,
@@ -46,6 +63,7 @@ export const monacoConfigState = selector<IMonacoConfig>({
       }
     } else {
       const config = JSON.parse(userInfo?.res_long) as IPersonalizeConfig
+      console.log(config.monacoConfig)
       return config.monacoConfig
     }
   }

@@ -27,6 +27,11 @@ export default defineConfig({
         target: 'http://api_tag.mgaronya.com',
         changeOrigin: true,
         rewrite: path => path.replace(/^\/tag_api/, '')
+      },
+      '/translate_api': {
+        target: 'http://api_translate.mgaronya.com/translator/translate',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/tag_api/, '')
       }
     }
   }

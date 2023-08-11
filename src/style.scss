@@ -22,7 +22,7 @@ body,
 #root {
   width: 100%;
   height: 100%;
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.05rem;
   padding: 0;
   margin: 0;
@@ -135,7 +135,7 @@ body,
 }
 
 *::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 rounded-full;
+  @apply bg-slate-100 rounded-full;
 }
 
 
