@@ -1,5 +1,5 @@
 import { Layout, ConfigProvider, Modal, Button, Avatar } from 'antd'
-import React, { Fragment, useState } from 'react'
+import React from 'react'
 
 import Navbar from '@/components/Navbar/Navbar'
 
