@@ -1,4 +1,4 @@
-import { currentArticleState } from '@/Recoil/store'
+import { currentArticleState } from '@/recoil/store'
 import { getArticleApi, getArticleHotRankApi } from '@/api/article'
 import { IArticle } from '@/vite-env'
 import { Skeleton, Space } from 'antd'

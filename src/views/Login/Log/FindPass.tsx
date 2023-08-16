@@ -1,4 +1,4 @@
-import { userInfoState } from '@/Recoil/store'
+import { userInfoState } from '@/recoil/store'
 import { findPasswordApi, getVerifyApi } from '@/api/user'
 import useCountdown from '@/tool/myHooks/useCountDown'
 import { Button, Col, Form, Input, Modal, Row, notification } from 'antd'

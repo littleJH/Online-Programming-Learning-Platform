@@ -1,4 +1,4 @@
-import { userInfoState } from '@/Recoil/store'
+import { userInfoState } from '@/recoil/store'
 import { getArticleListApi } from '@/api/article'
 import { getProblemListApi, getUserProblemListApi } from '@/api/problem'
 import { Descriptions } from 'antd'

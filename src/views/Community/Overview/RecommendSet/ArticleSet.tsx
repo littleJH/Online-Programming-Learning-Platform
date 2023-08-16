@@ -3,7 +3,7 @@ import ArticleCard from '@/components/Card/ArticleCard'
 import { IArticle } from '@/vite-env'
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
-import { currentArticleState } from '@/Recoil/store'
+import { currentArticleState } from '@/recoil/store'
 import { useSetRecoilState } from 'recoil'
 import { Skeleton } from 'antd'
 

@@ -4,7 +4,7 @@ import { Suspense, lazy } from 'react'
 import Loading from '@/components/Loading/Loading'
 import Root from '@/views/Root'
 import { useRecoilValue } from 'recoil'
-import { loginStatusState } from '@/Recoil/store'
+import { loginStatusState } from '@/recoil/store'
 
 const Homepage = lazy(() => import('@/views/Home/HomeRoot'))
 const LoginRoot = lazy(() => import('@/views/Login/LoginRoot'))

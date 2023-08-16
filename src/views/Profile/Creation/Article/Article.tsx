@@ -3,7 +3,7 @@ import ArticleCard from '@/components/Card/ArticleCard'
 import { IArticle } from '@/vite-env'
 import { getArticleListApi } from '@/api/article'
 import { useSetRecoilState } from 'recoil'
-import { currentArticleState } from '@/Recoil/store'
+import { currentArticleState } from '@/recoil/store'
 import { useNavigate } from 'react-router-dom'
 
 const Article: React.FC = () => {

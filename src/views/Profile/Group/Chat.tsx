@@ -9,7 +9,7 @@ import { craeteChatApi, enterPublishChatWs, getGroupChatsApi } from '@/api/chat'
 import { getUserInfoApi } from '@/api/user'
 import { iconBaseUrl } from '@/api/baseConfig'
 import { useRecoilValue } from 'recoil'
-import { userInfoState } from '@/Recoil/store'
+import { userInfoState } from '@/recoil/store'
 import ChatMessageCard from '@/components/Card/ChatMessageCard'
 
 interface IProps {

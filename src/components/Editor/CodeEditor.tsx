@@ -7,7 +7,7 @@ import { getCurrentUserinfo, updateInfoApi } from '@/api/user'
 import CodeEditorConfig from '@/components/Editor/CodeEditorConfig'
 import { IMonacoConfig, IPersonalizeConfig, User } from '@/vite-env'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { monacoConfigState, userInfoState } from '@/Recoil/store'
+import { monacoConfigState, userInfoState } from '@/recoil/store'
 
 interface Iprops {
   value: string

@@ -2,7 +2,7 @@ import { Button, Divider } from 'antd'
 import React, { useCallback, useState } from 'react'
 import CodeEditorConfig from '@/components/Editor/CodeEditorConfig'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { monacoConfigState, userInfoState } from '@/Recoil/store'
+import { monacoConfigState, userInfoState } from '@/recoil/store'
 import { getCurrentUserinfo, updateInfoApi } from '@/api/user'
 import { User } from '@/vite-env'
 

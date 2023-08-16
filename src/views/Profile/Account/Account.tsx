@@ -1,4 +1,4 @@
-import { loginStatusState, userInfoState } from '@/Recoil/store'
+import { loginStatusState, userInfoState } from '@/recoil/store'
 import {
   Button,
   Col,

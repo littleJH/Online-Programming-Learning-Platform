@@ -5,7 +5,7 @@ import '../Log/log.scss'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { getCurrentUserinfo, loginApi } from '@/api/user'
 import { useSetRecoilState } from 'recoil'
-import { userInfoState } from '@/Recoil/store'
+import { userInfoState } from '@/recoil/store'
 import FindPass from './FindPass'
 
 const App: React.FC<{

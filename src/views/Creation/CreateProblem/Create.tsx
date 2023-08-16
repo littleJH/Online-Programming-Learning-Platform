@@ -23,7 +23,7 @@ import {
 } from '@/api/problem'
 import { IProblem, ProgramMode } from '@/vite-env'
 import { useRecoilState } from 'recoil'
-import { currentProblemState } from '@/Recoil/store'
+import { currentProblemState } from '@/recoil/store'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import Dragger from 'antd/es/upload/Dragger'
 import { createTagApi, createTagAutoApi } from '@/api/tag'

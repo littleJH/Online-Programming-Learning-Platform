@@ -12,7 +12,7 @@ import {
   InfoCircleOutlined
 } from '@ant-design/icons'
 import { useRecoilValue } from 'recoil'
-import { loginStatusState } from '@/Recoil/store'
+import { loginStatusState } from '@/recoil/store'
 
 const menuItem = [
   {

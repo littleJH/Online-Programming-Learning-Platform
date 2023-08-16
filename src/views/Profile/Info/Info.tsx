@@ -1,4 +1,4 @@
-import { userInfoState } from '@/Recoil/store'
+import { userInfoState } from '@/recoil/store'
 import { iconBaseUrl } from '@/api/baseConfig'
 import {
   Avatar,

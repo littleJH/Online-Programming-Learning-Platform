@@ -36,7 +36,7 @@ import {
 import RecordModal from './Record/RecordModal'
 import CodeEditor from '@/components/Editor/CodeEditor'
 import { useRecoilValue } from 'recoil'
-import { monacoConfigState } from '@/Recoil/store'
+import { monacoConfigState } from '@/recoil/store'
 import { recordStates } from '@/assets/recordStates'
 import ojmap from '@/assets/ojmap'
 

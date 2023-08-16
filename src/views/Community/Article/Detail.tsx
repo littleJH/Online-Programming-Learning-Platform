@@ -1,6 +1,6 @@
 import { IArticle } from '@/vite-env'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { currentArticleState } from '@/Recoil/store'
+import { currentArticleState } from '@/recoil/store'
 import { useRecoilState } from 'recoil'
 import { useParams } from 'react-router-dom'
 import {

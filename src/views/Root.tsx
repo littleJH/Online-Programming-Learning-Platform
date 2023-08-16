@@ -6,7 +6,7 @@ import Navbar from '@/components/Navbar/Navbar'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { iconBaseUrl } from '@/api/baseConfig'
 import { useRecoilValue } from 'recoil'
-import { loginStatusState, userInfoState } from '@/Recoil/store'
+import { loginStatusState, userInfoState } from '@/recoil/store'
 
 const Root: React.FC = () => {
   const { Header, Content, Footer } = Layout
