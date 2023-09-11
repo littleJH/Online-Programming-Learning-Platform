@@ -116,7 +116,6 @@ const GroupRoot: React.FC = () => {
         {mode === 'default' && (
           <>{currentGroup && <Chat group={currentGroup}></Chat>}</>
         )}
-        {mode === 'search'}
       </div>
     </div>
   )
