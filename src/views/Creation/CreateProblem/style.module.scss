@@ -1,0 +1,9 @@
+.label::before {
+  content: '.';
+  border-radius: 0.1rem;
+  margin-right: 0.5rem;
+  background: #6366f1;
+  color: #6366f1;
+  border-radius: 0.1rem;
+  font-size: small;
+}

@@ -1,0 +1,194 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+$colorPrimary: #6366f1;
+$colorSuccess: #10b981;
+$colorWarning: #f59e0b;
+$colorError: #ef4444;
+$colorInfo: #3b82f6;
+
+
+@font-face {
+  font-family: 'Canger';
+  src: url('../src/assets/font/TsangerYuYangT_W04_W04.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  letter-spacing: 0.05rem;
+  padding: 0;
+  margin: 0;
+}
+
+
+@layer components {
+  .center {
+    @apply h-full w-full flex justify-center items-center;
+  }
+  .horizontal-center {
+    @apply w-full h-full flex justify-center;
+  }
+  .btn-red {
+    @apply w-24 h-8 mx-2 bg-red-400 text-white rounded transition-all duration-500 ease-in-out hover:bg-red-600 select-none;
+  }
+  .btn-blue {
+    @apply w-24 h-8 mx-2 text-white rounded bg-blue-400 transition-all duration-500 ease-in-out hover:bg-blue-600  dark:bg-blue-300 dark:text-black dark:hover:bg-blue-500 select-none;
+  }
+  .btn-opacity-small {
+    @apply w-16 h-6 text-xs  text-black rounded bg-opacity-0 ring-1 ring-slate-500 transition-all duration-500 ease-in-out hover:bg-slate-100  dark:text-slate-300 dark:hover:bg-deepBlack select-none;
+  }
+  .btn-red-large {
+    @apply w-24 h-10 mx-2  text-white rounded bg-red-400  transition-all duration-500 ease-in-out  hover:bg-red-600 select-none;
+  }
+  .btn-blue-large {
+    @apply w-24 h-10 mx-2   text-white rounded bg-blue-400  transition-all duration-500 ease-in-out  hover:bg-blue-600 select-none;
+  }
+  .btn-slate-auto {
+    @apply min-w-min h-10 px-2 ml-8 bg-slate-100 text-slate-500 hover:bg-red-500 transition-all duration-500 ease-in-out rounded hover:text-slate-300 select-none;
+  }
+  .ct-bg {
+    @apply absolute top-0 mt-20 flex flex-col items-center min-w-full bg-slate-50 dark:bg-opacity-0  dark:text-slate-300;
+  }
+  .input-focus {
+    @apply focus:outline-none focus:ring-1 focus:ring-slate-500 focus:border-transparent transition-all duration-500 ease-in-out;
+  }
+  .show-none {
+    @apply flex justify-center items-center mt-8;
+  }
+  .divider {
+    @apply my-4  border-t border border-solid border-slate-300 dark:border-slate-700;
+  }
+  .divider-vertical {
+    @apply  p-0 mx-4  border-r border-solid border-slate-200 dark:border-slate-700;
+    height: 0.75rem;
+    border-width: 1px;
+  }
+  .navBar {
+    @apply mb-4 flex;
+  }
+  .navBar > span {
+    @apply text-center text-sm p-4   transition-all duration-300 ease-in-out hover:bg-blue-50 dark:hover:bg-slate-700 hover:cursor-pointer;
+  }
+  .activeNav {
+    @apply font-bold  border-b-2 border-blue-300;
+  }
+  .avatar-small {
+    @apply h-8 w-8 mx-4 rounded-full border border-slate-300 hover:outline-none hover:ring-1 hover:ring-blue-500 transition-all duration-300 ease-in-out;
+  }
+  .serial {
+    @apply h-6 w-6 rounded-full flex justify-center items-center text-white bg-indigo-500;
+  }
+  .circle-border {
+    @apply h-6 w-6 border border-solid border-slate-500  rounded-full flex justify-center items-center text-white;
+  }  
+  .label-single {
+    @apply p-2 m-0 rounded shadow bg-blue-300 ;
+  }
+  .code {
+    @apply rounded font-mono tracking-wide;
+  }
+  .searchInput {
+    @apply p-2;
+  }
+  .card-avatar {
+    @apply h-8 w-8 border border-solid border-slate-500 select-none ;
+  }
+  .card-username {
+    @apply mx-4 font-medium hover:transition-all;
+  }
+  .card-username:hover {
+    color: $colorPrimary;
+    
+  }
+  .card-title {
+    @apply  font-semibold;
+  }
+  .card-content {
+    @apply mt-2 text-slate-500 text-sm;
+  }
+  .card-time {
+    @apply text-xs text-slate-700 select-none;
+  }
+  .card-img {
+    @apply flex items-center;
+    img {
+      height: 8rem;
+      margin-left: 1rem;
+    }
+  }
+}
+*::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  @apply bg-white dark:bg-black;
+}
+
+*::-webkit-scrollbar-thumb {
+  @apply bg-slate-100 rounded-full;
+}
+
+
+
+.icon-small {
+  width: 1rem;height: 1rem;
+  fill: currentColor;
+  overflow: hidden;
+}
+
+.icon {
+  width: 2rem;height: 2rem;
+  fill: currentColor;
+  overflow: hidden;
+}
+.icon-large {
+  width: 4rem;height: 4rem;
+  fill: currentColor;
+  overflow: hidden;
+}
+
+
+
+.countdown-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 10px;
+}
+
+.countdown-amount {
+  width: 4rem;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: #333;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.countdown-period {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.label::before {
+  content: '.';
+  border-radius: 0.1rem;
+  margin-right: 0.5rem;
+  background: #6366f1;
+  color: #6366f1;
+  border-radius: 0.1rem;
+}

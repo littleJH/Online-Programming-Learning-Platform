@@ -1,0 +1,48 @@
+.rotate {
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+  animation: rotate 5s linear infinite;
+}
+
+.move {
+  translate: all 2s linear;
+}
+
+
+@keyframes rotate {
+  0% {
+    height: 5rem;
+    width: 5rem;
+    transform: rotate(0deg);
+  }
+
+  25% {
+    height: 4.5rem;
+    width: 4.5rem;
+    transform: rotate(90deg);
+  }
+
+  50% {
+    height: 4rem;
+    width: 4rem;
+    transform: rotate(180deg);
+    
+  }
+
+  75% {
+    height: 4.5rem;
+    width: 4.5rem;
+    transform: rotate(270deg);
+  }
+
+  100% {
+    height: 5rem;
+    width: 5rem;
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes move {
+
+}

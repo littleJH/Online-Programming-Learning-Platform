@@ -1,0 +1,21 @@
+.resizeBar:hover {
+  cursor:col-resize;
+}
+
+.leftFooter {
+  user-select: none;
+  div {
+    display: flex;
+    align-items: center;
+  } 
+  div:hover {
+    cursor: pointer;
+  }
+  svg {
+    height: 1.5rem;
+  }
+  span {
+    margin: 0 0.5rem;
+  }
+}
+
