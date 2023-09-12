@@ -221,7 +221,7 @@ const Chat: React.FC<IProps> = props => {
           open={openModal}
           onClose={() => setOpenModal(false)}
         >
-          <GroupMember group_id={group.id}></GroupMember>
+          <GroupMember group_id={group.id} showAdd={true}></GroupMember>
         </Drawer>
       </div>
     </>

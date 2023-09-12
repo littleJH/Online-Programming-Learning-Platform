@@ -8,8 +8,9 @@ import { PlusOutlined } from '@ant-design/icons'
 
 const GroupMember: React.FC<{
   group_id: string
+  showAdd: boolean
 }> = props => {
-  const { group_id } = props
+  const { group_id, showAdd } = props
   const [openModal, setOpenModal] = useState(false)
   const [GroupMember, setGroupMember] = useState<User[]>([])
 
@@ -32,11 +33,13 @@ const GroupMember: React.FC<{
               className="hover:mx-2"
             ></Avatar>
           ))}
-          <Avatar
-            icon={<PlusOutlined />}
-            className=""
-            onClick={() => setOpenModal(true)}
-          ></Avatar>
+          {showAdd && (
+            <Avatar
+              icon={<PlusOutlined />}
+              className=""
+              onClick={() => setOpenModal(true)}
+            ></Avatar>
+          )}
         </Avatar.Group>
       </div>
       <Modal open={openModal} onCancel={() => setOpenModal(false)}></Modal>

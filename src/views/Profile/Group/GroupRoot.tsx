@@ -12,6 +12,7 @@ import { IGroup } from '@/vite-env'
 import { Outlet, useSearchParams } from 'react-router-dom'
 import Chat from './Chat'
 import { enterPublishChatWs } from '@/api/chat'
+import GroupDetail from './GroupDetail'
 
 let ws: WebSocket
 const GroupRoot: React.FC = () => {
@@ -113,8 +114,14 @@ const GroupRoot: React.FC = () => {
       </div>
       {/* <Divider type="vertical" className="h-full"></Divider> */}
       <div className="grow">
-        {mode === 'default' && (
-          <>{currentGroup && <Chat group={currentGroup}></Chat>}</>
+        {currentGroup && (
+          <>
+            {mode === 'default' ? (
+              <Chat group={currentGroup}></Chat>
+            ) : (
+              <GroupDetail group={currentGroup}></GroupDetail>
+            )}
+          </>
         )}
       </div>
     </div>
