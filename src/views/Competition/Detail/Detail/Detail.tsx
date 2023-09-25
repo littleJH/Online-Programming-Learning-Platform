@@ -18,7 +18,7 @@ import { User } from '@/vite-env'
 import CompetitionTypeLabel from '../Label.tsx/CompetitionTypeLabel'
 import EnterGroup from './Group/EnterGroup'
 import GroupInfo from './Group/GroupInfo'
-import { getUserGroupMembersApi } from '@/api/group'
+import { getMemberGroupListApi } from '@/api/group'
 
 type CompetitionState = 'notEnter' | 'underway' | 'enter' | 'finished'
 let interval: ReturnType<typeof setInterval>
@@ -194,7 +194,7 @@ const Detail: React.FC = () => {
     const result = await getEnterConditionApi(type, competition.id)
     if (result.data.data) {
       const group = result.data.data.group as IGroup
-      getUserGroupMembersApi(group.id).then(async res => {
+      getMemberGroupListApi(group.id).then(async res => {
         const members = res.data.data.userList
         const users: User[] = []
         for (let item of members) {
