@@ -18,7 +18,7 @@ import {
   applyEnterGroupApi,
   createUserGroupApi,
   getGroupApi,
-  getUserGroupListApi,
+  getLeaderGroupListApi,
   searchGroupByTextApi
 } from '@/api/group'
 import { enterCompetitionApi } from '@/api/competitionMixture'
@@ -184,7 +184,7 @@ const EnterGroup: React.FC<{
 
   const fetchMyGroupList = () => {
     getCurrentUserinfo().then(res => {
-      getUserGroupListApi(res.data.data.user.id).then(res => {
+      getLeaderGroupListApi(res.data.data.user.id).then(res => {
         const groups = res.data.data.groups as IGroup[]
         setdataSource(
           groups.map(item => {

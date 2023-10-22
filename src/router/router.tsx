@@ -15,79 +15,35 @@ const ProfileGroup = lazy(() => import('@/views/Profile/Group/GroupRoot'))
 const ProfileInfo = lazy(() => import('@/views/Profile/Info/Info'))
 const ProfileSetting = lazy(() => import('@/views/Profile/Setting/Setting'))
 const ProfileAccount = lazy(() => import('@/views/Profile/Account/Account'))
-const ProfileCretion = lazy(
-  () => import('@/views/Profile/Creation/CreationRoot')
-)
-const ProfileCreationArticle = lazy(
-  () => import('@/views/Profile/Creation/Article/Article')
-)
-const ProfileCreationProblem = lazy(
-  () => import('@/views/Profile/Creation/Problem/Problem')
-)
+const ProfileCretion = lazy(() => import('@/views/Profile/Creation/CreationRoot'))
+const ProfileCreationArticle = lazy(() => import('@/views/Profile/Creation/Article/Article'))
+const ProfileCreationProblem = lazy(() => import('@/views/Profile/Creation/Problem/Problem'))
 const ProblemRoot = lazy(() => import('@/views/Problem/ProblemRoot'))
-const ProblemSetRoot = lazy(
-  () => import('@/views/Problem/ProblemSet/ProblemSetRoot')
-)
+const ProblemSetRoot = lazy(() => import('@/views/Problem/ProblemSet/ProblemSetRoot'))
 const PorblemAll = lazy(() => import('@/views/Problem/ProblemSet/Set/All'))
 const ProblemId = lazy(() => import('@/views/Problem/Detail/Detail'))
-const ProblemDescription = lazy(
-  () => import('@/views/Problem/Detail/Description')
-)
-const ProblemSubmitrecord = lazy(
-  () => import('@/views/Problem/Detail/Record/Records')
-)
-const ProblemCreate = lazy(
-  () => import('@/views/Creation/CreateProblem/Create')
-)
+const ProblemDescription = lazy(() => import('@/views/Problem/Detail/Description'))
+const ProblemSubmitrecord = lazy(() => import('@/views/Problem/Detail/Record/Records'))
+const ProblemCreate = lazy(() => import('@/views/Creation/CreateProblem/Create'))
 const Competition = lazy(() => import('@/views/Competition/CompetitionRoot'))
 const CompetitionList = lazy(() => import('@/views/Competition/List/List'))
-const CompetitionId = lazy(
-  () => import('@/views/Competition/Detail//Detail/Detail')
-)
-const CompetitionOverview = lazy(
-  () => import('@/views/Competition/Detail/Content/Overview')
-)
-const CompetitionProblem = lazy(
-  () => import('@/views/Competition/Detail/Content/Problem/Problem')
-)
-const CompetitionProblemList = lazy(
-  () => import('@/views/Competition/Detail/Content/Problem/List/List')
-)
-const CompetitionProblemId = lazy(
-  () => import('@/views/Competition/Detail/Content/Problem/Answer/Answer')
-)
-const CompetitionRank = lazy(
-  () => import('@/views/Competition/Detail/Content/Rank/Rank')
-)
-const CompetitionRecord = lazy(
-  () => import('@/views/Competition/Detail/Content/Record/Record')
-)
-const CompetitionCreate = lazy(
-  () => import('@/views/Creation/CreateCompetition/Create')
-)
-const CompetitionCreateDeclare = lazy(
-  () => import('@/views/Creation/CreateCompetition/Declare')
-)
-const CompetitionCreateCompetition = lazy(
-  () => import('@/views/Creation/CreateCompetition/Competition')
-)
-const CompetitionCreateProblem = lazy(
-  () => import('@/views/Creation/CreateCompetition/Problem')
-)
-const CompetitionRandom = lazy(
-  () => import('@/views/Competition/CompetitionRandom/CompetitionRandom')
-)
+const CompetitionId = lazy(() => import('@/views/Competition/Detail//Detail/Detail'))
+const CompetitionOverview = lazy(() => import('@/views/Competition/Detail/Content/Overview'))
+const CompetitionProblem = lazy(() => import('@/views/Competition/Detail/Content/Problem/Problem'))
+const CompetitionProblemList = lazy(() => import('@/views/Competition/Detail/Content/Problem/List/List'))
+const CompetitionProblemId = lazy(() => import('@/views/Competition/Detail/Content/Problem/Answer/Answer'))
+const CompetitionRank = lazy(() => import('@/views/Competition/Detail/Content/Rank/Rank'))
+const CompetitionRecord = lazy(() => import('@/views/Competition/Detail/Content/Record/Record'))
+const CompetitionCreate = lazy(() => import('@/views/Creation/CreateCompetition/Create'))
+const CompetitionCreateDeclare = lazy(() => import('@/views/Creation/CreateCompetition/Declare'))
+const CompetitionCreateCompetition = lazy(() => import('@/views/Creation/CreateCompetition/Competition'))
+const CompetitionCreateProblem = lazy(() => import('@/views/Creation/CreateCompetition/Problem'))
+const CompetitionRandom = lazy(() => import('@/views/Competition/CompetitionRandom/CompetitionRandom'))
 const Community = lazy(() => import('@/views/Community/CommunityRoot'))
-const CommunityOverview = lazy(
-  () => import('@/views/Community/Overview/CommunityOverview')
-)
-const ArticleSet = lazy(
-  () => import('@/views/Community/Overview/RecommendSet/ArticleSet')
-)
+const CommunityOverview = lazy(() => import('@/views/Community/Overview/CommunityOverview'))
+const ArticleSet = lazy(() => import('@/views/Community/Overview/RecommendSet/ArticleSet'))
 const CreationRoot = lazy(() => import('@/views/Creation/CreationRoot'))
-const CreationNavgation = lazy(
-  () => import('@/views/Creation/CreationNavgation')
-)
+const CreationNavgation = lazy(() => import('@/views/Creation/CreationNavgation'))
 const CreateArticle = lazy(() => import('@/views/Creation/CreateArticle'))
 const CreateComment = lazy(() => import('@/views/Creation/CreateComment'))
 const CreatePost = lazy(() => import('@/views/Creation/CreatePost'))
@@ -275,6 +231,10 @@ const router = createBrowserRouter([
       },
       {
         path: 'creation',
+        loader: async () => {
+          if (!localStorage.getItem('token')) redirect('/login')
+          return null
+        },
         element: lazyload(CreationRoot),
         children: [
           {

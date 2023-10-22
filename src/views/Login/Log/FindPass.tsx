@@ -18,8 +18,9 @@ const FindPass: React.FC<{
   })
 
   const handleVerifyBtnClick = () => {
-    if (!info) return
-    getVerify(info?.email)
+    const email = form2.getFieldValue('email')
+    if (!email) return
+    getVerify(email)
   }
 
   const getVerify = (email: string) => {
@@ -36,10 +37,9 @@ const FindPass: React.FC<{
   }
 
   const handleFindBtnClick = () => {
-    if (!info) return
     form2.validateFields().then(res => {
       const formData = new FormData()
-      formData.append('Email', info?.email)
+      formData.append('Email', res.email)
       formData.append('Verify', res.verify)
       findPasswordApi(formData).then(res => {
         if (res.data.code === 200) {
@@ -67,11 +67,7 @@ const FindPass: React.FC<{
           translate: '0 50%'
         }}
         footer={[
-          <Button
-            key={'findPassword'}
-            type="primary"
-            onClick={handleFindBtnClick}
-          >
+          <Button key={'findPassword'} type="primary" onClick={handleFindBtnClick}>
             找回密码
           </Button>
         ]}
@@ -87,7 +83,7 @@ const FindPass: React.FC<{
               }
             ]}
           >
-            <Input defaultValue={info?.email} disabled></Input>
+            <Input defaultValue={info?.email}></Input>
           </Form.Item>
           <Row gutter={8}>
             <Col span={8}>
@@ -107,10 +103,7 @@ const FindPass: React.FC<{
             </Col>
             <Col span={4}>
               <Form.Item label=" ">
-                <Button
-                  disabled={verifyBtnDisable}
-                  onClick={handleVerifyBtnClick}
-                >
+                <Button disabled={verifyBtnDisable} onClick={handleVerifyBtnClick}>
                   {verifyBtnDisable && `${count} 秒后重新获取`}
                   {!verifyBtnDisable && '获取验证码'}
                 </Button>
