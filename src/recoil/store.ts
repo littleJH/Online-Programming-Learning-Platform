@@ -7,10 +7,9 @@ import {
   IPersonalizeConfig
 } from '@/vite-env'
 import { atom, selector } from 'recoil'
-import { redirect } from 'react-router-dom'
 import { notification } from 'antd'
 
-export const userInfoAtomState = atom<User | null>({
+const userInfoAtomState = atom<User | null>({
   key: 'userInfoAtomState',
   default: getCurrentUserinfo()
     .then(res => {
@@ -29,7 +28,7 @@ export const userInfoAtomState = atom<User | null>({
     })
 })
 
-export const userInfoState = selector<User | null>({
+const userInfoState = selector<User | null>({
   key: 'userInfoState',
   get: ({ get }) => {
     const info = get(userInfoAtomState)
@@ -41,7 +40,7 @@ export const userInfoState = selector<User | null>({
   }
 })
 
-export const loginStatusState = selector<boolean>({
+const loginStatusState = selector<boolean>({
   key: 'loginStatusState',
   get: ({ get }) => {
     if (get(userInfoState)) return true
@@ -49,7 +48,7 @@ export const loginStatusState = selector<boolean>({
   }
 })
 
-export const monacoConfigState = selector<IMonacoConfig>({
+const monacoConfigState = selector<IMonacoConfig>({
   key: 'monacoConfigState',
   get: ({ get }) => {
     const userInfo = get(userInfoState)
@@ -81,12 +80,21 @@ export const monacoConfigState = selector<IMonacoConfig>({
   }
 })
 
-export const currentArticleState = atom<null | IArticle>({
+const currentArticleState = atom<null | IArticle>({
   key: 'articleState',
   default: null
 })
 
-export const currentProblemState = atom<null | IProblem>({
+const currentProblemState = atom<null | IProblem>({
   key: 'problemState',
   default: null
 })
+
+export {
+  userInfoAtomState,
+  userInfoState,
+  loginStatusState,
+  monacoConfigState,
+  currentArticleState,
+  currentProblemState
+}
