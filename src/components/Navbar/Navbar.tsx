@@ -2,13 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { Menu } from 'antd'
 import type { MenuProps } from 'antd'
 import { redirect, useLocation, useNavigate } from 'react-router-dom'
+import { getPathArray } from '@/tool/MyUtils/Utils'
 
 const menuItem = [
-  // {
-  //   label: '竞赛',
-  //   key: 'competition'
-  // },
-
   {
     label: '首页',
     key: 'home'
@@ -27,22 +23,18 @@ const menuItem = [
   }
 ]
 
-export default function Header() {
-  const pathname = useLocation().pathname
+export default function Header(props: { headerNav: string, setHeaderNav: Function }) {
+  const { headerNav, setHeaderNav } = props
+  const { pathname } = useLocation()
+  const pathArr = getPathArray(pathname)
   const nav = useNavigate()
-  const [current, setcurrent] = useState('/')
 
   useEffect(() => {
-    menuItem.some(item => {
-      if (pathname.includes(item.key)) {
-        setcurrent(item.key)
-        return true
-      }
-    })
-  }, [pathname])
+    setHeaderNav(pathArr[0])
+  }, [])
 
   const handleMenuClick = (e: any) => {
-    setcurrent(e.key)
+    setHeaderNav(e.key)
     switch (e.key) {
       case 'problem':
         nav('/problem/set/all')
@@ -63,10 +55,10 @@ export default function Header() {
         userSelect: 'none',
         padding: '0 1rem',
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'start',
         alignContent: 'center'
       }}
-      selectedKeys={[current]}
+      selectedKeys={[headerNav]}
       mode="horizontal"
       onClick={handleMenuClick}
       items={menuItem}
