@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { baseConfig, baseURL, jsonConfig } from './baseConfig'
 
-import { CompetitionType } from '@/vite-env'
+import { CompetitionType } from '@/type'
 
 const request = axios.create({
   baseURL: `${baseURL}/competition/`

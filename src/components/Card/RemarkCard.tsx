@@ -6,7 +6,7 @@ import {
   getRemarkLikedApi,
   likeRemarkApi
 } from '@/api/remark'
-import { IRemark, User } from '@/vite-env'
+import { IRemark, User } from '@/type'
 import { Avatar, Divider, Space } from 'antd'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import ReadOnly from '../Editor/ReadOnly'

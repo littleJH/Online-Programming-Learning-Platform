@@ -1,6 +1,6 @@
 import { getProblemTestNumApi } from '@/api/problem'
 import { getRecordApi } from '@/api/record'
-import { IRecord, IRecordState } from '@/vite-env'
+import { IRecord, IRecordState } from '@/type'
 import { Button, Descriptions, Modal, Progress, Result } from 'antd'
 import React, { useEffect, useMemo, useState } from 'react'
 

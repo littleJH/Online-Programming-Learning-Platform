@@ -1,7 +1,7 @@
 import { iconBaseUrl } from '@/api/baseConfig'
 import { getGroupMembersApi } from '@/api/group'
 import { getUserInfoApi } from '@/api/user'
-import { User } from '@/vite-env'
+import { User } from '@/type'
 import { Avatar, Modal } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { PlusOutlined } from '@ant-design/icons'

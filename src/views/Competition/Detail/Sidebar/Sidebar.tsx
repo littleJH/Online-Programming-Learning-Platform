@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ICompetition, CompetitionType } from '@/vite-env'
+import { ICompetition, CompetitionType } from '@/type'
 import style from './sidebar.module.scss'
 import { getCurrentUserinfo, getUserInfoApi } from '@/api/user'
 import dayjs from 'dayjs'

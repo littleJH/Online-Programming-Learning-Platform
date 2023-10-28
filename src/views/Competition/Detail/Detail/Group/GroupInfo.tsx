@@ -1,5 +1,5 @@
 import UserCard from '@/components/User/UserCard'
-import { IGroup } from '@/vite-env'
+import { IGroup } from '@/type'
 import React from 'react'
 import style from './group.module.scss'
 

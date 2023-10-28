@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from 'react'
 import { Outlet, redirect } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
-import { loginStatusState } from '@/recoil/store'
+import { loginStatusState } from '@/store/appStore'
 
 const ProfileRoot: React.FC = () => {
   const info = useRecoilValue(loginStatusState)

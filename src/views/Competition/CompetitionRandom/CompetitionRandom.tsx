@@ -9,7 +9,7 @@ import {
   getEnterRandomCompetitionListApi
 } from '@/api/CompetitionRandom'
 import { useParams } from 'react-router-dom'
-import { CompetitionType, User } from '@/vite-env'
+import { CompetitionType, User } from '@/type'
 import dayjs from 'dayjs'
 import { getCurrentUserinfo, getUserInfoApi } from '@/api/user'
 import style from './style.module.scss'

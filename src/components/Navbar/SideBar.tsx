@@ -1,4 +1,4 @@
-import { getPathArray } from '@/tool/MyUtils/Utils'
+import { getPathArray } from '@/tool/MyUtils/utils'
 import { Menu } from 'antd'
 import { ItemType, MenuItemType } from 'antd/es/menu/hooks/useItems'
 import React, { useEffect, useState } from 'react'
@@ -13,35 +13,41 @@ import {
   TeamOutlined,
   InfoCircleOutlined
 } from '@ant-design/icons'
-
+import useNavTo from '@/tool/myHooks/useNavTo'
 
 const menuItemObj: any = {
   problemMenuItem: [
     {
-      label: "",
+      label: '',
       key: ''
     }
   ],
   creationMenuItem: [
     {
-      label: "题目",
+      label: '题目',
       key: 'problem'
-    }, {
+    },
+    {
       label: '题单',
       key: 'topic'
-    }, {
+    },
+    {
       label: '表单',
-      key: "form"
-    }, {
+      key: 'form'
+    },
+    {
       label: '比赛',
       key: 'competition'
-    }, {
+    },
+    {
       label: '文章',
       key: 'article'
-    }, {
+    },
+    {
       label: '讨论',
       key: 'comment'
-    }, {
+    },
+    {
       label: '题解',
       key: 'post'
     }
@@ -188,14 +194,13 @@ const menuItemObj: any = {
   ]
 }
 
-
-const SideBar: React.FC<{ header: string }> = (props) => {
+const SideBar: React.FC<{ header: string }> = props => {
   const { header } = props
   const { pathname } = useLocation()
   const pathArr = getPathArray(pathname)
   const [current, setCurrent] = useState('')
   const [menuItem, setMenuItem] = useState([])
-  const nav = useNavigate()
+  const navTo = useNavTo()
 
   useEffect(() => {
     setMenuItem(menuItemObj[`${header}MenuItem`])
@@ -203,7 +208,7 @@ const SideBar: React.FC<{ header: string }> = (props) => {
 
   const handleMenuClick = (e: any) => {
     setCurrent(e.key)
-    nav(`/${header}/${e.key}`)
+    navTo(`/${header}/${e.key}`)
   }
 
   return (
@@ -211,7 +216,7 @@ const SideBar: React.FC<{ header: string }> = (props) => {
       style={{
         height: '100%',
         userSelect: 'none',
-        padding: '0 1rem',
+        padding: '0 1rem'
       }}
       selectedKeys={[current]}
       mode="vertical"

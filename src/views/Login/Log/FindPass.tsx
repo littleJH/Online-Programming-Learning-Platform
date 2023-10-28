@@ -1,4 +1,4 @@
-import { userInfoState } from '@/recoil/store'
+import { userInfoState } from '@/store/appStore'
 import { findPasswordApi, getVerifyApi } from '@/api/user'
 import useCountdown from '@/tool/myHooks/useCountDown'
 import { Button, Col, Form, Input, Modal, Row, notification } from 'antd'
@@ -67,7 +67,11 @@ const FindPass: React.FC<{
           translate: '0 50%'
         }}
         footer={[
-          <Button key={'findPassword'} type="primary" onClick={handleFindBtnClick}>
+          <Button
+            key={'findPassword'}
+            type="primary"
+            onClick={handleFindBtnClick}
+          >
             找回密码
           </Button>
         ]}
@@ -103,7 +107,10 @@ const FindPass: React.FC<{
             </Col>
             <Col span={4}>
               <Form.Item label=" ">
-                <Button disabled={verifyBtnDisable} onClick={handleVerifyBtnClick}>
+                <Button
+                  disabled={verifyBtnDisable}
+                  onClick={handleVerifyBtnClick}
+                >
                   {verifyBtnDisable && `${count} 秒后重新获取`}
                   {!verifyBtnDisable && '获取验证码'}
                 </Button>

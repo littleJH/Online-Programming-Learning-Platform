@@ -1,37 +1,34 @@
 import { Layout, ConfigProvider, Modal, Button, Avatar } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import Navbar from '@/components/Navbar/Navbar'
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-} from '@ant-design/icons';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { iconBaseUrl } from '@/api/baseConfig'
-import { useRecoilValue } from 'recoil'
-import { loginStatusState, userInfoState } from '@/recoil/store'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { loginStatusState, userInfoState } from '@/store/appStore'
 import Sider from 'antd/es/layout/Sider'
 import SideBar from '@/components/Navbar/SideBar'
+import { headerNavState } from '@/store/appStore'
+import useNavTo from '@/tool/myHooks/useNavTo'
 
 const Root: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false)
   const [btnCollapsed, setBtnCollapsed] = useState(false)
-  const [headerNav, setHeaderNav] = useState('')
+  const headerNav = useRecoilValue(headerNavState)
   const { Header, Content, Footer } = Layout
-
 
   useEffect(() => {
     setCollapsed(btnCollapsed)
   }, [btnCollapsed])
 
-
   const siderStyle: React.CSSProperties = {
     lineHeight: '120px',
     color: '#fff',
-    backgroundColor: '#3ba0e9',
+    backgroundColor: '#3ba0e9'
   }
 
   const footerStyle: React.CSSProperties = {
-    padding: '0',
+    padding: '0'
   }
 
   return (
@@ -65,11 +62,18 @@ const Root: React.FC = () => {
     >
       <Layout className="w-full h-full">
         <Header className="sticky top-0 z-10 p-0 flex">
-          <Navbar headerNav={headerNav} setHeaderNav={setHeaderNav}></Navbar>
-          <MyLogin setHeaderNav={setHeaderNav}></MyLogin>
+          <Navbar headerNav={headerNav}></Navbar>
+          <MyLogin></MyLogin>
         </Header>
         <Layout hasSider>
-          <Sider onMouseOver={() => setCollapsed(false)} onMouseLeave={() => setCollapsed(btnCollapsed)} style={siderStyle} collapsible trigger={null} collapsed={collapsed}>
+          <Sider
+            onMouseOver={() => setCollapsed(false)}
+            onMouseLeave={() => setCollapsed(btnCollapsed)}
+            style={siderStyle}
+            collapsible
+            trigger={null}
+            collapsed={collapsed}
+          >
             <SideBar header={headerNav}></SideBar>
           </Sider>
           <Content
@@ -94,22 +98,17 @@ const Root: React.FC = () => {
 
 export default Root
 
-const MyLogin: React.FC<{ setHeaderNav: Function }> = (props) => {
-  const { setHeaderNav } = props
-  const nav = useNavigate()
+const MyLogin: React.FC = () => {
+  const nav = useNavTo()
   const myInfo = useRecoilValue(userInfoState)
   const loginStatus = useRecoilValue(loginStatusState)
 
-  const handleClick = async () => {
-    setHeaderNav('profile')
-    loginStatus ? nav('/profile/info') : nav('/login')
+  const handleClick = () => {
+    nav('/profile')
   }
 
   return (
-    <div
-      className="bg-white h-full flex items-center"
-      onClick={() => handleClick()}
-    >
+    <div className="bg-white h-full flex items-center" onClick={handleClick}>
       {loginStatus && (
         <Avatar
           className="hover:cursor-pointer mr-8"

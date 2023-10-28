@@ -26,7 +26,7 @@ import { getRecordListApi } from '@/api/record'
 import Column from 'antd/es/table/Column'
 import { NavLink, useNavigate, useSearchParams } from 'react-router-dom'
 import AcPercentLabel from '@/components/Label/ProblemLabel/AcPercentLabel'
-import { IPrblemTableDataType, IProblem, ITopic } from '@/vite-env'
+import { IPrblemTableDataType, IProblem, ITopic } from '@/type'
 import { getTagListApi } from '@/api/tag'
 import ReadOnly from '@/components/Editor/ReadOnly'
 import {

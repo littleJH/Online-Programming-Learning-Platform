@@ -1,5 +1,5 @@
 import { getCompetitionRankListApi, getMemberRankApi } from '@/api/competition'
-import { ICompetition, IRank } from '@/vite-env'
+import { ICompetition, IRank } from '@/type'
 import { Table } from 'antd'
 import Column from 'antd/es/table/Column'
 import React, { useEffect, useMemo, useState } from 'react'

@@ -1,8 +1,10 @@
 import axios from 'axios'
-import { baseURL, baseConfig, jsonConfig } from './baseConfig'
-const request = axios.create({
-  baseURL: `${baseURL}/article`
-})
+import { baseURL, baseConfig, jsonConfig, createRequest } from './baseConfig'
+// const request = axios.create({
+//   baseURL: `${baseURL}/article`
+// })
+
+const request = createRequest({ baseURL: 'article' })
 
 // article
 export const createArticleApi = (data: any) => {

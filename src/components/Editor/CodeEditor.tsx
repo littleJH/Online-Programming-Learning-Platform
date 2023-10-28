@@ -5,9 +5,9 @@ import { Modal, Select } from 'antd'
 import { languageList, poj_languageList } from './LanguageList'
 import { getCurrentUserinfo, updateInfoApi } from '@/api/user'
 import CodeEditorConfig from '@/components/Editor/CodeEditorConfig'
-import { IMonacoConfig, IPersonalizeConfig, User } from '@/vite-env'
+import { IMonacoConfig, IPersonalizeConfig, User } from '@/type'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { monacoConfigState, userInfoState } from '@/recoil/store'
+import { monacoConfigState, userInfoState } from '@/store/appStore'
 
 interface Iprops {
   value: string

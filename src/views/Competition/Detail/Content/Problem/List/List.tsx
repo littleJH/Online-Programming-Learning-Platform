@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Skeleton, Table } from 'antd'
 import Column from 'antd/es/table/Column'
 import { useNavigate, useOutletContext } from 'react-router-dom'
-import { CompetitionState } from '@/vite-env'
+import { CompetitionState } from '@/type'
 import NoData from '@/components/Empty/NoData'
 
 interface Problems {

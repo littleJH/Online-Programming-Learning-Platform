@@ -1,4 +1,4 @@
-import { ICompetition } from '@/vite-env'
+import { ICompetition } from '@/type'
 import React from 'react'
 
 export interface IProps {

@@ -1,5 +1,5 @@
 import { Menu, Modal } from 'antd'
-import { ICompetition } from '@/vite-env'
+import { ICompetition } from '@/type'
 import { Suspense, lazy, useState } from 'react'
 import Competition from './Competition'
 import Problem from './Problem'

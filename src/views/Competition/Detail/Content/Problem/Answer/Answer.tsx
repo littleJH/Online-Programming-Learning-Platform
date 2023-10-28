@@ -8,7 +8,7 @@ import {
   IRunResult,
   IRecordState,
   CompetitionType
-} from '@/vite-env'
+} from '@/type'
 import ReadOnly from '@/components/Editor/ReadOnly'
 import { Button, Popover, Segmented, Switch, Table, notification } from 'antd'
 import Column from 'antd/es/table/Column'

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Avatar } from 'antd'
-import { User } from '@/vite-env'
+import { User } from '@/type'
 
 interface Iprops {
   user: User

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { iconBaseUrl } from '@/api/baseConfig'
-import { IArticle } from '@/vite-env'
+import { IArticle } from '@/type'
 import { Avatar, Space } from 'antd'
 import style from './style.module.scss'
 import GetTimeago from '@/tool/myFns/GetTimeago'

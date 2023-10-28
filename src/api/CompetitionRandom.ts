@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { baseConfig, baseURL, wsBaseUrl } from './baseConfig'
-import { CompetitionType } from '@/vite-env'
+import { CompetitionType } from '@/type'
 const request = axios.create({
   baseURL: `${baseURL}/competition/random/`
 })

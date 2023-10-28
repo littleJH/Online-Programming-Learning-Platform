@@ -9,7 +9,7 @@ import {
   InputNumber,
   DatePicker
 } from 'antd'
-import { ICompetition } from '@/vite-env'
+import { ICompetition } from '@/type'
 import dayjs from 'dayjs'
 import { updateCompetitionApi } from '@/api/competition'
 import TextEditor from '@/components/Editor/TextEditor'

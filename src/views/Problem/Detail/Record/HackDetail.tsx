@@ -1,6 +1,6 @@
 import { showProblemApi } from '@/api/problem'
 import ReadOnly from '@/components/Editor/ReadOnly'
-import { IHack, IProblem, IRecord, User } from '@/vite-env'
+import { IHack, IProblem, IRecord, User } from '@/type'
 import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import Highlight from '@/components/Editor/Highlight'

@@ -1,9 +1,9 @@
 import { getArticleListApi } from '@/api/article'
 import ArticleCard from '@/components/Card/ArticleCard'
-import { IArticle } from '@/vite-env'
+import { IArticle } from '@/type'
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
-import { currentArticleState } from '@/recoil/store'
+import { currentArticleState } from '@/store/appStore'
 import { useSetRecoilState } from 'recoil'
 import { Skeleton } from 'antd'
 

@@ -8,9 +8,9 @@ import {
 import { MinusCircleOutlined } from '@ant-design/icons'
 import { searchProblemByTextApi, showProblemApi } from '@/api/problem'
 import { Button, InputNumber, List, Select, Spin, notification } from 'antd'
-import ProblemNew from '../../../Creation/CreateCompetition/ProblemNew'
+import ProblemNew from '../../../Creation/pages/CreateCompetition/ProblemNew'
 import ReadOnly from '@/components/Editor/ReadOnly'
-import { ICompetition } from '@/vite-env'
+import { ICompetition } from '@/type'
 interface IProblem {
   id: string
   score: string | ''

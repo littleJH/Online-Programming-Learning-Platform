@@ -1,124 +1,185 @@
-import { createBrowserRouter, redirect } from 'react-router-dom'
-import ErrorPage from '@/components/error-page'
-import { Suspense, lazy } from 'react'
+import {
+  Navigate,
+  RouteObject,
+  createBrowserRouter,
+  redirect,
+  useLocation,
+  useRoutes
+} from 'react-router-dom'
+import React, { ReactNode, Suspense, lazy } from 'react'
 import Loading from '@/components/Loading/Loading'
-import Root from '@/views/Root'
-import { useRecoilValue } from 'recoil'
-import { loginStatusState } from '@/recoil/store'
+import { useSetRecoilState } from 'recoil'
+import { headerNavState, pathNameState } from '@/store/appStore'
+import { getPathArray } from '@/tool/MyUtils/utils'
+// import Article from '@/views/Profile/Creation/Article/Article'
 
+interface MyRoute {
+  path: string
+  element: any
+  errorElement?: any
+  children?: MyRoute[]
+  meta?: {
+    title: string
+    needLogin: boolean
+  }
+}
+
+const Root = lazy(() => import('@/views/Root'))
+const ErrorPage = lazy(() => import('@/components/error-page'))
 const Homepage = lazy(() => import('@/views/Home/HomeRoot'))
 const LoginRoot = lazy(() => import('@/views/Login/LoginRoot'))
 const ProfileRoot = lazy(() => import('@/views/Profile/ProfileRoot'))
-const ProfileFriend = lazy(() => import('@/views/Profile/Friend/Friend'))
-const ProfileMessage = lazy(() => import('@/views/Profile/Message/Message'))
-const ProfileGroup = lazy(() => import('@/views/Profile/Group/GroupRoot'))
-const ProfileInfo = lazy(() => import('@/views/Profile/Info/Info'))
-const ProfileSetting = lazy(() => import('@/views/Profile/Setting/Setting'))
-const ProfileAccount = lazy(() => import('@/views/Profile/Account/Account'))
-const ProfileCretion = lazy(() => import('@/views/Profile/Creation/CreationRoot'))
-const ProfileCreationArticle = lazy(() => import('@/views/Profile/Creation/Article/Article'))
-const ProfileCreationProblem = lazy(() => import('@/views/Profile/Creation/Problem/Problem'))
+const ProfileFriend = lazy(() => import('@/views/Profile/pages/Friend/Friend'))
+const ProfileMessage = lazy(
+  () => import('@/views/Profile/pages/Message/Message')
+)
+const ProfileGroup = lazy(() => import('@/views/Profile/pages/Group/GroupRoot'))
+const ProfileInfo = lazy(() => import('@/views/Profile/pages/Info/Info'))
+const ProfileSetting = lazy(
+  () => import('@/views/Profile/pages/Setting/Setting')
+)
+const ProfileAccount = lazy(
+  () => import('@/views/Profile/pages/Account/Account')
+)
+const ProfileCretion = lazy(
+  () => import('@/views/Profile/pages/Creation/CreationRoot')
+)
+const ProfileCreationArticle = lazy(
+  () => import('@/views/Profile/pages/Creation/Article')
+)
+const ProfileCreationProblem = lazy(
+  () => import('@/views/Profile/pages/Creation/Problem')
+)
 const ProblemRoot = lazy(() => import('@/views/Problem/ProblemRoot'))
-const ProblemSetRoot = lazy(() => import('@/views/Problem/ProblemSet/ProblemSetRoot'))
+const ProblemSetRoot = lazy(
+  () => import('@/views/Problem/ProblemSet/ProblemSetRoot')
+)
 const PorblemAll = lazy(() => import('@/views/Problem/ProblemSet/Set/All'))
 const ProblemId = lazy(() => import('@/views/Problem/Detail/Detail'))
-const ProblemDescription = lazy(() => import('@/views/Problem/Detail/Description'))
-const ProblemSubmitrecord = lazy(() => import('@/views/Problem/Detail/Record/Records'))
-const ProblemCreate = lazy(() => import('@/views/Creation/CreateProblem/Create'))
+const ProblemDescription = lazy(
+  () => import('@/views/Problem/Detail/Description')
+)
+const ProblemSubmitrecord = lazy(
+  () => import('@/views/Problem/Detail/Record/Records')
+)
+const ProblemCreate = lazy(
+  () => import('@/views/Creation/pages/CreateProblem/Create')
+)
 const Competition = lazy(() => import('@/views/Competition/CompetitionRoot'))
 const CompetitionList = lazy(() => import('@/views/Competition/List/List'))
-const CompetitionId = lazy(() => import('@/views/Competition/Detail//Detail/Detail'))
-const CompetitionOverview = lazy(() => import('@/views/Competition/Detail/Content/Overview'))
-const CompetitionProblem = lazy(() => import('@/views/Competition/Detail/Content/Problem/Problem'))
-const CompetitionProblemList = lazy(() => import('@/views/Competition/Detail/Content/Problem/List/List'))
-const CompetitionProblemId = lazy(() => import('@/views/Competition/Detail/Content/Problem/Answer/Answer'))
-const CompetitionRank = lazy(() => import('@/views/Competition/Detail/Content/Rank/Rank'))
-const CompetitionRecord = lazy(() => import('@/views/Competition/Detail/Content/Record/Record'))
-const CompetitionCreate = lazy(() => import('@/views/Creation/CreateCompetition/Create'))
-const CompetitionCreateDeclare = lazy(() => import('@/views/Creation/CreateCompetition/Declare'))
-const CompetitionCreateCompetition = lazy(() => import('@/views/Creation/CreateCompetition/Competition'))
-const CompetitionCreateProblem = lazy(() => import('@/views/Creation/CreateCompetition/Problem'))
-const CompetitionRandom = lazy(() => import('@/views/Competition/CompetitionRandom/CompetitionRandom'))
+const CompetitionId = lazy(
+  () => import('@/views/Competition/Detail//Detail/Detail')
+)
+const CompetitionOverview = lazy(
+  () => import('@/views/Competition/Detail/Content/Overview')
+)
+const CompetitionProblem = lazy(
+  () => import('@/views/Competition/Detail/Content/Problem/Problem')
+)
+const CompetitionProblemList = lazy(
+  () => import('@/views/Competition/Detail/Content/Problem/List/List')
+)
+const CompetitionProblemId = lazy(
+  () => import('@/views/Competition/Detail/Content/Problem/Answer/Answer')
+)
+const CompetitionRank = lazy(
+  () => import('@/views/Competition/Detail/Content/Rank/Rank')
+)
+const CompetitionRecord = lazy(
+  () => import('@/views/Competition/Detail/Content/Record/Record')
+)
+const CompetitionCreate = lazy(
+  () => import('@/views/Creation/pages/CreateCompetition/Create')
+)
+const CompetitionCreateDeclare = lazy(
+  () => import('@/views/Creation/pages/CreateCompetition/Declare')
+)
+const CompetitionCreateCompetition = lazy(
+  () => import('@/views/Creation/pages/CreateCompetition/Competition')
+)
+const CompetitionCreateProblem = lazy(
+  () => import('@/views/Creation/pages/CreateCompetition/Problem')
+)
+const CompetitionRandom = lazy(
+  () => import('@/views/Competition/CompetitionRandom/CompetitionRandom')
+)
 const Community = lazy(() => import('@/views/Community/CommunityRoot'))
-const CommunityOverview = lazy(() => import('@/views/Community/Overview/CommunityOverview'))
-const ArticleSet = lazy(() => import('@/views/Community/Overview/RecommendSet/ArticleSet'))
-const CreationRoot = lazy(() => import('@/views/Creation/CreationRoot'))
-const CreationNavgation = lazy(() => import('@/views/Creation/CreationNavgation'))
-const CreateArticle = lazy(() => import('@/views/Creation/CreateArticle'))
-const CreateComment = lazy(() => import('@/views/Creation/CreateComment'))
-const CreatePost = lazy(() => import('@/views/Creation/CreatePost'))
-const CreateTopic = lazy(() => import('@/views/Creation/CreateTopic'))
-const CreateForm = lazy(() => import('@/views/Creation/CreateForm'))
+const CommunityOverview = lazy(
+  () => import('@/views/Community/Overview/CommunityOverview')
+)
+const ArticleSet = lazy(
+  () => import('@/views/Community/Overview/RecommendSet/ArticleSet')
+)
+const CreationRoot = lazy(() => import('@/views/Creation/root/CreationRoot'))
+const CreationNavgation = lazy(
+  () => import('@/views/Creation/root/CreationNavgation')
+)
+const CreateArticle = lazy(() => import('@/views/Creation/pages/CreateArticle'))
+const CreateComment = lazy(() => import('@/views/Creation/pages/CreateComment'))
+const CreatePost = lazy(() => import('@/views/Creation/pages/CreatePost'))
+const CreateTopic = lazy(() => import('@/views/Creation/pages/CreateTopic'))
+const CreateForm = lazy(() => import('@/views/Creation/pages/CreateForm'))
 const ArticleDetail = lazy(() => import('@/views/Community/Article/Detail'))
 
-export const lazyload = (Result: any) => {
-  return (
-    <Suspense fallback={<Loading></Loading>}>
-      <Result></Result>
-    </Suspense>
-  )
-}
-
-const router = createBrowserRouter([
+const routes: MyRoute[] = [
   {
     path: '/',
-    element: <Root />,
-    errorElement: <ErrorPage />,
+    element: Root,
+    errorElement: ErrorPage,
     children: [
       // home
       {
         path: 'home',
-        element: lazyload(Homepage)
+        element: Homepage
       },
       {
         path: 'login',
-        element: lazyload(LoginRoot),
-        children: [{}]
+        element: LoginRoot
       },
       //profile
       {
         path: 'profile',
-        loader: async () => {
-          if (!localStorage.getItem('token')) return redirect('/login')
-          return null
-        },
-        element: lazyload(ProfileRoot),
+        // loader: async () => {
+        //   if (!localStorage.getItem('token')) return redirect('/login')
+        //   return null
+        // },
+        element: ProfileRoot,
         children: [
           {
             path: 'friend',
-            element: lazyload(ProfileFriend)
+            element: ProfileFriend
           },
           {
             path: 'message',
-            element: lazyload(ProfileMessage)
+            element: ProfileMessage
           },
           {
             path: 'group',
-            element: lazyload(ProfileGroup)
+            element: ProfileGroup
           },
           {
             path: 'info',
-            element: lazyload(ProfileInfo)
+            element: ProfileInfo
           },
           {
             path: 'setting',
-            element: lazyload(ProfileSetting)
+            element: ProfileSetting
           },
           {
             path: 'account',
-            element: lazyload(ProfileAccount)
+            element: ProfileAccount
           },
           {
             path: 'creation',
-            element: lazyload(ProfileCretion),
+            element: ProfileCretion,
             children: [
               {
                 path: 'article',
-                element: lazyload(ProfileCreationArticle)
+                element: ProfileCreationArticle
               },
               {
                 path: 'problem',
-                element: lazyload(ProfileCreationProblem)
+                element: ProfileCreationProblem
               }
             ]
           }
@@ -127,29 +188,29 @@ const router = createBrowserRouter([
       // problem
       {
         path: 'problem',
-        element: lazyload(ProblemRoot),
+        element: ProblemRoot,
         children: [
           {
             path: 'set',
-            element: lazyload(ProblemSetRoot),
+            element: ProblemSetRoot,
             children: [
               {
                 path: 'all',
-                element: lazyload(PorblemAll)
+                element: PorblemAll
               }
             ]
           },
           {
             path: ':id',
-            element: lazyload(ProblemId),
+            element: ProblemId,
             children: [
               {
                 path: '',
-                element: lazyload(ProblemDescription)
+                element: ProblemDescription
               },
               {
                 path: 'records',
-                element: lazyload(ProblemSubmitrecord)
+                element: ProblemSubmitrecord
               }
             ]
           }
@@ -158,136 +219,181 @@ const router = createBrowserRouter([
       // competition
       {
         path: 'competition',
-        element: lazyload(Competition),
+        element: Competition,
         children: [
           {
             path: 'list',
-            element: lazyload(CompetitionList)
+            element: CompetitionList
           },
           {
             path: ':competition_id',
-            element: lazyload(CompetitionId),
+            element: CompetitionId,
             children: [
               {
                 path: '',
-                element: lazyload(CompetitionOverview)
+                element: CompetitionOverview
               },
               {
                 path: 'problem',
-                element: lazyload(CompetitionProblem),
+                element: CompetitionProblem,
                 children: [
                   {
                     path: '',
-                    element: lazyload(CompetitionProblemList)
+                    element: CompetitionProblemList
                   },
                   {
                     path: ':problem_id',
-                    element: lazyload(CompetitionProblemId)
+                    element: CompetitionProblemId
                   }
                 ]
               },
               {
                 path: 'rank',
-                element: lazyload(CompetitionRank)
+                element: CompetitionRank
               },
               {
                 path: 'record',
-                element: lazyload(CompetitionRecord)
+                element: CompetitionRecord
               }
             ]
           },
 
           {
             path: 'random/:competition_type',
-            element: lazyload(CompetitionRandom)
+            element: CompetitionRandom
           }
         ]
       },
       // community
       {
         path: 'community',
-        element: lazyload(Community),
+        element: Community,
         children: [
           {
             path: 'overview',
-            element: lazyload(CommunityOverview),
+            element: CommunityOverview,
             children: [
               {
                 path: 'articleset',
-                element: lazyload(ArticleSet)
-              }
-            ]
-          },
-          {
-            path: 'article',
-            children: [
-              {
-                path: ':article_id',
-                element: lazyload(ArticleDetail)
+                element: ArticleSet
               }
             ]
           }
+          // {
+          //   path: 'article',
+          //   element: Article,
+          //   children: [
+          //     {
+          //       path: ':article_id',
+          //       element: ArticleDetail
+          //     }
+          //   ]
+          // }
         ]
       },
       {
         path: 'creation',
-        loader: async () => {
-          if (!localStorage.getItem('token')) redirect('/login')
-          return null
-        },
-        element: lazyload(CreationRoot),
+        element: CreationRoot,
         children: [
           {
             path: '',
-            element: lazyload(CreationNavgation)
+            element: CreationNavgation,
+            meta: {
+              title: '创作中心',
+              needLogin: false
+            }
           },
           {
             path: 'article',
-            element: lazyload(CreateArticle)
+            element: CreateArticle
           },
           {
             path: 'comment',
-            element: lazyload(CreateComment)
+            element: CreateComment
           },
           {
             path: 'post',
-            element: lazyload(CreatePost)
+            element: CreatePost
           },
           {
             path: 'problem',
-            element: lazyload(ProblemCreate)
+            element: ProblemCreate
           },
           {
             path: 'competition',
-            element: lazyload(CompetitionCreate),
+            element: CompetitionCreate,
             children: [
               {
                 path: '',
-                element: lazyload(CompetitionCreateDeclare)
+                element: CompetitionCreateDeclare
               },
 
               {
                 path: 'competition',
-                element: lazyload(CompetitionCreateCompetition)
+                element: CompetitionCreateCompetition
               },
               {
                 path: 'problem',
-                element: lazyload(CompetitionCreateProblem)
+                element: CompetitionCreateProblem
               }
             ]
           },
           {
             path: 'topic',
-            element: lazyload(CreateTopic)
+            element: CreateTopic
           },
           {
             path: 'form',
-            element: lazyload(CreateForm)
+            element: CreateForm
           }
         ]
       }
     ]
   }
-])
+]
 
-export default router
+const Guard: React.FC<{
+  element: ReactNode
+  meta: { title: string; needLogin: boolean }
+}> = props => {
+  let { element, meta = { needLogin: true, title: 'DOJ' } } = props
+  const { needLogin, title } = meta
+  const { pathname } = useLocation()
+  if (title) document.title = title
+  if (needLogin && pathname !== '/login') {
+    if (!localStorage.getItem('token'))
+      element = <Navigate to={'/login'} replace={true}></Navigate>
+  }
+
+  return element
+}
+
+const load = (Result: any, meta: any) => {
+  const element = (
+    <Suspense fallback={<Loading></Loading>}>
+      <Result></Result>
+    </Suspense>
+  )
+  return <Guard element={element} meta={meta}></Guard>
+}
+
+const transformRoutes = (routes: MyRoute[]) => {
+  const list: RouteObject[] = []
+  routes.forEach(item => {
+    const obj = { ...item }
+    if (!obj.path) return
+    obj.element = load(obj.element, obj.meta)
+    if (obj.children) obj.children = transformRoutes(obj.children) as any
+    list.push(obj)
+  })
+  return list
+}
+
+const RouterWaiter = () => {
+  const setPathName = useSetRecoilState(pathNameState)
+
+  onpopstate = () => setPathName(location.pathname)
+  return useRoutes(transformRoutes(routes))
+}
+
+export default RouterWaiter

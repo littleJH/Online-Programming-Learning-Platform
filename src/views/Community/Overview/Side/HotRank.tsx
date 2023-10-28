@@ -1,6 +1,6 @@
-import { currentArticleState } from '@/recoil/store'
+import { currentArticleState } from '@/store/appStore'
 import { getArticleApi, getArticleHotRankApi } from '@/api/article'
-import { IArticle } from '@/vite-env'
+import { IArticle } from '@/type'
 import { Skeleton, Space } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'

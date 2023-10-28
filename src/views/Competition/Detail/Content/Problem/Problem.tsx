@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { getProblemNewApi, getProblemNewListApi } from '@/api/problemNew'
 import { getRecordListApi } from '@/api/competitionMixture'
-import { CompetitionType, ICompetition } from '@/vite-env'
+import { CompetitionType, ICompetition } from '@/type'
 import { Outlet, useOutletContext } from 'react-router-dom'
 import ProblemStateLabel from '../../Label.tsx/ProblemStateLabel'
-import { CompetitionState } from '@/vite-env'
+import { CompetitionState } from '@/type'
 
 interface Problems {
   key: string

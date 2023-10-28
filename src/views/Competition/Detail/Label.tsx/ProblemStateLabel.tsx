@@ -1,5 +1,5 @@
 import React, { Fragment, useLayoutEffect, useState } from 'react'
-import { IRecord } from '@/vite-env'
+import { IRecord } from '@/type'
 import { recordStates } from '@/assets/recordStates'
 
 type ProblemState = 'unsubmited' | 'unAccepted' | 'accepted'

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import hljs from '@/highlight'
+import hljs from '@/tool/MyUtils/highlight'
 
 interface IProps {
   code: string

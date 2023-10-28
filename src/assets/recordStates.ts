@@ -1,4 +1,4 @@
-import { IRecordState } from '@/vite-env'
+import { IRecordState } from '@/type'
 export const recordStates: IRecordState[] = [
   {
     value: 'Running',

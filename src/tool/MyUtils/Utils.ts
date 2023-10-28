@@ -1,4 +1,4 @@
-import { RcFile } from "antd/es/upload";
+import { RcFile } from 'antd/es/upload'
 
 export const formatProblemJson = async (file: RcFile) => {
   const text = await file.text()
@@ -21,14 +21,13 @@ export const formatProblemJson = async (file: RcFile) => {
           output: data.sample_case.sample_outpit
         }
       ]
-      break;
-      case "ATCODER": 
-
+      break
+    case 'ATCODER':
       break
     default:
       data.problem_id = String(data.id)
       delete data.id
-      break;
+      break
   }
   return data
 }

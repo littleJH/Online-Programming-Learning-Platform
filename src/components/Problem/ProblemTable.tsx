@@ -1,4 +1,4 @@
-import { IPrblemTableDataType, IProblem } from '@/vite-env'
+import { IPrblemTableDataType, IProblem } from '@/type'
 import {
   Button,
   Popover,

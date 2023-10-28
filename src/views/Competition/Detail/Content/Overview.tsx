@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react'
 import ReadOnly from '@/components/Editor/ReadOnly'
 import { useOutletContext } from 'react-router-dom'
-import { ICompetition } from '@/vite-env'
+import { ICompetition } from '@/type'
 
 const Overview: React.FC = () => {
   const [competition] = useOutletContext<[ICompetition]>()

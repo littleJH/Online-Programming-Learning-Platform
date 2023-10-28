@@ -1,6 +1,6 @@
 import React, { useLayoutEffect } from 'react'
 import { Spin } from 'antd'
-import { IRunResult, IRecordState } from '@/vite-env'
+import { IRunResult, IRecordState } from '@/type'
 import { recordStates } from '@/assets/recordStates'
 
 interface IProps {

@@ -27,7 +27,7 @@ import {
   IRecordState,
   IRecordTableDataSource,
   User
-} from '@/vite-env'
+} from '@/type'
 import Hack from '@/views/Competition/Detail/Content/Record/Hack'
 import { getUserInfoApi } from '@/api/user'
 import { getHackApi } from '@/api/hack'

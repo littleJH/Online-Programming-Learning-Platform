@@ -1,8 +1,8 @@
 import { getUserInfoApi } from '@/api/user'
-import { CompetitionType, IRecord, User } from '@/vite-env'
+import { CompetitionType, IRecord, User } from '@/type'
 import TextArea from 'antd/es/input/TextArea'
 import React, { useEffect, useRef, useState } from 'react'
-import hljs from '@/highlight'
+import hljs from '@/tool/MyUtils/highlight'
 import { Button, notification } from 'antd'
 import Highlight from '@/components/Editor/Highlight'
 

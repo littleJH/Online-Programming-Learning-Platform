@@ -1,4 +1,4 @@
-import { IMonacoConfig } from '@/vite-env'
+import { IMonacoConfig } from '@/type'
 import { Button, Col, Form, InputNumber, Row, Select, Switch } from 'antd'
 import React, { useState } from 'react'
 

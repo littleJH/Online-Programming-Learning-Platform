@@ -3,7 +3,7 @@ import ReadOnly from '@/components/Editor/ReadOnly'
 import { Divider, Space, Table } from 'antd'
 import Column from 'antd/es/table/Column'
 import { useOutletContext } from 'react-router-dom'
-import { ICaseSample, IProblem } from '@/vite-env'
+import { ICaseSample, IProblem } from '@/type'
 
 const ctnClassname = 'py-4'
 const roClassname = ''

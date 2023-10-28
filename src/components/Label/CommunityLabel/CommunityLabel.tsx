@@ -1,4 +1,4 @@
-import { IArticleLabel } from '@/vite-env'
+import { IArticleLabel } from '@/type'
 import React from 'react'
 
 const CommunityLabel: React.FC<{

@@ -1,4 +1,4 @@
-import { CompetitionType } from '@/vite-env'
+import { CompetitionType } from '@/type'
 import React, { Fragment, useEffect, useState } from 'react'
 
 const CompetitionTypeLabel: React.FC<{

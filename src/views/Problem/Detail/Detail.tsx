@@ -32,11 +32,11 @@ import {
   ICaseSample,
   IRecord,
   IProblem
-} from '@/vite-env'
+} from '@/type'
 import RecordModal from './Record/RecordModal'
 import CodeEditor from '@/components/Editor/CodeEditor'
 import { useRecoilValue } from 'recoil'
-import { monacoConfigState } from '@/recoil/store'
+import { monacoConfigState } from '@/store/appStore'
 import { recordStates } from '@/assets/recordStates'
 import ojmap from '@/assets/ojmap'
 

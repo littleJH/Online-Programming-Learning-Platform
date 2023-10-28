@@ -1,4 +1,4 @@
-import { CompetitionType, ICompetition, IGroup } from '@/vite-env'
+import { CompetitionType, ICompetition, IGroup } from '@/type'
 import {
   Button,
   Space,

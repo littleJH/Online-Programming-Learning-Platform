@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { getCompetitionListApi } from '@/api/competition'
 import { Skeleton, Table } from 'antd'
-import { ICompetition } from '@/vite-env'
+import { ICompetition } from '@/type'
 import dayjs from 'dayjs'
 import Column from 'antd/es/table/Column'
 import { useNavigate } from 'react-router-dom'

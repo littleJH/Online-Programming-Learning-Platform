@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Menu } from 'antd'
 import type { MenuProps } from 'antd'
 import { redirect, useLocation, useNavigate } from 'react-router-dom'
-import { getPathArray } from '@/tool/MyUtils/Utils'
+import { getPathArray } from '@/tool/MyUtils/utils'
+import useNavTo from '@/tool/myHooks/useNavTo'
 
 const menuItem = [
   {
@@ -23,27 +24,20 @@ const menuItem = [
   }
 ]
 
-export default function Header(props: { headerNav: string, setHeaderNav: Function }) {
-  const { headerNav, setHeaderNav } = props
-  const { pathname } = useLocation()
-  const pathArr = getPathArray(pathname)
-  const nav = useNavigate()
-
-  useEffect(() => {
-    setHeaderNav(pathArr[0])
-  }, [])
+export default function Header(props: { headerNav: string }) {
+  const { headerNav } = props
+  const navTo = useNavTo()
 
   const handleMenuClick = (e: any) => {
-    setHeaderNav(e.key)
     switch (e.key) {
       case 'problem':
-        nav('/problem/set/all')
+        navTo('/problem/set/all')
         break
       case 'community':
-        nav('/community/overview/articleset')
+        navTo('/community/overview/articleset')
         break
       default:
-        nav(e.key)
+        navTo(e.key)
         break
     }
   }
