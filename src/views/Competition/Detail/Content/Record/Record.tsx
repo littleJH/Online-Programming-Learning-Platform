@@ -11,7 +11,7 @@ import Hack from './Hack'
 import { getUserInfoApi } from '@/api/user'
 import RecordStateLabel from '@/views/Problem/Detail/RecordLabel.tsx/RecordStateLabel'
 import { getHackApi } from '@/api/hack'
-import NoData from '@/components/Empty/NoData'
+import NoData from '@/components/empty/NoData'
 
 interface Filter {
   text: string

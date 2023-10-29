@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect } from 'react'
-import CodeEditor from '@/components/Editor/CodeEditor'
+import CodeEditor from '@/components/editor/CodeEditor'
 import { Radio, Space } from 'antd'
 import { ProgramMode } from '@/type'
 interface Iprops {

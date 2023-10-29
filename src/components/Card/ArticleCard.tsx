@@ -3,7 +3,7 @@ import { iconBaseUrl } from '@/api/baseConfig'
 import { IArticle } from '@/type'
 import { Avatar, Space } from 'antd'
 import style from './style.module.scss'
-import GetTimeago from '@/tool/myFns/GetTimeago'
+import GetTimeago from '@/tool/myFns/getTimeago'
 import CommunityLabel from '../Label/CommunityLabel/CommunityLabel'
 import { getUserInfoApi } from '@/api/user'
 import {

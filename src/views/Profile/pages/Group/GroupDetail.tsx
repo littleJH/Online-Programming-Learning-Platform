@@ -1,5 +1,5 @@
 import { getGroupApi } from '@/api/group'
-import GroupMember from '@/components/Group/GroupMember'
+import GroupMember from '@/components/group/GroupMember'
 import { IGroup } from '@/type'
 import React, { useEffect, useState } from 'react'
 

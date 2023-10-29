@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useOutletContext, useParams } from 'react-router-dom'
 import { rollingRanklistWs } from '@/api/competition'
 import { getUserInfoApi } from '@/api/user'
-import NoData from '@/components/Empty/NoData'
+import NoData from '@/components/empty/NoData'
 
 interface DataSource extends IRank {
   key: string

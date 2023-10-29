@@ -34,7 +34,7 @@ import {
   IProblem
 } from '@/type'
 import RecordModal from './Record/RecordModal'
-import CodeEditor from '@/components/Editor/CodeEditor'
+import CodeEditor from '@/components/editor/CodeEditor'
 import { useRecoilValue } from 'recoil'
 import { monacoConfigState } from '@/store/appStore'
 import { recordStates } from '@/assets/recordStates'

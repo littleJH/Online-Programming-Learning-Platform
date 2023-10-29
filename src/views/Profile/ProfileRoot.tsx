@@ -19,7 +19,7 @@ const ProfileRoot: React.FC = () => {
   return (
     <div
       style={{
-        minWidth: '768px'
+        maxWidth: '1024px'
       }}
     >
       <Outlet></Outlet>

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import ProblemList from '@/components/Problem/List/List'
+import ProblemList from '@/components/Problem/list/List'
 import {
   Button,
   Input,
@@ -13,9 +13,9 @@ import {
   Tooltip,
   notification
 } from 'antd'
-import Throttle from '@/tool/myFns/Throttle'
-import TextEditor from '@/components/Editor/TextEditor'
-import NoData from '@/components/Empty/NoData'
+import Throttle from '@/tool/myFns/throttle'
+import TextEditor from '@/components/editor/TextEditor'
+import NoData from '@/components/empty/NoData'
 import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import {
@@ -32,7 +32,7 @@ import {
 } from '@ant-design/icons'
 import { IPrblemTableDataType } from '@/type'
 import { createTopicApi } from '@/api/topic'
-import ReadOnly from '@/components/Editor/ReadOnly'
+import ReadOnly from '@/components/editor/ReadOnly'
 import { useNavigate } from 'react-router-dom'
 
 interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {

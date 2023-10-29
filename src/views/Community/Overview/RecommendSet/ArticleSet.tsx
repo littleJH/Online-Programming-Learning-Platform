@@ -1,5 +1,5 @@
 import { getArticleListApi } from '@/api/article'
-import ArticleCard from '@/components/Card/ArticleCard'
+import ArticleCard from '@/components/card/ArticleCard'
 import { IArticle } from '@/type'
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'

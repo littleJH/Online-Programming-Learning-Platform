@@ -1,5 +1,5 @@
 import { searchProblemByTextApi, showProblemApi } from '@/api/problem'
-import ReadOnly from '@/components/Editor/ReadOnly'
+import ReadOnly from '@/components/editor/ReadOnly'
 import { Button, InputNumber, List, Select, Spin, notification } from 'antd'
 import { MinusCircleOutlined } from '@ant-design/icons'
 import React, { Fragment, useEffect, useState } from 'react'

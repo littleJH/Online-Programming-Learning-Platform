@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useLayoutEffect, useState } from 'react'
-import ReadOnly from '@/components/Editor/ReadOnly'
+import ReadOnly from '@/components/editor/ReadOnly'
 import { Divider, Space, Table } from 'antd'
 import Column from 'antd/es/table/Column'
 import { useOutletContext } from 'react-router-dom'

@@ -3,7 +3,7 @@ import { Skeleton, Table } from 'antd'
 import Column from 'antd/es/table/Column'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import { CompetitionState } from '@/type'
-import NoData from '@/components/Empty/NoData'
+import NoData from '@/components/empty/NoData'
 
 interface Problems {
   key: string

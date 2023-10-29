@@ -1,6 +1,6 @@
 import { Button, Divider } from 'antd'
 import React, { useCallback, useState } from 'react'
-import CodeEditorConfig from '@/components/Editor/CodeEditorConfig'
+import CodeEditorConfig from '@/components/editor/CodeEditorConfig'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { monacoConfigState, userInfoState } from '@/store/appStore'
 import { getCurrentUserinfo, updateInfoApi } from '@/api/user'

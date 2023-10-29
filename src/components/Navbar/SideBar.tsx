@@ -1,8 +1,5 @@
-import { getPathArray } from '@/tool/MyUtils/utils'
 import { Menu } from 'antd'
-import { ItemType, MenuItemType } from 'antd/es/menu/hooks/useItems'
 import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
 import {
   UserOutlined,
   MenuOutlined,
@@ -14,7 +11,37 @@ import {
   InfoCircleOutlined
 } from '@ant-design/icons'
 import useNavTo from '@/tool/myHooks/useNavTo'
+import MySvgIcon from '../icon/MySvgIcon'
 
+const SideBar: React.FC<{ header: string }> = props => {
+  const { header } = props
+  const [current, setCurrent] = useState('')
+  const [menuItem, setMenuItem] = useState([])
+  const navTo = useNavTo()
+
+  useEffect(() => {
+    setMenuItem(menuItemObj[`${header}MenuItem`])
+  }, [header])
+
+  const handleMenuClick = (e: any) => {
+    setCurrent(e.key)
+    navTo(`/${header}/${e.key}`)
+  }
+
+  return (
+    <Menu
+      style={{
+        height: '100%',
+        userSelect: 'none',
+        padding: '0 1rem'
+      }}
+      selectedKeys={[current]}
+      mode="vertical"
+      onClick={handleMenuClick}
+      items={menuItem}
+    ></Menu>
+  )
+}
 const menuItemObj: any = {
   problemMenuItem: [
     {
@@ -25,7 +52,8 @@ const menuItemObj: any = {
   creationMenuItem: [
     {
       label: '题目',
-      key: 'problem'
+      key: 'problem',
+      icon: <MySvgIcon size={1.25} href="problem" classname="mr-5"></MySvgIcon>
     },
     {
       label: '题单',
@@ -192,38 +220,6 @@ const menuItemObj: any = {
       icon: <SafetyCertificateOutlined />
     }
   ]
-}
-
-const SideBar: React.FC<{ header: string }> = props => {
-  const { header } = props
-  const { pathname } = useLocation()
-  const pathArr = getPathArray(pathname)
-  const [current, setCurrent] = useState('')
-  const [menuItem, setMenuItem] = useState([])
-  const navTo = useNavTo()
-
-  useEffect(() => {
-    setMenuItem(menuItemObj[`${header}MenuItem`])
-  }, [header])
-
-  const handleMenuClick = (e: any) => {
-    setCurrent(e.key)
-    navTo(`/${header}/${e.key}`)
-  }
-
-  return (
-    <Menu
-      style={{
-        height: '100%',
-        userSelect: 'none',
-        padding: '0 1rem'
-      }}
-      selectedKeys={[current]}
-      mode="vertical"
-      onClick={handleMenuClick}
-      items={menuItem}
-    ></Menu>
-  )
 }
 
 export default SideBar

@@ -12,7 +12,7 @@ import {
 import { ICompetition } from '@/type'
 import dayjs from 'dayjs'
 import { updateCompetitionApi } from '@/api/competition'
-import TextEditor from '@/components/Editor/TextEditor'
+import TextEditor from '@/components/editor/TextEditor'
 
 interface Iprops {
   competition: ICompetition | undefined

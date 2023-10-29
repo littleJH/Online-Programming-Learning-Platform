@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Menu } from 'antd'
 import type { MenuProps } from 'antd'
 import { redirect, useLocation, useNavigate } from 'react-router-dom'
-import { getPathArray } from '@/tool/MyUtils/utils'
+import { getPathArray } from '@/tool/myUtils/utils'
 import useNavTo from '@/tool/myHooks/useNavTo'
 
 const menuItem = [

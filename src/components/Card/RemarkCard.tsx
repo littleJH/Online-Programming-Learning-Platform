@@ -9,8 +9,8 @@ import {
 import { IRemark, User } from '@/type'
 import { Avatar, Divider, Space } from 'antd'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import ReadOnly from '../Editor/ReadOnly'
-import GetTimeago from '@/tool/myFns/GetTimeago'
+import ReadOnly from '../editor/ReadOnly'
+import GetTimeago from '@/tool/myFns/getTimeago'
 import style from './style.module.scss'
 
 const RemarkCard: React.FC<{

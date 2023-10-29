@@ -5,9 +5,9 @@ import { ProgramMode } from '@/type'
 import { IProblem } from '@/type'
 import { createProgramApi } from '@/api/program'
 import { createProblemNewApi } from '@/api/problemNew'
-import Problem from '@/views/Creation/pages/CreateProblem/Problem'
-import Program from '@/views/Creation/pages/CreateProblem/Program'
-import Submit from '@/views/Creation/pages/CreateProblem/submit'
+import Problem from '@/views/Creation/pages/createProblem/Problem'
+import Program from '@/views/Creation/pages/createProblem/Program'
+import Submit from '@/views/Creation/pages/createProblem/submit'
 
 interface IProps {
   open: boolean

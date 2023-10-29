@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import Login from '@/views/Login/Log/Login'
-import Register from '@/views/Login/Log/Register'
+import Login from '@/views/Login/log/Login'
+import Register from '@/views/Login/log/Register'
 import { Divider } from 'antd'
 import LoginPic from '@/assets/Login.svg'
 

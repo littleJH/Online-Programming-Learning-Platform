@@ -1,4 +1,4 @@
-import TextEditor from '@/components/Editor/TextEditor'
+import TextEditor from '@/components/editor/TextEditor'
 import React, { useEffect, useState } from 'react'
 import CreateArticle from '../pages/CreateArticle'
 import { Radio, Segmented, Space } from 'antd'

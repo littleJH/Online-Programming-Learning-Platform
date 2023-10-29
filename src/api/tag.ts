@@ -8,8 +8,8 @@ export const createTagApi = (tag: string) => {
   return request.post(`/create/${tag}`)
 }
 
-export const createTagAutoApi = (text: string) => {
-  return request.get(`/auto?text=${text}`, baseConfig())
+export const createTagAutoApi = (text: string, translate: boolean = true) => {
+  return request.get(`/auto/${translate}?text=${text}`, baseConfig())
 }
 
 export const getTagListApi = (pageNum: number = 1, pageSize: number = 20) => {

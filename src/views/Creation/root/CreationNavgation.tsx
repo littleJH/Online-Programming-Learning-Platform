@@ -1,8 +1,8 @@
-import { Space, Tooltip } from 'antd'
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import style from './style.module.scss'
+import { Space } from 'antd'
+import React, { useEffect } from 'react'
 import useNavTo from '@/tool/myHooks/useNavTo'
+import { useSetRecoilState } from 'recoil'
+import { sideBarCollapsed } from '@/store/appStore'
 
 const lineClass = 'flex'
 const itemClass =
@@ -10,9 +10,12 @@ const itemClass =
 
 const CreationNavgation: React.FC = () => {
   const nav = useNavTo()
+  const setSideBarCollapsed = useSetRecoilState(sideBarCollapsed)
 
+  useEffect(() => setSideBarCollapsed(true), [])
   const handleClick = (e: string) => {
     nav(`${e}`)
+    setSideBarCollapsed(false)
   }
 
   return (

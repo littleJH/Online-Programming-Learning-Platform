@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react'
-import ReadOnly from '@/components/Editor/ReadOnly'
+import ReadOnly from '@/components/editor/ReadOnly'
 import { useOutletContext } from 'react-router-dom'
 import { ICompetition } from '@/type'
 

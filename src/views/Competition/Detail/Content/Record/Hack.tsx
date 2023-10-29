@@ -2,9 +2,9 @@ import { getUserInfoApi } from '@/api/user'
 import { CompetitionType, IRecord, User } from '@/type'
 import TextArea from 'antd/es/input/TextArea'
 import React, { useEffect, useRef, useState } from 'react'
-import hljs from '@/tool/MyUtils/highlight'
+import hljs from '@/tool/myUtils/highlight'
 import { Button, notification } from 'antd'
-import Highlight from '@/components/Editor/Highlight'
+import Highlight from '@/components/editor/Highlight'
 
 interface Iprops {
   record: IRecord

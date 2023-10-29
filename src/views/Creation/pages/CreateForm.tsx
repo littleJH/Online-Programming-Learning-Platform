@@ -1,5 +1,5 @@
 import { getTopicListApi, getTopicProblemsApi } from '@/api/topic'
-import TextEditor from '@/components/Editor/TextEditor'
+import TextEditor from '@/components/editor/TextEditor'
 import { IGroup, ITopic } from '@/type'
 import {
   Button,
@@ -22,7 +22,7 @@ import {
 } from '@ant-design/icons'
 import { RowSelectMethod } from 'antd/es/table/interface'
 import { getGroupListApi } from '@/api/group'
-import NoData from '@/components/Empty/NoData'
+import NoData from '@/components/empty/NoData'
 import { createFormApi } from '@/api/form'
 import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'

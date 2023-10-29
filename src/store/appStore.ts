@@ -8,7 +8,7 @@ import {
 } from '@/type'
 import { atom, selector } from 'recoil'
 import { notification } from 'antd'
-import { getPathArray } from '@/tool/MyUtils/utils'
+import { getPathArray } from '@/tool/myUtils/utils'
 
 const userInfoAtomState = atom<User | null>({
   key: 'userInfoAtomState',
@@ -104,6 +104,11 @@ const headerNavState = selector<string>({
   }
 })
 
+const sideBarCollapsed = atom<boolean>({
+  key: 'sideBarCollapsed',
+  default: false
+})
+
 export {
   userInfoAtomState,
   userInfoState,
@@ -112,5 +117,6 @@ export {
   currentArticleState,
   currentProblemState,
   headerNavState,
-  pathNameState
+  pathNameState,
+  sideBarCollapsed
 }

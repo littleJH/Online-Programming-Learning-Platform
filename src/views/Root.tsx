@@ -1,18 +1,22 @@
 import { Layout, ConfigProvider, Modal, Button, Avatar } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
-import Navbar from '@/components/Navbar/Navbar'
+import Navbar from '@/components/navbar/Navbar'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { iconBaseUrl } from '@/api/baseConfig'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { loginStatusState, userInfoState } from '@/store/appStore'
+import {
+  loginStatusState,
+  sideBarCollapsed,
+  userInfoState
+} from '@/store/appStore'
 import Sider from 'antd/es/layout/Sider'
-import SideBar from '@/components/Navbar/SideBar'
+import SideBar from '@/components/navbar/SideBar'
 import { headerNavState } from '@/store/appStore'
 import useNavTo from '@/tool/myHooks/useNavTo'
 
 const Root: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useRecoilState(sideBarCollapsed)
   const [btnCollapsed, setBtnCollapsed] = useState(false)
   const headerNav = useRecoilValue(headerNavState)
   const { Header, Content, Footer } = Layout
@@ -102,9 +106,11 @@ const MyLogin: React.FC = () => {
   const nav = useNavTo()
   const myInfo = useRecoilValue(userInfoState)
   const loginStatus = useRecoilValue(loginStatusState)
+  const setSideBarCollapsed = useSetRecoilState(sideBarCollapsed)
 
   const handleClick = () => {
     nav('/profile')
+    setSideBarCollapsed(true)
   }
 
   return (

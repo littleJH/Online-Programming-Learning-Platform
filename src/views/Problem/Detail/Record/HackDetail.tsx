@@ -1,9 +1,9 @@
 import { showProblemApi } from '@/api/problem'
-import ReadOnly from '@/components/Editor/ReadOnly'
+import ReadOnly from '@/components/editor/ReadOnly'
 import { IHack, IProblem, IRecord, User } from '@/type'
 import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import Highlight from '@/components/Editor/Highlight'
+import Highlight from '@/components/editor/Highlight'
 import { getUserInfoApi } from '@/api/user'
 
 interface IProps {

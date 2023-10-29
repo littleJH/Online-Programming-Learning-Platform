@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { languageList } from '@/components/Editor/LanguageList'
+import { languageList } from '@/components/editor/LanguageList'
 
 const LanaugeLabel: React.FC<{
   value: string

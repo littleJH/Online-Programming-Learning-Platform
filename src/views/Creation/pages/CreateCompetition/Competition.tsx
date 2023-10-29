@@ -11,7 +11,7 @@ import {
   Switch,
   notification
 } from 'antd'
-import TextEditor from '@/components/Editor/TextEditor'
+import TextEditor from '@/components/editor/TextEditor'
 import { Descendant } from 'slate'
 import dayjs from 'dayjs'
 import { createCompetitionApi } from '@/api/competition'

@@ -20,12 +20,12 @@ import {
 } from '@/api/article'
 import { createArticleRemarkApi, getArticleRemarkListApi } from '@/api/remark'
 import { getUserInfoApi } from '@/api/user'
-import ReadOnly from '@/components/Editor/ReadOnly'
+import ReadOnly from '@/components/editor/ReadOnly'
 import style from './style.module.scss'
 import { Button, Divider, Modal, Skeleton, Space } from 'antd'
 import CommunityLabel from '@/components/Label/CommunityLabel/CommunityLabel'
-import TextEditor from '@/components/Editor/TextEditor'
-import RemarkCard from '@/components/Card/RemarkCard'
+import TextEditor from '@/components/editor/TextEditor'
+import RemarkCard from '@/components/card/RemarkCard'
 
 let visibled = false
 

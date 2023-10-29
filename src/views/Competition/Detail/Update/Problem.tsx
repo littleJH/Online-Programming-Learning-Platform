@@ -8,8 +8,8 @@ import {
 import { MinusCircleOutlined } from '@ant-design/icons'
 import { searchProblemByTextApi, showProblemApi } from '@/api/problem'
 import { Button, InputNumber, List, Select, Spin, notification } from 'antd'
-import ProblemNew from '../../../Creation/pages/CreateCompetition/ProblemNew'
-import ReadOnly from '@/components/Editor/ReadOnly'
+import ProblemNew from '../../../Creation/pages/createCompetition/ProblemNew'
+import ReadOnly from '@/components/editor/ReadOnly'
 import { ICompetition } from '@/type'
 interface IProblem {
   id: string

@@ -139,6 +139,16 @@ body,
 }
 
 
+.icon {
+  width: 2rem;height: 2rem;
+  fill: currentColor;
+  overflow: hidden;
+}
+
+.icon-base {
+  fill: currentColor;
+  overflow: hidden;
+}
 
 .icon-small {
   width: 1rem;height: 1rem;
@@ -146,11 +156,7 @@ body,
   overflow: hidden;
 }
 
-.icon {
-  width: 2rem;height: 2rem;
-  fill: currentColor;
-  overflow: hidden;
-}
+
 .icon-large {
   width: 4rem;height: 4rem;
   fill: currentColor;

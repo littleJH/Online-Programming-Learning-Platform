@@ -12,7 +12,7 @@ import {
 import Column from 'antd/es/table/Column'
 import copy from 'copy-to-clipboard'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import ReadOnly from '../Editor/ReadOnly'
+import ReadOnly from '../editor/ReadOnly'
 import { getRecordListApi } from '@/api/record'
 import { getProblemLabelsApi } from '@/api/problem'
 import AcPercentLabel from '../Label/ProblemLabel/AcPercentLabel'

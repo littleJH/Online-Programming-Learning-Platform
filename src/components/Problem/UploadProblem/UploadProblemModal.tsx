@@ -11,7 +11,7 @@ import {
 import { RcFile, UploadChangeParam, UploadFile } from 'antd/es/upload'
 import { createTagAutoApi } from '@/api/tag'
 import { IProblem } from '@/type'
-import { formatProblemJson } from '@/tool/MyUtils/utils'
+import { formatProblemJson } from '@/tool/myUtils/utils'
 
 interface IProps {
   openUploadModal: boolean
@@ -54,7 +54,7 @@ export const UploadProblemModal: React.FC<IProps> = props => {
     if (code === 200) {
       let index1 = 0
       for (let tag of tagCount) {
-        if (index1 >= 2) break
+        if (index1 > 2) break
         const res2 = await createProblemLabelApi(id, tag.Tag)
         console.log(tagCount, tag, res2.data)
       }

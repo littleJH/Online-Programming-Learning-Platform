@@ -9,11 +9,11 @@ import {
   IRecordState,
   CompetitionType
 } from '@/type'
-import ReadOnly from '@/components/Editor/ReadOnly'
+import ReadOnly from '@/components/editor/ReadOnly'
 import { Button, Popover, Segmented, Switch, Table, notification } from 'antd'
 import Column from 'antd/es/table/Column'
-import Code from '@/components/Editor/CodeEditor'
-import { languageList } from '@/components/Editor/LanguageList'
+import Code from '@/components/editor/CodeEditor'
+import { languageList } from '@/components/editor/LanguageList'
 import RunResult from '@/views/Problem/Detail/RunResult'
 import TextArea from 'antd/es/input/TextArea'
 import { createTestApi } from '@/api/test'

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import TextEditor from '@/components/Editor/TextEditor'
+import TextEditor from '@/components/editor/TextEditor'
 import { Button, Form, Input, Select, Col, Row, InputNumber } from 'antd'
 import { IProblem } from '@/type'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'

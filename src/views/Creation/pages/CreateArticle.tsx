@@ -2,14 +2,14 @@ import { ICategory } from '@/type'
 import { Select, Input, SelectProps, Button, Space, notification } from 'antd'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { createArticleApi, createArticleLabelApi } from '@/api/article'
-import Throttle from '@/tool/myFns/Throttle'
+import Throttle from '@/tool/myFns/throttle'
 import { useNavigate } from 'react-router-dom'
 import Dragger from 'antd/es/upload/Dragger'
 import { UploadChangeParam } from 'antd/es/upload'
 import { UploadRequestOption } from 'rc-upload/lib/interface'
 import { uploadImgApi } from '@/api/img'
 import { getCategoryListApi } from '@/api/category'
-import TextEditor from '@/components/Editor/TextEditor'
+import TextEditor from '@/components/editor/TextEditor'
 
 const options: SelectProps['options'] = []
 const creation_article_title = localStorage.getItem('creation_article_title')

@@ -28,7 +28,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import Dragger from 'antd/es/upload/Dragger'
 import { createTagApi, createTagAutoApi } from '@/api/tag'
 import { RcFile, UploadChangeParam } from 'antd/es/upload'
-import { UploadProblemModal } from '@/components/Problem/UploadProblem/UploadProblemModal'
+import { UploadProblemModal } from '@/components/Problem/uploadProblem/UploadProblemModal'
 
 const stringArrItem = [
   'test_input',

@@ -1,4 +1,4 @@
-import UserCard from '@/components/User/UserCard'
+import UserCard from '@/components/user/UserCard'
 import { IGroup } from '@/type'
 import React from 'react'
 import style from './group.module.scss'

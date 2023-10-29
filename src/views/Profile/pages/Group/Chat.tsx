@@ -10,7 +10,7 @@ import React, {
   useState
 } from 'react'
 import { EllipsisOutlined } from '@ant-design/icons'
-import GroupMember from '@/components/Group/GroupMember'
+import GroupMember from '@/components/group/GroupMember'
 import {
   craeteChatApi,
   enterGroupPublishChatWS,
@@ -21,7 +21,7 @@ import { getUserInfoApi } from '@/api/user'
 import { iconBaseUrl } from '@/api/baseConfig'
 import { useRecoilValue } from 'recoil'
 import { userInfoState } from '@/store/appStore'
-import ChatMessageCard from '@/components/Card/ChatMessageCard'
+import ChatMessageCard from '@/components/card/ChatMessageCard'
 
 interface IProps {
   group: IGroup

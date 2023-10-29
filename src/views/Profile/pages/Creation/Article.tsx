@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import ArticleCard from '@/components/Card/ArticleCard'
+import ArticleCard from '@/components/card/ArticleCard'
 import { IArticle } from '@/type'
 import { getArticleListApi } from '@/api/article'
 import { useSetRecoilState } from 'recoil'

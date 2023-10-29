@@ -7,10 +7,10 @@ import {
   useRoutes
 } from 'react-router-dom'
 import React, { ReactNode, Suspense, lazy } from 'react'
-import Loading from '@/components/Loading/Loading'
+import Loading from '@/components/loading/Loading'
 import { useSetRecoilState } from 'recoil'
 import { headerNavState, pathNameState } from '@/store/appStore'
-import { getPathArray } from '@/tool/MyUtils/utils'
+import { getPathArray } from '@/tool/myUtils/utils'
 // import Article from '@/views/Profile/Creation/Article/Article'
 
 interface MyRoute {
@@ -63,7 +63,7 @@ const ProblemSubmitrecord = lazy(
   () => import('@/views/Problem/Detail/Record/Records')
 )
 const ProblemCreate = lazy(
-  () => import('@/views/Creation/pages/CreateProblem/Create')
+  () => import('@/views/Creation/pages/createProblem/Create')
 )
 const Competition = lazy(() => import('@/views/Competition/CompetitionRoot'))
 const CompetitionList = lazy(() => import('@/views/Competition/List/List'))
@@ -89,16 +89,16 @@ const CompetitionRecord = lazy(
   () => import('@/views/Competition/Detail/Content/Record/Record')
 )
 const CompetitionCreate = lazy(
-  () => import('@/views/Creation/pages/CreateCompetition/Create')
+  () => import('@/views/Creation/pages/createCompetition/Create')
 )
 const CompetitionCreateDeclare = lazy(
-  () => import('@/views/Creation/pages/CreateCompetition/Declare')
+  () => import('@/views/Creation/pages/createCompetition/Declare')
 )
 const CompetitionCreateCompetition = lazy(
-  () => import('@/views/Creation/pages/CreateCompetition/Competition')
+  () => import('@/views/Creation/pages/createCompetition/Competition')
 )
 const CompetitionCreateProblem = lazy(
-  () => import('@/views/Creation/pages/CreateCompetition/Problem')
+  () => import('@/views/Creation/pages/createCompetition/Problem')
 )
 const CompetitionRandom = lazy(
   () => import('@/views/Competition/CompetitionRandom/CompetitionRandom')

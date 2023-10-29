@@ -23,7 +23,7 @@ import {
 } from '@/api/user'
 import useCountdown from '@/tool/myHooks/useCountDown'
 import { redirect, useNavigate } from 'react-router-dom'
-import FindPass from '@/views/Login/Log/FindPass'
+import FindPass from '@/views/Login/log/FindPass'
 
 const Account: React.FC = () => {
   const nav = useNavigate()
