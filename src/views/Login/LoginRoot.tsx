@@ -1,23 +1,30 @@
 import React, { useState } from 'react'
 import Login from '@/views/Login/log/Login'
 import Register from '@/views/Login/log/Register'
-import { Divider } from 'antd'
 import LoginPic from '@/assets/Login.svg'
+import { Divider } from 'antd'
 
 const LoginRoot: React.FC = () => {
   const [mode, setmode] = useState<'Login' | 'Register'>('Login')
   return (
-    <div className="w-full h-full flex">
+    <div className='w-full h-full flex'>
       <div
-        className="w-2/3 flex justify-center"
+        className='grow flex justify-center'
         style={{
           fontSize: '3rem',
           fontWeight: '600'
         }}
       >
-        <img src={LoginPic} className="w-full"></img>
+        <img
+          src={LoginPic}
+          className='w-1/2'
+        ></img>
       </div>
-      <div className="w-1/3">
+      <Divider
+        type='vertical'
+        className='h-full w-16 '
+      ></Divider>
+      <div className='grow flex justify-center'>
         {mode === 'Login' && <Login setmode={setmode}></Login>}
         {mode === 'Register' && <Register setmode={setmode}></Register>}
       </div>

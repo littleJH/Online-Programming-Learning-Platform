@@ -1,38 +1,27 @@
+import { notification } from 'antd'
 import axios from 'axios'
 
 const baseUrlObj: any = {
   iconBaseUrl: 'http://icon.mgaronya.com',
   imgBaseUrl: 'http://api_img.mgaronya.com',
   baseURL: import.meta.env.DEV ? '/api' : 'http://api_oj.mgaronya.com',
-  testBaseUrl: import.meta.env.DEV
-    ? '/test'
-    : 'http://test_oj.mgaronya.com/test',
+  testBaseUrl: import.meta.env.DEV ? '/test' : 'http://test_oj.mgaronya.com/test',
   tagBaseUrl: import.meta.env.DEV ? '/tag_api' : 'http://api_tag.mgaronya.com',
   wsBaseUrl: 'ws://api_oj.mgaronya.com',
-  translateBaseUrl: import.meta.env.DEV
-    ? '/translate_api'
-    : 'http://api_translate.mgaronya.com/translator/translate'
+  translateBaseUrl: import.meta.env.DEV ? '/translate_api' : 'http://api_translate.mgaronya.com/translator/translate'
 }
 
 export const iconBaseUrl = 'http://icon.mgaronya.com'
 export const imgBaseUrl = 'http://api_img.mgaronya.com'
-export const baseURL = import.meta.env.DEV
-  ? '/api'
-  : 'http://api_oj.mgaronya.com'
+export const baseURL = import.meta.env.DEV ? '/api' : 'http://api_oj.mgaronya.com'
 
-export const testBaseUrl = import.meta.env.DEV
-  ? '/test'
-  : 'http://test_oj.mgaronya.com/test'
+export const testBaseUrl = import.meta.env.DEV ? '/test' : 'http://test_oj.mgaronya.com/test'
 
-export const tagBaseUrl = import.meta.env.DEV
-  ? '/tag_api'
-  : 'http://api_tag.mgaronya.com'
+export const tagBaseUrl = import.meta.env.DEV ? '/tag_api' : 'http://api_tag.mgaronya.com'
 
 export const wsBaseUrl = 'ws://api_oj.mgaronya.com'
 
-export const translateBaseUrl = import.meta.env.DEV
-  ? '/translate_api'
-  : 'http://api_translate.mgaronya.com/translator/translate'
+export const translateBaseUrl = import.meta.env.DEV ? '/translate_api' : 'http://api_translate.mgaronya.com/translator/translate'
 
 export const baseConfig = () => {
   return {
@@ -68,19 +57,32 @@ export const createRequest = (options: { type?: string; baseURL: string }) => {
   })
   // 请求拦截器
   request.interceptors.request.use(
-    config => {
+    (config) => {
       return config
     },
-    error => {
+    (error) => {
       return Promise.reject(error)
     }
   )
   //响应拦截器
   request.interceptors.response.use(
-    response => {
+    (response) => {
+      const {
+        data: { code }
+      } = response
+      if (code == 201 && !localStorage.getItem('token')) {
+        const a = document.createElement('a')
+        a.href = '/login'
+        a.click()
+      }
       return response
     },
-    error => {
+    (error) => {
+      const { code = '请求错误' } = error
+      notification.error({
+        message: code,
+        description: '请检查网络设置'
+      })
       return Promise.reject(error)
     }
   )

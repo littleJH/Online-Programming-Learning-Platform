@@ -2,14 +2,10 @@ import { Layout, ConfigProvider, Modal, Button, Avatar } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import Navbar from '@/components/navbar/Navbar'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { iconBaseUrl } from '@/api/baseConfig'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import {
-  loginStatusState,
-  sideBarCollapsed,
-  userInfoState
-} from '@/store/appStore'
+import { loginStatusState, pathNameState, sideBarCollapsed, userInfoState } from '@/store/appStore'
 import Sider from 'antd/es/layout/Sider'
 import SideBar from '@/components/navbar/SideBar'
 import { headerNavState } from '@/store/appStore'
@@ -17,7 +13,7 @@ import useNavTo from '@/tool/myHooks/useNavTo'
 
 const Root: React.FC = () => {
   const [collapsed, setCollapsed] = useRecoilState(sideBarCollapsed)
-  const [btnCollapsed, setBtnCollapsed] = useState(false)
+  const [btnCollapsed, setBtnCollapsed] = useState(!collapsed)
   const headerNav = useRecoilValue(headerNavState)
   const { Header, Content, Footer } = Layout
 
@@ -64,25 +60,27 @@ const Root: React.FC = () => {
         }
       }}
     >
-      <Layout className="w-full h-full">
-        <Header className="sticky top-0 z-10 p-0 flex">
+      <Layout className='w-full h-full'>
+        <Header className='sticky top-0 z-10 p-0 flex'>
           <Navbar headerNav={headerNav}></Navbar>
           <MyLogin></MyLogin>
         </Header>
         <Layout hasSider>
-          <Sider
-            onMouseOver={() => setCollapsed(false)}
-            onMouseLeave={() => setCollapsed(btnCollapsed)}
-            style={siderStyle}
-            collapsible
-            trigger={null}
-            collapsed={collapsed}
-          >
-            <SideBar header={headerNav}></SideBar>
-          </Sider>
+          {headerNav !== 'login' && (
+            <Sider
+              onMouseOver={() => setCollapsed(false)}
+              onMouseLeave={() => setCollapsed(btnCollapsed)}
+              style={siderStyle}
+              collapsible
+              trigger={null}
+              collapsed={collapsed}
+            >
+              <SideBar header={headerNav}></SideBar>
+            </Sider>
+          )}
           <Content
-            id="mainContent"
-            className="bg-white overflow-y-auto scroll-smooth px-16 py-8 flex justify-center"
+            id='mainContent'
+            className='bg-white overflow-y-auto scroll-smooth px-16 py-8 flex justify-center'
           >
             <Outlet></Outlet>
           </Content>
@@ -90,7 +88,7 @@ const Root: React.FC = () => {
 
         <Footer style={footerStyle}>
           <Button
-            type="text"
+            type='text'
             icon={btnCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => setBtnCollapsed(!btnCollapsed)}
           />
@@ -114,15 +112,18 @@ const MyLogin: React.FC = () => {
   }
 
   return (
-    <div className="bg-white h-full flex items-center" onClick={handleClick}>
+    <div
+      className='bg-white h-full flex items-center'
+      onClick={handleClick}
+    >
       {loginStatus && (
         <Avatar
-          className="hover:cursor-pointer mr-8"
-          alt="登录"
+          className='hover:cursor-pointer mr-8'
+          alt='登录'
           src={`${iconBaseUrl}/${myInfo?.icon}`}
         ></Avatar>
       )}
-      {!loginStatus && <Button type="link">登录</Button>}
+      {!loginStatus && <Button type='link'>登录</Button>}
     </div>
   )
 }

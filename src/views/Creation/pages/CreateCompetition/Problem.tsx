@@ -162,6 +162,15 @@ const Problem: React.FC = () => {
         }
       })
     }
+    if (resState.code === 200) {
+      notification.success({
+        message: resState.msg
+      })
+    } else {
+      notification.success({
+        message: resState.msg
+      })
+    }
   }
 
   return (
