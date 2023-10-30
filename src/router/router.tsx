@@ -1,11 +1,4 @@
-import {
-  Navigate,
-  RouteObject,
-  createBrowserRouter,
-  redirect,
-  useLocation,
-  useRoutes
-} from 'react-router-dom'
+import { Navigate, RouteObject, createBrowserRouter, redirect, useLocation, useRoutes } from 'react-router-dom'
 import React, { ReactNode, Suspense, lazy } from 'react'
 import Loading from '@/components/Loading/Loading'
 import { useSetRecoilState } from 'recoil'
@@ -17,7 +10,7 @@ interface MyRoute {
   path: string
   element: any
   errorElement?: any
-  redirect?: string,
+  redirect?: string
   children?: MyRoute[]
   meta?: {
     title?: string
@@ -31,93 +24,43 @@ const Homepage = lazy(() => import('@/views/Home/HomeRoot'))
 const LoginRoot = lazy(() => import('@/views/Login/LoginRoot'))
 const ProfileRoot = lazy(() => import('@/views/Profile/ProfileRoot'))
 const ProfileFriend = lazy(() => import('@/views/Profile/pages/Friend/Friend'))
-const ProfileMessage = lazy(
-  () => import('@/views/Profile/pages/Message/Message')
-)
+const ProfileMessage = lazy(() => import('@/views/Profile/pages/Message/Message'))
 const ProfileGroup = lazy(() => import('@/views/Profile/pages/Group/GroupRoot'))
 const ProfileInfo = lazy(() => import('@/views/Profile/pages/Info/Info'))
-const ProfileSetting = lazy(
-  () => import('@/views/Profile/pages/Setting/Setting')
-)
-const ProfileAccount = lazy(
-  () => import('@/views/Profile/pages/Account/Account')
-)
-const ProfileCretion = lazy(
-  () => import('@/views/Profile/pages/Creation/CreationRoot')
-)
-const ProfileCreationArticle = lazy(
-  () => import('@/views/Profile/pages/Creation/Article')
-)
-const ProfileCreationProblem = lazy(
-  () => import('@/views/Profile/pages/Creation/Problem')
-)
+const ProfileSetting = lazy(() => import('@/views/Profile/pages/Setting/Setting'))
+const ProfileAccount = lazy(() => import('@/views/Profile/pages/Account/Account'))
+const ProfileCretion = lazy(() => import('@/views/Profile/pages/Creation/CreationRoot'))
+const ProfileCreationArticle = lazy(() => import('@/views/Profile/pages/Creation/Article'))
+const ProfileCreationProblem = lazy(() => import('@/views/Profile/pages/Creation/Problem'))
 const ProblemDetailRoot = lazy(() => import('@/views/ProblemDetail/DetailRoot'))
-const ProblemSetRoot = lazy(
-  () => import('@/views/ProblemSet/ProblemSetRoot')
-)
+const ProblemSetRoot = lazy(() => import('@/views/ProblemSet/ProblemSetRoot'))
 const PorblemAll = lazy(() => import('@/views/ProblemSet/set/All'))
 const ProblemTopic = lazy(() => import('@/views/ProblemSet/topic/Topic'))
 const ProblemForm = lazy(() => import('@/views/ProblemSet/form/Form'))
 
 const ProblemId = lazy(() => import('@/views/ProblemDetail/DetailRoot'))
-const ProblemDescription = lazy(
-  () => import('@/views/ProblemDetail/Description')
-)
-const ProblemSubmitrecord = lazy(
-  () => import('@/views/ProblemDetail/Record/Records')
-)
-const ProblemCreate = lazy(
-  () => import('@/views/Creation/pages/CreateProblem/Create')
-)
+const ProblemDescription = lazy(() => import('@/views/ProblemDetail/Description'))
+const ProblemSubmitrecord = lazy(() => import('@/views/ProblemDetail/Record/Records'))
+const ProblemCreate = lazy(() => import('@/views/Creation/pages/CreateProblem/Create'))
 const Competition = lazy(() => import('@/views/Competition/CompetitionRoot'))
 const CompetitionList = lazy(() => import('@/views/Competition/List/List'))
-const CompetitionId = lazy(
-  () => import('@/views/Competition/Detail//Detail/Detail')
-)
-const CompetitionOverview = lazy(
-  () => import('@/views/Competition/Detail/Content/Overview')
-)
-const CompetitionProblem = lazy(
-  () => import('@/views/Competition/Detail/Content/Problem/Problem')
-)
-const CompetitionProblemList = lazy(
-  () => import('@/views/Competition/Detail/Content/Problem/List/List')
-)
-const CompetitionProblemId = lazy(
-  () => import('@/views/Competition/Detail/Content/Problem/Answer/Answer')
-)
-const CompetitionRank = lazy(
-  () => import('@/views/Competition/Detail/Content/Rank/Rank')
-)
-const CompetitionRecord = lazy(
-  () => import('@/views/Competition/Detail/Content/Record/Record')
-)
-const CompetitionCreate = lazy(
-  () => import('@/views/Creation/pages/CreateCompetition/Create')
-)
-const CompetitionCreateDeclare = lazy(
-  () => import('@/views/Creation/pages/CreateCompetition/Declare')
-)
-const CompetitionCreateCompetition = lazy(
-  () => import('@/views/Creation/pages/CreateCompetition/Competition')
-)
-const CompetitionCreateProblem = lazy(
-  () => import('@/views/Creation/pages/CreateCompetition/Problem')
-)
-const CompetitionRandom = lazy(
-  () => import('@/views/Competition/CompetitionRandom/CompetitionRandom')
-)
+const CompetitionId = lazy(() => import('@/views/Competition/Detail//Detail/Detail'))
+const CompetitionOverview = lazy(() => import('@/views/Competition/Detail/Content/Overview'))
+const CompetitionProblem = lazy(() => import('@/views/Competition/Detail/Content/Problem/Problem'))
+const CompetitionProblemList = lazy(() => import('@/views/Competition/Detail/Content/Problem/List/List'))
+const CompetitionProblemId = lazy(() => import('@/views/Competition/Detail/Content/Problem/Answer/Answer'))
+const CompetitionRank = lazy(() => import('@/views/Competition/Detail/Content/Rank/Rank'))
+const CompetitionRecord = lazy(() => import('@/views/Competition/Detail/Content/Record/Record'))
+const CompetitionCreate = lazy(() => import('@/views/Creation/pages/CreateCompetition/Create'))
+const CompetitionCreateDeclare = lazy(() => import('@/views/Creation/pages/CreateCompetition/Declare'))
+const CompetitionCreateCompetition = lazy(() => import('@/views/Creation/pages/CreateCompetition/Competition'))
+const CompetitionCreateProblem = lazy(() => import('@/views/Creation/pages/CreateCompetition/Problem'))
+const CompetitionRandom = lazy(() => import('@/views/Competition/CompetitionRandom/CompetitionRandom'))
 const Community = lazy(() => import('@/views/Community/CommunityRoot'))
-const CommunityOverview = lazy(
-  () => import('@/views/Community/Overview/CommunityOverview')
-)
-const ArticleSet = lazy(
-  () => import('@/views/Community/Overview/RecommendSet/ArticleSet')
-)
+const CommunityOverview = lazy(() => import('@/views/Community/Overview/CommunityOverview'))
+const ArticleSet = lazy(() => import('@/views/Community/Overview/RecommendSet/ArticleSet'))
 const CreationRoot = lazy(() => import('@/views/Creation/root/CreationRoot'))
-const CreationNavgation = lazy(
-  () => import('@/views/Creation/root/CreationNavgation')
-)
+const CreationNavgation = lazy(() => import('@/views/Creation/root/CreationNavgation'))
 const CreateArticle = lazy(() => import('@/views/Creation/pages/CreateArticle'))
 const CreateComment = lazy(() => import('@/views/Creation/pages/CreateComment'))
 const CreatePost = lazy(() => import('@/views/Creation/pages/CreatePost'))
@@ -202,7 +145,8 @@ const routes: MyRoute[] = [
           {
             path: 'topic',
             element: ProblemTopic
-          }, {
+          },
+          {
             path: 'form',
             element: ProblemForm
           }
@@ -337,7 +281,7 @@ const routes: MyRoute[] = [
             element: CompetitionCreate,
             children: [
               {
-                path: '',
+                path: 'declare',
                 element: CompetitionCreateDeclare
               },
 
@@ -367,15 +311,20 @@ const routes: MyRoute[] = [
 
 const Guard: React.FC<{
   element: ReactNode
-  meta: { title: string; needLogin: boolean, redirect: string }
-}> = props => {
+  meta: { title: string; needLogin: boolean; redirect: string }
+}> = (props) => {
   let { element, meta = { needLogin: false, title: 'DOJ' } } = props
   const { needLogin, title } = meta
   const { pathname } = useLocation()
   if (title) document.title = title
   if (needLogin && pathname !== '/login') {
     if (!localStorage.getItem('token'))
-      element = <Navigate to={'/login'} replace={true}></Navigate>
+      element = (
+        <Navigate
+          to={'/login'}
+          replace={true}
+        ></Navigate>
+      )
   }
 
   return element
@@ -387,12 +336,17 @@ const load = (Result: any, meta: any) => {
       <Result></Result>
     </Suspense>
   )
-  return <Guard element={element} meta={meta}></Guard>
+  return (
+    <Guard
+      element={element}
+      meta={meta}
+    ></Guard>
+  )
 }
 
 const transformRoutes = (routes: MyRoute[]) => {
   const list: RouteObject[] = []
-  routes.forEach(item => {
+  routes.forEach((item) => {
     const obj = { ...item }
     if (!obj.path) return
     obj.element = load(obj.element, obj.meta)

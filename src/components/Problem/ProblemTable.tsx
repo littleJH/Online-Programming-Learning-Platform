@@ -1,14 +1,5 @@
 import { IPrblemTableDataType, IProblem } from '@/type'
-import {
-  Button,
-  Popover,
-  Skeleton,
-  Space,
-  Table,
-  Tag,
-  Tooltip,
-  notification
-} from 'antd'
+import { Button, Popover, Skeleton, Space, Table, Tag, Tooltip, notification } from 'antd'
 import Column from 'antd/es/table/Column'
 import copy from 'copy-to-clipboard'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -39,28 +30,11 @@ interface IProps {
 
 let flag = false
 
-const ProblemTable: React.FC<IProps> = props => {
-  const {
-    mode,
-    pageNum,
-    pageSize,
-    total,
-    tableScrollHeight,
-    setSelectedProblems,
-    selectedRowKeys,
-    problemList,
-    onPageChange,
-    onTitleClick,
-    onDelete,
-    onUpdate,
-    fetchDone,
-    setFetchDone,
-    setPageNum,
-    setPageSize,
-    setFirst
-  } = props
+const ProblemTable: React.FC<IProps> = (props) => {
+  const { mode, pageNum, pageSize, total, tableScrollHeight, setSelectedProblems, selectedRowKeys, problemList, onPageChange, onTitleClick, onDelete, onUpdate, fetchDone, setFetchDone, setPageNum, setPageSize, setFirst } = props
   const [dataSource, setDataSource] = useState<IPrblemTableDataType[]>([])
 
+  useEffect(() => console.log('dataSource ==> ', dataSource), [dataSource])
   useEffect(() => {
     flag && fetchProblems(problemList)
     flag = true
@@ -77,7 +51,7 @@ const ProblemTable: React.FC<IProps> = props => {
     }
   }, [])
 
-  const fetchProblems = useCallback(async (problems: IProblem[]) => {
+  const fetchProblems = async (problems: IProblem[]) => {
     console.log('fetchProblems')
     let index = 0
     const list: IPrblemTableDataType[] = []
@@ -113,7 +87,7 @@ const ProblemTable: React.FC<IProps> = props => {
     setFirst(false)
     flag = true
     setDataSource(list)
-  }, [])
+  }
 
   return (
     <div>
@@ -132,48 +106,27 @@ const ProblemTable: React.FC<IProps> = props => {
           scroll={
             mode === 'select'
               ? {
-                y: tableScrollHeight
-              }
+                  y: tableScrollHeight
+                }
               : undefined
           }
           rowSelection={
             mode === 'select' && setSelectedProblems
               ? {
-                columnWidth: 64,
-                selectedRowKeys: selectedRowKeys,
-                onChange: (value, selectedRows, info) => {
-                  if (info.type === 'all') {
-                    value.length
-                      ? setSelectedProblems((prev: any) => [
-                        ...prev,
-                        ...selectedRows
-                      ])
-                      : setSelectedProblems(
-                        (prev: IPrblemTableDataType[]) => [
-                          ...prev.filter(
-                            value =>
-                              dataSource.findIndex(
-                                val => val.key === value.key
-                              ) === -1
-                          )
-                        ]
-                      )
+                  columnWidth: 64,
+                  selectedRowKeys: selectedRowKeys,
+                  onChange: (value, selectedRows, info) => {
+                    if (info.type === 'all') {
+                      value.length ? setSelectedProblems((prev: any) => [...prev, ...selectedRows]) : setSelectedProblems((prev: IPrblemTableDataType[]) => [...prev.filter((value) => dataSource.findIndex((val) => val.key === value.key) === -1)])
+                    }
+                  },
+                  onSelect: (record, selected) => {
+                    selected ? setSelectedProblems((prev: IPrblemTableDataType[]) => [...prev, record]) : setSelectedProblems((prev: IPrblemTableDataType[]) => [...prev.filter((value) => value.key !== record.key)])
                   }
-                },
-                onSelect: (record, selected) => {
-                  selected
-                    ? setSelectedProblems((prev: IPrblemTableDataType[]) => [
-                      ...prev,
-                      record
-                    ])
-                    : setSelectedProblems((prev: IPrblemTableDataType[]) => [
-                      ...prev.filter(value => value.key !== record.key)
-                    ])
                 }
-              }
               : undefined
           }
-          size="small"
+          size='small'
           pagination={{
             position: ['bottomCenter'],
             current: pageNum,
@@ -191,29 +144,29 @@ const ProblemTable: React.FC<IProps> = props => {
         >
           {/* <Column  title="序号" dataIndex={'index'}></Column> */}
           <Column
-            title="KEY"
+            title='KEY'
             dataIndex={'key'}
             width={128}
             render={(value: string) => (
               <Tooltip
                 mouseEnterDelay={0.3}
                 title={`点击复制 ${value}`}
-                color="white"
+                color='white'
                 overlayInnerStyle={{
                   color: 'black'
                 }}
               >
                 <div
-                  className="select-none hover:cursor-pointer"
+                  className='select-none hover:cursor-pointer'
                   onClick={() => handleKyeClick(value)}
                 >
                   <div
-                    className="w-16"
-                  // style={{
-                  //   overflow: 'hidden',
-                  //   textOverflow: 'ellipsis',
-                  //   whiteSpace: 'nowrap'
-                  // }}
+                    className='w-16'
+                    // style={{
+                    //   overflow: 'hidden',
+                    //   textOverflow: 'ellipsis',
+                    //   whiteSpace: 'nowrap'
+                    // }}
                   >
                     {value.slice(value.length - 5)}
                   </div>
@@ -222,15 +175,13 @@ const ProblemTable: React.FC<IProps> = props => {
             )}
           ></Column>
           <Column
-            title="标题"
+            title='标题'
             dataIndex={'title'}
             render={(value, _, index) => (
               <Popover
                 mouseEnterDelay={0.3}
                 title={value}
-                content={
-                  <ReadOnly html={dataSource[index].description}></ReadOnly>
-                }
+                content={<ReadOnly html={dataSource[index].description}></ReadOnly>}
                 overlayStyle={{
                   maxWidth: '512px'
                 }}
@@ -240,7 +191,7 @@ const ProblemTable: React.FC<IProps> = props => {
                 }}
               >
                 <div
-                  className="hover:cursor-pointer text-indigo-500 min-w-max"
+                  className='hover:cursor-pointer text-indigo-500 min-w-max'
                   onClick={() => onTitleClick(index)}
                 >
                   {value}
@@ -250,14 +201,18 @@ const ProblemTable: React.FC<IProps> = props => {
           ></Column>
 
           <Column
-            title="标签"
+            title='标签'
             dataIndex={'labels'}
-            render={value => (
+            render={(value) => (
               <>
                 {value.map((item: any, index: number) => {
                   return (
-                    <Tag key={index} bordered={false} color="#f1f5f9">
-                      <div className="text-slate-700">{item.label}</div>
+                    <Tag
+                      key={index}
+                      bordered={false}
+                      color='#f1f5f9'
+                    >
+                      <div className='text-slate-700'>{item.label}</div>
                     </Tag>
                   )
                 })}
@@ -265,20 +220,20 @@ const ProblemTable: React.FC<IProps> = props => {
             )}
           ></Column>
           <Column
-            title="AC率"
+            title='AC率'
             dataIndex={'acPerc'}
             width={128}
-            render={value => <div className="">{value}</div>}
+            render={(value) => <div className=''>{value}</div>}
           ></Column>
           {mode === 'action' && (
             <Column
-              title="操作"
+              title='操作'
               render={(_, __, index) => (
                 <>
                   {onUpdate && (
                     <Button
-                      type="link"
-                      size="small"
+                      type='link'
+                      size='small'
                       onClick={() => onUpdate(index)}
                     >
                       更新
@@ -286,8 +241,8 @@ const ProblemTable: React.FC<IProps> = props => {
                   )}
                   {onDelete && (
                     <Button
-                      type="link"
-                      size="small"
+                      type='link'
+                      size='small'
                       onClick={() => onDelete(index)}
                     >
                       删除

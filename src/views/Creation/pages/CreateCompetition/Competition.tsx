@@ -1,18 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import {
-  Button,
-  Col,
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  Radio,
-  Row,
-  Switch,
-  notification
-} from 'antd'
+import { Button, Col, DatePicker, Form, Input, InputNumber, Radio, Row, Switch, notification } from 'antd'
 import TextEditor from '@/components/editor/TextEditor'
-import { Descendant } from 'slate'
 import dayjs from 'dayjs'
 import { createCompetitionApi } from '@/api/competition'
 
@@ -35,19 +23,13 @@ const competitionType = [
   }
 ]
 
-const obj = localStorage.getItem('createCompetition')
-  ? JSON.parse(localStorage.getItem('createCompetition') as string)
-  : null
+const obj = localStorage.getItem('createCompetition') ? JSON.parse(localStorage.getItem('createCompetition') as string) : null
 
 const Competition: React.FC = () => {
   const [form] = Form.useForm()
   const [isHack, setisHack] = useState(false)
   const [isGroup, setisGroup] = useState(false)
-  const [timeRange, settimeRange] = useState(
-    obj
-      ? [dayjs(obj.timeRange[0]), dayjs(obj.timeRange[1])]
-      : [dayjs(), dayjs()]
-  )
+  const [timeRange, settimeRange] = useState(obj ? [dayjs(obj.timeRange[0]), dayjs(obj.timeRange[1])] : [dayjs(), dayjs()])
 
   const { RangePicker } = DatePicker
   useLayoutEffect(() => {
@@ -65,10 +47,7 @@ const Competition: React.FC = () => {
   }
 
   const timeRangeChange = (value: any, dateString: any) => {
-    form.setFieldValue('timeRange', [
-      dayjs(dateString[0]),
-      dayjs(dateString[1])
-    ])
+    form.setFieldValue('timeRange', [dayjs(dateString[0]), dayjs(dateString[1])])
   }
   const onFinish = () => {
     form.validateFields().then(() => {
@@ -87,22 +66,17 @@ const Competition: React.FC = () => {
             values[key] = JSON.stringify(values[key])
             break
           case 'hack_time':
-            values[key] = dayjs(values.end_time)
-              .add(values[key], 'minute')
-              .format('YYYY-MM-DD HH:mm:ss')
+            values[key] = dayjs(values.end_time).add(values[key], 'minute').format('YYYY-MM-DD HH:mm:ss')
             break
           default:
             break
         }
       })
       console.log(values)
-      createCompetitionApi(JSON.stringify(values)).then(res => {
+      createCompetitionApi(JSON.stringify(values)).then((res) => {
         console.log(res)
         if (res.data.code === 200) {
-          localStorage.setItem(
-            'competitionInfo',
-            JSON.stringify(res.data.data.competition)
-          )
+          localStorage.setItem('competitionInfo', JSON.stringify(res.data.data.competition))
           notification.success({
             message: res.data.msg,
             placement: 'topRight'
@@ -119,14 +93,14 @@ const Competition: React.FC = () => {
   return (
     <Form
       scrollToFirstError
-      name="problemForm"
+      name='problemForm'
       form={form}
       onFinish={onFinish}
-      layout="vertical"
+      layout='vertical'
     >
       <Form.Item
         name={'title'}
-        label="标题"
+        label='标题'
         required
         rules={[{ required: true }]}
       >
@@ -134,14 +108,14 @@ const Competition: React.FC = () => {
       </Form.Item>
       <Form.Item
         name={'type'}
-        label="比赛类型"
+        label='比赛类型'
         required
         rules={[{ required: true }]}
       >
         <Radio.Group
-          optionType="button"
+          optionType='button'
           options={competitionType}
-          onChange={e => {
+          onChange={(e) => {
             if (e.target.value === 'Group') setisGroup(true)
             else setisGroup(false)
           }}
@@ -153,7 +127,7 @@ const Competition: React.FC = () => {
             <Col>
               <Form.Item
                 name={'less_num'}
-                label="人数下限"
+                label='人数下限'
                 rules={[{ required: true }]}
               >
                 <InputNumber min={1}></InputNumber>
@@ -162,7 +136,7 @@ const Competition: React.FC = () => {
             <Col>
               <Form.Item
                 name={'up_num'}
-                label="人数上限"
+                label='人数上限'
                 dependencies={['less_num']}
                 rules={[{ required: true }]}
               >
@@ -175,30 +149,30 @@ const Competition: React.FC = () => {
 
       <Form.Item
         name={'timeRange'}
-        label="比赛时间"
+        label='比赛时间'
         rules={[{ required: true }]}
       >
         <RangePicker
           defaultValue={timeRange as any}
           showTime={{ format: 'HH:mm' }}
-          format="YYYY-MM-DD HH:mm"
+          format='YYYY-MM-DD HH:mm'
           onChange={timeRangeChange}
         ></RangePicker>
       </Form.Item>
       <Form.Item
         name={'content'}
-        label="描述"
+        label='描述'
         required
         rules={[{ required: true }]}
       >
         <TextEditor
-          mode="markdown"
+          mode='markdown'
           defaultHtml={obj ? obj.content : ''}
           htmlChange={(value: any) => textChange(value, 'content')}
         ></TextEditor>
       </Form.Item>
-      <Form.Item label="Hack">
-        <Switch onChange={value => setisHack(value)}></Switch>
+      <Form.Item label='Hack'>
+        <Switch onChange={(value) => setisHack(value)}></Switch>
       </Form.Item>
       {isHack && (
         <Form.Item noStyle>
@@ -206,7 +180,7 @@ const Competition: React.FC = () => {
             <Col span={6}>
               <Form.Item
                 name={'hack_time'}
-                label="Hack时长"
+                label='Hack时长'
                 rules={[{ required: true }]}
               >
                 <InputNumber addonAfter={'min'}></InputNumber>
@@ -215,7 +189,7 @@ const Competition: React.FC = () => {
             <Col>
               <Form.Item
                 name={'hack_score'}
-                label="Hack分数"
+                label='Hack分数'
                 tooltip={<span>黑客成功后的奖励分数</span>}
                 rules={[{ required: true }]}
               >
@@ -225,7 +199,7 @@ const Competition: React.FC = () => {
             <Col>
               <Form.Item
                 name={'hack_num'}
-                label="Hack次数"
+                label='Hack次数'
                 tooltip={<span>最多可以获得分数的黑客次数</span>}
                 rules={[{ required: true }]}
               >
@@ -235,7 +209,10 @@ const Competition: React.FC = () => {
           </Row>
         </Form.Item>
       )}
-      <Button htmlType="submit" type="primary">
+      <Button
+        htmlType='submit'
+        type='primary'
+      >
         保存
       </Button>
     </Form>
