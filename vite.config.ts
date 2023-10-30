@@ -16,22 +16,30 @@ export default defineConfig({
       '/api': {
         target: 'http://api_oj.mgaronya.com',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/api/, '')
+        rewrite: (path) => path.replace(/^\/api/, '')
       },
       '/test': {
         target: 'http://test_oj.mgaronya.com',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/test/, '')
+        rewrite: (path) => path.replace(/^\/test/, '')
       },
       '/tag_api': {
         target: 'http://api_tag.mgaronya.com',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/tag_api/, '')
+        rewrite: (path) => path.replace(/^\/tag_api/, '')
       },
       '/translate_api': {
         target: 'http://api_translate.mgaronya.com/translator/translate',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/tag_api/, '')
+        rewrite: (path) => path.replace(/^\/tag_api/, '')
+      }
+    }
+  },
+  build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true
       }
     }
   }
