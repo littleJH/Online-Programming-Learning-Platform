@@ -17,18 +17,20 @@ const Description: React.FC = () => {
   const [fetchDone, setfetchDone] = useState(false)
   const [mouseoverLike, setmouseoverLike] = useState(false)
 
+  console.log('problemDetail ==> ', problem)
+
   useLayoutEffect(() => {
     caseSamples
       ? caseSamples.forEach((item, index) => {
-          setdataSource(value => [
-            ...value,
-            {
-              key: String(item.cid),
-              input: item.input,
-              output: item.output
-            }
-          ])
-        })
+        setdataSource(value => [
+          ...value,
+          {
+            key: String(item.cid),
+            input: item.input,
+            output: item.output
+          }
+        ])
+      })
       : null
   }, [caseSamples])
 

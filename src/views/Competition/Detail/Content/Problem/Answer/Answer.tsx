@@ -14,7 +14,7 @@ import { Button, Popover, Segmented, Switch, Table, notification } from 'antd'
 import Column from 'antd/es/table/Column'
 import Code from '@/components/editor/CodeEditor'
 import { languageList } from '@/components/editor/LanguageList'
-import RunResult from '@/views/Problem/Detail/RunResult'
+import RunResult from '@/views/ProblemDetail/RunResult'
 import TextArea from 'antd/es/input/TextArea'
 import { createTestApi } from '@/api/test'
 import { createRecordApi } from '@/api/competitionMixture'
@@ -65,7 +65,7 @@ const Answer: React.FC = () => {
         ])
       })
     })
-    window.addEventListener('resize', () => {})
+    window.addEventListener('resize', () => { })
   }, [])
 
   useEffect(() => {

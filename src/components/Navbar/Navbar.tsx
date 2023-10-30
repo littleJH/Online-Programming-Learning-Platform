@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Menu } from 'antd'
 import type { MenuProps } from 'antd'
 import { redirect, useLocation, useNavigate } from 'react-router-dom'
-import { getPathArray } from '@/tool/myUtils/utils'
+import { getPathArray } from '@/tool/MyUtils/utils'
 import useNavTo from '@/tool/myHooks/useNavTo'
 
 const menuItem = [
@@ -12,7 +12,7 @@ const menuItem = [
   },
   {
     label: '题库',
-    key: 'problem'
+    key: 'problemset'
   },
   {
     label: '社区',
@@ -30,9 +30,6 @@ export default function Header(props: { headerNav: string }) {
 
   const handleMenuClick = (e: any) => {
     switch (e.key) {
-      case 'problem':
-        navTo('/problem/set/all')
-        break
       case 'community':
         navTo('/community/overview/articleset')
         break

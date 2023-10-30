@@ -33,7 +33,8 @@ export const formatProblemJson = async (file: RcFile) => {
 }
 
 export const getPathArray = (path: string) => {
-  const arr = path.split('/')
+  const index = path.indexOf('?')
+  const arr = path.slice(0, index > 0 ? index : path.length).split('/')
   arr.shift()
   return arr
 }

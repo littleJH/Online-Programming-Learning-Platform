@@ -9,9 +9,10 @@ import { IProblem } from '@/type'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
+import useNavTo from '@/tool/myHooks/useNavTo'
 
 const ProfileCretion: React.FC = () => {
-  const nav = useNavigate()
+  const nav = useNavTo()
   const info = useRecoilValue(userInfoState)
   const [problemList, setProblemList] = useState<IProblem[]>([])
   const [total, setTotal] = useState(0)
@@ -40,7 +41,7 @@ const ProfileCretion: React.FC = () => {
   }
   const handleTitleClick = (index: number) => {
     const id = problemList[index].id
-    nav(`/problem/${id}`)
+    nav(`/problem/${id}/detail`)
   }
   const handleDelete = (index: number) => {
     deleteProblemApi(problemList[index].id).then(res => {

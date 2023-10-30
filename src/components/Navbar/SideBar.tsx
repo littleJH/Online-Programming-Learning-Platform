@@ -11,17 +11,22 @@ import {
   InfoCircleOutlined
 } from '@ant-design/icons'
 import useNavTo from '@/tool/myHooks/useNavTo'
-import MySvgIcon from '../icon/MySvgIcon'
+import MySvgIcon from '../Icon/MySvgIcon'
+import { useRecoilValue } from 'recoil'
+import { pathNameState } from '@/store/appStore'
+import { getPathArray } from '@/tool/MyUtils/utils'
 
 const SideBar: React.FC<{ header: string }> = props => {
   const { header } = props
   const [current, setCurrent] = useState('')
   const [menuItem, setMenuItem] = useState([])
+  const pathname = useRecoilValue(pathNameState)
   const navTo = useNavTo()
 
   useEffect(() => {
+    setCurrent(getPathArray(pathname)[1])
     setMenuItem(menuItemObj[`${header}MenuItem`])
-  }, [header])
+  }, [header, pathname])
 
   const handleMenuClick = (e: any) => {
     setCurrent(e.key)
@@ -43,10 +48,18 @@ const SideBar: React.FC<{ header: string }> = props => {
   )
 }
 const menuItemObj: any = {
-  problemMenuItem: [
+  problemsetMenuItem: [
     {
-      label: '',
-      key: ''
+      label: '全部',
+      key: 'all'
+    },
+    {
+      label: '题单',
+      key: 'topic',
+    },
+    {
+      label: '表单',
+      key: 'form'
     }
   ],
   creationMenuItem: [

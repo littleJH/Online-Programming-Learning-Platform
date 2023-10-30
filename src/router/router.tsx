@@ -7,20 +7,21 @@ import {
   useRoutes
 } from 'react-router-dom'
 import React, { ReactNode, Suspense, lazy } from 'react'
-import Loading from '@/components/loading/Loading'
+import Loading from '@/components/Loading/Loading'
 import { useSetRecoilState } from 'recoil'
 import { headerNavState, pathNameState } from '@/store/appStore'
-import { getPathArray } from '@/tool/myUtils/utils'
+import { getPathArray } from '@/tool/MyUtils/utils'
 // import Article from '@/views/Profile/Creation/Article/Article'
 
 interface MyRoute {
   path: string
   element: any
   errorElement?: any
+  redirect?: string,
   children?: MyRoute[]
   meta?: {
-    title: string
-    needLogin: boolean
+    title?: string
+    needLogin?: boolean
   }
 }
 
@@ -50,20 +51,23 @@ const ProfileCreationArticle = lazy(
 const ProfileCreationProblem = lazy(
   () => import('@/views/Profile/pages/Creation/Problem')
 )
-const ProblemRoot = lazy(() => import('@/views/Problem/ProblemRoot'))
+const ProblemDetailRoot = lazy(() => import('@/views/ProblemDetail/DetailRoot'))
 const ProblemSetRoot = lazy(
-  () => import('@/views/Problem/ProblemSet/ProblemSetRoot')
+  () => import('@/views/ProblemSet/ProblemSetRoot')
 )
-const PorblemAll = lazy(() => import('@/views/Problem/ProblemSet/Set/All'))
-const ProblemId = lazy(() => import('@/views/Problem/Detail/Detail'))
+const PorblemAll = lazy(() => import('@/views/ProblemSet/set/All'))
+const ProblemTopic = lazy(() => import('@/views/ProblemSet/topic/Topic'))
+const ProblemForm = lazy(() => import('@/views/ProblemSet/form/Form'))
+
+const ProblemId = lazy(() => import('@/views/ProblemDetail/DetailRoot'))
 const ProblemDescription = lazy(
-  () => import('@/views/Problem/Detail/Description')
+  () => import('@/views/ProblemDetail/Description')
 )
 const ProblemSubmitrecord = lazy(
-  () => import('@/views/Problem/Detail/Record/Records')
+  () => import('@/views/ProblemDetail/Record/Records')
 )
 const ProblemCreate = lazy(
-  () => import('@/views/Creation/pages/createProblem/Create')
+  () => import('@/views/Creation/pages/CreateProblem/Create')
 )
 const Competition = lazy(() => import('@/views/Competition/CompetitionRoot'))
 const CompetitionList = lazy(() => import('@/views/Competition/List/List'))
@@ -89,16 +93,16 @@ const CompetitionRecord = lazy(
   () => import('@/views/Competition/Detail/Content/Record/Record')
 )
 const CompetitionCreate = lazy(
-  () => import('@/views/Creation/pages/createCompetition/Create')
+  () => import('@/views/Creation/pages/CreateCompetition/Create')
 )
 const CompetitionCreateDeclare = lazy(
-  () => import('@/views/Creation/pages/createCompetition/Declare')
+  () => import('@/views/Creation/pages/CreateCompetition/Declare')
 )
 const CompetitionCreateCompetition = lazy(
-  () => import('@/views/Creation/pages/createCompetition/Competition')
+  () => import('@/views/Creation/pages/CreateCompetition/Competition')
 )
 const CompetitionCreateProblem = lazy(
-  () => import('@/views/Creation/pages/createCompetition/Problem')
+  () => import('@/views/Creation/pages/CreateCompetition/Problem')
 )
 const CompetitionRandom = lazy(
   () => import('@/views/Competition/CompetitionRandom/CompetitionRandom')
@@ -185,27 +189,36 @@ const routes: MyRoute[] = [
           }
         ]
       },
-      // problem
+      // problemset
       {
-        path: 'problem',
-        element: ProblemRoot,
+        path: 'problemset',
+        element: ProblemSetRoot,
+        redirect: '/problemset/all',
         children: [
           {
-            path: 'set',
-            element: ProblemSetRoot,
-            children: [
-              {
-                path: 'all',
-                element: PorblemAll
-              }
-            ]
+            path: 'all',
+            element: PorblemAll
           },
+          {
+            path: 'topic',
+            element: ProblemTopic
+          }, {
+            path: 'form',
+            element: ProblemForm
+          }
+        ]
+      },
+      //problemDetail
+      {
+        path: 'problemdetail',
+        element: ProblemDetailRoot,
+        children: [
           {
             path: ':id',
             element: ProblemId,
             children: [
               {
-                path: '',
+                path: 'description',
                 element: ProblemDescription
               },
               {
@@ -354,9 +367,9 @@ const routes: MyRoute[] = [
 
 const Guard: React.FC<{
   element: ReactNode
-  meta: { title: string; needLogin: boolean }
+  meta: { title: string; needLogin: boolean, redirect: string }
 }> = props => {
-  let { element, meta = { needLogin: true, title: 'DOJ' } } = props
+  let { element, meta = { needLogin: false, title: 'DOJ' } } = props
   const { needLogin, title } = meta
   const { pathname } = useLocation()
   if (title) document.title = title

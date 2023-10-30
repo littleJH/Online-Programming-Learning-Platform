@@ -40,6 +40,7 @@ import {
 import { getUserInfoApi } from '@/api/user'
 import { iconBaseUrl } from '@/api/baseConfig'
 import ProblemTable from '../ProblemTable'
+import useNavTo from '@/tool/myHooks/useNavTo'
 
 interface ITag {
   label: string
@@ -69,37 +70,26 @@ const ProblemList: React.FC<IProps> = props => {
   const {
     mode,
     width,
-    selectedProblems,
     setSelectedProblems,
     selectedRowKeys
   } = props
-  const [querys, setQuerys] = useSearchParams()
-  const nav = useNavigate()
+  const nav = useNavTo()
   const { Search } = Input
+  const [querys, setQuerys] = useSearchParams()
+  const [topic_id, setTopic_id] = useState(querys.get('topic') || '')
+  const [searchText, setSearchText] = useState<string>(querys.get('text') || '')
+  const [labelGroup, setLabelGroup] = useState<string[]>(JSON.parse(querys.get('labels') || '[]'))
+  const [pageNum, setPageNum] = useState<number>(Number(querys.get('pageNum') || 1))
+  const [pageSize, setPageSize] = useState(Number(querys.get('pageSize') || 20))
   const [problemList, setproblemList] = useState<IProblem[]>([])
   const [topicList, setTopicList] = useState<ITopic[]>([])
   const [selectedTopic, setSelectedTopic] = useState<ITopic | undefined>()
-  const [topic_id, setTopic_id] = useState(
-    querys.get('topic') ? (querys.get('topic') as string) : ''
-  )
   const [tagList, setTagList] = useState<ITag[]>([])
   const [fetchDone, setFetchDone] = useState(false)
-  // const searchMode = useRef<
-  //   'default' | 'textSearch' | 'labelSearch' | 'text&label'
-  // >('default')
-  const [searchText, setSearchText] = useState<string>(
-    querys.get('text') ? (querys.get('text') as string) : ''
-  )
-  const [labelGroup, setLabelGroup] = useState<string[]>(
-    querys.get('labels') ? JSON.parse(querys.get('labels') as string) : []
-  )
   const [total, setTotal] = useState(0)
-  const [pageNum, setPageNum] = useState(1)
-  const [pageSize, setPageSize] = useState(20)
   const leftCtn = useRef<HTMLDivElement>(null)
   const searchCtn = useRef<HTMLDivElement>(null)
   const [tableScrollHeight, setTableScrollHeight] = useState(0)
-  // const [first, setFirst] = useState(true)
 
   useEffect(() => {
     if (!topic_id && !searchText.length && !labelGroup.length) {
@@ -132,27 +122,12 @@ const ProblemList: React.FC<IProps> = props => {
     })
   }, [])
 
-  // useEffect(() => {
-  //   const resize = () => {
-  //     if (leftCtn && searchCtn) {
-  //       setTableScrollHeight(
-  //         leftCtn.clientHeight - searchCtn?.clientHeight - 80
-  //       )
-  //     }
-  //   }
-  //   resize()
-  //   window.addEventListener('resize', resize)
-  //   return () => {
-  //     window.removeEventListener('reseize', resize)
-  //   }
-  // }, [problemList])
-
   useEffect(() => {
     fetchDone
       ? document.querySelector('#mainContent')?.scrollTo({
-          left: 0,
-          top: 0
-        })
+        left: 0,
+        top: 0
+      })
       : null
   }, [fetchDone])
 
@@ -199,12 +174,9 @@ const ProblemList: React.FC<IProps> = props => {
 
   // 监听labelGroup
   useEffect(() => {
-    setQuerys(() => {
-      return [
-        ['topic', topic_id],
-        ['text', searchText],
-        ['labels', JSON.stringify(labelGroup)]
-      ]
+    setQuerys((search) => {
+      search.set('labels', JSON.stringify(labelGroup))
+      return search
     })
     if (first) return
     resetPage()
@@ -226,46 +198,8 @@ const ProblemList: React.FC<IProps> = props => {
       console.log(problemsRes.data.data)
       setTotal(problemsRes.data.data.total)
       setproblemList(problemsRes.data.data.problems)
-      // fetchProblems(problemsRes.data.data.problems)
     })
   }, [])
-
-  // const fetchProblems = useCallback(async (problems: IProblem[]) => {
-  //   setFetchDone(false)
-  //   let index = 0
-  //   const list: IPrblemTableDataType[] = []
-  //   for (let problem of problems) {
-  //     const res = await Promise.all([
-  //       getRecordListApi({
-  //         problem_id: problem.id
-  //       }),
-  //       getRecordListApi({
-  //         problem_id: problem.id,
-  //         condition: 'Accepted'
-  //       }),
-  //       getProblemLabelsApi(problem.id)
-  //     ])
-  //     list.push({
-  //       key: problem.id as string,
-  //       index: (pageNum - 1) * pageSize + index + 1,
-  //       title: problem.title,
-  //       description: problem.description,
-  //       totaRecords: res[0].data.data.total,
-  //       accpet: res[1].data.data.total,
-  //       acPerc: (
-  //         <AcPercentLabel
-  //           total={res[0].data.data.total}
-  //           accept={res[1].data.data.total}
-  //         ></AcPercentLabel>
-  //       ),
-  //       labels: res[2].data.data.problemLabels
-  //     })
-  //     index++
-  //   }
-  //   setproblemList(list)
-  //   setFetchDone(true)
-  //   setFirst(false)
-  // }, [])
 
   const fetchTopics = useCallback(async (topic_id: string) => {
     setFetchDone(false)
@@ -278,15 +212,14 @@ const ProblemList: React.FC<IProps> = props => {
       problems.push(res.data.data.problem)
     }
     setproblemList(problems)
-    // fetchProblems(problems)
   }, [])
 
   const toDetail = (index: number) => {
     const id = problemList[index].id
-    nav(`/problem/${id}`)
+    nav(`/problemdetail/${id}/description`)
   }
 
-  const searchProblemByText = useCallback(() => {
+  const searchProblemByText = () => {
     setFetchDone(false)
     if (topic_id) {
       searchProblemInTopicByTextApi(
@@ -298,19 +231,17 @@ const ProblemList: React.FC<IProps> = props => {
         console.log(res.data)
         setTotal(res.data.data.total)
         setproblemList(res.data.data.problems)
-        // fetchProblems(res.data.data.problems)
       })
     } else {
       searchProblemByTextApi(searchText, pageNum, pageSize).then(res => {
         console.log(res.data)
         setTotal(res.data.data.total)
         setproblemList(res.data.data.problems)
-        // fetchProblems(res.data.data.problems)
       })
     }
-  }, [searchText, topic_id, pageNum, pageSize])
+  }
 
-  const searchProblemsByLabels = useCallback(
+  const searchProblemsByLabels =
     (index: number) => {
       console.log('searchProblemsByLabels', index, first)
       setFetchDone(false)
@@ -324,21 +255,17 @@ const ProblemList: React.FC<IProps> = props => {
           console.log(res.data.data)
           setTotal(res.data.data.total)
           setproblemList(res.data.data.problems)
-          // fetchProblems(res.data.data.problems)
         })
       } else {
         searchProblemByLabelApi(labelGroup, pageNum, pageSize).then(res => {
           console.log(res.data.data)
           setTotal(res.data.data.total)
           setproblemList(res.data.data.problems)
-          // fetchProblems(res.data.data.problems)
         })
       }
-    },
-    [labelGroup, topic_id, pageNum, pageSize]
-  )
+    }
 
-  const searchProblemByTextAndLabel = useCallback(() => {
+  const searchProblemByTextAndLabel = () => {
     setFetchDone(false)
     if (topic_id) {
       searchProblemInTopicByTextLabelApi(
@@ -352,7 +279,6 @@ const ProblemList: React.FC<IProps> = props => {
         setTotal(res.data.data.total)
         console.log(res.data)
         setproblemList(res.data.data.problems)
-        // fetchProblems(res.data.data.problems)
       })
     } else {
       searchProblemByTextAndLabelApi(
@@ -363,34 +289,27 @@ const ProblemList: React.FC<IProps> = props => {
       ).then(res => {
         console.log(res.data)
         setTotal(res.data.data.total)
-        // fetchProblems(res.data.data.problems)
       })
     }
-  }, [searchText, labelGroup, topic_id, pageNum, pageSize])
+  }
 
-  const handleTopicChange = useCallback(
+  const handleTopicChange =
     async (value: string) => {
-      console.log('topic change')
       const topic = topicList.find(topic => topic.id === value)
       if (topic) {
         const res = await getUserInfoApi(topic.user_id)
         topic.user = res.data.data.user
       }
       resetPage()
-      setTopic_id(topic ? topic?.id : '')
+      setTopic_id(topic?.id || '')
       setSelectedTopic(topic)
-      setQuerys(() => {
-        return [
-          ['topic', topic ? topic?.id : ''],
-          ['text', searchText],
-          ['labels', JSON.stringify(labelGroup)]
-        ]
+      setQuerys((search) => {
+        search.set('topic', topic?.id || '')
+        return search
       })
-    },
-    [topicList, searchText, labelGroup]
-  )
+    }
 
-  const handleSearch = useCallback(() => {
+  const handleSearch = () => {
     if (!searchText.length) return
     resetPage()
     if (!labelGroup.length) {
@@ -398,36 +317,44 @@ const ProblemList: React.FC<IProps> = props => {
     } else {
       searchProblemByTextAndLabel()
     }
-  }, [searchText, labelGroup])
+  }
 
-  const handleTagClick = useCallback(
+  const handleTagClick =
     (index: number) => {
       const list = [...tagList]
       list[index].checked = !list[index].checked
       setTagList(list)
-    },
-    [tagList]
-  )
+    }
 
-  const handleDeselect = useCallback(
+  const handleDeselect =
     (value: string) => {
       const list = [...tagList]
       const index = tagList.findIndex(item => item.label === value)
       list[index].checked = false
       setTagList(list)
-    },
-    [tagList]
-  )
+    }
 
-  const handleClear = useCallback(() => {
+  const handleClear = () => {
     const list = [...tagList]
     list.forEach(item => (item.checked = false))
     setTagList(list)
-  }, [tagList, topic_id, searchText])
+  }
 
-  const handlePageChange = useCallback(
+  const handleTextChange = ((event: any) => {
+    setSearchText(event.target.value)
+    setQuerys((search) => {
+      search.set('text', event.target.value)
+      return search
+    })
+  })
+
+  const handlePageChange =
     (num: number, size: number) => {
-      console.log('handlePageChange')
+      setQuerys((search) => {
+        search.set('pageNum', String(num))
+        search.set('pageSize', String(size))
+        return search
+      })
       setPageNum(num)
       setPageSize(size)
       if (!topic_id && !searchText.length && !labelGroup.length) {
@@ -439,9 +366,7 @@ const ProblemList: React.FC<IProps> = props => {
         else if (labelGroup.length) searchProblemsByLabels(5)
         else fetchTopics(topic_id)
       }
-    },
-    [selectedProblems, searchText, labelGroup, topic_id]
-  )
+    }
 
   const resetPage = () => {
     setPageNum(1)
@@ -484,9 +409,8 @@ const ProblemList: React.FC<IProps> = props => {
                       color={`${item.checked ? '#6366f1' : '#f1f5f9'}`}
                     >
                       <div
-                        className={`hover:cursor-pointer select-none ${
-                          item.checked ? 'text-white' : 'text-slate-700'
-                        }`}
+                        className={`hover:cursor-pointer select-none ${item.checked ? 'text-white' : 'text-slate-700'
+                          }`}
                         onClick={() => handleTagClick(index)}
                       >
                         {item.label}
@@ -511,22 +435,13 @@ const ProblemList: React.FC<IProps> = props => {
             </Popover>
             <Search
               style={{
-                width: '128px'
+                width: '256px'
               }}
               defaultValue={searchText}
               placeholder="文本搜索"
               enterButton
               onSearch={handleSearch}
-              onChange={event => {
-                setSearchText(event.target.value)
-                setQuerys(() => {
-                  return [
-                    ['topic', topic_id],
-                    ['text', event.target.value],
-                    ['labels', JSON.stringify(labelGroup)]
-                  ]
-                })
-              }}
+              onChange={handleTextChange}
             ></Search>
           </Space>
           {selectedTopic && (

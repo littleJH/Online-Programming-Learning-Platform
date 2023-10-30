@@ -132,45 +132,45 @@ const ProblemTable: React.FC<IProps> = props => {
           scroll={
             mode === 'select'
               ? {
-                  y: tableScrollHeight
-                }
+                y: tableScrollHeight
+              }
               : undefined
           }
           rowSelection={
             mode === 'select' && setSelectedProblems
               ? {
-                  columnWidth: 64,
-                  selectedRowKeys: selectedRowKeys,
-                  onChange: (value, selectedRows, info) => {
-                    if (info.type === 'all') {
-                      value.length
-                        ? setSelectedProblems((prev: any) => [
-                            ...prev,
-                            ...selectedRows
-                          ])
-                        : setSelectedProblems(
-                            (prev: IPrblemTableDataType[]) => [
-                              ...prev.filter(
-                                value =>
-                                  dataSource.findIndex(
-                                    val => val.key === value.key
-                                  ) === -1
-                              )
-                            ]
+                columnWidth: 64,
+                selectedRowKeys: selectedRowKeys,
+                onChange: (value, selectedRows, info) => {
+                  if (info.type === 'all') {
+                    value.length
+                      ? setSelectedProblems((prev: any) => [
+                        ...prev,
+                        ...selectedRows
+                      ])
+                      : setSelectedProblems(
+                        (prev: IPrblemTableDataType[]) => [
+                          ...prev.filter(
+                            value =>
+                              dataSource.findIndex(
+                                val => val.key === value.key
+                              ) === -1
                           )
-                    }
-                  },
-                  onSelect: (record, selected) => {
-                    selected
-                      ? setSelectedProblems((prev: IPrblemTableDataType[]) => [
-                          ...prev,
-                          record
-                        ])
-                      : setSelectedProblems((prev: IPrblemTableDataType[]) => [
-                          ...prev.filter(value => value.key !== record.key)
-                        ])
+                        ]
+                      )
                   }
+                },
+                onSelect: (record, selected) => {
+                  selected
+                    ? setSelectedProblems((prev: IPrblemTableDataType[]) => [
+                      ...prev,
+                      record
+                    ])
+                    : setSelectedProblems((prev: IPrblemTableDataType[]) => [
+                      ...prev.filter(value => value.key !== record.key)
+                    ])
                 }
+              }
               : undefined
           }
           size="small"
@@ -209,11 +209,11 @@ const ProblemTable: React.FC<IProps> = props => {
                 >
                   <div
                     className="w-16"
-                    // style={{
-                    //   overflow: 'hidden',
-                    //   textOverflow: 'ellipsis',
-                    //   whiteSpace: 'nowrap'
-                    // }}
+                  // style={{
+                  //   overflow: 'hidden',
+                  //   textOverflow: 'ellipsis',
+                  //   whiteSpace: 'nowrap'
+                  // }}
                   >
                     {value.slice(value.length - 5)}
                   </div>

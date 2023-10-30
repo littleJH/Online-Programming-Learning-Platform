@@ -6,7 +6,7 @@ import {
   pathNameState
 } from '@/store/appStore'
 import { useSetRecoilState, useResetRecoilState, useRecoilValue } from 'recoil'
-import { getPathArray } from '../myUtils/utils'
+import { getPathArray } from '../MyUtils/utils'
 
 const useNavTo = () => {
   const nav = useNavigate()

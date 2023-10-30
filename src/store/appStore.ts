@@ -8,7 +8,7 @@ import {
 } from '@/type'
 import { atom, selector } from 'recoil'
 import { notification } from 'antd'
-import { getPathArray } from '@/tool/myUtils/utils'
+import { getPathArray } from '@/tool/MyUtils/utils'
 
 const userInfoAtomState = atom<User | null>({
   key: 'userInfoAtomState',

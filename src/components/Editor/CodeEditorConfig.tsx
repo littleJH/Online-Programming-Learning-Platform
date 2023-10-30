@@ -53,51 +53,45 @@ const CodeEditorConfig: React.FC<IProps> = props => {
       </Row>
       <h6 className="label">间距</h6>
       <Row gutter={32}>
-        <Col span={12}>
-          <Row gutter={32}>
-            <Col span={8}>
-              <Form.Item name={'lineHeight'} label="行高">
-                <InputNumber
-                  defaultValue={monacoConfig.options.fontSize}
-                  min={0}
-                  step={2}
-                ></InputNumber>
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item name={'letterSpacing'} label="字母间距">
-                <InputNumber
-                  defaultValue={monacoConfig.options.letterSpacing}
-                  min={0}
-                  step={1}
-                ></InputNumber>
-              </Form.Item>
-            </Col>
-          </Row>
+        <Col span={8}>
+          <Form.Item name={'lineHeight'} label="行高">
+            <InputNumber
+              defaultValue={monacoConfig.options.fontSize}
+              min={0}
+              step={2}
+            ></InputNumber>
+          </Form.Item>
         </Col>
-        <Col span={12}>
-          <Form.Item name={'padding'} label="边距" noStyle>
-            <Row gutter={32}>
-              <Col span={8}>
-                <Form.Item name={'top'} label="上边距">
-                  <InputNumber
-                    defaultValue={monacoConfig.options.padding.top}
-                    min={0}
-                  ></InputNumber>
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item name={'bottom'} label="下边距">
-                  <InputNumber
-                    defaultValue={monacoConfig.options.padding.bottom}
-                    min={0}
-                  ></InputNumber>
-                </Form.Item>
-              </Col>
-            </Row>
+        <Col span={8}>
+          <Form.Item name={'letterSpacing'} label="字母间距">
+            <InputNumber
+              defaultValue={monacoConfig.options.letterSpacing}
+              min={0}
+              step={1}
+            ></InputNumber>
           </Form.Item>
         </Col>
       </Row>
+      <Form.Item name={'padding'} label="边距" noStyle>
+        <Row gutter={32}>
+          <Col span={8}>
+            <Form.Item name={'top'} label="上边距">
+              <InputNumber
+                defaultValue={monacoConfig.options.padding.top}
+                min={0}
+              ></InputNumber>
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item name={'bottom'} label="下边距">
+              <InputNumber
+                defaultValue={monacoConfig.options.padding.bottom}
+                min={0}
+              ></InputNumber>
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form.Item>
 
       <h6 className="label">滚轮/滚动</h6>
       <Row gutter={32}>

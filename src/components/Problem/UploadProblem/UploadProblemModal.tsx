@@ -11,7 +11,7 @@ import {
 import { RcFile, UploadChangeParam, UploadFile } from 'antd/es/upload'
 import { createTagAutoApi } from '@/api/tag'
 import { IProblem } from '@/type'
-import { formatProblemJson } from '@/tool/myUtils/utils'
+import { formatProblemJson } from '@/tool/MyUtils/utils'
 
 interface IProps {
   openUploadModal: boolean

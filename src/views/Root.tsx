@@ -82,7 +82,7 @@ const Root: React.FC = () => {
           </Sider>
           <Content
             id="mainContent"
-            className="bg-white overflow-y-auto scroll-smooth px-16 py-8"
+            className="bg-white overflow-y-auto scroll-smooth px-16 py-8 flex justify-center"
           >
             <Outlet></Outlet>
           </Content>
