@@ -12,6 +12,7 @@ const baseUrlObj: any = {
 }
 
 export const iconBaseUrl = 'http://icon.mgaronya.com'
+export const imgGetBaseUrl = 'http://img.mgaronya.com'
 export const imgBaseUrl = 'http://api_img.mgaronya.com'
 export const baseURL = import.meta.env.DEV ? '/api' : 'http://api_oj.mgaronya.com'
 

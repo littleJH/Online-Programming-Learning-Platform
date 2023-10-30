@@ -10,7 +10,7 @@ import { UploadRequestOption } from 'rc-upload/lib/interface'
 import { uploadImgApi } from '@/api/img'
 import { getCategoryListApi } from '@/api/category'
 import TextEditor from '@/components/editor/TextEditor'
-import { iconBaseUrl, imgBaseUrl } from '@/api/baseConfig'
+import { iconBaseUrl, imgBaseUrl, imgGetBaseUrl } from '@/api/baseConfig'
 
 const options: SelectProps['options'] = []
 const creation_article_title = localStorage.getItem('creation_article_title')
@@ -116,8 +116,8 @@ const CreateArticle: React.FC<{}> = () => {
     } = await uploadImgApi(form)
     if (code === 200) {
       file.status = 'done'
-      file.url = `${imgBaseUrl}/${data.Icon}`
-      setIconUrl(`${iconBaseUrl}/${data.Icon}`)
+      file.url = `${imgGetBaseUrl}/${data.Icon}`
+      setIconUrl(`${imgGetBaseUrl}/${data.Icon}`)
       setIconFile([file])
     }
   }
@@ -180,7 +180,6 @@ const CreateArticle: React.FC<{}> = () => {
             onSelect={(value) => setcategory(value)}
           ></Select>
           <Dragger
-            height={168}
             style={{
               width: '100%'
             }}
@@ -198,7 +197,7 @@ const CreateArticle: React.FC<{}> = () => {
                 style={{ width: '100%' }}
               ></img>
             ) : (
-              <span>拖拽或点击上传“封面”</span>
+              <div className='my-16'>拖拽或点击上传“封面”</div>
             )}
           </Dragger>
           <div className='flex justify-center'>
