@@ -1,15 +1,18 @@
 import { BrowserRouter } from 'react-router-dom'
 import RouterWaiter from './router/router'
-import { useRecoilValue } from 'recoil'
-import { ConfigProvider } from 'antd'
-import { themeState } from './store/appStore'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { ConfigProvider, notification } from 'antd'
+import { notificationApi, themeState } from './store/appStore'
 import { useEffect } from 'react'
 import './style.scss'
 
 function App() {
   const theme = useRecoilValue(themeState)
+  const setNotificationApi = useSetRecoilState(notificationApi)
+  const [api, contextHolder] = notification.useNotification()
 
   useEffect(() => {
+    setNotificationApi(api)
     const globalStyle = document.getElementsByTagName('body')[0].style
     for (let key in theme) {
       if (theme[key]) {
@@ -43,6 +46,7 @@ function App() {
         }
       }}
     >
+      {contextHolder}
       <BrowserRouter>
         <RouterWaiter />
       </BrowserRouter>

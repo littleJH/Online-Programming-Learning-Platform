@@ -2,8 +2,9 @@ import { getCurrentUserinfo } from '@/api/user'
 import { IArticle, IProblem, IMonacoConfig, User, IPersonalizeConfig } from '@/type'
 import { atom, selector } from 'recoil'
 import { notification } from 'antd'
-import { getPathArray } from '@/tool/MyUtils/utils'
+import { getPathArray } from '@/tool/myUtils/Utils'
 import { themeDefault, monacoConfigDefault } from '@/config/config'
+import { NotificationInstance } from 'antd/es/notification/interface'
 
 export const userInfoAtomState = atom<User | null>({
   key: 'userInfoAtomState',
@@ -103,4 +104,9 @@ export const headerNavState = selector<string>({
 export const sideBarCollapsed = atom<boolean>({
   key: 'sideBarCollapsed',
   default: false
+})
+
+export const notificationApi = atom<NotificationInstance | null>({
+  key: 'notificationApi',
+  default: null
 })

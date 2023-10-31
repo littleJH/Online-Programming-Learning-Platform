@@ -2,7 +2,7 @@ import { Button, ColorPicker, Divider, Form, notification, theme } from 'antd'
 import React, { useCallback, useState } from 'react'
 import CodeEditorConfig from '@/components/editor/CodeEditorConfig'
 import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil'
-import { monacoConfigState, themeState, userInfoAtomState, userInfoState } from '@/store/appStore'
+import { monacoConfigState, notificationApi, themeState, userInfoAtomState, userInfoState } from '@/store/appStore'
 import { getCurrentUserinfo, updateInfoApi } from '@/api/user'
 import { Color } from 'antd/es/color-picker'
 import { themeDefault } from '@/config/config'
@@ -13,6 +13,7 @@ const Setting: React.FC = () => {
   const [monacoConfig, setMonacoConfig] = useState(monacoConfigRecoil)
   const [info, setInfo] = useRecoilState(userInfoState)
   const [theme, setTheme] = useRecoilState(themeState)
+  const notification = useRecoilValue(notificationApi)
 
   const handleClick = () => {
     updateConfig()
@@ -39,9 +40,10 @@ const Setting: React.FC = () => {
       if (res.data.code === 200) {
         const res = await getCurrentUserinfo()
         setInfo(res.data.data.user)
-        notification.success({
-          message: '保存成功'
-        })
+        notification &&
+          notification.success({
+            message: '保存成功'
+          })
       }
     })
   }

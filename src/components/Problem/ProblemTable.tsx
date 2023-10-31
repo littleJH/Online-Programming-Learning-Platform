@@ -7,6 +7,8 @@ import ReadOnly from '../editor/ReadOnly'
 import { getRecordListApi } from '@/api/record'
 import { getProblemLabelsApi } from '@/api/problem'
 import AcPercentLabel from '../Label/ProblemLabel/AcPercentLabel'
+import { useRecoilValue } from 'recoil'
+import { themeState } from '@/store/appStore'
 
 interface IProps {
   mode: 'select' | 'default' | 'action'
@@ -33,6 +35,7 @@ let flag = false
 const ProblemTable: React.FC<IProps> = (props) => {
   const { mode, pageNum, pageSize, total, tableScrollHeight, setSelectedProblems, selectedRowKeys, problemList, onPageChange, onTitleClick, onDelete, onUpdate, fetchDone, setFetchDone, setPageNum, setPageSize, setFirst } = props
   const [dataSource, setDataSource] = useState<IPrblemTableDataType[]>([])
+  const theme = useRecoilValue(themeState)
 
   useEffect(() => console.log('dataSource ==> ', dataSource), [dataSource])
   useEffect(() => {
@@ -191,7 +194,8 @@ const ProblemTable: React.FC<IProps> = (props) => {
                 }}
               >
                 <div
-                  className='hover:cursor-pointer text-indigo-500 min-w-max'
+                  color={theme.colorPrimary}
+                  className='hover:cursor-pointer min-w-max'
                   onClick={() => onTitleClick(index)}
                 >
                   {value}
