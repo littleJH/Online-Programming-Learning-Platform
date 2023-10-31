@@ -190,7 +190,7 @@ body,
 }
 
 .label::before {
-  content: '.';
+  content: '|';
   border-radius: 0.1rem;
   margin-right: 0.5rem;
   background: $colorPrimary;

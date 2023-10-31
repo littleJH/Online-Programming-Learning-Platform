@@ -26,6 +26,7 @@ const Setting: React.FC = () => {
       options: monacoConfig.options
     }
     const newTheme = { ...theme, ...form.getFieldsValue(true) }
+    console.log(newTheme)
     const newInfo = {
       ...info,
       res_long: JSON.stringify({
@@ -52,6 +53,7 @@ const Setting: React.FC = () => {
     //     theme: personalizeConfig.
     //   })
     // }
+    console.log(form.getFieldsValue(true))
     setTheme(form.getFieldsValue(true))
     const globalStyle = document.getElementsByTagName('body')[0].style
     globalStyle.setProperty(`--${key}`, `#${value.toHex()}`)
@@ -60,7 +62,15 @@ const Setting: React.FC = () => {
 
   return (
     <div style={{ width: '512px' }}>
-      <h3 className='label'>主题设置</h3>
+      <h3 className='label flex items-center'>
+        主题设置
+        <Button
+          size='small'
+          style={{ fontSize: '0.5rem', marginLeft: '1rem' }}
+        >
+          重置
+        </Button>
+      </h3>
       <Divider></Divider>
       <Form form={form}>
         <Form.Item
