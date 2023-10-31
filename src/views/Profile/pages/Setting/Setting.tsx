@@ -1,10 +1,11 @@
-import { Button, ColorPicker, Divider, Form, theme } from 'antd'
+import { Button, ColorPicker, Divider, Form, notification, theme } from 'antd'
 import React, { useCallback, useState } from 'react'
 import CodeEditorConfig from '@/components/editor/CodeEditorConfig'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { monacoConfigState, themeState, userInfoState } from '@/store/appStore'
+import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil'
+import { monacoConfigState, themeState, userInfoAtomState, userInfoState } from '@/store/appStore'
 import { getCurrentUserinfo, updateInfoApi } from '@/api/user'
 import { Color } from 'antd/es/color-picker'
+import { themeDefault } from '@/config/config'
 
 const Setting: React.FC = () => {
   const [form] = Form.useForm()
@@ -18,7 +19,6 @@ const Setting: React.FC = () => {
   }
 
   const updateConfig = (language?: string) => {
-    console.log('form ==> ', form.getFieldsValue(true))
     const personalizeConfig = info && info.res_long !== '' ? JSON.parse(info.res_long) : {}
     const newMonaco = {
       language: language ? language : monacoConfig.language,
@@ -39,25 +39,21 @@ const Setting: React.FC = () => {
       if (res.data.code === 200) {
         const res = await getCurrentUserinfo()
         setInfo(res.data.data.user)
+        notification.success({
+          message: '保存成功'
+        })
       }
     })
   }
 
   const handleColorChange = (value: Color, key: string) => {
-    // const newTheme = {...theme}
-    // const personalizeConfig = info && info.res_long !== '' ? JSON.parse(info.res_long) : {}
-    // const newInfo = {
-    //   ...info,
-    //   res_long: JSON.stringify({
-    //     ...personalizeConfig,
-    //     theme: personalizeConfig.
-    //   })
-    // }
-    console.log(form.getFieldsValue(true))
-    setTheme(form.getFieldsValue(true))
-    const globalStyle = document.getElementsByTagName('body')[0].style
-    globalStyle.setProperty(`--${key}`, `#${value.toHex()}`)
     form.setFieldValue(key, value.toHex())
+    setTheme(form.getFieldsValue(true))
+  }
+
+  const handleResetClick = async () => {
+    setTheme(themeDefault)
+    form.resetFields()
   }
 
   return (
@@ -66,7 +62,9 @@ const Setting: React.FC = () => {
         主题设置
         <Button
           size='small'
-          style={{ fontSize: '0.5rem', marginLeft: '1rem' }}
+          style={{ fontSize: '0.75rem', marginLeft: '1rem' }}
+          type='dashed'
+          onClick={handleResetClick}
         >
           重置
         </Button>

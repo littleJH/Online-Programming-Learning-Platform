@@ -14,10 +14,6 @@ export const userInfoAtomState = atom<User | null>({
     })
     .catch(() => {
       if (['/login'].includes(location.pathname)) return
-      notification.error({
-        message: '获取个人信息失败',
-        description: '请检查登录状态'
-      })
       const a = document.createElement('a')
       a.href = '/login'
       a.click()
@@ -28,6 +24,7 @@ export const userInfoState = selector<User | null>({
   key: 'userInfoState',
   get: ({ get }) => (get(userInfoAtomState) ? get(userInfoAtomState) : null),
   set: ({ set }, newValue) => {
+    console.log('userInfo newValue ==> ', newValue)
     set(userInfoAtomState, newValue)
   }
 })
@@ -43,13 +40,20 @@ export const themeState = selector({
     const userInfo = get(userInfoState)
     if (userInfo?.res_long === '' || !userInfo) return themeDefault
     else {
-      console.log('personalConfig ==> ', JSON.parse(userInfo.res_long))
       const { theme } = JSON.parse(userInfo.res_long) as IPersonalizeConfig
       return { ...themeDefault, ...theme }
     }
   },
-  set: ({ set }, newValue) => {
-    console.log({ ...newValue })
+  set: ({ set, get }, newValue) => {
+    const userInfo = get(userInfoState) as User
+    const config = JSON.parse(userInfo.res_long)
+    set(userInfoState, {
+      ...userInfo,
+      res_long: JSON.stringify({
+        ...config,
+        theme: { ...config.theme, ...newValue }
+      })
+    })
   }
 })
 

@@ -6,7 +6,7 @@ export const themeDefault: ITheme = {
   colorWarning: '#f59e0b',
   colorError: '#ef4444',
   colorInfo: '#3b82f6',
-  colorTextBase: 'rgba(0, 0, 0, 0.88)'
+  colorTextBase: '#000'
 }
 
 export const monacoConfigDefault: IMonacoConfig = {
