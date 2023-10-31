@@ -1,8 +1,6 @@
-import axios from 'axios'
-import { baseURL, baseConfig, jsonConfig } from './baseConfig'
-const request = axios.create({
-  baseURL: `${baseURL}/remark`
-})
+import { createRequest, baseConfig, jsonConfig } from '../config/apiConfig'
+
+const request = createRequest({ baseURL: 'remark' })
 
 // article
 
@@ -10,19 +8,12 @@ export const createArticleRemarkApi = (id: string, data: any) => {
   return request.post(`/create/${id}`, data, jsonConfig())
 }
 
-export const getArticleRemarkListApi = (
-  id: string,
-  pageNum: number = 1,
-  pageSize: number = 20
-) => {
+export const getArticleRemarkListApi = (id: string, pageNum: number = 1, pageSize: number = 20) => {
   return request.get(`/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 
 // like
-export const getRemarkLikeNumApi = (
-  id: string,
-  type: 'true' | 'false' = 'true'
-) => {
+export const getRemarkLikeNumApi = (id: string, type: 'true' | 'false' = 'true') => {
   return request.get(`/like/number/${id}?like=${type}`)
 }
 

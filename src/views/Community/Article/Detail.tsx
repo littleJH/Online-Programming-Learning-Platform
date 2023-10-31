@@ -21,18 +21,15 @@ import {
 import { createArticleRemarkApi, getArticleRemarkListApi } from '@/api/remark'
 import { getUserInfoApi } from '@/api/user'
 import ReadOnly from '@/components/editor/ReadOnly'
-import style from './style.module.scss'
-import { Button, Divider, Modal, Skeleton, Space } from 'antd'
+import { Button, Divider, Modal, Space } from 'antd'
 import CommunityLabel from '@/components/Label/CommunityLabel/CommunityLabel'
 import TextEditor from '@/components/editor/TextEditor'
-import RemarkCard from '@/components/card/RemarkCard'
-
-let visibled = false
+import RemarkCard from '@/components/Card/RemarkCard'
+import SideActionBar from '@/components/SideActionBar/SideActionBar'
 
 const Detail: React.FC = () => {
   const { article_id } = useParams() as { article_id: string }
-  const [currentArticle, setcurrentArticle] =
-    useRecoilState(currentArticleState)
+  const [currentArticle, setcurrentArticle] = useRecoilState(currentArticleState)
   const [openRemarkModal, setopenRemarkModal] = useState(false)
   const [remarkContent, setremarkContent] = useState('')
 
@@ -43,15 +40,11 @@ const Detail: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    console.log(currentArticle)
-    !currentArticle?.liked && fetch()
-    if (!visibled) {
-      setArticleVisibleApi(article_id).then(res => console.log(res.data))
-      visibled = true
-    }
+    typeof currentArticle?.likeNum !== 'number' && fetch()
+    setArticleVisibleApi(article_id)
   }, [currentArticle])
 
-  const fetch = useCallback(async () => {
+  const fetch = async () => {
     const res = await Promise.all([
       getArticleApi(article_id),
       getArticleLikedApi(article_id),
@@ -76,16 +69,16 @@ const Detail: React.FC = () => {
     const userRes = await getUserInfoApi(article.user_id)
     article.user = userRes.data.data.user
     setcurrentArticle(article)
-  }, [article_id])
+  }
 
-  const handleLikeClick = useCallback(() => {
+  const handleLikeClick = () => {
     const like = () => {
-      likeArticleApi(article_id, 'true').then(async res => {
+      likeArticleApi(article_id, 'true').then(async (res) => {
         console.log(res.data)
         if (res.data.code === 200 && currentArticle) {
           const { data } = await getArticleLikeNumApi(article_id, 'true')
           console.log(data)
-          setcurrentArticle(value => {
+          setcurrentArticle((value) => {
             return {
               ...value,
               liked: 1,
@@ -96,10 +89,10 @@ const Detail: React.FC = () => {
       })
     }
     const cancelLike = () => {
-      deleteLikeArticleApi(article_id).then(res => {
+      deleteLikeArticleApi(article_id).then((res) => {
         console.log(res.data)
         if (res.data.code === 200 && currentArticle) {
-          setcurrentArticle(value => {
+          setcurrentArticle((value) => {
             return {
               ...value,
               liked: 0
@@ -109,16 +102,15 @@ const Detail: React.FC = () => {
       })
     }
     currentArticle?.liked === 1 ? cancelLike() : like()
-  }, [currentArticle])
+  }
 
-  const handleCollectClick = useCallback(() => {
+  const handleCollectClick = () => {
     const collect = () => {
-      collectArticleApi(article_id).then(async res => {
+      collectArticleApi(article_id).then(async (res) => {
         console.log(res.data)
-        const { data } = await getArticleCollectNumApi(article_id)
         if (res.data.code === 200 && currentArticle) {
           const { data } = await getArticleCollectNumApi(article_id)
-          setcurrentArticle(value => {
+          setcurrentArticle((value) => {
             return {
               ...value,
               collected: true,
@@ -129,11 +121,11 @@ const Detail: React.FC = () => {
       })
     }
     const cancelCollect = () => {
-      deleteCollectArticleApi(article_id).then(async res => {
+      deleteCollectArticleApi(article_id).then(async (res) => {
         console.log(res.data)
         if (res.data.code === 200 && currentArticle) {
           const { data } = await getArticleCollectNumApi(article_id)
-          setcurrentArticle(value => {
+          setcurrentArticle((value) => {
             return {
               ...value,
               collected: false,
@@ -144,21 +136,20 @@ const Detail: React.FC = () => {
       })
     }
     currentArticle?.collected ? cancelCollect() : collect()
-  }, [currentArticle])
-
-  const handleSubmitRemarkClick = useCallback(() => {
+  }
+  const handleSubmitRemarkClick = () => {
     console.log(remarkContent)
     createArticleRemarkApi(
       article_id,
       JSON.stringify({
         content: remarkContent
       })
-    ).then(async res => {
+    ).then(async (res) => {
       if (res.data.code === 200) {
         setopenRemarkModal(false)
         setremarkContent('')
         const { data } = await getArticleRemarkListApi(article_id)
-        setcurrentArticle(value => {
+        setcurrentArticle((value) => {
           return {
             ...value,
             remark: {
@@ -169,13 +160,13 @@ const Detail: React.FC = () => {
         })
       }
     })
-  }, [article_id, remarkContent])
+  }
 
-  const handleCommentClick = useCallback(() => {
+  const handleCommentClick = () => {
     const a = document.createElement('a')
     a.href = '#remark'
     a.click()
-  }, [])
+  }
 
   const handleArrowupClick = () => {
     const a = document.createElement('a')
@@ -186,9 +177,9 @@ const Detail: React.FC = () => {
     <>
       {currentArticle && (
         <>
-          <div id="top"></div>
+          <div id='top'></div>
           <div
-            className="flex"
+            className='flex'
             style={{
               width: '1024px'
             }}
@@ -196,12 +187,15 @@ const Detail: React.FC = () => {
             <div>
               <div
                 style={{ width: '768px' }}
-                className={`${style.responsiveMargin} h-full ml-16 shadow rounded px-16 py-8  transition-all duration-500 ease-in-out`}
+                className={`h-full ml-16 shadow rounded px-16 py-8  transition-all duration-500 ease-in-out`}
               >
                 {/* header */}
                 <div>
-                  <h1 className="mt-0">{currentArticle.title}</h1>
-                  <Space size={'large'} className="text-sm text-slate-500">
+                  <h1 className='mt-0'>{currentArticle.title}</h1>
+                  <Space
+                    size={'large'}
+                    className='text-sm text-slate-500'
+                  >
                     <span>作者：{currentArticle.user?.name}</span>
                     <span>发布于：{currentArticle.created_at}</span>
                     <span>阅读：{currentArticle.visibleNum}</span>
@@ -223,11 +217,11 @@ const Detail: React.FC = () => {
                 <ReadOnly html={currentArticle.content}></ReadOnly>
               </div>
               {/* remark */}
-              <div id="remark">
-                <div className="flex justify-center">
+              <div id='remark'>
+                <div className='flex justify-center'>
                   <Button
-                    type="dashed"
-                    className="shadow m-4"
+                    type='dashed'
+                    className='shadow m-4'
                     onClick={() => setopenRemarkModal(true)}
                   >
                     #我有一言
@@ -235,63 +229,45 @@ const Detail: React.FC = () => {
                 </div>
                 <div>
                   {currentArticle.remark &&
-                    currentArticle.remark.remarks.map(remark => (
-                      <RemarkCard remark={remark} key={remark.id}></RemarkCard>
+                    currentArticle.remark.remarks.map((remark) => (
+                      <RemarkCard
+                        remark={remark}
+                        key={remark.id}
+                      ></RemarkCard>
                     ))}
                 </div>
               </div>
             </div>
-            <div className="w-8"></div>
-            <div className="w-64 h-96 shadow rounded "></div>
+            <div className='w-8'></div>
+            <div className='w-64 h-96 shadow rounded '></div>
           </div>
 
           <div
-            className={`${style.leftBar}w-12 h-12 px-4 fixed top-1/2 left-0 flex flex-col`}
+            className={`w-12 h-12 px-4 fixed top-1/2 right-0 flex flex-col`}
             style={{
               translate: '0 -50%'
             }}
           >
-            <Space direction="vertical" size={'large'}>
-              <div className={style.item} onClick={handleLikeClick}>
-                <div className={style.num}>{currentArticle.likeNum}</div>
-                <svg className="icon">
-                  <use
-                    href={
-                      currentArticle.liked === 1 ? '#icon-liked' : '#icon-like'
-                    }
-                  ></use>
-                </svg>
-              </div>
-              <div className={style.item} onClick={handleCollectClick}>
-                <div className={style.num}>{currentArticle.collectNum}</div>
-                <svg className="icon">
-                  <use
-                    href={
-                      currentArticle.collected
-                        ? '#icon-collected'
-                        : '#icon-collect'
-                    }
-                  ></use>
-                </svg>
-              </div>
-              <div className={style.item} onClick={handleCommentClick}>
-                <div className={style.num}>{currentArticle.remark?.total}</div>
-                <svg className="icon">
-                  <use href="#icon-comment"></use>
-                </svg>
-              </div>
-              <div className={style.item} onClick={handleArrowupClick}>
-                <svg className="icon">
-                  <use href="#icon-arrowup"></use>
-                </svg>
-              </div>
-            </Space>
+            <SideActionBar
+              onArrowupClick={handleArrowupClick}
+              onCollectClick={handleCollectClick}
+              onCommentClick={handleCommentClick}
+              onLikeClick={handleLikeClick}
+              likeNum={currentArticle.likeNum}
+              collectNum={currentArticle.collectNum}
+              remarkNum={currentArticle.remark.total}
+              liked={currentArticle.liked}
+              collected={currentArticle.collected}
+            ></SideActionBar>
           </div>
           <Modal
             open={openRemarkModal}
             onCancel={() => setopenRemarkModal(false)}
             footer={[
-              <Button type="primary" onClick={handleSubmitRemarkClick}>
+              <Button
+                type='primary'
+                onClick={handleSubmitRemarkClick}
+              >
                 发布
               </Button>
             ]}
@@ -303,11 +279,11 @@ const Detail: React.FC = () => {
           >
             <div>
               <TextEditor
-                mode="markdown"
+                mode='markdown'
                 value={remarkContent}
                 htmlChange={(value: string) => setremarkContent(value)}
-                placeholder=" "
-                className="h-36"
+                placeholder=' '
+                className='h-36'
               ></TextEditor>
             </div>
           </Modal>

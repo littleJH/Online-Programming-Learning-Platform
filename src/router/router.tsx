@@ -56,8 +56,7 @@ const CompetitionCreateDeclare = lazy(() => import('@/views/Creation/pages/Creat
 const CompetitionCreateCompetition = lazy(() => import('@/views/Creation/pages/CreateCompetition/Competition'))
 const CompetitionCreateProblem = lazy(() => import('@/views/Creation/pages/CreateCompetition/Problem'))
 const CompetitionRandom = lazy(() => import('@/views/Competition/CompetitionRandom/CompetitionRandom'))
-const Community = lazy(() => import('@/views/Community/CommunityRoot'))
-const CommunityOverview = lazy(() => import('@/views/Community/Overview/CommunityOverview'))
+const CommunityRoot = lazy(() => import('@/views/Community/CommunityRoot'))
 const ArticleSet = lazy(() => import('@/views/Community/Overview/RecommendSet/ArticleSet'))
 const CreationRoot = lazy(() => import('@/views/Creation/root/CreationRoot'))
 const CreationNavgation = lazy(() => import('@/views/Creation/root/CreationNavgation'))
@@ -224,28 +223,16 @@ const routes: MyRoute[] = [
       // community
       {
         path: 'community',
-        element: Community,
+        element: CommunityRoot,
         children: [
           {
-            path: 'overview',
-            element: CommunityOverview,
-            children: [
-              {
-                path: 'articleset',
-                element: ArticleSet
-              }
-            ]
+            path: 'articleset',
+            element: ArticleSet
+          },
+          {
+            path: 'article/:article_id',
+            element: ArticleDetail
           }
-          // {
-          //   path: 'article',
-          //   element: Article,
-          //   children: [
-          //     {
-          //       path: ':article_id',
-          //       element: ArticleDetail
-          //     }
-          //   ]
-          // }
         ]
       },
       {

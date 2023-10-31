@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { baseURL, baseConfig, jsonConfig, createRequest } from './baseConfig'
+import { baseConfig, jsonConfig, createRequest } from '../config/apiConfig'
 
 const request = createRequest({ baseURL: 'article' })
 

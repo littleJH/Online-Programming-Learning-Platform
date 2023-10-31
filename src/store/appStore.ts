@@ -1,19 +1,14 @@
 import { getCurrentUserinfo } from '@/api/user'
-import {
-  IArticle,
-  IProblem,
-  IMonacoConfig,
-  User,
-  IPersonalizeConfig
-} from '@/type'
+import { IArticle, IProblem, IMonacoConfig, User, IPersonalizeConfig } from '@/type'
 import { atom, selector } from 'recoil'
 import { notification } from 'antd'
 import { getPathArray } from '@/tool/MyUtils/utils'
+import { themeDefault, monacoConfigDefault } from '@/config/config'
 
-const userInfoAtomState = atom<User | null>({
+export const userInfoAtomState = atom<User | null>({
   key: 'userInfoAtomState',
   default: getCurrentUserinfo()
-    .then(res => {
+    .then((res) => {
       if (res.data.code === 200) return Promise.resolve(res.data.data.user)
       else return null
     })
@@ -29,7 +24,7 @@ const userInfoAtomState = atom<User | null>({
     })
 })
 
-const userInfoState = selector<User | null>({
+export const userInfoState = selector<User | null>({
   key: 'userInfoState',
   get: ({ get }) => (get(userInfoAtomState) ? get(userInfoAtomState) : null),
   set: ({ set }, newValue) => {
@@ -37,66 +32,63 @@ const userInfoState = selector<User | null>({
   }
 })
 
-const loginStatusState = selector<boolean>({
+export const loginStatusState = selector<boolean>({
   key: 'loginStatusState',
   get: ({ get }) => (get(userInfoState) ? true : false)
 })
 
-const monacoConfigState = selector<IMonacoConfig>({
+export const themeState = selector({
+  key: 'themeState',
+  get: ({ get }) => {
+    const userInfo = get(userInfoState)
+    if (userInfo?.res_long === '' || !userInfo) return themeDefault
+    else {
+      console.log('personalConfig ==> ', JSON.parse(userInfo.res_long))
+      const { theme } = JSON.parse(userInfo.res_long) as IPersonalizeConfig
+      return { ...themeDefault, ...theme }
+    }
+  },
+  set: ({ set }, newValue) => {
+    console.log({ ...newValue })
+  }
+})
+
+export const monacoConfigState = selector<IMonacoConfig>({
   key: 'monacoConfigState',
   get: ({ get }) => {
     const userInfo = get(userInfoState)
     if (userInfo?.res_long === '' || !userInfo) {
-      return {
-        language: 'C',
-        theme: 'vs-dark',
-        options: {
-          fontSize: 14,
-          fontWeight: '400',
-          lineHeight: 24,
-          letterSpacing: 1,
-          smoothScrolling: true,
-          cursorSmoothCaretAnimation: 'on',
-          emptySelectionClipboard: true,
-          mouseWheelScrollSensitivity: 1,
-          mouseWheelZoom: true,
-          padding: {
-            bottom: 10,
-            top: 10
-          }
-        }
-      }
+      return monacoConfigDefault
     } else {
-      const config = JSON.parse(userInfo?.res_long) as IPersonalizeConfig
-      console.log(config.monacoConfig)
-      return config.monacoConfig
+      const { monacoConfig } = JSON.parse(userInfo?.res_long) as IPersonalizeConfig
+      return { ...monacoConfigDefault, ...monacoConfig }
     }
   }
 })
 
-const currentArticleState = atom<null | IArticle>({
+export const currentArticleState = atom<null | IArticle>({
   key: 'articleState',
   default: null
 })
 
-const currentProblemState = atom<null | IProblem>({
+export const currentProblemState = atom<null | IProblem>({
   key: 'problemState',
   default: null
 })
 
-const pathNameState = atom<string>({
+export const pathNameState = atom<string>({
   key: 'pathNameState',
   default: location.pathname,
   effects: [
     ({ onSet }) => {
-      onSet(newValue => {
+      onSet((newValue) => {
         console.log('pathNameState ==> ', newValue)
       })
     }
   ]
 })
 
-const headerNavState = selector<string>({
+export const headerNavState = selector<string>({
   key: 'headerNavState',
   get: ({ get }) => {
     const pathname = get(pathNameState)
@@ -104,19 +96,7 @@ const headerNavState = selector<string>({
   }
 })
 
-const sideBarCollapsed = atom<boolean>({
+export const sideBarCollapsed = atom<boolean>({
   key: 'sideBarCollapsed',
   default: false
 })
-
-export {
-  userInfoAtomState,
-  userInfoState,
-  loginStatusState,
-  monacoConfigState,
-  currentArticleState,
-  currentProblemState,
-  headerNavState,
-  pathNameState,
-  sideBarCollapsed
-}

@@ -2,11 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-$colorPrimary: #6366f1;
-$colorSuccess: #10b981;
-$colorWarning: #f59e0b;
-$colorError: #ef4444;
-$colorInfo: #3b82f6;
+$colorPrimary: var(--colorPrimary, #6366f1);
+$colorSuccess: var(--colorSuccess, #10b981);
+$colorWarning: var(colorWarning, #f59e0b);
+$colorError: var(colorError, #ef4444);
+$colorInfo: var(colorInfo, #3b82f6);
 
 
 @font-face {
@@ -106,7 +106,6 @@ body,
   }
   .card-username:hover {
     color: $colorPrimary;
-    
   }
   .card-title {
     @apply  font-semibold;
@@ -194,7 +193,7 @@ body,
   content: '.';
   border-radius: 0.1rem;
   margin-right: 0.5rem;
-  background: #6366f1;
-  color: #6366f1;
+  background: $colorPrimary;
+  color: $colorPrimary;
   border-radius: 0.1rem;
 }

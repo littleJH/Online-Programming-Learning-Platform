@@ -1,29 +1,26 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { iconBaseUrl } from '@/api/baseConfig'
+import { iconBaseUrl, imgGetBaseUrl } from '@/config/apiConfig'
 import { IArticle } from '@/type'
 import { Avatar, Space } from 'antd'
 import style from './style.module.scss'
-import GetTimeago from '@/tool/myFns/getTimeago'
+import GetTimeago from '@/tool/myFns/GetTimeago'
 import CommunityLabel from '../Label/CommunityLabel/CommunityLabel'
 import { getUserInfoApi } from '@/api/user'
-import {
-  getArticleCollectNumApi,
-  getArticleCollectedApi,
-  getArticleLabelsApi,
-  getArticleLikeNumApi,
-  getArticleLikedApi,
-  getArticleVisibleNumApi
-} from '@/api/article'
+import { getArticleCollectNumApi, getArticleCollectedApi, getArticleLabelsApi, getArticleLikeNumApi, getArticleLikedApi, getArticleVisibleNumApi } from '@/api/article'
 import { getArticleRemarkListApi } from '@/api/remark'
+import MySvgIcon from '../Icon/MySvgIcon'
+import { useRecoilValue } from 'recoil'
+import { themeState } from '@/store/appStore'
 
 interface IProps {
   articleProp: IArticle
   onclick: Function
 }
 
-const ArticleCard: React.FC<IProps> = props => {
+const ArticleCard: React.FC<IProps> = (props) => {
   const { articleProp, onclick } = props
   const [article, setArticle] = useState<IArticle>(articleProp)
+  const theme = useRecoilValue(themeState)
 
   useEffect(() => {
     const article = { ...articleProp }
@@ -36,7 +33,7 @@ const ArticleCard: React.FC<IProps> = props => {
       getArticleVisibleNumApi(articleProp.id),
       getArticleLabelsApi(articleProp.id),
       getArticleRemarkListApi(articleProp.id)
-    ]).then(res => {
+    ]).then((res) => {
       article.user = res[0].data.data.user
       article.liked = res[1].data.data.like
       article.likeNum = res[2].data.data.total
@@ -52,39 +49,45 @@ const ArticleCard: React.FC<IProps> = props => {
     })
   }, [])
 
-  useEffect(() => console.log(article), [article])
-
   const ago = useMemo(() => {
     const { num, unit } = GetTimeago(article.created_at)
     return `${num}${unit}前`
   }, [article])
 
+  const imgUrl = useMemo(() => article.res_long && article.res_long !== '' && JSON.parse(article.res_long).img, [article])
+
   return (
     <div
-      className="w-full p-4  rounded shadow-sm hover:cursor-pointer hover:shadow-md transition-all"
+      className='w-full p-4  rounded shadow-sm hover:cursor-pointer hover:shadow-md transition-all'
       onClick={() => onclick(article)}
     >
-      <div className="flex">
+      <div className='flex'>
         {/* left */}
-        <div className="grow" style={{ width: '100px' }}>
-          <div className="flex items-center my-2">
+        <div
+          className='grow'
+          style={{ width: '100px' }}
+        >
+          <div className='flex items-center my-2'>
             <Avatar
-              className="card-avatar"
+              className='card-avatar'
               src={`${iconBaseUrl}/${article.user?.icon}`}
             ></Avatar>
-            <div className="card-username">{article.user?.name}</div>
-            <div className="card-time">{ago}</div>
+            <div className='card-username'>{article.user?.name}</div>
+            <div className='card-time'>{ago}</div>
             {article.labels && article.labels.length > 0 && (
-              <Space className="mx-8">
-                {article.labels.map(label => (
-                  <CommunityLabel key={label.id} label={label}></CommunityLabel>
+              <Space className='mx-8'>
+                {article.labels.map((label) => (
+                  <CommunityLabel
+                    key={label.id}
+                    label={label}
+                  ></CommunityLabel>
                 ))}
               </Space>
             )}
           </div>
-          <div className="card-title">{article.title}</div>
+          <div className='card-title'>{article.title}</div>
           <div
-            className="card-content"
+            className='card-content'
             style={{
               width: '100%',
               overflow: 'hidden',
@@ -96,39 +99,31 @@ const ArticleCard: React.FC<IProps> = props => {
           </div>
 
           {/* footer */}
-          <div className="flex items-center mt-2">
+          <div className='flex items-center mt-2'>
             <div className={`${style.footer} grow flex items-center`}>
               <div>
-                <svg className="icon-small">
-                  <use
-                    href={
-                      article.collected ? '#icon-collected' : '#icon-collect'
-                    }
-                  ></use>
-                </svg>
+                <MySvgIcon
+                  href={article.collected ? '#icon-collected' : '#icon-collect'}
+                  color={article.collected ? theme.colorPrimary : ''}
+                ></MySvgIcon>
                 <span>{article.collectNum}</span>
               </div>
-              <div className="divider-vertical"></div>
+              <div className='divider-vertical'></div>
               <div>
-                <svg className="icon-small">
-                  <use
-                    href={article.liked ? '#icon-liked' : '#icon-like'}
-                  ></use>
-                </svg>
+                <MySvgIcon
+                  href={article.liked ? '#icon-liked' : '#icon-like'}
+                  color={article.liked ? theme.colorPrimary : ''}
+                ></MySvgIcon>
                 <span>{article.likeNum}</span>
               </div>
-              <div className="divider-vertical"></div>
+              <div className='divider-vertical'></div>
               <div>
-                <svg className="icon-small">
-                  <use href="#icon-comment"></use>
-                </svg>
+                <MySvgIcon href={'#icon-comment'}></MySvgIcon>
                 <span>{article.remark?.total}</span>
               </div>
-              <div className="divider-vertical"></div>
+              <div className='divider-vertical'></div>
               <div>
-                <svg className="icon-small">
-                  <use href="#icon-visible"></use>
-                </svg>
+                <MySvgIcon href={'#icon-visible'}></MySvgIcon>
                 <span>{article.visibleNum}</span>
               </div>
             </div>
@@ -136,9 +131,17 @@ const ArticleCard: React.FC<IProps> = props => {
         </div>
 
         {/* right image */}
-        <div className="card-img" style={{}}>
-          <img src={`${iconBaseUrl}/${article.user?.icon}`} alt="" />
-        </div>
+        {imgUrl && (
+          <div
+            className='card-img'
+            style={{}}
+          >
+            <img
+              src={`${imgGetBaseUrl}/${imgUrl}`}
+              alt=''
+            />
+          </div>
+        )}
       </div>
     </div>
   )

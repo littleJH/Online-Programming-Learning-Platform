@@ -83,11 +83,7 @@ export interface IRunResult {
   time: number
 }
 
-export type ProgramMode =
-  | 'standard'
-  | 'special_judge'
-  | 'standardHack'
-  | 'specialHack'
+export type ProgramMode = 'standard' | 'special_judge' | 'standardHack' | 'specialHack'
 
 export interface IRecordState {
   value: string
@@ -117,11 +113,7 @@ export interface ICompetition {
   user_id: string
 }
 
-export type ProgramMode =
-  | 'standard'
-  | 'special_judge'
-  | 'standardHack'
-  | 'specialHack'
+export type ProgramMode = 'standard' | 'special_judge' | 'standardHack' | 'specialHack'
 
 export interface IRecord {
   [key: strinig]: string | number
@@ -157,7 +149,11 @@ export interface User {
 
 export interface IPersonalizeConfig {
   monacoConfig: IMonacoConfig
-  theme: 'light' | 'dark' = 'light'
+  theme: ITheme
+}
+
+export interface ITheme {
+  [key: string]: string
 }
 
 export interface IMonacoConfig {
@@ -200,17 +196,7 @@ export interface IRecordTableDataSource {
   hack: HackState
 }
 
-export type CompetitionType =
-  | 'Single'
-  | 'Group'
-  | 'Match'
-  | 'OI'
-  | ''
-  | 'single'
-  | 'group'
-  | 'match'
-  | 'Normal'
-  | 'normal'
+export type CompetitionType = 'Single' | 'Group' | 'Match' | 'OI' | '' | 'single' | 'group' | 'match' | 'Normal' | 'normal'
 
 export interface IRank {
   create_at: string

@@ -1,7 +1,10 @@
 import ReactDOM from 'react-dom/client'
-import './style.scss'
+
 import App from './App'
+import { RecoilRoot } from 'recoil'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <App />
+  <RecoilRoot>
+    <App />
+  </RecoilRoot>
 )

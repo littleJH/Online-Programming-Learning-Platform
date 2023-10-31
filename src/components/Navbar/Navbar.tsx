@@ -29,14 +29,7 @@ export default function Header(props: { headerNav: string }) {
   const navTo = useNavTo()
 
   const handleMenuClick = (e: any) => {
-    switch (e.key) {
-      case 'community':
-        navTo('/community/overview/articleset')
-        break
-      default:
-        navTo(e.key)
-        break
-    }
+    navTo(e.key)
   }
   return (
     <Menu
@@ -50,7 +43,7 @@ export default function Header(props: { headerNav: string }) {
         alignContent: 'center'
       }}
       selectedKeys={[headerNav]}
-      mode="horizontal"
+      mode='horizontal'
       onClick={handleMenuClick}
       items={menuItem}
     ></Menu>

@@ -1,8 +1,6 @@
-import axios from 'axios'
-import { formConfig, imgBaseUrl } from './baseConfig'
-const request = axios.create({
-  baseURL: `${imgBaseUrl}/img`
-})
+import { formConfig, createRequest } from '../config/apiConfig'
+
+const request = createRequest({ baseURL: 'img', type: 'img' })
 
 export const uploadImgApi = (data: any) => {
   return request.post('/upload', data, formConfig())

@@ -1,9 +1,8 @@
 import axios from 'axios'
-import { baseConfig, baseURL, wsBaseUrl } from './baseConfig'
+import { baseConfig, createRequest, wsBaseUrl } from '../config/apiConfig'
 import { CompetitionType } from '@/type'
-const request = axios.create({
-  baseURL: `${baseURL}/competition/random/`
-})
+
+const request = createRequest({ baseURL: '/competition/random/' })
 
 export const enterRandomCompetitionApi = (type: CompetitionType) => {
   return request.post(`${type}/enter`, {}, baseConfig())
@@ -22,7 +21,5 @@ export const getEnterRandomCompetitionListApi = (type: CompetitionType) => {
 }
 
 export const enterPublishWs = () => {
-  return new WebSocket(
-    'ws://10.60.37.43:2000/competition/random/single/enter/publish'
-  )
+  return new WebSocket('ws://10.60.37.43:2000/competition/random/single/enter/publish')
 }

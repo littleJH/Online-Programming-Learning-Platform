@@ -1,8 +1,6 @@
-import axios from 'axios'
-import { baseConfig, tagBaseUrl } from './baseConfig'
-const request = axios.create({
-  baseURL: `${tagBaseUrl}/tag`
-})
+import { baseConfig, createRequest } from '../config/apiConfig'
+
+const request = createRequest({ baseURL: 'tag', type: 'tag' })
 
 export const createTagApi = (tag: string) => {
   return request.post(`/create/${tag}`)

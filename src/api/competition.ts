@@ -1,8 +1,6 @@
-import axios from 'axios'
-import { baseURL, jsonConfig } from './baseConfig'
-const request = axios.create({
-  baseURL: `${baseURL}/competition`
-})
+import { createRequest, jsonConfig } from '../config/apiConfig'
+
+const request = createRequest({ baseURL: 'competition' })
 
 export const createCompetitionApi = (data: any) => {
   return request.post(`/create`, data, jsonConfig())
@@ -28,18 +26,11 @@ export const getMemberRankApi = (competition_id: string, member_id: string) => {
   return request.get(`/member/rank/${competition_id}/${member_id}`)
 }
 
-export const getMemberPenaltiesApi = (
-  competition_id: string,
-  member_id: string
-) => {
+export const getMemberPenaltiesApi = (competition_id: string, member_id: string) => {
   return request.get(`/member/show/${competition_id}/${member_id}`)
 }
 
-export const getCompetitionRankListApi = (
-  id: string,
-  pageNum = 1,
-  pageSize = 20
-) => {
+export const getCompetitionRankListApi = (id: string, pageNum = 1, pageSize = 20) => {
   return request.get(`/rank/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 

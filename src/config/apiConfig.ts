@@ -1,7 +1,9 @@
 import { notification } from 'antd'
 import axios from 'axios'
 
-const baseUrlObj: any = {
+const baseUrlObj: {
+  [key: string]: string
+} = {
   iconBaseUrl: 'http://icon.mgaronya.com',
   imgBaseUrl: 'http://api_img.mgaronya.com',
   baseURL: import.meta.env.DEV ? '/api' : 'http://api_oj.mgaronya.com',
@@ -11,18 +13,13 @@ const baseUrlObj: any = {
   translateBaseUrl: import.meta.env.DEV ? '/translate_api' : 'http://api_translate.mgaronya.com/translator/translate'
 }
 
-export const iconBaseUrl = 'http://icon.mgaronya.com'
-export const imgGetBaseUrl = 'http://img.mgaronya.com'
-export const imgBaseUrl = 'http://api_img.mgaronya.com'
-export const baseURL = import.meta.env.DEV ? '/api' : 'http://api_oj.mgaronya.com'
-
-export const testBaseUrl = import.meta.env.DEV ? '/test' : 'http://test_oj.mgaronya.com/test'
-
-export const tagBaseUrl = import.meta.env.DEV ? '/tag_api' : 'http://api_tag.mgaronya.com'
-
-export const wsBaseUrl = 'ws://api_oj.mgaronya.com'
-
-export const translateBaseUrl = import.meta.env.DEV ? '/translate_api' : 'http://api_translate.mgaronya.com/translator/translate'
+export const wsBaseUrl = baseUrlObj.wsBaseUrl
+export const translateBaseUrl = baseUrlObj.translateBaseUrl
+export const iconBaseUrl = baseUrlObj.iconBaseUrl
+export const imgBaseUrl = baseUrlObj.imgBaseUrl
+export const tagBaseUrl = baseUrlObj.tagBaseUrl
+export const baseURL = baseUrlObj.baseURL
+export const imgGetBaseUrl = baseUrlObj.imgBaseUrl
 
 export const baseConfig = () => {
   return {

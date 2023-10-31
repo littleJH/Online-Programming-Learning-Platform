@@ -2,23 +2,12 @@ import { getGroupLettersApi } from '@/api/Letter'
 import { IChat, IGroup } from '@/type'
 import { Avatar, Button, Divider, Drawer, Input, List, Modal, Spin } from 'antd'
 import { TextAreaRef } from 'antd/es/input/TextArea'
-import React, {
-  KeyboardEventHandler,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react'
+import React, { KeyboardEventHandler, useEffect, useMemo, useRef, useState } from 'react'
 import { EllipsisOutlined } from '@ant-design/icons'
 import GroupMember from '@/components/group/GroupMember'
-import {
-  craeteChatApi,
-  enterGroupPublishChatWS,
-  enterPublishChatWs,
-  getGroupChatsApi
-} from '@/api/chat'
+import { craeteChatApi, enterGroupPublishChatWS, enterPublishChatWs, getGroupChatsApi } from '@/api/chat'
 import { getUserInfoApi } from '@/api/user'
-import { iconBaseUrl } from '@/api/baseConfig'
+import { iconBaseUrl } from '@/config/apiConfig'
 import { useRecoilValue } from 'recoil'
 import { userInfoState } from '@/store/appStore'
 import ChatMessageCard from '@/components/card/ChatMessageCard'
@@ -28,7 +17,7 @@ interface IProps {
 }
 
 let ws: WebSocket
-const Chat: React.FC<IProps> = props => {
+const Chat: React.FC<IProps> = (props) => {
   const { group } = props
   const info = useRecoilValue(userInfoState)
   const inputTextarea = useRef<TextAreaRef>(null)
@@ -45,7 +34,7 @@ const Chat: React.FC<IProps> = props => {
 
   const initChatList = (id: string) => {
     setLoading(true)
-    getGroupChatsApi(id).then(async res => {
+    getGroupChatsApi(id).then(async (res) => {
       console.log(res.data.data)
       const chats = res.data.data.chats
       const list: IChat[] = []
@@ -99,9 +88,7 @@ const Chat: React.FC<IProps> = props => {
             ></Avatar>
           )}
           <div style={{ maxWidth: '75%' }}>
-            <ChatMessageCard mode={bool ? 'right' : 'left'}>
-              {msgItem.content}
-            </ChatMessageCard>
+            <ChatMessageCard mode={bool ? 'right' : 'left'}>{msgItem.content}</ChatMessageCard>
           </div>
           {bool && (
             <Avatar
@@ -123,7 +110,7 @@ const Chat: React.FC<IProps> = props => {
       JSON.stringify({
         content: text
       })
-    ).then(res => {
+    ).then((res) => {
       if (res.data.code === 200) {
         setText('')
       }
@@ -133,16 +120,16 @@ const Chat: React.FC<IProps> = props => {
   return (
     <>
       <div
-        className="h-full w-full flex flex-col border border-solid border-slate-300 rounded"
+        className='h-full w-full flex flex-col border border-solid border-slate-300 rounded'
         style={{
           width: '768px'
         }}
       >
-        <div className="h-3/4 flex flex-col">
-          <div className="sticky top-0 z-10 flex justify-between items-center">
-            <span className="mx-8">{group.title}</span>
+        <div className='h-3/4 flex flex-col'>
+          <div className='sticky top-0 z-10 flex justify-between items-center'>
+            <span className='mx-8'>{group.title}</span>
             <span
-              className="mx-2"
+              className='mx-2'
               onClick={() => {
                 setOpenModal(true)
               }}
@@ -155,7 +142,7 @@ const Chat: React.FC<IProps> = props => {
               />
             </span>
           </div>
-          <div className="h-full grow px-8 overflow-scroll">
+          <div className='h-full grow px-8 overflow-scroll'>
             <div ref={chatBox}>
               <List
                 loading={loading}
@@ -182,25 +169,25 @@ const Chat: React.FC<IProps> = props => {
           </div>
         </div>
         <div
-          className="h-1/4 border-slate-300 relative"
+          className='h-1/4 border-slate-300 relative'
           style={{
             borderTopWidth: '1px',
             borderTopStyle: 'solid'
           }}
           onClick={() => inputTextarea.current?.focus()}
         >
-          <div className="overflow-scroll h-full py-4">
+          <div className='overflow-scroll h-full py-4'>
             <Input.TextArea
               ref={inputTextarea}
               value={text}
-              onChange={e => setText(e.target.value)}
+              onChange={(e) => setText(e.target.value)}
               bordered={false}
               autoSize={{
                 minRows: 6
               }}
-              onKeyDown={e => {
+              onKeyDown={(e) => {
                 if (e.key === 'Enter')
-                  if (e.shiftKey) setText(value => `${value}\n`)
+                  if (e.shiftKey) setText((value) => `${value}\n`)
                   else {
                     e.preventDefault()
                     sendChat()
@@ -209,8 +196,8 @@ const Chat: React.FC<IProps> = props => {
             ></Input.TextArea>
           </div>
           <Button
-            className="absolute bottom-4 right-4"
-            type="primary"
+            className='absolute bottom-4 right-4'
+            type='primary'
             onClick={sendChat}
           >
             发送
@@ -221,7 +208,10 @@ const Chat: React.FC<IProps> = props => {
           open={openModal}
           onClose={() => setOpenModal(false)}
         >
-          <GroupMember group_id={group.id} showAdd={true}></GroupMember>
+          <GroupMember
+            group_id={group.id}
+            showAdd={true}
+          ></GroupMember>
         </Drawer>
       </div>
     </>

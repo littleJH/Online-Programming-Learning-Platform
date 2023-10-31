@@ -1,8 +1,6 @@
-import axios from 'axios'
-import { baseURL, jsonConfig } from './baseConfig'
-const request = axios.create({
-  baseURL: `${baseURL}/set`
-})
+import { createRequest, jsonConfig } from '../config/apiConfig'
+
+const request = createRequest({ baseURL: 'set' })
 
 export const createFormApi = (data: any) => {
   return request.post('/create', data, jsonConfig())

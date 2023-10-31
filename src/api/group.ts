@@ -1,8 +1,6 @@
-import axios from 'axios'
-import { baseURL, baseConfig, jsonConfig } from './baseConfig'
-const request = axios.create({
-  baseURL: `${baseURL}/group`
-})
+import { createRequest, baseConfig, jsonConfig } from '../config/apiConfig'
+
+const request = createRequest({ baseURL: 'group' })
 
 export const createUserGroupApi = (data: any) => {
   return request.post('/create', data, jsonConfig())
@@ -42,35 +40,16 @@ export const searchGroupByLabelApi = (labels: string[]) => {
   return request.get(`/search/label?labels=${labels}`)
 }
 
-export const searthGroupByTextAndLabelApi = (
-  text: string,
-  labels: string[],
-  pageNum = 1,
-  pageSize = 20
-) => {
-  return request.get(
-    `/search/with/label/${text}?pageNum=${pageNum}&pageSize=${pageSize}&labels=${labels}`
-  )
+export const searthGroupByTextAndLabelApi = (text: string, labels: string[], pageNum = 1, pageSize = 20) => {
+  return request.get(`/search/with/label/${text}?pageNum=${pageNum}&pageSize=${pageSize}&labels=${labels}`)
 }
 
 //other
 
-export const getLeaderGroupListApi = (
-  id: string,
-  pageNum = 1,
-  pageSize = 20
-) => {
-  return request.get(
-    `/leader/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`
-  )
+export const getLeaderGroupListApi = (id: string, pageNum = 1, pageSize = 20) => {
+  return request.get(`/leader/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 
-export const getMemberGroupListApi = (
-  id: string,
-  pageNum = 1,
-  pageSize = 20
-) => {
-  return request.get(
-    `/member/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`
-  )
+export const getMemberGroupListApi = (id: string, pageNum = 1, pageSize = 20) => {
+  return request.get(`/member/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }

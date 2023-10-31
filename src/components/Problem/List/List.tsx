@@ -11,7 +11,7 @@ import { getTagListApi } from '@/api/tag'
 import ReadOnly from '@/components/editor/ReadOnly'
 import { getTopicApi, getTopicListApi, getTopicProblemsApi, searchProblemInTopicByLabelApi, searchProblemInTopicByTextApi, searchProblemInTopicByTextLabelApi } from '@/api/topic'
 import { getUserInfoApi } from '@/api/user'
-import { iconBaseUrl } from '@/api/baseConfig'
+import { iconBaseUrl } from '@/config/apiConfig'
 import ProblemTable from '../ProblemTable'
 import useNavTo from '@/tool/myHooks/useNavTo'
 

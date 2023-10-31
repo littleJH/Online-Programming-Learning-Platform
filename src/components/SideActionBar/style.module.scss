@@ -1,8 +1,5 @@
 @tailwind base;
 
-.leftBar {
-
-}
 .item {
   // h-12 w-12 flex justify-center items-center rounded-full bg-slate-200
   height: 3rem;
@@ -37,10 +34,4 @@
   background-color: #64748b;
   display: flex;
   align-items: center;
-}
-
-.responsiveMargin {
-  @media (min-width: 1150px) {
-    margin-left: 0;
-  }
 }

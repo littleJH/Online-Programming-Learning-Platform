@@ -1,5 +1,5 @@
 import { userInfoState } from '@/store/appStore'
-import { iconBaseUrl, imgGetBaseUrl } from '@/api/baseConfig'
+import { iconBaseUrl, imgGetBaseUrl } from '@/config/apiConfig'
 import { Avatar, Button, Col, Descriptions, Divider, Form, Input, Radio, Row, Segmented, Select, Space, Upload, UploadFile } from 'antd'
 import React, { useCallback, useState } from 'react'
 import { useRecoilValue } from 'recoil'

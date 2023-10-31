@@ -1,13 +1,13 @@
-import { Layout, ConfigProvider, Modal, Button, Avatar } from 'antd'
-import React, { useEffect, useRef, useState } from 'react'
-import Navbar from '@/components/navbar/Navbar'
+import React, { useEffect, useState } from 'react'
+import { Layout, Button, Avatar } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import { Outlet } from 'react-router-dom'
-import { iconBaseUrl } from '@/api/baseConfig'
+import { iconBaseUrl } from '@/config/apiConfig'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { loginStatusState, pathNameState, sideBarCollapsed, userInfoState } from '@/store/appStore'
+import { loginStatusState, sideBarCollapsed, userInfoState } from '@/store/appStore'
 import Sider from 'antd/es/layout/Sider'
-import SideBar from '@/components/navbar/SideBar'
+import SideBar from '@/components/Navbar/SideBar'
+import Navbar from '@/components/Navbar/Navbar'
 import { headerNavState } from '@/store/appStore'
 import useNavTo from '@/tool/myHooks/useNavTo'
 
@@ -32,69 +32,42 @@ const Root: React.FC = () => {
   }
 
   return (
-    <ConfigProvider
-      form={{
-        validateMessages: {
-          required: '"${label}"是必选字段'
-        }
-      }}
-      theme={{
-        token: {
-          colorPrimary: '#6366f1',
-          colorSuccess: '#10b981',
-          colorWarning: '#f59e0b',
-          colorError: '#ef4444',
-          colorInfo: '#3b82f6',
-          fontSize: 14,
-          borderRadius: 4,
-          wireframe: false
-        }
-      }}
-      avatar={{
-        style: {
-          border: '1px solid #ccc',
-          opacity: '100%',
-          cursor: 'pointer',
-          transition: 'all',
-          transitionDuration: '300ms'
-        }
-      }}
-    >
-      <Layout className='w-full h-full'>
-        <Header className='sticky top-0 z-10 p-0 flex'>
-          <Navbar headerNav={headerNav}></Navbar>
-          <MyLogin></MyLogin>
-        </Header>
-        <Layout hasSider>
-          {headerNav !== 'login' && (
-            <Sider
-              onMouseOver={() => setCollapsed(false)}
-              onMouseLeave={() => setCollapsed(btnCollapsed)}
-              style={siderStyle}
-              collapsible
-              trigger={null}
-              collapsed={collapsed}
-            >
-              <SideBar header={headerNav}></SideBar>
-            </Sider>
-          )}
-          <Content
-            id='mainContent'
-            className='bg-white overflow-y-auto scroll-smooth px-16 py-8 flex justify-center'
+    <Layout className='w-full h-full'>
+      <Header className='sticky top-0 z-10 p-0 flex'>
+        <Navbar headerNav={headerNav}></Navbar>
+        <MyLogin></MyLogin>
+      </Header>
+      <Layout hasSider>
+        {headerNav !== 'login' && (
+          <Sider
+            onMouseOver={() => setCollapsed(false)}
+            onMouseLeave={() => setCollapsed(btnCollapsed)}
+            style={siderStyle}
+            collapsible
+            trigger={null}
+            collapsed={collapsed}
           >
+            <SideBar header={headerNav}></SideBar>
+          </Sider>
+        )}
+        <Content
+          id='mainContent'
+          className='bg-white py-4'
+        >
+          <div className='w-full h-full flex justify-center overflow-y-scroll scroll-smooth'>
             <Outlet></Outlet>
-          </Content>
-        </Layout>
-
-        <Footer style={footerStyle}>
-          <Button
-            type='text'
-            icon={btnCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setBtnCollapsed(!btnCollapsed)}
-          />
-        </Footer>
+          </div>
+        </Content>
       </Layout>
-    </ConfigProvider>
+
+      <Footer style={footerStyle}>
+        <Button
+          type='text'
+          icon={btnCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          onClick={() => setBtnCollapsed(!btnCollapsed)}
+        />
+      </Footer>
+    </Layout>
   )
 }
 

@@ -1,9 +1,6 @@
-import axios from 'axios'
-import { baseURL, baseConfig, jsonConfig } from './baseConfig'
+import { createRequest, baseConfig, jsonConfig } from '../config/apiConfig'
 
-const request = axios.create({
-  baseURL: `${baseURL}/program`
-})
+const request = createRequest({ baseURL: 'program' })
 
 export const createProgramApi = (data: any) => {
   return request.post('/create', data, jsonConfig())

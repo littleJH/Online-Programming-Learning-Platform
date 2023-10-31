@@ -10,7 +10,7 @@ import { UploadRequestOption } from 'rc-upload/lib/interface'
 import { uploadImgApi } from '@/api/img'
 import { getCategoryListApi } from '@/api/category'
 import TextEditor from '@/components/editor/TextEditor'
-import { iconBaseUrl, imgBaseUrl, imgGetBaseUrl } from '@/api/baseConfig'
+import { iconBaseUrl, imgBaseUrl, imgGetBaseUrl } from '@/config/apiConfig'
 
 const options: SelectProps['options'] = []
 const creation_article_title = localStorage.getItem('creation_article_title')
@@ -49,7 +49,7 @@ const CreateArticle: React.FC<{}> = () => {
     localStorage.setItem('creation_article_content', value)
   }
 
-  const createArticle = useCallback(() => {
+  const createArticle = () => {
     if (title === '' || content === '') {
       notification.warning({
         message: '标题/正文不能为空',
@@ -61,7 +61,13 @@ const CreateArticle: React.FC<{}> = () => {
       JSON.stringify({
         title,
         content,
-        category
+        category,
+        res_long:
+          iconUrl !== ''
+            ? JSON.stringify({
+                img: iconUrl
+              })
+            : ''
       })
     )
       .then((res) => {
@@ -97,7 +103,7 @@ const CreateArticle: React.FC<{}> = () => {
           }
         }
       })
-  }, [title, content, category])
+  }
 
   const throttle = Throttle(createArticle, 1000)
 
@@ -117,7 +123,7 @@ const CreateArticle: React.FC<{}> = () => {
     if (code === 200) {
       file.status = 'done'
       file.url = `${imgGetBaseUrl}/${data.Icon}`
-      setIconUrl(`${imgGetBaseUrl}/${data.Icon}`)
+      setIconUrl(`${data.Icon}`)
       setIconFile([file])
     }
   }
@@ -192,7 +198,7 @@ const CreateArticle: React.FC<{}> = () => {
           >
             {iconUrl !== '' ? (
               <img
-                src={iconUrl}
+                src={`${imgGetBaseUrl}/${iconUrl}`}
                 alt='封面'
                 style={{ width: '100%' }}
               ></img>

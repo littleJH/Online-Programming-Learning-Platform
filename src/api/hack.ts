@@ -1,9 +1,6 @@
-import axios from 'axios'
-import { baseURL, baseConfig, jsonConfig } from './baseConfig'
+import { createRequest } from '../config/apiConfig'
 
-const request = axios.create({
-  baseURL: `${baseURL}/hack`
-})
+const request = createRequest({ baseURL: 'hack' })
 
 export const getHackApi = (id: string) => {
   return request.get(`/show/${id}`)

@@ -1,14 +1,8 @@
-import axios from 'axios'
-import { baseURL, baseConfig, jsonConfig, formConfig } from './baseConfig'
-const request = axios.create({
-  baseURL: `${baseURL}/user`
-})
+import { baseConfig, jsonConfig, formConfig, createRequest } from '../config/apiConfig'
 
-export const searchUserByTextApi = (
-  text: string,
-  pageNum = 1,
-  pageSize = 20
-) => {
+const request = createRequest({ baseURL: 'user' })
+
+export const searchUserByTextApi = (text: string, pageNum = 1, pageSize = 20) => {
   return request.get(`/search/${text}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 

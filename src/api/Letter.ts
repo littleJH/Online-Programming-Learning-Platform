@@ -1,8 +1,6 @@
-import axios from 'axios'
-import { baseURL, baseConfig, formConfig } from './baseConfig'
-const request = axios.create({
-  baseURL: `${baseURL}/letter`
-})
+import { createRequest, baseConfig, formConfig } from '../config/apiConfig'
+
+const request = createRequest({ baseURL: 'letter' })
 
 export const craeteLetterApi = (id: string, data: any) => {
   return request.post(`/send/${id}`, data, formConfig())
