@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import { Layout, Button, Avatar } from 'antd'
+import { Layout, Button, Avatar, theme } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import { Outlet } from 'react-router-dom'
 import { iconBaseUrl } from '@/config/apiConfig'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { loginStatusState, sideBarCollapsed, userInfoState } from '@/store/appStore'
+import { isDarkState, loginStatusState, sideBarCollapsed, themeState, userInfoState } from '@/store/appStore'
 import Sider from 'antd/es/layout/Sider'
 import SideBar from '@/components/Navbar/SideBar'
 import Navbar from '@/components/Navbar/Navbar'
 import { headerNavState } from '@/store/appStore'
 import useNavTo from '@/tool/myHooks/useNavTo'
+import MySvgIcon from '@/components/Icon/MySvgIcon'
 
 const Root: React.FC = () => {
   const [collapsed, setCollapsed] = useRecoilState(sideBarCollapsed)
   const [btnCollapsed, setBtnCollapsed] = useState(!collapsed)
   const headerNav = useRecoilValue(headerNavState)
   const { Header, Content, Footer } = Layout
+  const { token } = theme.useToken()
+  const [isDark, setIsDark] = useRecoilState(isDarkState)
 
   useEffect(() => {
     setCollapsed(btnCollapsed)
@@ -35,9 +38,27 @@ const Root: React.FC = () => {
 
   return (
     <Layout className='w-full h-full'>
-      <Header className='sticky top-0 z-10 p-0 flex'>
+      <Header
+        className='sticky top-0 z-10 p-0 flex items-center'
+        style={{ backgroundColor: token.colorBgBase }}
+      >
         <Navbar headerNav={headerNav}></Navbar>
-        <MyLogin></MyLogin>
+        <Button
+          type='text'
+          className='flex items-center h-12'
+          onClick={() => setIsDark((value) => !value)}
+        >
+          <MySvgIcon
+            href={`#icon-${isDark ? 'light' : 'dark'}`}
+            size={2}
+          ></MySvgIcon>
+        </Button>
+        <Button
+          type='text'
+          className='flex items-center h-12'
+        >
+          <MyLogin></MyLogin>
+        </Button>
       </Header>
       <Layout hasSider>
         {!['login', 'problemdetail'].includes(headerNav) && (
@@ -55,6 +76,9 @@ const Root: React.FC = () => {
         <Content
           id='mainContent'
           className='bg-white py-4'
+          style={{
+            backgroundColor: token.colorBgBlur
+          }}
         >
           <div className='w-full h-full flex justify-center overflow-y-scroll scroll-smooth'>
             <Outlet></Outlet>
@@ -88,12 +112,12 @@ const MyLogin: React.FC = () => {
 
   return (
     <div
-      className='bg-white h-full flex items-center'
+      className='h-full flex items-center'
       onClick={handleClick}
     >
       {loginStatus && (
         <Avatar
-          className='hover:cursor-pointer mr-8'
+          className='hover:cursor-pointer'
           alt='登录'
           src={`${iconBaseUrl}/${myInfo?.icon}`}
         ></Avatar>

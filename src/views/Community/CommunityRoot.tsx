@@ -46,7 +46,7 @@ const CommunityRoot: React.FC = () => {
     <>
       <div
         className='flex'
-        style={{ width: '1024px' }}
+        // style={{ width: '1024px' }}
       >
         {/* left */}
         <div

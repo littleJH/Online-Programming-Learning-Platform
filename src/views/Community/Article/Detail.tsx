@@ -178,16 +178,15 @@ const Detail: React.FC = () => {
       {currentArticle && (
         <>
           <div id='top'></div>
-          <div
-            className='flex'
-            style={{
-              width: '1024px'
-            }}
-          >
-            <div>
+          <div className='flex'>
+            <div
+              style={{
+                backgroundColor: '#fff'
+              }}
+            >
               <div
-                style={{ width: '768px' }}
-                className={`h-full ml-16 shadow rounded px-16 py-8  transition-all duration-500 ease-in-out`}
+                style={{ width: '820px' }}
+                className={`h-full shadow rounded px-8 py-8  transition-all duration-500 ease-in-out`}
               >
                 {/* header */}
                 <div>
@@ -238,14 +237,14 @@ const Detail: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className='w-8'></div>
-            <div className='w-64 h-96 shadow rounded '></div>
+            {/* <div className='w-8'></div> */}
+            {/* <div className='w-64 h-96 shadow rounded '></div> */}
           </div>
 
           <div
             className={`w-12 h-12 px-4 fixed top-1/2 right-0 flex flex-col`}
             style={{
-              translate: '0 -50%'
+              translate: '-50% -50%'
             }}
           >
             <SideActionBar

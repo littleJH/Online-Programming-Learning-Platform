@@ -1,16 +1,16 @@
 import { Button, ColorPicker, Divider, Form, notification, theme } from 'antd'
 import React, { useCallback, useState } from 'react'
-import CodeEditorConfig from '@/components/editor/CodeEditorConfig'
-import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil'
-import { monacoConfigState, notificationApi, themeState, userInfoAtomState, userInfoState } from '@/store/appStore'
+import CodeEditorConfig from '@/components/Editor/CodeEditorConfig'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { monacoOptionsState, notificationApi, themeState, userInfoState } from '@/store/appStore'
 import { getCurrentUserinfo, updateInfoApi } from '@/api/user'
 import { Color } from 'antd/es/color-picker'
 import { themeDefault } from '@/config/config'
 
 const Setting: React.FC = () => {
   const [form] = Form.useForm()
-  const monacoConfigRecoil = useRecoilValue(monacoConfigState)
-  const [monacoConfig, setMonacoConfig] = useState(monacoConfigRecoil)
+  const monacoOptionsValue = useRecoilValue(monacoOptionsState)
+  const [monacoOptions, setMonacoOptions] = useState(monacoOptionsValue)
   const [info, setInfo] = useRecoilState(userInfoState)
   const [theme, setTheme] = useRecoilState(themeState)
   const notification = useRecoilValue(notificationApi)
@@ -19,22 +19,13 @@ const Setting: React.FC = () => {
     updateConfig()
   }
 
-  const updateConfig = (language?: string) => {
-    const personalizeConfig = info && info.res_long !== '' ? JSON.parse(info.res_long) : {}
-    const newMonaco = {
-      language: language ? language : monacoConfig.language,
-      theme: monacoConfig.theme,
-      options: monacoConfig.options
-    }
+  const updateConfig = () => {
     const newTheme = { ...theme, ...form.getFieldsValue(true) }
     console.log(newTheme)
     const newInfo = {
       ...info,
-      res_long: JSON.stringify({
-        ...personalizeConfig,
-        monacoConfig: newMonaco,
-        theme: newTheme
-      })
+      theme: JSON.stringify(newTheme),
+      manaco: JSON.stringify(monacoOptions)
     }
     updateInfoApi(JSON.stringify(newInfo)).then(async (res) => {
       if (res.data.code === 200) {
@@ -128,7 +119,7 @@ const Setting: React.FC = () => {
             onChangeComplete={(value) => handleColorChange(value, 'colorInfo')}
           ></ColorPicker>
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           name={'colorTextBase'}
           label='文字色'
         >
@@ -137,13 +128,13 @@ const Setting: React.FC = () => {
             showText={true}
             onChangeComplete={(value) => handleColorChange(value, 'colorTextBase')}
           ></ColorPicker>
-        </Form.Item>
+        </Form.Item> */}
       </Form>
       <h3 className='label'>代码编辑器设置</h3>
       <Divider></Divider>
       <CodeEditorConfig
-        monacoConfig={monacoConfig}
-        setMonacoConfig={setMonacoConfig}
+        monacoOptions={monacoOptions}
+        setMonacoOptions={setMonacoOptions}
       ></CodeEditorConfig>
       <div className='text-end'>
         <Button

@@ -1,9 +1,9 @@
 import { getCurrentUserinfo } from '@/api/user'
-import { IArticle, IProblem, IMonacoConfig, User, IPersonalizeConfig } from '@/type'
+import { IArticle, IProblem, IMonacoOptions, User } from '@/type'
 import { atom, selector } from 'recoil'
 import { notification } from 'antd'
-import { getPathArray } from '@/tool/myUtils/Utils'
-import { themeDefault, monacoConfigDefault } from '@/config/config'
+import { getPathArray } from '@/tool/myUtils/utils'
+import { themeDefault, monacoOptionsDefault } from '@/config/config'
 import { NotificationInstance } from 'antd/es/notification/interface'
 
 export const userInfoAtomState = atom<User | null>({
@@ -41,7 +41,7 @@ export const themeState = selector({
     const userInfo = get(userInfoState)
     if (userInfo?.res_long === '' || !userInfo) return themeDefault
     else {
-      const { theme } = JSON.parse(userInfo.res_long) as IPersonalizeConfig
+      const theme = JSON.parse(userInfo.theme !== '' ? userInfo.theme : '{}')
       const globalStyle = document.getElementsByTagName('body')[0].style
       for (let key in theme) {
         if (theme[key]) {
@@ -53,14 +53,11 @@ export const themeState = selector({
   },
   set: ({ set, get }, newValue) => {
     const userInfo = get(userInfoState) as User
-    const config = JSON.parse(userInfo.res_long)
-    const newTheme = { ...config.theme, ...newValue }
+    const theme = JSON.parse(userInfo.theme !== '' ? userInfo.theme : '{}')
+    const newTheme = { ...theme, ...newValue }
     set(userInfoState, {
       ...userInfo,
-      res_long: JSON.stringify({
-        ...config,
-        theme: newTheme
-      })
+      theme: newTheme
     })
     const globalStyle = document.getElementsByTagName('body')[0].style
     for (let key in newTheme) {
@@ -71,16 +68,58 @@ export const themeState = selector({
   }
 })
 
-export const monacoConfigState = selector<IMonacoConfig>({
-  key: 'monacoConfigState',
+export const monacoOptionsState = selector<IMonacoOptions>({
+  key: 'monacoOptionsState',
   get: ({ get }) => {
     const userInfo = get(userInfoState)
-    if (userInfo?.res_long === '' || !userInfo) {
-      return monacoConfigDefault
+    if (userInfo?.monaco_options === '' || !userInfo) {
+      return monacoOptionsDefault
     } else {
-      const { monacoConfig } = JSON.parse(userInfo?.res_long) as IPersonalizeConfig
-      return { ...monacoConfigDefault, ...monacoConfig }
+      const monaco_options = JSON.parse(userInfo?.monaco_options)
+      return { ...monacoOptionsDefault, ...monaco_options }
     }
+  },
+  set: ({ set, get }, newValue) => {
+    const userInfo = get(userInfoState) as User
+    const newInfo = {
+      ...userInfo,
+      monaco_options: String(newValue)
+    }
+    set(userInfoState, newInfo)
+  }
+})
+
+export const monacoThemeState = selector<string>({
+  key: 'monacoThemeState',
+  get: ({ get }) => {
+    const userInfo = get(userInfoState)
+    if (userInfo?.monaco_theme === '' || !userInfo) return 'vs-dark'
+    else return userInfo.monaco_theme
+  },
+  set: ({ set, get }, newValue) => {
+    const userInfo = get(userInfoState) as User
+    const newInfo = {
+      ...userInfo,
+      monaco_theme: String(newValue)
+    }
+    set(userInfoState, newInfo)
+  }
+})
+
+export const languageState = selector<string>({
+  key: 'languageState',
+  get: ({ get }) => {
+    const userInfo = get(userInfoState)
+    if (userInfo?.language === '' || !userInfo) return 'C++'
+    else return userInfo.language
+  },
+  set: ({ set, get }, newValue) => {
+    const userInfo = get(userInfoState) as User
+    const newInfo = {
+      ...userInfo,
+      language: String(newValue)
+    }
+    set(userInfoState, newInfo)
   }
 })
 
@@ -122,4 +161,12 @@ export const sideBarCollapsed = atom<boolean>({
 export const notificationApi = atom<NotificationInstance | null>({
   key: 'notificationApi',
   default: null
+})
+
+export const isDarkState = atom<boolean>({
+  key: 'isDarkState',
+  default: (async () => {
+    const isDark = Boolean(localStorage.getItem('isDark'))
+    return Promise.resolve(isDark)
+  })()
 })

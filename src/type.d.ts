@@ -145,6 +145,10 @@ export interface User {
   visit_num?: number
   res_short: string
   res_long: string
+  theme: string
+  monaco_options: string
+  language: string
+  monaco_theme: string
 }
 
 export interface IPersonalizeConfig {
@@ -156,26 +160,22 @@ export interface ITheme {
   [key: string]: string
 }
 
-export interface IMonacoConfig {
-  language: string
-  theme: 'vs-dark' | 'light'
-  options: {
-    fontSize?: number = 14
-    fontWeight?: string = '400'
-    lineHeight?: number = 24
-    letterSpacing?: number = 1
-    smoothScrolling?: boolean = true
-    cursorSmoothCaretAnimation?: 'on' | 'off' | 'explicit' = 'on'
-    emptySelectionClipboard?: boolean = true
-    mouseWheelScrollSensitivity?: number = 1
-    mouseWheelZoom?: boolean = true
-    padding: {
-      bottom?: number = 10
-      top?: number = 10
-    }
-    scrollBeyondLastLine?: boolean = false
-    showUnused?: boolean = true
+export interface IMonacoOptions {
+  fontSize?: number = 14
+  fontWeight?: string = '400'
+  lineHeight?: number = 24
+  letterSpacing?: number = 1
+  smoothScrolling?: boolean = true
+  cursorSmoothCaretAnimation?: 'on' | 'off' | 'explicit' = 'on'
+  emptySelectionClipboard?: boolean = true
+  mouseWheelScrollSensitivity?: number = 1
+  mouseWheelZoom?: boolean = true
+  padding: {
+    bottom?: number = 10
+    top?: number = 10
   }
+  scrollBeyondLastLine?: boolean = false
+  showUnused?: boolean = true
 }
 
 export interface IEditorConfig {

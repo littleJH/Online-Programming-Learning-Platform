@@ -1,12 +1,7 @@
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import React, { useState, useEffect } from 'react'
 import { Editor, Toolbar } from '@wangeditor/editor-for-react'
-import {
-  Boot,
-  IDomEditor,
-  IEditorConfig,
-  IToolbarConfig
-} from '@wangeditor/editor'
+import { Boot, IDomEditor, IEditorConfig, IToolbarConfig } from '@wangeditor/editor'
 import markdownModule from '@wangeditor/plugin-md'
 
 let flag = false
@@ -19,16 +14,8 @@ const TextEditor: React.FC<{
   placeholder?: string
   style?: React.CSSProperties
   className?: string
-}> = props => {
-  const {
-    mode,
-    value,
-    htmlChange,
-    placeholder,
-    style,
-    className,
-    defaultHtml
-  } = props
+}> = (props) => {
+  const { mode, value, htmlChange, placeholder, style, className, defaultHtml } = props
 
   if (!flag) {
     Boot.registerModule(markdownModule)
@@ -57,7 +44,7 @@ const TextEditor: React.FC<{
   }
   return (
     <div
-      className="h-full grow border border-solid border-slate-300 rounded  overflow-scroll"
+      className='h-full grow border border-solid border-slate-300 rounded  overflow-scroll'
       style={{
         zIndex: 100
       }}
@@ -66,8 +53,8 @@ const TextEditor: React.FC<{
         <Toolbar
           editor={editor}
           defaultConfig={toolbarConfig}
-          mode="default"
-          className="border-indigo-300 sticky top-0"
+          mode='default'
+          className='border-indigo-300 sticky top-0'
           style={{
             zIndex: 1000,
             borderBottomWidth: '1px'
@@ -80,8 +67,8 @@ const TextEditor: React.FC<{
         value={value}
         onCreated={seteditor}
         onChange={handleChange}
-        mode="default"
-        style={{ ...style, minHeight: '128px' }}
+        mode='default'
+        style={{ minHeight: '300px', ...style }}
         className={className}
       ></Editor>
     </div>

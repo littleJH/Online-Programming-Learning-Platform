@@ -1,15 +1,16 @@
 import { BrowserRouter } from 'react-router-dom'
 import RouterWaiter from './router/router'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { ConfigProvider, notification } from 'antd'
-import { notificationApi, themeState } from './store/appStore'
+import { ConfigProvider, notification, theme } from 'antd'
+import { isDarkState, notificationApi, themeState } from './store/appStore'
 import { useEffect } from 'react'
 import './style.scss'
 
 function App() {
-  const theme = useRecoilValue(themeState)
+  const myTheme = useRecoilValue(themeState)
   const setNotificationApi = useSetRecoilState(notificationApi)
   const [api, contextHolder] = notification.useNotification()
+  const isDark = useRecoilValue(isDarkState)
 
   useEffect(() => {
     setNotificationApi(api)
@@ -36,8 +37,9 @@ function App() {
           fontSize: 14,
           borderRadius: 4,
           wireframe: false,
-          ...theme
-        }
+          ...myTheme
+        },
+        algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm
       }}
     >
       {contextHolder}
