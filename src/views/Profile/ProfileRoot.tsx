@@ -2,6 +2,7 @@ import React, { useLayoutEffect } from 'react'
 import { Outlet, redirect } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
 import { loginStatusState } from '@/store/appStore'
+import { Card } from 'antd'
 
 const ProfileRoot: React.FC = () => {
   const info = useRecoilValue(loginStatusState)
@@ -17,13 +18,15 @@ const ProfileRoot: React.FC = () => {
   // }
 
   return (
-    <div
+    <Card
       style={{
-        maxWidth: '1024px'
+        minWidth: '820px',
+        maxWidth: '1024px',
+        height: 'max-content'
       }}
     >
       <Outlet></Outlet>
-    </div>
+    </Card>
   )
 }
 

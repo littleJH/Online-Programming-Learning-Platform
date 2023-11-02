@@ -3,15 +3,14 @@ import { Outlet } from 'react-router-dom'
 import CreationNavgation from './CreationNavgation'
 import { useRecoilValue } from 'recoil'
 import { pathNameState } from '@/store/appStore'
+import { Card } from 'antd'
 
 const CreationRoot: React.FC = () => {
   const [mode, setmode] = useState('')
   const pathname = useRecoilValue(pathNameState)
-  const [showNav, setShowNav] = useState(false)
 
-  useEffect(() => {
-    setShowNav(pathname === '/creation')
-  }, [pathname])
+  const showNav = React.useMemo(() => pathname === '/creation', [pathname])
+  const full = React.useMemo(() => pathname === '/creation/article', [pathname])
 
   const handleModeChange = (value: any) => {
     console.log(value)
@@ -20,7 +19,20 @@ const CreationRoot: React.FC = () => {
   return (
     <>
       {showNav && <CreationNavgation></CreationNavgation>}
-      <Outlet></Outlet>
+      <Card
+        size='small'
+        style={{
+          height: `${full ? '100%' : 'max-content'}`,
+          width: `${full ? '100%' : 'max-content'}`,
+          margin: `${full ? '0 1rem' : '0'}`
+        }}
+        bodyStyle={{
+          height: `${full ? '100%' : 'max-content'}`,
+          width: `${full ? '100%' : 'max-content'}`
+        }}
+      >
+        <Outlet></Outlet>
+      </Card>
     </>
   )
 }

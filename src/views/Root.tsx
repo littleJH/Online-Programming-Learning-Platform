@@ -26,6 +26,8 @@ const Root: React.FC = () => {
 
   useEffect(() => console.log('headerNav ==> ', headerNav), [headerNav])
 
+  const headerStyle: React.CSSProperties = { backgroundColor: `${isDark ? '#141414' : '#ffffff'}`, boxShadow: token.boxShadowTertiary }
+
   const siderStyle: React.CSSProperties = {
     lineHeight: '120px',
     color: '#fff',
@@ -40,7 +42,7 @@ const Root: React.FC = () => {
     <Layout className='w-full h-full'>
       <Header
         className='sticky top-0 z-10 p-0 flex items-center'
-        style={{ backgroundColor: `${isDark ? '#141414' : '#ffffff'}`, boxShadow: token.boxShadowTertiary }}
+        style={headerStyle}
       >
         <Navbar headerNav={headerNav}></Navbar>
         <Button

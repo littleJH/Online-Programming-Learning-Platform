@@ -12,6 +12,7 @@ import Dragger from 'antd/es/upload/Dragger'
 import { createTagApi, createTagAutoApi } from '@/api/tag'
 import { RcFile, UploadChangeParam } from 'antd/es/upload'
 import { UploadProblemModal } from '@/components/Problem/uploadProblem/UploadProblemModal'
+import { CloudUploadOutlined } from '@ant-design/icons'
 
 const stringArrItem = ['test_input', 'test_output', 'sample_input', 'sample_output']
 
@@ -324,24 +325,17 @@ const Create: React.FC = () => {
         {/* <Button type="dashed" onClick={() => setOpenUploadModal(true)}>
           上传题目
         </Button> */}
-        <div
-          className='fixed bottom-4'
-          style={{
-            width: '128px',
-            height: '128px'
-          }}
-        >
-          <Space direction='vertical'>
-            <Button
-              type='dashed'
-              onClick={() => setOpenUploadModal(true)}
-            >
-              上传题目文件
-            </Button>
-            {/* <Button type="dashed" onClick={() => setOpenCreateTagModal(true)}>
-              自动创建标签
-            </Button> */}
-          </Space>
+        <div className='fixed bottom-16 right-4'>
+          <Button
+            type='dashed'
+            style={{
+              height: '4rem',
+              width: '4rem'
+            }}
+            onClick={() => setOpenUploadModal(true)}
+          >
+            <CloudUploadOutlined style={{ fontSize: '2rem' }} />
+          </Button>
         </div>
       </div>
 
