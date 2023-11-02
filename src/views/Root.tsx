@@ -40,22 +40,23 @@ const Root: React.FC = () => {
     <Layout className='w-full h-full'>
       <Header
         className='sticky top-0 z-10 p-0 flex items-center'
-        style={{ backgroundColor: token.colorBgBase }}
+        style={{ backgroundColor: `${isDark ? '#141414' : '#ffffff'}`, boxShadow: token.boxShadowTertiary }}
       >
         <Navbar headerNav={headerNav}></Navbar>
         <Button
           type='text'
-          className='flex items-center h-12'
+          className='flex items-center h-12 p-2'
           onClick={() => setIsDark((value) => !value)}
         >
           <MySvgIcon
             href={`#icon-${isDark ? 'light' : 'dark'}`}
             size={2}
+            color={`${isDark ? '#fff' : '#000'}`}
           ></MySvgIcon>
         </Button>
         <Button
           type='text'
-          className='flex items-center h-12'
+          className='flex items-center h-12 p-2 mr-4'
         >
           <MyLogin></MyLogin>
         </Button>

@@ -1,11 +1,7 @@
 import React, { Fragment, useEffect, useLayoutEffect, useState } from 'react'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { showCompetitionApi } from '@/api/competition'
-import {
-  cancelEnterApi,
-  enterCompetitionApi,
-  getEnterListApi
-} from '@/api/competitionMixture'
+import { cancelEnterApi, enterCompetitionApi, getEnterListApi } from '@/api/competitionMixture'
 import { getEnterConditionApi } from '@/api/competitionMixture'
 import dayjs from 'dayjs'
 import Sidebar from '../Sidebar/Sidebar'
@@ -30,26 +26,15 @@ interface CountDown {
   second: string
 }
 
-const getState = (
-  start: string,
-  end: string,
-  enter: boolean
-): CompetitionState => {
+const getState = (start: string, end: string, enter: boolean): CompetitionState => {
   if (dayjs(start).valueOf() > dayjs().valueOf()) {
     return enter ? 'enter' : 'notEnter'
-  } else if (
-    dayjs(start).valueOf() < dayjs().valueOf() &&
-    dayjs(end).valueOf() > dayjs().valueOf()
-  ) {
+  } else if (dayjs(start).valueOf() < dayjs().valueOf() && dayjs(end).valueOf() > dayjs().valueOf()) {
     return 'underway'
   } else return 'finished'
 }
 
-const countDownFun = (
-  endTime: string,
-  setcountDown: Function,
-  setcompetitionState: Function
-) => {
+const countDownFun = (endTime: string, setcountDown: Function, setcompetitionState: Function) => {
   const end = dayjs(endTime)
   const time: CountDown = {
     day: '00',
@@ -62,28 +47,19 @@ const countDownFun = (
     let duration = end.unix() - current.unix()
     if (duration >= 0) {
       if (duration >= 60 * 60 * 24) {
-        time.day =
-          Math.floor(duration / (60 * 60 * 24)) >= 10
-            ? String(Math.floor(duration / (60 * 60 * 24)))
-            : `0${String(Math.floor(duration / (60 * 60 * 24)))}`
+        time.day = Math.floor(duration / (60 * 60 * 24)) >= 10 ? String(Math.floor(duration / (60 * 60 * 24))) : `0${String(Math.floor(duration / (60 * 60 * 24)))}`
         duration = duration - 60 * 60 * 24 * Number(time.day)
       } else if (duration < 60 * 60 * 24 && duration > 60 * 60 * 23) {
         time.day = '00'
       }
       if (duration >= 60 * 60) {
-        time.hour =
-          Math.floor(duration / (60 * 60)) >= 10
-            ? String(Math.floor(duration / (60 * 60)))
-            : `0${String(Math.floor(duration / (60 * 60)))}`
+        time.hour = Math.floor(duration / (60 * 60)) >= 10 ? String(Math.floor(duration / (60 * 60))) : `0${String(Math.floor(duration / (60 * 60)))}`
         duration = duration - 60 * 60 * Number(time.hour)
       } else if (duration > 60 * 59 && duration < 60 * 60) {
         time.hour = '00'
       }
       if (duration >= 60) {
-        time.min =
-          Math.floor(duration / 60) >= 10
-            ? String(Math.floor(duration / 60))
-            : `0${String(Math.floor(duration / 60))}`
+        time.min = Math.floor(duration / 60) >= 10 ? String(Math.floor(duration / 60)) : `0${String(Math.floor(duration / 60))}`
         duration = duration - 60 * Number(time.min)
       } else if (duration < 60) {
         time.min = '00'
@@ -120,18 +96,13 @@ const Detail: React.FC = () => {
 
   useLayoutEffect(() => {
     if (location.pathname.indexOf('problem') >= 0) {
-      setanswering(
-        location.pathname.slice(location.pathname.indexOf('problem') + 8)
-          .length === 0
-          ? false
-          : true
-      )
+      setanswering(location.pathname.slice(location.pathname.indexOf('problem') + 8).length === 0 ? false : true)
     } else setanswering(false)
   }, [])
 
   useEffect(() => {
     let type: CompetitionType = ''
-    showCompetitionApi(competition_id as string).then(res => {
+    showCompetitionApi(competition_id as string).then((res) => {
       const competition = res.data.data.competition as ICompetition
       switch (competition.type) {
         case 'Single':
@@ -174,17 +145,11 @@ const Detail: React.FC = () => {
     const type = 'single'
     const result = await getEnterConditionApi(type, competition.id)
     console.log(result)
-    const state = getState(
-      competition.start_time,
-      competition.end_time,
-      result.data.data.enter
-    )
+    const state = getState(competition.start_time, competition.end_time, result.data.data.enter)
     setcompetitionState(state)
-    if (state === 'enter' || state === 'notEnter')
-      countDownFun(competition.start_time, setcountDown, setcompetitionState)
-    else if (state === 'underway')
-      countDownFun(competition.end_time, setcountDown, setcompetitionState)
-    getEnterListApi(type, competition.id).then(res => {
+    if (state === 'enter' || state === 'notEnter') countDownFun(competition.start_time, setcountDown, setcompetitionState)
+    else if (state === 'underway') countDownFun(competition.end_time, setcountDown, setcompetitionState)
+    getEnterListApi(type, competition.id).then((res) => {
       setenterNum(res.data.data.total)
     })
   }
@@ -194,11 +159,11 @@ const Detail: React.FC = () => {
     const result = await getEnterConditionApi(type, competition.id)
     if (result.data.data) {
       const group = result.data.data.group as IGroup
-      getMemberGroupListApi(group.id).then(async res => {
+      getMemberGroupListApi(group.id).then(async (res) => {
         const members = res.data.data.userList
         const users: User[] = []
         for (let item of members) {
-          await getUserInfoApi(item.user_id).then(res => {
+          await getUserInfoApi(item.user_id).then((res) => {
             users.push(res.data.data.user)
           })
         }
@@ -208,16 +173,10 @@ const Detail: React.FC = () => {
         setgroupInfo(group)
       })
     }
-    const state = getState(
-      competition.start_time,
-      competition.end_time,
-      result.data.data ? true : false
-    )
+    const state = getState(competition.start_time, competition.end_time, result.data.data ? true : false)
     setcompetitionState(state)
-    if (state === 'enter' || state === 'notEnter')
-      countDownFun(competition.start_time, setcountDown, setcompetitionState)
-    else if (state === 'underway')
-      countDownFun(competition.end_time, setcountDown, setcompetitionState)
+    if (state === 'enter' || state === 'notEnter') countDownFun(competition.start_time, setcountDown, setcompetitionState)
+    else if (state === 'underway') countDownFun(competition.end_time, setcountDown, setcompetitionState)
     // getEnterListApi(type, competition.id).then(res => {
     //   setenterNum(res.data.data.total)
     // })
@@ -227,11 +186,7 @@ const Detail: React.FC = () => {
     const type = 'match'
     const result = await getEnterConditionApi(type, competition.id)
     console.log(result)
-    const state = getState(
-      competition.start_time,
-      competition.end_time,
-      result.data.data ? true : false
-    )
+    const state = getState(competition.start_time, competition.end_time, result.data.data ? true : false)
     setcompetitionState(state)
   }
 
@@ -240,42 +195,30 @@ const Detail: React.FC = () => {
       password: '666666'
     }
     if (competitionState === 'notEnter') {
-      enterCompetitionApi(
-        type,
-        competition?.id as string,
-        JSON.stringify(data)
-      ).then(res => {
+      enterCompetitionApi(type, competition?.id as string, JSON.stringify(data)).then((res) => {
         if (res.data.code === 200) {
           setopenEnterModal(false)
           setcompetitionState('enter')
           notification.success({
-            message: '报名成功',
-            placement: 'topRight'
+            message: '报名成功'
           })
         } else {
           notification.warning({
-            message: res.data.msg,
-            placement: 'topRight'
+            message: res.data.msg
           })
         }
       })
     } else if (competitionState === 'enter') {
-      cancelEnterApi(
-        type,
-        competition?.id as string,
-        groupInfo.id ? groupInfo.id : ''
-      ).then(res => {
+      cancelEnterApi(type, competition?.id as string, groupInfo.id ? groupInfo.id : '').then((res) => {
         if (res.data.code === 200) {
           setopenEnterModal(false)
           setcompetitionState('notEnter')
           notification.success({
-            message: '取消报名成功',
-            placement: 'topRight'
+            message: '取消报名成功'
           })
         } else {
           notification.warning({
-            message: res.data.msg,
-            placement: 'topRight'
+            message: res.data.msg
           })
         }
       })
@@ -285,11 +228,11 @@ const Detail: React.FC = () => {
   const getEnterList = () => {
     setenterList([])
     setopenEnterListModal(true)
-    getEnterListApi(type, competition?.id as string).then(res => {
+    getEnterListApi(type, competition?.id as string).then((res) => {
       console.log('enterlist', res.data.data)
       res.data.data.competitionRanks.forEach((item: any) => {
-        getUserInfoApi(item.member_id).then(result => {
-          setenterList(value => [...value, result.data.data.user])
+        getUserInfoApi(item.member_id).then((result) => {
+          setenterList((value) => [...value, result.data.data.user])
         })
       })
     })
@@ -317,77 +260,65 @@ const Detail: React.FC = () => {
   }
 
   return (
-    <div className="max-w-screen-xl">
+    <div className='max-w-screen-xl'>
       {/* header */}
-      <div className="rounded shadow-md p-4">
-        <div className="flex">
-          <div className="flex flex-col items-center justify-center">
+      <div className='rounded shadow-md p-4'>
+        <div className='flex'>
+          <div className='flex flex-col items-center justify-center'>
             <svg
               onClick={() => {
-                ;['notEnter', 'enter'].includes(competitionState as string)
-                  ? setopenEnterModal(true)
-                  : null
+                ;['notEnter', 'enter'].includes(competitionState as string) ? setopenEnterModal(true) : null
               }}
-              className="icon-large hover:cursor-pointer"
+              className='icon-large hover:cursor-pointer'
               aria-hidden={true}
             >
-              {competitionState === 'notEnter' && (
-                <use href="#icon-weibaoming"></use>
-              )}
-              {competitionState === 'enter' && (
-                <use href="#icon-yibaoming"></use>
-              )}
-              {competitionState === 'underway' && (
-                <use href="#icon-jinhangzhong"></use>
-              )}
-              {competitionState === 'finished' && (
-                <use href="#icon-yijieshu"></use>
-              )}
+              {competitionState === 'notEnter' && <use href='#icon-weibaoming'></use>}
+              {competitionState === 'enter' && <use href='#icon-yibaoming'></use>}
+              {competitionState === 'underway' && <use href='#icon-jinhangzhong'></use>}
+              {competitionState === 'finished' && <use href='#icon-yijieshu'></use>}
             </svg>
           </div>
-          <div className="flex-grow">
-            <div className=" flex justify-center items-center text-3xl font-bold ">
+          <div className='flex-grow'>
+            <div className=' flex justify-center items-center text-3xl font-bold '>
               <CompetitionTypeLabel
-                className="icon"
+                className='icon'
                 showLabel={false}
                 type={competition?.type as CompetitionType}
               ></CompetitionTypeLabel>
-              <div className="ml-4">{competition?.title}</div>
+              <div className='ml-4'>{competition?.title}</div>
             </div>
-            <div className="flex justify-center mt-4 h-12">
+            <div className='flex justify-center mt-4 h-12'>
               {competitionState !== 'finished' && (
                 <Fragment>
-                  <div className="countdown-section">
-                    <span className="countdown-amount">{countDown?.day}</span>
+                  <div className='countdown-section'>
+                    <span className='countdown-amount'>{countDown?.day}</span>
                     {/* <span className="countdown-period">天</span> */}
                   </div>
-                  <div className="countdown-section">
-                    <span className="countdown-amount">{countDown?.hour}</span>
+                  <div className='countdown-section'>
+                    <span className='countdown-amount'>{countDown?.hour}</span>
                     {/* <span className="countdown-period">时</span> */}
                   </div>
-                  <div className="countdown-section">
-                    <span className="countdown-amount">{countDown?.min}</span>
+                  <div className='countdown-section'>
+                    <span className='countdown-amount'>{countDown?.min}</span>
                     {/* <span className="countdown-period">分</span> */}
                   </div>
-                  <div className="countdown-section">
-                    <span className="countdown-amount">
-                      {countDown?.second}
-                    </span>
+                  <div className='countdown-section'>
+                    <span className='countdown-amount'>{countDown?.second}</span>
                     {/* <span className="countdown-period">秒</span> */}
                   </div>
                 </Fragment>
               )}
             </div>
           </div>
-          <div className="flex flex-col items-center justify-center">
-            <Tooltip title="查看报名列表">
+          <div className='flex flex-col items-center justify-center'>
+            <Tooltip title='查看报名列表'>
               <div
-                className=" font-bold hover:cursor-pointer"
+                className=' font-bold hover:cursor-pointer'
                 onClick={() => getEnterList()}
               >
                 {typeof enterNum === 'number' && (
                   <Fragment>
-                    <div className="flex justify-center ">{enterNum}名</div>
+                    <div className='flex justify-center '>{enterNum}名</div>
                     <div>参赛者</div>
                   </Fragment>
                 )}
@@ -397,10 +328,10 @@ const Detail: React.FC = () => {
         </div>
       </div>
       <Menu
-        className="my-4"
+        className='my-4'
         selectedKeys={[current]}
-        onClick={e => navTo(e)}
-        mode="horizontal"
+        onClick={(e) => navTo(e)}
+        mode='horizontal'
         items={[
           {
             key: 'overview',
@@ -420,23 +351,21 @@ const Detail: React.FC = () => {
           }
         ]}
       ></Menu>
-      <div className="flex w-full">
+      <div className='flex w-full'>
         {/* content */}
         <div
-          className="shadow flex-grow"
+          className='shadow flex-grow'
           style={{
             minWidth: '1000px'
           }}
         >
-          <Outlet
-            context={[competition, competitionState, setanswering, type]}
-          ></Outlet>
+          <Outlet context={[competition, competitionState, setanswering, type]}></Outlet>
         </div>
         {/* sidebar */}
         {!answering && (
           <Fragment>
-            <div className="w-8"></div>
-            <div className="shadow w-96 h-min">
+            <div className='w-8'></div>
+            <div className='shadow w-96 h-min'>
               <Sidebar
                 type={type}
                 competition={competition}
@@ -458,9 +387,12 @@ const Detail: React.FC = () => {
               {competitionState === 'notEnter' && <div>报名本个人赛？</div>}
               {competitionState === 'enter' && <div>取消报名本个人赛？</div>}
             </div>
-            <div className="flex justify-center mt-8">
+            <div className='flex justify-center mt-8'>
               <Button onClick={() => setopenEnterModal(false)}>取消</Button>
-              <Button type="primary" onClick={enterCompetition}>
+              <Button
+                type='primary'
+                onClick={enterCompetition}
+              >
                 确定
               </Button>
             </div>
@@ -469,14 +401,17 @@ const Detail: React.FC = () => {
         {type === 'group' && (
           <div>
             {competitionState === 'notEnter' && (
-              <EnterGroup competition={competition} type={type}></EnterGroup>
+              <EnterGroup
+                competition={competition}
+                type={type}
+              ></EnterGroup>
             )}
             {competitionState === 'enter' && (
               <Fragment>
                 <GroupInfo group={groupInfo}></GroupInfo>
-                <div className="absolute right-8 bottom-8">
+                <div className='absolute right-8 bottom-8'>
                   <Button
-                    type="dashed"
+                    type='dashed'
                     danger
                     onClick={() => enterCompetition()}
                   >
@@ -489,20 +424,18 @@ const Detail: React.FC = () => {
         )}
       </Modal>
       <Modal
-        title="报名列表"
+        title='报名列表'
         open={openEnterListModal}
         onCancel={() => setopenEnterListModal(false)}
         footer={[]}
       >
         <List
-          itemLayout="horizontal"
+          itemLayout='horizontal'
           dataSource={enterList}
           renderItem={(item, index) => (
             <Fragment>
               <List.Item>
-                <List.Item.Meta
-                  title={<UserCard user={item}></UserCard>}
-                ></List.Item.Meta>
+                <List.Item.Meta title={<UserCard user={item}></UserCard>}></List.Item.Meta>
               </List.Item>
             </Fragment>
           )}

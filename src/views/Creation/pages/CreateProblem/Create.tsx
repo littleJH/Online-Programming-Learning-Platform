@@ -56,8 +56,7 @@ const Create: React.FC = () => {
       })
       .catch(() => {
         notification.warning({
-          message: '请完善表单！',
-          placement: 'topRight'
+          message: '请完善表单！'
         })
       })
   }, [form])
@@ -78,8 +77,7 @@ const Create: React.FC = () => {
       console.log(res.data)
       if (res.data.code !== 200) {
         notification.warning({
-          message: res.data.msg,
-          placement: 'topRight'
+          message: res.data.msg
         })
         return
       }
@@ -89,8 +87,7 @@ const Create: React.FC = () => {
       const res = await Promise.all([createProgramApi(data1), createProgramApi(data2)])
       if (res[0].data.code !== 200) {
         notification.warning({
-          message: res[0].data.msg,
-          placement: 'topRight'
+          message: res[0].data.msg
         })
         return
       }

@@ -77,15 +77,13 @@ const CreateTopic: React.FC = () => {
     if (!selectedProblems.length || !title.length) {
       if (!title.length) {
         notification.error({
-          message: '请输入标题',
-          placement: 'topRight'
+          message: '请输入标题'
         })
         inputRef.current?.focus()
       }
       if (!selectedProblems.length)
         notification.error({
-          message: '您还没有添加题目',
-          placement: 'topRight'
+          message: '您还没有添加题目'
         })
       return
     }

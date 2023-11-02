@@ -42,14 +42,12 @@ const Account: React.FC = () => {
           setInfo(newInfo)
           notification.success({
             message: '邮箱更改成功',
-            description: `新邮箱为：${newInfo.email}`,
-            placement: 'topRight'
+            description: `新邮箱为：${newInfo.email}`
           })
           setOpenUpdateEmailModal(false)
         } else {
           notification.error({
-            message: res.data.msg,
-            placement: 'topRight'
+            message: res.data.msg
           })
         }
       })
@@ -65,14 +63,12 @@ const Account: React.FC = () => {
       updatePasswordApi(formData).then((res) => {
         if (res.data.code === 200) {
           notification.success({
-            message: '密码更改成功',
-            placement: 'topRight'
+            message: '密码更改成功'
           })
           setOpenUpdatePwModal(false)
         } else {
           notification.error({
-            message: res.data.msg,
-            placement: 'topRight'
+            message: res.data.msg
           })
         }
       })

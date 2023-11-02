@@ -9,7 +9,12 @@ import './style.scss'
 function App() {
   const myTheme = useRecoilValue(themeState)
   const setNotificationApi = useSetRecoilState(notificationApi)
-  const [api, contextHolder] = notification.useNotification()
+  const [api, contextHolder] = notification.useNotification({
+    placement: 'bottomRight',
+    bottom: 50,
+    stack: false,
+    maxCount: 6
+  })
   const isDark = useRecoilValue(isDarkState)
 
   useEffect(() => {

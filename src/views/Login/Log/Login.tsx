@@ -25,7 +25,7 @@ const App: React.FC<{
           localStorage.setItem('token', token)
           notification.success({
             message: '欢迎',
-            placement: 'topRight',
+             ,
             duration: 1
           })
           window.history.back()

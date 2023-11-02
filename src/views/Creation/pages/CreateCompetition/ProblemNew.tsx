@@ -14,12 +14,7 @@ interface IProps {
   setisModelOpen: Function
 }
 
-const stringArrItem = [
-  'test_input',
-  'test_output',
-  'sample_input',
-  'sample_output'
-]
+const stringArrItem = ['test_input', 'test_output', 'sample_input', 'sample_output']
 
 const initial: Descendant = {
   type: 'paragraph',
@@ -47,14 +42,13 @@ const initLocalProblemForm: any = {
 
 type StepStatus = 'wait' | 'process' | 'finish' | 'error'
 
-const ProblemNew: React.FC<IProps> = props => {
+const ProblemNew: React.FC<IProps> = (props) => {
   const [form] = Form.useForm()
   const { open, setisModelOpen } = props
   const [stepStatus, setstepStatus] = React.useState<StepStatus>('process')
   const [currentStep, setcurrentStep] = React.useState(0)
   const [programMode, setprogramMode] = React.useState<ProgramMode>('standard')
-  const [problemForm, setlocalProblemForm] =
-    React.useState<IProblem>(initLocalProblemForm)
+  const [problemForm, setlocalProblemForm] = React.useState<IProblem>(initLocalProblemForm)
   const [failMessage, setfailMessage] = React.useState()
   const [codeLanguage, setcodeLanguage] = React.useState('cpp')
   const [code1, setcode1] = React.useState('')
@@ -62,24 +56,12 @@ const ProblemNew: React.FC<IProps> = props => {
 
   useLayoutEffect(() => {
     if (currentStep === 0) {
-      const data = localStorage.getItem('problemForm')
-        ? (JSON.parse(
-            localStorage.getItem('problemForm') as string
-          ) as IProblem)
-        : initLocalProblemForm
+      const data = localStorage.getItem('problemForm') ? (JSON.parse(localStorage.getItem('problemForm') as string) as IProblem) : initLocalProblemForm
       setlocalProblemForm(data)
       form.setFieldsValue(data)
     } else if (currentStep === 1) {
-      setcode1(
-        localStorage.getItem('code1')
-          ? (localStorage.getItem('code1') as string)
-          : ''
-      )
-      setcode2(
-        localStorage.getItem('code2')
-          ? (localStorage.getItem('code2') as string)
-          : ''
-      )
+      setcode1(localStorage.getItem('code1') ? (localStorage.getItem('code1') as string) : '')
+      setcode2(localStorage.getItem('code2') ? (localStorage.getItem('code2') as string) : '')
     }
   }, [currentStep])
 
@@ -88,17 +70,13 @@ const ProblemNew: React.FC<IProps> = props => {
       case 0:
         form
           .validateFields()
-          .then(res => {
-            localStorage.setItem(
-              'problemForm',
-              JSON.stringify(form.getFieldsValue())
-            )
-            setcurrentStep(currentStep => currentStep + 1)
+          .then((res) => {
+            localStorage.setItem('problemForm', JSON.stringify(form.getFieldsValue()))
+            setcurrentStep((currentStep) => currentStep + 1)
           })
           .catch(() => {
             notification.warning({
-              message: '请完善表单',
-              placement: 'topRight'
+              message: '请完善表单'
             })
           })
         break
@@ -112,40 +90,32 @@ const ProblemNew: React.FC<IProps> = props => {
           code: code2
         })
         if (programMode === 'standard' || programMode === 'special_judge') {
-          createProgramApi(data1).then(res => {
+          createProgramApi(data1).then((res) => {
             console.log(res)
             if (res.data.code !== 200) {
               notification.warning({
-                message: res.data.msg,
-                placement: 'topRight'
+                message: res.data.msg
               })
               return
             }
             const id = res.data.data.program.id
-            programMode === 'standard'
-              ? form.setFieldValue('standard', id)
-              : form.setFieldValue('special_judge', id)
-            setcurrentStep(currentStep => currentStep + 1)
+            programMode === 'standard' ? form.setFieldValue('standard', id) : form.setFieldValue('special_judge', id)
+            setcurrentStep((currentStep) => currentStep + 1)
           })
         } else {
-          Promise.all([createProgramApi(data1), createProgramApi(data2)]).then(
-            res => {
-              if (res[0].data.code !== 200) {
-                notification.warning({
-                  message: res[0].data.msg,
-                  placement: 'topRight'
-                })
-                return
-              }
-              const id1 = res[0].data.data.program.id
-              const id2 = res[1].data.data.program.id
-              programMode === 'standardHack'
-                ? form.setFieldValue('standard', id1)
-                : form.setFieldValue('special_judge', id1)
-              form.setFieldValue('input_check', id2)
-              setcurrentStep(currentStep => currentStep + 1)
+          Promise.all([createProgramApi(data1), createProgramApi(data2)]).then((res) => {
+            if (res[0].data.code !== 200) {
+              notification.warning({
+                message: res[0].data.msg
+              })
+              return
             }
-          )
+            const id1 = res[0].data.data.program.id
+            const id2 = res[1].data.data.program.id
+            programMode === 'standardHack' ? form.setFieldValue('standard', id1) : form.setFieldValue('special_judge', id1)
+            form.setFieldValue('input_check', id2)
+            setcurrentStep((currentStep) => currentStep + 1)
+          })
         }
         break
       case 2:
@@ -167,7 +137,7 @@ const ProblemNew: React.FC<IProps> = props => {
           }
         })
         console.log(result)
-        createProblemNewApi(JSON.stringify(result)).then(res => {
+        createProblemNewApi(JSON.stringify(result)).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
             localStorage.removeItem('problemForm')
@@ -191,17 +161,17 @@ const ProblemNew: React.FC<IProps> = props => {
   return (
     <div>
       <Modal
-        className="min-w-max"
-        title="创建赛内题目"
+        className='min-w-max'
+        title='创建赛内题目'
         open={open}
         onCancel={handleCancel}
-        footer={[
-          <Button type="primary">上一步</Button>,
-          <Button type="primary">下一步</Button>
-        ]}
+        footer={[<Button type='primary'>上一步</Button>, <Button type='primary'>下一步</Button>]}
       >
-        <div style={{ width: '1000px' }} className="flex flex-col items-center">
-          <div className="p-8 w-2/3">
+        <div
+          style={{ width: '1000px' }}
+          className='flex flex-col items-center'
+        >
+          <div className='p-8 w-2/3'>
             <Steps
               status={stepStatus}
               current={currentStep}
@@ -223,17 +193,15 @@ const ProblemNew: React.FC<IProps> = props => {
               setcodeLanguage={setcodeLanguage}
             ></Program>
           )}
-          {currentStep === 2 && stepStatus === 'process' && (
-            <Submit form={form}></Submit>
-          )}
+          {currentStep === 2 && stepStatus === 'process' && <Submit form={form}></Submit>}
           {stepStatus === 'finish' && (
             <Result
               status={'success'}
-              title="题目创建成功！"
+              title='题目创建成功！'
               extra={[
                 <Button
                   key={'0'}
-                  type="primary"
+                  type='primary'
                   onClick={() => {
                     setcurrentStep(0)
                     setstepStatus('process')
@@ -241,7 +209,11 @@ const ProblemNew: React.FC<IProps> = props => {
                 >
                   继续创建下一题
                 </Button>,
-                <Button key={'1'} type="primary" onClick={() => {}}>
+                <Button
+                  key={'1'}
+                  type='primary'
+                  onClick={() => {}}
+                >
                   查看题目详情
                 </Button>
               ]}
@@ -276,23 +248,27 @@ const ProblemNew: React.FC<IProps> = props => {
           {stepStatus === 'process' && (
             <div>
               {currentStep === 0 && (
-                <Button size="large" type="primary" onClick={() => nextStep()}>
+                <Button
+                  size='large'
+                  type='primary'
+                  onClick={() => nextStep()}
+                >
                   下一步
                 </Button>
               )}
               {currentStep === 1 && (
                 <Fragment>
                   <Button
-                    size="large"
+                    size='large'
                     onClick={() => {
-                      setcurrentStep(currentStep => currentStep - 1)
+                      setcurrentStep((currentStep) => currentStep - 1)
                     }}
                   >
                     上一步
                   </Button>
                   <Button
-                    size="large"
-                    type="primary"
+                    size='large'
+                    type='primary'
                     onClick={() => nextStep()}
                   >
                     下一步
@@ -302,14 +278,18 @@ const ProblemNew: React.FC<IProps> = props => {
               {currentStep === 2 && (
                 <Fragment>
                   <Button
-                    size="large"
+                    size='large'
                     onClick={() => {
-                      setcurrentStep(currentStep => currentStep - 1)
+                      setcurrentStep((currentStep) => currentStep - 1)
                     }}
                   >
                     上一步
                   </Button>
-                  <Button size="large" type="primary" onClick={nextStep}>
+                  <Button
+                    size='large'
+                    type='primary'
+                    onClick={nextStep}
+                  >
                     提交
                   </Button>
                 </Fragment>

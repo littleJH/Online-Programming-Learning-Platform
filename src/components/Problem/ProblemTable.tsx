@@ -48,7 +48,6 @@ const ProblemTable: React.FC<IProps> = (props) => {
     if (flag) {
       notification.success({
         message: '已复制到剪切板',
-        placement: 'topRight',
         duration: 1
       })
     }

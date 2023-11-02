@@ -49,10 +49,7 @@ const CommunityRoot: React.FC = () => {
         // style={{ width: '1024px' }}
       >
         {/* left */}
-        <div
-          className='grow  h-full'
-          style={{ width: '512px' }}
-        >
+        <div className='grow h-full'>
           {/* 公告 */}
           {showHeaderSider && (
             <div
@@ -65,7 +62,7 @@ const CommunityRoot: React.FC = () => {
                 <Col span={8}>
                   <Card
                     title='公告1'
-                    bordered={false}
+                    size='small'
                     hoverable
                   >
                     公告1的内容...
@@ -74,7 +71,7 @@ const CommunityRoot: React.FC = () => {
                 <Col span={8}>
                   <Card
                     title='公告2'
-                    bordered={false}
+                    size='small'
                     hoverable
                   >
                     公告2的内容...
@@ -83,7 +80,7 @@ const CommunityRoot: React.FC = () => {
                 <Col span={8}>
                   <Card
                     title='公告3'
-                    bordered={false}
+                    size='small'
                     hoverable
                   >
                     公告3的内容...
@@ -102,11 +99,9 @@ const CommunityRoot: React.FC = () => {
               width: '16rem'
             }}
           >
-            <div
-              className='my-4 px-6 shadow rounded   flex flex-col justify-center text-xs'
-              style={{
-                height: '130px'
-              }}
+            <Card
+              hoverable
+              className='my-4 flex flex-col justify-center text-xs'
             >
               <div className='font-medium text-base mb-2'>全站统计</div>
               <Space size={'large'}>
@@ -127,7 +122,7 @@ const CommunityRoot: React.FC = () => {
                   <div>用户：1325</div>
                 </Space>
               </Space>
-            </div>
+            </Card>
             <div>
               <HotRank></HotRank>
             </div>

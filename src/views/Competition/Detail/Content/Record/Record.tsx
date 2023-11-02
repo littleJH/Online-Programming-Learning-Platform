@@ -38,7 +38,7 @@ const Record: React.FC = () => {
 
   useEffect(() => {
     if (currentRecord.user_id) {
-      getUserInfoApi(currentRecord.user_id).then(res => {
+      getUserInfoApi(currentRecord.user_id).then((res) => {
         setuserInfo(res.data.data.user)
       })
     }
@@ -52,11 +52,8 @@ const Record: React.FC = () => {
       const { data } = await getProblemNewApi(record.problem_id)
       const problem = data.data.problem
       let hack: HackState = 'unableHack'
-      if (
-        problem.input_check_id.indexOf('0000') &&
-        record.condition === 'Accepted'
-      ) {
-        await getHackApi(record.hack_id).then(res => {
+      if (problem.input_check_id.indexOf('0000') && record.condition === 'Accepted') {
+        await getHackApi(record.hack_id).then((res) => {
           if (res.data.code === 400) hack = 'notHack'
           else if (res.data.code === 200) {
             console.log('hackDetail: ', res)
@@ -70,9 +67,7 @@ const Record: React.FC = () => {
         {
           key: record.id,
           index,
-          condition: (
-            <RecordStateLabel value={record.condition}></RecordStateLabel>
-          ),
+          condition: <RecordStateLabel value={record.condition}></RecordStateLabel>,
           create_at: record.created_at,
           language: <LanaugeLabel value={record.language}></LanaugeLabel>,
           pass: record.pass,
@@ -82,7 +77,7 @@ const Record: React.FC = () => {
       ])
       setfilters((value: Filter[]) => {
         let repetition = false
-        value.forEach(item => {
+        value.forEach((item) => {
           if (item.text === problem.title) repetition = true
         })
         if (repetition) return [...value]
@@ -108,17 +103,15 @@ const Record: React.FC = () => {
       input: hackInput
     }
 
-    hackRecordApi(type, currentRecord.id, JSON.stringify(data)).then(res => {
+    hackRecordApi(type, currentRecord.id, JSON.stringify(data)).then((res) => {
       console.log(res)
       if (res.data.code === 200) {
         notification.success({
-          message: res.data.msg,
-          placement: 'topRight'
+          message: res.data.msg
         })
       } else {
         notification.warning({
-          message: res.data.msg,
-          placement: 'topRight'
+          message: res.data.msg
         })
       }
     })
@@ -132,22 +125,20 @@ const Record: React.FC = () => {
       <Table
         dataSource={dataSource}
         locale={{
-          emptyText: <NoData text="暂无数据" />
+          emptyText: <NoData text='暂无数据' />
         }}
       >
         <Column
-          align="center"
+          align='center'
           dataIndex={['problem', 'title']}
-          title="题目"
+          title='题目'
           filters={filters}
-          onFilter={(value, record: any) =>
-            record.problem.title.indexOf(value) === 0
-          }
+          onFilter={(value, record: any) => record.problem.title.indexOf(value) === 0}
           filterMultiple
           render={(value, record) => {
             return (
               <div
-                className="hover:cursor-pointer"
+                className='hover:cursor-pointer'
                 onClick={() => handleClick(record)}
               >
                 {value}
@@ -156,53 +147,61 @@ const Record: React.FC = () => {
           }}
         ></Column>
         <Column
-          align="center"
+          align='center'
           dataIndex={'condition'}
-          title="提交状态"
+          title='提交状态'
         ></Column>
-        <Column align="center" dataIndex={'language'} title="语言"></Column>
-        <Column align="center" dataIndex={'pass'} title="通过用例"></Column>
         <Column
-          align="center"
+          align='center'
+          dataIndex={'language'}
+          title='语言'
+        ></Column>
+        <Column
+          align='center'
+          dataIndex={'pass'}
+          title='通过用例'
+        ></Column>
+        <Column
+          align='center'
           dataIndex={'create_at'}
-          title="提交时间"
+          title='提交时间'
         ></Column>
         <Column
-          align="center"
+          align='center'
           dataIndex={'hack'}
-          title="骇客"
+          title='骇客'
           render={(value, record: any) => {
             switch (value) {
               case 'notHack':
                 return (
                   <div
-                    className="hover:cursor-pointer"
+                    className='hover:cursor-pointer'
                     onClick={() => {
                       setcurrentRecord(recordList[record.index])
                       setopenHackModal(true)
                     }}
                   >
-                    <svg className="icon">
-                      <use href="#icon-hackster"></use>
+                    <svg className='icon'>
+                      <use href='#icon-hackster'></use>
                     </svg>
                   </div>
                 )
               case 'hacked':
                 return (
                   <div
-                    className="hover:cursor-pointer"
+                    className='hover:cursor-pointer'
                     onClick={() => {
                       setcurrentRecord(recordList[record.index])
                     }}
                   >
                     <svg
-                      className="icon"
+                      className='icon'
                       style={{
                         width: '1.5rem',
                         height: '1.5rem'
                       }}
                     >
-                      <use href="#icon-choose"></use>
+                      <use href='#icon-choose'></use>
                     </svg>
                   </div>
                 )

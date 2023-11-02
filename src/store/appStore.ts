@@ -41,6 +41,7 @@ export const themeState = selector({
     const userInfo = get(userInfoState)
     if (userInfo?.res_long === '' || !userInfo) return themeDefault
     else {
+      console.log(userInfo.theme)
       const theme = JSON.parse(userInfo.theme !== '' ? userInfo.theme : '{}')
       const globalStyle = document.getElementsByTagName('body')[0].style
       for (let key in theme) {
@@ -55,9 +56,10 @@ export const themeState = selector({
     const userInfo = get(userInfoState) as User
     const theme = JSON.parse(userInfo.theme !== '' ? userInfo.theme : '{}')
     const newTheme = { ...theme, ...newValue }
+    console.log('new theme ==> ', newTheme)
     set(userInfoState, {
       ...userInfo,
-      theme: newTheme
+      theme: JSON.stringify(newTheme)
     })
     const globalStyle = document.getElementsByTagName('body')[0].style
     for (let key in newTheme) {
@@ -83,7 +85,7 @@ export const monacoOptionsState = selector<IMonacoOptions>({
     const userInfo = get(userInfoState) as User
     const newInfo = {
       ...userInfo,
-      monaco_options: String(newValue)
+      monaco_options: JSON.stringify(newValue)
     }
     set(userInfoState, newInfo)
   }
@@ -166,7 +168,14 @@ export const notificationApi = atom<NotificationInstance | null>({
 export const isDarkState = atom<boolean>({
   key: 'isDarkState',
   default: (async () => {
-    const isDark = Boolean(localStorage.getItem('isDark'))
-    return Promise.resolve(isDark)
-  })()
+    let isDark = localStorage.getItem('isDark')
+    return Promise.resolve(isDark === 'true')
+  })(),
+  effects_UNSTABLE: [
+    ({ onSet }) => {
+      onSet((newValue) => {
+        localStorage.setItem('isDark', String(newValue))
+      })
+    }
+  ]
 })

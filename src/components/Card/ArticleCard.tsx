@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { iconBaseUrl, imgGetBaseUrl } from '@/config/apiConfig'
 import { IArticle } from '@/type'
-import { Avatar, Space } from 'antd'
+import { Avatar, Space, theme, Card } from 'antd'
 import style from './style.module.scss'
 import GetTimeago from '@/tool/myFns/GetTimeago'
 import CommunityLabel from '../Label/CommunityLabel/CommunityLabel'
@@ -20,7 +20,7 @@ interface IProps {
 const ArticleCard: React.FC<IProps> = (props) => {
   const { articleProp, onclick } = props
   const [article, setArticle] = useState<IArticle>(articleProp)
-  const theme = useRecoilValue(themeState)
+  const { token } = theme.useToken()
 
   useEffect(() => {
     const article = { ...articleProp }
@@ -57,9 +57,11 @@ const ArticleCard: React.FC<IProps> = (props) => {
   const imgUrl = useMemo(() => article.res_long && article.res_long !== '' && JSON.parse(article.res_long).img, [article])
 
   return (
-    <div
-      className='w-full p-4  rounded shadow-sm hover:cursor-pointer hover:shadow-md transition-all'
+    <Card
       onClick={() => onclick(article)}
+      className='my-4'
+      size='small'
+      hoverable
     >
       <div className='flex'>
         {/* left */}
@@ -104,7 +106,7 @@ const ArticleCard: React.FC<IProps> = (props) => {
               <div>
                 <MySvgIcon
                   href={article.collected ? '#icon-collected' : '#icon-collect'}
-                  color={article.collected ? theme.colorPrimary : ''}
+                  color={article.collected ? token.colorPrimary : ''}
                 ></MySvgIcon>
                 <span>{article.collectNum}</span>
               </div>
@@ -112,7 +114,7 @@ const ArticleCard: React.FC<IProps> = (props) => {
               <div>
                 <MySvgIcon
                   href={article.liked ? '#icon-liked' : '#icon-like'}
-                  color={article.liked ? theme.colorPrimary : ''}
+                  color={article.liked ? token.colorPrimary : ''}
                 ></MySvgIcon>
                 <span>{article.likeNum}</span>
               </div>
@@ -143,7 +145,7 @@ const ArticleCard: React.FC<IProps> = (props) => {
           </div>
         )}
       </div>
-    </div>
+    </Card>
   )
 }
 

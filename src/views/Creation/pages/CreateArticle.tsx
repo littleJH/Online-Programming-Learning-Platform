@@ -52,8 +52,7 @@ const CreateArticle: React.FC<{}> = () => {
   const createArticle = () => {
     if (title === '' || content === '') {
       notification.warning({
-        message: '标题/正文不能为空',
-        placement: 'topRight'
+        message: '标题/正文不能为空'
       })
       return
     }
@@ -82,8 +81,7 @@ const CreateArticle: React.FC<{}> = () => {
         } else {
           notification.warning({
             message: '文章发布失败',
-            description: res.data.msg,
-            placement: 'topRight'
+            description: res.data.msg
           })
         }
         return article.id
@@ -97,8 +95,7 @@ const CreateArticle: React.FC<{}> = () => {
           if (res?.data.code !== 200) {
             notification.warning({
               message: `标签${label}创建失败`,
-              description: res?.data.msg,
-              placement: 'topRight'
+              description: res?.data.msg
             })
           }
         }

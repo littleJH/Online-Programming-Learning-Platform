@@ -24,7 +24,7 @@ const ArticleSet: React.FC = () => {
   }
 
   return (
-    <div className='w-full'>
+    <div style={{ width: '820px' }}>
       {!articleList.length && (
         <Skeleton
           active

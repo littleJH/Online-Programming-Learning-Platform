@@ -78,13 +78,11 @@ const Competition: React.FC = () => {
         if (res.data.code === 200) {
           localStorage.setItem('competitionInfo', JSON.stringify(res.data.data.competition))
           notification.success({
-            message: res.data.msg,
-            placement: 'topRight'
+            message: res.data.msg
           })
         } else {
           notification.warning({
-            message: res.data.msg,
-            placement: 'topRight'
+            message: res.data.msg
           })
         }
       })
