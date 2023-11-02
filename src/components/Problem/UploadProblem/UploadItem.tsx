@@ -8,7 +8,9 @@
 
 /** @format */
 
+import { themeState } from '@/store/appStore'
 import React from 'react'
+import { useRecoilValue } from 'recoil'
 
 const UploadItem: React.FC<{
   name?: string
@@ -17,7 +19,8 @@ const UploadItem: React.FC<{
   message?: string
 }> = (props) => {
   const { originNode, name, status, message } = props
-  const messageColor = status === 'error' ? '#ef4444' : status === 'done' ? '#10b981' : ''
+  const theme = useRecoilValue(themeState)
+  const messageColor = status === 'error' ? theme.colorError : status === 'done' ? theme.colorSuccess : ''
 
   return (
     <div>

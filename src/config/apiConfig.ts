@@ -6,10 +6,11 @@ const baseUrlObj: {
 } = {
   iconBaseUrl: 'http://icon.mgaronya.com',
   imgBaseUrl: 'http://api_img.mgaronya.com',
+  imgGetBaseUrl: 'http://img.mgaronya.com',
+  wsBaseUrl: 'ws://api_oj.mgaronya.com',
   baseURL: import.meta.env.DEV ? '/api' : 'http://api_oj.mgaronya.com',
   testBaseUrl: import.meta.env.DEV ? '/test' : 'http://test_oj.mgaronya.com/test',
   tagBaseUrl: import.meta.env.DEV ? '/tag_api' : 'http://api_tag.mgaronya.com',
-  wsBaseUrl: 'ws://api_oj.mgaronya.com',
   translateBaseUrl: import.meta.env.DEV ? '/translate_api' : 'http://api_translate.mgaronya.com/translator/translate'
 }
 
@@ -19,7 +20,7 @@ export const iconBaseUrl = baseUrlObj.iconBaseUrl
 export const imgBaseUrl = baseUrlObj.imgBaseUrl
 export const tagBaseUrl = baseUrlObj.tagBaseUrl
 export const baseURL = baseUrlObj.baseURL
-export const imgGetBaseUrl = baseUrlObj.imgBaseUrl
+export const imgGetBaseUrl = baseUrlObj.imgGetBaseUrl
 
 export const baseConfig = () => {
   return {
@@ -68,7 +69,7 @@ export const createRequest = (options: { type?: string; baseURL: string }) => {
       const {
         data: { code }
       } = response
-      if (code == 201 && !localStorage.getItem('token')) {
+      if (code == 201 && !localStorage.getItem('token') && location.pathname !== '/login') {
         const a = document.createElement('a')
         a.href = '/login'
         a.click()

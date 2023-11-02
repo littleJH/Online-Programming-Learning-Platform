@@ -42,19 +42,32 @@ export const themeState = selector({
     if (userInfo?.res_long === '' || !userInfo) return themeDefault
     else {
       const { theme } = JSON.parse(userInfo.res_long) as IPersonalizeConfig
+      const globalStyle = document.getElementsByTagName('body')[0].style
+      for (let key in theme) {
+        if (theme[key]) {
+          globalStyle.setProperty(`--${key}`, `#${theme[key]}`)
+        }
+      }
       return { ...themeDefault, ...theme }
     }
   },
   set: ({ set, get }, newValue) => {
     const userInfo = get(userInfoState) as User
     const config = JSON.parse(userInfo.res_long)
+    const newTheme = { ...config.theme, ...newValue }
     set(userInfoState, {
       ...userInfo,
       res_long: JSON.stringify({
         ...config,
-        theme: { ...config.theme, ...newValue }
+        theme: newTheme
       })
     })
+    const globalStyle = document.getElementsByTagName('body')[0].style
+    for (let key in newTheme) {
+      if (newTheme[key]) {
+        globalStyle.setProperty(`--${key}`, `#${newTheme[key]}`)
+      }
+    }
   }
 })
 

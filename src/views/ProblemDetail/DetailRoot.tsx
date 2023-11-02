@@ -1,5 +1,3 @@
-/** @format */
-
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { getProblemCollectNumApi, getProblemCollectedApi, getProblemLikeNumApi, getProblemLikedApi, getProblemVisibleNumApi, showProblemApi } from '@/api/problem'
@@ -196,7 +194,10 @@ export const Detail: React.FC = () => {
 
   return (
     <>
-      <div id='container' className='flex h-full w-full'>
+      <div
+        id='container'
+        className='flex h-full w-full'
+      >
         {/* left */}
         <div
           className='w-1/2'
@@ -247,14 +248,29 @@ export const Detail: React.FC = () => {
           </div>
         </div>
         {/* resize */}
-        <div id='resizebar' className={`h-full w-3 bg-slate-50 flex flex-col justify-center  items-center  hover:bg-slate-300 hover:shadow transition-all duration-300 ${style.resizeBar}`} onMouseDown={addResizeListener} onMouseUp={removeResizeListener} onMouseLeave={removeResizeListener}>
-          <svg className='w-4 h-6 ' aria-hidden='true'>
+        <div
+          id='resizebar'
+          className={`h-full w-3 bg-slate-50 flex flex-col justify-center  items-center  hover:bg-slate-300 hover:shadow transition-all duration-300 ${style.resizeBar}`}
+          onMouseDown={addResizeListener}
+          onMouseUp={removeResizeListener}
+          onMouseLeave={removeResizeListener}
+        >
+          <svg
+            className='w-4 h-6 '
+            aria-hidden='true'
+          >
             <use href='#icon-Scrollvertical'></use>
           </svg>
-          <svg className='w-4 h-6' aria-hidden='true'>
+          <svg
+            className='w-4 h-6'
+            aria-hidden='true'
+          >
             <use href='#icon-Scrollvertical'></use>
           </svg>
-          <svg className='w-4 h-6' aria-hidden='true'>
+          <svg
+            className='w-4 h-6'
+            aria-hidden='true'
+          >
             <use href='#icon-Scrollvertical'></use>
           </svg>
         </div>
@@ -265,7 +281,10 @@ export const Detail: React.FC = () => {
             minWidth: '512px'
           }}
         >
-          <div ref={rightCtnRef} className='flex-auto flex flex-col overflow-hidden'>
+          <div
+            ref={rightCtnRef}
+            className='flex-auto flex flex-col overflow-hidden'
+          >
             {/* codeEditor */}
             <div className='flex-auto'>
               <CodeEditor
@@ -281,7 +300,10 @@ export const Detail: React.FC = () => {
             </div>
             {/* console */}
             {showConsole && (
-              <div ref={consoleRef} className=''>
+              <div
+                ref={consoleRef}
+                className=''
+              >
                 <Menu
                   activeKey={consoleMode}
                   style={{
@@ -334,15 +356,25 @@ export const Detail: React.FC = () => {
               }}
             >
               <div className='flex-grow'>
-                <Button size='small' onClick={() => setshowConsole((value) => !value)}>
+                <Button
+                  size='small'
+                  onClick={() => setshowConsole((value) => !value)}
+                >
                   控制台
                 </Button>
               </div>
               <Space>
-                <Button size='small' onClick={runCode}>
+                <Button
+                  size='small'
+                  onClick={runCode}
+                >
                   执行代码
                 </Button>
-                <Button size='small' onClick={craeteRecord} type='primary'>
+                <Button
+                  size='small'
+                  onClick={craeteRecord}
+                  type='primary'
+                >
                   提交
                 </Button>
               </Space>
@@ -350,7 +382,17 @@ export const Detail: React.FC = () => {
           </div>
         </div>
       </div>
-      {recordResponse && <RecordModal tabMode={tabHeadMode} record={recordResponse} problem_id={problem?.id} openModal={openRecordModal} setopenModal={setopenRecordModal} state={currentRecordState} setrecordList={setrecordList}></RecordModal>}
+      {recordResponse && (
+        <RecordModal
+          tabMode={tabHeadMode}
+          record={recordResponse}
+          problem_id={problem?.id}
+          openModal={openRecordModal}
+          setopenModal={setopenRecordModal}
+          state={currentRecordState}
+          setrecordList={setrecordList}
+        ></RecordModal>
+      )}
     </>
   )
 }

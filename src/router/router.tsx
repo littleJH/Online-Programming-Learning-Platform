@@ -1,9 +1,8 @@
-import { Navigate, RouteObject, createBrowserRouter, redirect, useLocation, useRoutes } from 'react-router-dom'
+import { Navigate, RouteObject, useLocation, useRoutes } from 'react-router-dom'
 import React, { ReactNode, Suspense, lazy } from 'react'
 import Loading from '@/components/Loading/Loading'
 import { useSetRecoilState } from 'recoil'
-import { headerNavState, pathNameState } from '@/store/appStore'
-import { getPathArray } from '@/tool/MyUtils/utils'
+import { pathNameState } from '@/store/appStore'
 // import Article from '@/views/Profile/Creation/Article/Article'
 
 interface MyRoute {
@@ -37,8 +36,6 @@ const ProblemSetRoot = lazy(() => import('@/views/ProblemSet/ProblemSetRoot'))
 const PorblemAll = lazy(() => import('@/views/ProblemSet/set/All'))
 const ProblemTopic = lazy(() => import('@/views/ProblemSet/topic/Topic'))
 const ProblemForm = lazy(() => import('@/views/ProblemSet/form/Form'))
-
-const ProblemId = lazy(() => import('@/views/ProblemDetail/DetailRoot'))
 const ProblemDescription = lazy(() => import('@/views/ProblemDetail/Description'))
 const ProblemSubmitrecord = lazy(() => import('@/views/ProblemDetail/Record/Records'))
 const ProblemCreate = lazy(() => import('@/views/Creation/pages/CreateProblem/Create'))
@@ -153,22 +150,16 @@ const routes: MyRoute[] = [
       },
       //problemDetail
       {
-        path: 'problemdetail',
+        path: 'problemdetail/:id',
         element: ProblemDetailRoot,
         children: [
           {
-            path: ':id',
-            element: ProblemId,
-            children: [
-              {
-                path: 'description',
-                element: ProblemDescription
-              },
-              {
-                path: 'records',
-                element: ProblemSubmitrecord
-              }
-            ]
+            path: 'description',
+            element: ProblemDescription
+          },
+          {
+            path: 'records',
+            element: ProblemSubmitrecord
           }
         ]
       },

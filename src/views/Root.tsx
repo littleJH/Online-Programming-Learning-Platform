@@ -21,6 +21,8 @@ const Root: React.FC = () => {
     setCollapsed(btnCollapsed)
   }, [btnCollapsed])
 
+  useEffect(() => console.log('headerNav ==> ', headerNav), [headerNav])
+
   const siderStyle: React.CSSProperties = {
     lineHeight: '120px',
     color: '#fff',
@@ -38,7 +40,7 @@ const Root: React.FC = () => {
         <MyLogin></MyLogin>
       </Header>
       <Layout hasSider>
-        {headerNav !== 'login' && (
+        {!['login', 'problemdetail'].includes(headerNav) && (
           <Sider
             onMouseOver={() => setCollapsed(false)}
             onMouseLeave={() => setCollapsed(btnCollapsed)}

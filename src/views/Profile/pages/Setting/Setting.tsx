@@ -49,7 +49,7 @@ const Setting: React.FC = () => {
   }
 
   const handleColorChange = (value: Color, key: string) => {
-    form.setFieldValue(key, value.toHex())
+    form.setFieldValue(key, `#${value.toHex()}`)
     setTheme(form.getFieldsValue(true))
   }
 

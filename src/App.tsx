@@ -13,12 +13,6 @@ function App() {
 
   useEffect(() => {
     setNotificationApi(api)
-    const globalStyle = document.getElementsByTagName('body')[0].style
-    for (let key in theme) {
-      if (theme[key]) {
-        globalStyle.setProperty(`--${key}`, theme[key])
-      }
-    }
   }, [])
 
   return (
