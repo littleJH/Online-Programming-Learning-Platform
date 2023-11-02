@@ -37,8 +37,9 @@ export const UploadProblemModal: React.FC<IProps> = (props) => {
     length && total !== length && setTotal(length)
     const data = await formatProblemJson(file)
     const {
-      data: { code, msg }
+      data: { code, data: resData, msg }
     } = await uploadVjudgeProblemApi(JSON.stringify(data))
+    if (code === 200) createTagAuto(resData)
     setLoadCount((value) => value + 1)
     setFileList((value) => [
       ...value,
