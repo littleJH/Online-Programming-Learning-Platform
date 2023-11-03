@@ -26,6 +26,14 @@ const Root: React.FC = () => {
 
   useEffect(() => console.log('headerNav ==> ', headerNav), [headerNav])
 
+  useEffect(() => {
+    console.log('theme ==> ', token)
+    const body = document.getElementsByTagName('body')[0]
+    body.style.setProperty('--colorBgBase', token.colorBgBase)
+    body.style.setProperty('--colorTextBase', token.colorTextBase)
+    body.style.setProperty('--colorBgBlur', token.colorBgBlur)
+  }, [token])
+
   const headerStyle: React.CSSProperties = { backgroundColor: `${isDark ? '#141414' : '#ffffff'}`, boxShadow: token.boxShadowTertiary }
 
   const siderStyle: React.CSSProperties = {
@@ -78,7 +86,7 @@ const Root: React.FC = () => {
         )}
         <Content
           id='mainContent'
-          className='bg-white py-4'
+          className='py-4'
           style={{
             backgroundColor: token.colorBgBlur
           }}

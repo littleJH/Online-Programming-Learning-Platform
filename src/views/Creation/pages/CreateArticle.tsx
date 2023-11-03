@@ -1,5 +1,5 @@
 import { ICategory } from '@/type'
-import { Select, Input, SelectProps, Button, Space, notification } from 'antd'
+import { Select, Input, SelectProps, Button, Space, notification, Card } from 'antd'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { createArticleApi, createArticleLabelApi } from '@/api/article'
 import Throttle from '@/tool/myFns/throttle'
@@ -136,19 +136,26 @@ const CreateArticle: React.FC<{}> = () => {
 
   return (
     <div className='h-full w-full p-4 flex'>
-      <div className='w-96 grow'>
+      <Card
+        size='small'
+        className='grow'
+        bodyStyle={{
+          padding: '0px',
+          height: '100%'
+        }}
+      >
         <TextEditor
           mode='richtext'
           value={content}
           htmlChange={(value: string) => htmlChange(value)}
           placeholder='开始你的创作~~~'
-          style={{
-            overflowY: 'hidden',
-            minHeight: '300px'
-          }}
         ></TextEditor>
-      </div>
-      <div className='w-72 ml-8'>
+      </Card>
+      <Card
+        size='small'
+        bordered={false}
+        className='w-72 ml-8'
+      >
         <Space
           className='w-full'
           direction='vertical'
@@ -213,7 +220,7 @@ const CreateArticle: React.FC<{}> = () => {
             </Button>
           </div>
         </Space>
-      </div>
+      </Card>
     </div>
   )
 }

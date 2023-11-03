@@ -46,7 +46,7 @@ export const themeState = selector({
       const globalStyle = document.getElementsByTagName('body')[0].style
       for (let key in theme) {
         if (theme[key]) {
-          globalStyle.setProperty(`--${key}`, `#${theme[key]}`)
+          globalStyle.setProperty(`--${key}`, `${theme[key]}`)
         }
       }
       return { ...themeDefault, ...theme }
@@ -175,6 +175,9 @@ export const isDarkState = atom<boolean>({
     ({ onSet }) => {
       onSet((newValue) => {
         localStorage.setItem('isDark', String(newValue))
+        // const html = document.getElementsByTagName('html')[0]
+        // html.classList.add('dark')
+        // console.log('html ==> ', html.classList)
       })
     }
   ]

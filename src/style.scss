@@ -4,9 +4,12 @@
 
 $colorPrimary: var(--colorPrimary, #6366f1);
 $colorSuccess: var(--colorSuccess, #10b981);
-$colorWarning: var(colorWarning, #f59e0b);
-$colorError: var(colorError, #ef4444);
-$colorInfo: var(colorInfo, #3b82f6);
+$colorWarning: var(--colorWarning, #f59e0b);
+$colorError: var(--colorError, #ef4444);
+$colorInfo: var(--colorInfo, #3b82f6);
+$colorBgBase: var(--colorBgBase);
+$colorTextBase: var(--colorTextBase);
+$colorBgBlur: var(--colorBgBlur);
 
 
 @font-face {
@@ -26,6 +29,16 @@ body,
   letter-spacing: 0.05rem;
   padding: 0;
   margin: 0;
+}
+
+:root, :host {
+  --w-e-textarea-bg-color: $colorBgBase !important;
+  --w-e-textarea-color: $colorTextBase !important;
+  --w-e-toolbar-color: $colorTextBase !important;
+  --w-e-toolbar-bg-color: $colorBgBlur !important;
+  --w-e-toolbar-active-color:  $colorTextBase !important;
+  --w-e-toolbar-active-bg-color: $colorBgBlur !important;
+  /* ...其他... */
 }
 
 
@@ -126,15 +139,15 @@ body,
 }
 *::-webkit-scrollbar {
   width: 0.5rem;
-  height: 6px;
 }
 
 *::-webkit-scrollbar-track {
-  @apply bg-white dark:bg-black;
+  background-color: $colorBgBase;
 }
 
 *::-webkit-scrollbar-thumb {
-  @apply bg-slate-100 rounded-full;
+  @apply rounded-xl;
+  background-color: $colorTextBase;
 }
 
 

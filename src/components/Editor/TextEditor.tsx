@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { Editor, Toolbar } from '@wangeditor/editor-for-react'
 import { Boot, IDomEditor, IEditorConfig, IToolbarConfig } from '@wangeditor/editor'
 import markdownModule from '@wangeditor/plugin-md'
+import { theme } from 'antd'
 
 let flag = false
 
@@ -16,6 +17,7 @@ const TextEditor: React.FC<{
   className?: string
 }> = (props) => {
   const { mode, value, htmlChange, placeholder, style, className, defaultHtml } = props
+  const { token } = theme.useToken()
 
   if (!flag) {
     Boot.registerModule(markdownModule)
@@ -44,7 +46,7 @@ const TextEditor: React.FC<{
   }
   return (
     <div
-      className='h-full grow border border-solid border-slate-300 rounded  overflow-scroll'
+      className='h-full flex flex-col'
       style={{
         zIndex: 100
       }}
@@ -54,10 +56,10 @@ const TextEditor: React.FC<{
           editor={editor}
           defaultConfig={toolbarConfig}
           mode='default'
-          className='border-indigo-300 sticky top-0'
+          className='sticky top-0'
           style={{
             zIndex: 1000,
-            borderBottomWidth: '1px'
+            boxShadow: token.boxShadowTertiary
           }}
         ></Toolbar>
       )}
@@ -68,7 +70,7 @@ const TextEditor: React.FC<{
         onCreated={seteditor}
         onChange={handleChange}
         mode='default'
-        style={{ minHeight: '300px', ...style }}
+        style={{ minHeight: '300px', flexGrow: '1', backgroundColor: token.colorBgBase, ...style }}
         className={className}
       ></Editor>
     </div>
