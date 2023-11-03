@@ -168,7 +168,7 @@ const CreateTopic: React.FC = () => {
         </div>
         <div className='w-16'></div>
         <Space
-          className='w-96 px-4 h-full  overflow-scroll'
+          className='w-96 px-4 h-full'
           direction='vertical'
           size={'large'}
         >

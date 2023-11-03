@@ -2,11 +2,12 @@ import { iconBaseUrl } from '@/config/apiConfig'
 import { getUserInfoApi } from '@/api/user'
 import { cancelLikeRemarkApi, getRemarkLikeNumApi, getRemarkLikedApi, likeRemarkApi } from '@/api/remark'
 import { IRemark, User } from '@/type'
-import { Avatar, Divider, Space } from 'antd'
+import { Avatar, Divider, Card } from 'antd'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import ReadOnly from '../editor/ReadOnly'
 import GetTimeago from '@/tool/myFns/getTimeago'
 import style from './style.module.scss'
+import MySvgIcon from '../Icon/MySvgIcon'
 
 const RemarkCard: React.FC<{
   remark: IRemark
@@ -72,7 +73,7 @@ const RemarkCard: React.FC<{
   }
 
   return (
-    <div className='w-full p-4 rounded shadow my-4  transition-all'>
+    <Card className='w-full'>
       <div className='flex items-center'>
         <Avatar
           className='card-avatar'
@@ -95,13 +96,14 @@ const RemarkCard: React.FC<{
 
         <Divider type='vertical'></Divider>
         <div onClick={handleDislikeClick}>
-          <svg className='icon-small'>
-            <use href={remark.liked === -1 ? '#icon-disliked' : '#icon-dislike'}></use>
-          </svg>
+          <MySvgIcon
+            href={remark.liked === -1 ? '#icon-disliked' : '#icon-dislike'}
+            size={1}
+          ></MySvgIcon>
           <span>{remark.dislikeNum}</span>
         </div>
       </div>
-    </div>
+    </Card>
   )
 }
 

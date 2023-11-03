@@ -154,7 +154,7 @@ const CreateArticle: React.FC<{}> = () => {
       <Card
         size='small'
         bordered={false}
-        className='w-72 ml-8'
+        className='w-96 ml-8'
       >
         <Space
           className='w-full'

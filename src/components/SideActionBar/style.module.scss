@@ -1,4 +1,6 @@
+@import '../../style.scss';
 @tailwind base;
+
 
 .item {
   // h-12 w-12 flex justify-center items-center rounded-full bg-slate-200
@@ -30,8 +32,8 @@
   height: 1rem;
   padding: 0.1rem 0.2rem;
   border-radius: 50%;
-  color: #cbd5e1;
-  background-color: #64748b;
+  color: $colorTextBase;
+  background-color: $colorBgBlur;
   display: flex;
   align-items: center;
 }

@@ -4,13 +4,11 @@ import { IArticle } from '@/type'
 import { Avatar, Space, theme, Card } from 'antd'
 import style from './style.module.scss'
 import GetTimeago from '@/tool/myFns/GetTimeago'
-import CommunityLabel from '../Label/CommunityLabel/CommunityLabel'
+import MyTag from '../Label/MyTag'
 import { getUserInfoApi } from '@/api/user'
 import { getArticleCollectNumApi, getArticleCollectedApi, getArticleLabelsApi, getArticleLikeNumApi, getArticleLikedApi, getArticleVisibleNumApi } from '@/api/article'
 import { getArticleRemarkListApi } from '@/api/remark'
 import MySvgIcon from '../Icon/MySvgIcon'
-import { useRecoilValue } from 'recoil'
-import { themeState } from '@/store/appStore'
 
 interface IProps {
   articleProp: IArticle
@@ -79,10 +77,10 @@ const ArticleCard: React.FC<IProps> = (props) => {
             {article.labels && article.labels.length > 0 && (
               <Space className='mx-8'>
                 {article.labels.map((label) => (
-                  <CommunityLabel
+                  <MyTag
                     key={label.id}
-                    label={label}
-                  ></CommunityLabel>
+                    label={label.label}
+                  ></MyTag>
                 ))}
               </Space>
             )}
@@ -106,7 +104,7 @@ const ArticleCard: React.FC<IProps> = (props) => {
               <div>
                 <MySvgIcon
                   href={article.collected ? '#icon-collected' : '#icon-collect'}
-                  color={article.collected ? token.colorPrimary : ''}
+                  color={article.collected ? token.colorPrimaryTextHover : token.colorTextDescription}
                 ></MySvgIcon>
                 <span>{article.collectNum}</span>
               </div>
@@ -114,18 +112,24 @@ const ArticleCard: React.FC<IProps> = (props) => {
               <div>
                 <MySvgIcon
                   href={article.liked ? '#icon-liked' : '#icon-like'}
-                  color={article.liked ? token.colorPrimary : ''}
+                  color={article.liked ? token.colorPrimaryTextHover : token.colorTextDescription}
                 ></MySvgIcon>
                 <span>{article.likeNum}</span>
               </div>
               <div className='divider-vertical'></div>
               <div>
-                <MySvgIcon href={'#icon-comment'}></MySvgIcon>
+                <MySvgIcon
+                  href={'#icon-comment'}
+                  color={token.colorTextDescription}
+                ></MySvgIcon>
                 <span>{article.remark?.total}</span>
               </div>
               <div className='divider-vertical'></div>
               <div>
-                <MySvgIcon href={'#icon-visible'}></MySvgIcon>
+                <MySvgIcon
+                  href={'#icon-visible'}
+                  color={token.colorTextDescription}
+                ></MySvgIcon>
                 <span>{article.visibleNum}</span>
               </div>
             </div>

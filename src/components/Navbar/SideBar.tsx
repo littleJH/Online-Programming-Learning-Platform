@@ -1,6 +1,6 @@
 import { Menu } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { UserOutlined, MenuOutlined, StarOutlined, SafetyCertificateOutlined, SettingOutlined, MessageOutlined, TeamOutlined, InfoCircleOutlined } from '@ant-design/icons'
+import { UserOutlined, MenuOutlined, StarOutlined, SafetyCertificateOutlined, SettingOutlined, MessageOutlined, TeamOutlined, InfoCircleOutlined, TrophyOutlined, GlobalOutlined, CodeOutlined } from '@ant-design/icons'
 import useNavTo from '@/tool/myHooks/useNavTo'
 import MySvgIcon from '../Icon/MySvgIcon'
 import { useRecoilValue } from 'recoil'
@@ -32,7 +32,7 @@ const SideBar: React.FC<{ header: string }> = (props) => {
         padding: '0 1rem'
       }}
       selectedKeys={[current]}
-      mode='vertical'
+      mode='inline'
       onClick={handleMenuClick}
       items={menuItem}
     ></Menu>
@@ -69,39 +69,53 @@ const menuItemObj: any = {
   ],
   creationMenuItem: [
     {
-      label: '题目',
-      key: 'problem',
-      icon: (
-        <MySvgIcon
-          size={1.25}
-          href='problem'
-          classname='mr-5'
-        ></MySvgIcon>
-      )
+      key: 'sub1',
+      label: '题目相关',
+      icon: <CodeOutlined />,
+      children: [
+        {
+          label: '题目',
+          key: 'problem'
+        },
+        {
+          label: '题单',
+          key: 'topic'
+        },
+        {
+          label: '表单',
+          key: 'form'
+        },
+        {
+          label: '题解',
+          key: 'post'
+        }
+      ]
     },
     {
-      label: '题单',
-      key: 'topic'
+      key: 'sub2',
+      label: '社区相关',
+      icon: <GlobalOutlined />,
+      children: [
+        {
+          label: '文章',
+          key: 'article'
+        },
+        {
+          label: '讨论',
+          key: 'comment'
+        }
+      ]
     },
     {
-      label: '表单',
-      key: 'form'
-    },
-    {
-      label: '比赛',
-      key: 'competition'
-    },
-    {
-      label: '文章',
-      key: 'article'
-    },
-    {
-      label: '讨论',
-      key: 'comment'
-    },
-    {
-      label: '题解',
-      key: 'post'
+      key: 'sub3',
+      label: '比赛相关',
+      icon: <TrophyOutlined />,
+      children: [
+        {
+          label: '比赛',
+          key: 'competition'
+        }
+      ]
     }
   ],
   profileMenuItem: [

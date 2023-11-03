@@ -1,6 +1,7 @@
 import { Space, theme } from 'antd'
 import React, { CSSProperties, MouseEventHandler } from 'react'
 import style from './style.module.scss'
+import MySvgIcon from '../Icon/MySvgIcon'
 
 interface Iprops {
   onLikeClick: MouseEventHandler<HTMLDivElement>
@@ -18,8 +19,8 @@ const SideActionBar: React.FC<Iprops> = (props) => {
   const { onLikeClick, onCollectClick, onCommentClick, onArrowupClick, likeNum, collectNum, remarkNum, liked, collected } = props
   const { token } = theme.useToken()
   const colorStyle: CSSProperties = {
-    backgroundColor: token.colorPrimaryBg,
-    color: token.colorPrimaryText
+    backgroundColor: token.colorBgBase,
+    color: token.colorTextDescription
   }
   return (
     <div>
@@ -33,9 +34,11 @@ const SideActionBar: React.FC<Iprops> = (props) => {
           style={colorStyle}
         >
           <div className={style.num}>{likeNum}</div>
-          <svg className='icon'>
-            <use href={liked === 1 ? '#icon-liked' : '#icon-like'}></use>
-          </svg>
+          <MySvgIcon
+            href={liked === 1 ? '#icon-liked' : '#icon-like'}
+            size={1.5}
+            color={liked === 1 ? token.colorPrimaryTextHover : token.colorTextDescription}
+          ></MySvgIcon>
         </div>
         <div
           className={style.item}
@@ -43,9 +46,11 @@ const SideActionBar: React.FC<Iprops> = (props) => {
           style={colorStyle}
         >
           <div className={style.num}>{collectNum}</div>
-          <svg className='icon'>
-            <use href={collected ? '#icon-collected' : '#icon-collect'}></use>
-          </svg>
+          <MySvgIcon
+            href={collected ? '#icon-collected' : '#icon-collect'}
+            size={1.5}
+            color={collected ? token.colorPrimaryTextHover : token.colorTextDescription}
+          ></MySvgIcon>
         </div>
         <div
           className={style.item}
@@ -53,18 +58,20 @@ const SideActionBar: React.FC<Iprops> = (props) => {
           style={colorStyle}
         >
           <div className={style.num}>{remarkNum}</div>
-          <svg className='icon'>
-            <use href='#icon-comment'></use>
-          </svg>
+          <MySvgIcon
+            href='#icon-comment'
+            size={1.5}
+          ></MySvgIcon>
         </div>
         <div
           className={style.item}
           onClick={onArrowupClick}
           style={colorStyle}
         >
-          <svg className='icon'>
-            <use href='#icon-arrowup'></use>
-          </svg>
+          <MySvgIcon
+            href='#icon-arrowup'
+            size={1.5}
+          ></MySvgIcon>
         </div>
       </Space>
     </div>

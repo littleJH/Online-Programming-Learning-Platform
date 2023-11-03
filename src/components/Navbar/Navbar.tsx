@@ -4,23 +4,28 @@ import type { MenuProps } from 'antd'
 import { redirect, useLocation, useNavigate } from 'react-router-dom'
 import { getPathArray } from '@/tool/MyUtils/utils'
 import useNavTo from '@/tool/myHooks/useNavTo'
+import { CodeOutlined, GlobalOutlined, BulbOutlined, HomeOutlined } from '@ant-design/icons'
 
 const menuItem = [
   {
     label: '首页',
-    key: 'home'
+    key: 'home',
+    icon: <HomeOutlined />
   },
   {
     label: '题库',
-    key: 'problemset'
+    key: 'problemset',
+    icon: <CodeOutlined />
   },
   {
     label: '社区',
-    key: 'community'
+    key: 'community',
+    icon: <GlobalOutlined />
   },
   {
     label: '创作中心',
-    key: 'creation'
+    key: 'creation',
+    icon: <BulbOutlined />
   }
 ]
 
@@ -39,7 +44,7 @@ export default function Header(props: { headerNav: string }) {
         userSelect: 'none',
         padding: '0 1rem',
         display: 'flex',
-        justifyContent: 'start',
+        justifyContent: 'center',
         alignContent: 'center'
       }}
       selectedKeys={[headerNav]}

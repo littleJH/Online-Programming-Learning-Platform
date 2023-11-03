@@ -326,73 +326,81 @@ const ProblemList: React.FC<IProps> = (props) => {
       >
         <div
           ref={leftCtn}
-          className='grow'
+          className='grow w-full'
           style={{ width: '1px' }}
         >
-          <Space
+          <div
             ref={searchCtn}
-            className='py-4'
+            className='py-4 w-full flex'
           >
-            <Select
-              style={{
-                width: '128px'
-              }}
-              allowClear
-              placeholder='选择题单'
-              value={selectedTopic?.id}
-              onChange={handleTopicChange}
-              options={topicOptions}
-            ></Select>
-            <Popover
-              overlayStyle={{
-                maxWidth: '1024px'
-              }}
-              trigger={'click'}
-              content={
-                <div>
-                  {tagList.map((item: ITag, index) => (
-                    <Tag
-                      key={index}
-                      style={{
-                        margin: '0.5rem 0.25rem'
-                      }}
-                      color={`${item.checked ? '#6366f1' : '#f1f5f9'}`}
-                    >
-                      <div
-                        className={`hover:cursor-pointer select-none ${item.checked ? 'text-white' : 'text-slate-700'}`}
-                        onClick={() => handleTagClick(index)}
-                      >
-                        {item.label}
-                      </div>
-                    </Tag>
-                  ))}
-                </div>
-              }
-            >
+            <div style={{ flexGrow: '1', width: '1/3' }}>
               <Select
-                mode='multiple'
-                showSearch={false}
-                style={{ minWidth: '128px' }}
+                style={{
+                  width: '100%'
+                }}
                 allowClear
-                maxTagCount={3}
-                placeholder='标签筛选'
-                open={false}
-                value={labelGroup}
-                onDeselect={handleDeselect}
-                onClear={handleClear}
+                placeholder='选择题单'
+                value={selectedTopic?.id}
+                onChange={handleTopicChange}
+                options={topicOptions}
               ></Select>
-            </Popover>
-            <Search
-              style={{
-                width: '256px'
-              }}
-              defaultValue={searchText}
-              placeholder='文本搜索'
-              enterButton
-              onSearch={handleSearch}
-              onChange={handleTextChange}
-            ></Search>
-          </Space>
+            </div>
+            <div className='w-4'></div>
+            <div style={{ flexGrow: '1', width: '1/3' }}>
+              <Popover
+                overlayStyle={{
+                  maxWidth: '1024px'
+                }}
+                trigger={'click'}
+                content={
+                  <div>
+                    {tagList.map((item: ITag, index) => (
+                      <Tag
+                        key={index}
+                        style={{
+                          margin: '0.5rem 0.25rem'
+                        }}
+                        color={`${item.checked ? '#6366f1' : '#f1f5f9'}`}
+                      >
+                        <div
+                          className={`hover:cursor-pointer select-none ${item.checked ? 'text-white' : 'text-slate-700'}`}
+                          onClick={() => handleTagClick(index)}
+                        >
+                          {item.label}
+                        </div>
+                      </Tag>
+                    ))}
+                  </div>
+                }
+              >
+                <Select
+                  mode='multiple'
+                  showSearch={false}
+                  style={{ width: '100%' }}
+                  allowClear
+                  maxTagCount={3}
+                  placeholder='标签筛选'
+                  open={false}
+                  value={labelGroup}
+                  onDeselect={handleDeselect}
+                  onClear={handleClear}
+                ></Select>
+              </Popover>
+            </div>
+            <div className='w-4'></div>
+            <div style={{ flexGrow: '1', width: '1/3' }}>
+              <Search
+                style={{
+                  width: '100%'
+                }}
+                defaultValue={searchText}
+                placeholder='文本搜索'
+                enterButton
+                onSearch={handleSearch}
+                onChange={handleTextChange}
+              ></Search>
+            </div>
+          </div>
           {selectedTopic && (
             <Collapse
               activeKey={collapseActiveKey}

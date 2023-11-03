@@ -12,6 +12,8 @@ import { getUserInfoApi } from '@/api/user'
 import RecordStateLabel from '@/views/ProblemDetail/RecordLabel.tsx/RecordStateLabel'
 import { getHackApi } from '@/api/hack'
 import NoData from '@/components/empty/NoData'
+import { notificationApi } from '@/store/appStore'
+import { useRecoilValue } from 'recoil'
 
 interface Filter {
   text: string
@@ -31,6 +33,7 @@ const Record: React.FC = () => {
   const [hackInput, sethackInput] = useState('')
   const [hackDetail, sethackDetail] = useState<IHack>({} as IHack)
   const [userInfo, setuserInfo] = useState<User>({} as User)
+  const notification = useRecoilValue(notificationApi)
 
   useEffect(() => {
     if (type) fetch()
@@ -106,13 +109,15 @@ const Record: React.FC = () => {
     hackRecordApi(type, currentRecord.id, JSON.stringify(data)).then((res) => {
       console.log(res)
       if (res.data.code === 200) {
-        notification.success({
-          message: res.data.msg
-        })
+        notification &&
+          notification.success({
+            message: res.data.msg
+          })
       } else {
-        notification.warning({
-          message: res.data.msg
-        })
+        notification &&
+          notification.warning({
+            message: res.data.msg
+          })
       }
     })
   }

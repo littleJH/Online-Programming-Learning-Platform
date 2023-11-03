@@ -11,6 +11,8 @@ import RunResult from '@/views/ProblemDetail/RunResult'
 import TextArea from 'antd/es/input/TextArea'
 import { createTestApi } from '@/api/test'
 import { createRecordApi } from '@/api/competitionMixture'
+import { useRecoilValue } from 'recoil'
+import { notificationApi } from '@/store/appStore'
 
 const Answer: React.FC = () => {
   const nav = useNavigate()
@@ -30,6 +32,7 @@ const Answer: React.FC = () => {
   const [caseSamples, setcaseSamples] = useState<ICaseSample[]>([])
   const [runResult, setrunResult] = useState<IRunResult>({} as IRunResult)
   const [currentState, setcurrentState] = useState<IRecordState>({} as IRecordState)
+  const notification = useRecoilValue(notificationApi)
 
   const currentLang: React.ReactNode = useMemo(() => {
     let element: JSX.Element = <div></div>
@@ -92,14 +95,16 @@ const Answer: React.FC = () => {
     createRecordApi(type, competition_id as string, JSON.stringify(data)).then((res) => {
       console.log(res.data)
       if (res.data.code === 200) {
-        notification.success({
-          message: res.data.msg
-        })
+        notification &&
+          notification.success({
+            message: res.data.msg
+          })
         nav(`/competition/${competition_id}/record`)
       } else {
-        notification.info({
-          message: res.data.msg
-        })
+        notification &&
+          notification.info({
+            message: res.data.msg
+          })
       }
     })
   }

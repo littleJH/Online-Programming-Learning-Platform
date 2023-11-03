@@ -18,21 +18,23 @@ const CreationRoot: React.FC = () => {
   }
   return (
     <>
-      {showNav && <CreationNavgation></CreationNavgation>}
-      <Card
-        size='small'
-        style={{
-          height: `${full ? '100%' : 'max-content'}`,
-          width: `${full ? '100%' : 'max-content'}`,
-          margin: `${full ? '0 1rem' : '0'}`
-        }}
-        bodyStyle={{
-          height: `${full ? '100%' : 'max-content'}`,
-          width: `${full ? '100%' : 'max-content'}`
-        }}
-      >
-        <Outlet></Outlet>
-      </Card>
+      {showNav ? (
+        <CreationNavgation></CreationNavgation>
+      ) : (
+        <Card
+          style={{
+            height: `${full ? '100%' : 'max-content'}`,
+            width: `${full ? '100%' : 'max-content'}`,
+            margin: `${full ? '0 1rem' : '0'}`
+          }}
+          bodyStyle={{
+            height: `${full ? '100%' : 'max-content'}`,
+            width: `${full ? '100%' : 'max-content'}`
+          }}
+        >
+          <Outlet></Outlet>
+        </Card>
+      )}
     </>
   )
 }

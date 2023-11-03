@@ -1,5 +1,5 @@
 import { IArticle } from '@/type'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { currentArticleState } from '@/store/appStore'
 import { useRecoilState } from 'recoil'
 import { useParams } from 'react-router-dom'
@@ -21,8 +21,8 @@ import {
 import { createArticleRemarkApi, getArticleRemarkListApi } from '@/api/remark'
 import { getUserInfoApi } from '@/api/user'
 import ReadOnly from '@/components/editor/ReadOnly'
-import { Button, Divider, Modal, Space } from 'antd'
-import CommunityLabel from '@/components/Label/CommunityLabel/CommunityLabel'
+import { Button, Divider, Modal, Space, Card, theme } from 'antd'
+import MyTag from '@/components/Label/MyTag'
 import TextEditor from '@/components/editor/TextEditor'
 import RemarkCard from '@/components/Card/RemarkCard'
 import SideActionBar from '@/components/SideActionBar/SideActionBar'
@@ -32,6 +32,7 @@ const Detail: React.FC = () => {
   const [currentArticle, setcurrentArticle] = useRecoilState(currentArticleState)
   const [openRemarkModal, setopenRemarkModal] = useState(false)
   const [remarkContent, setremarkContent] = useState('')
+  const { token } = theme.useToken()
 
   useEffect(() => {
     return () => {
@@ -174,72 +175,64 @@ const Detail: React.FC = () => {
     a.click()
   }
   return (
-    <>
+    <div style={{ width: '1000px' }}>
       {currentArticle && (
         <>
           <div id='top'></div>
-          <div className='flex'>
-            <div
-              style={{
-                backgroundColor: '#fff'
-              }}
-            >
-              <div
-                style={{ width: '820px' }}
-                className={`h-full shadow rounded px-8 py-8  transition-all duration-500 ease-in-out`}
+          <Card>
+            {/* header */}
+            <div style={{ letterSpacing: '0.2rem' }}>
+              <h1 className='mt-0'>{currentArticle.title}</h1>
+              <Space
+                size={'large'}
+                className='text-sm'
+                style={{
+                  color: token.colorTextDescription
+                }}
               >
-                {/* header */}
-                <div>
-                  <h1 className='mt-0'>{currentArticle.title}</h1>
-                  <Space
-                    size={'large'}
-                    className='text-sm text-slate-500'
-                  >
-                    <span>作者：{currentArticle.user?.name}</span>
-                    <span>发布于：{currentArticle.created_at}</span>
-                    <span>阅读：{currentArticle.visibleNum}</span>
-                    <span></span>
-                  </Space>
+                <span>作者：{currentArticle.user?.name}</span>
+                <span>发布于：{currentArticle.created_at}</span>
+                <span>阅读：{currentArticle.visibleNum}</span>
+                <span></span>
+              </Space>
 
-                  <Space>
-                    {currentArticle.labels &&
-                      currentArticle.labels.map((label, index) => (
-                        <CommunityLabel
-                          label={label}
-                          key={index}
-                        ></CommunityLabel>
-                      ))}
-                  </Space>
-                </div>
-                <Divider></Divider>
-                {/* body */}
-                <ReadOnly html={currentArticle.content}></ReadOnly>
-              </div>
-              {/* remark */}
-              <div id='remark'>
-                <div className='flex justify-center'>
-                  <Button
-                    type='dashed'
-                    className='shadow m-4'
-                    onClick={() => setopenRemarkModal(true)}
-                  >
-                    #我有一言
-                  </Button>
-                </div>
-                <div>
-                  {currentArticle.remark &&
-                    currentArticle.remark.remarks.map((remark) => (
-                      <RemarkCard
-                        remark={remark}
-                        key={remark.id}
-                      ></RemarkCard>
-                    ))}
-                </div>
-              </div>
+              <Space>
+                {currentArticle.labels &&
+                  currentArticle.labels.map((label, index) => (
+                    <MyTag
+                      label={label.label}
+                      key={index}
+                    ></MyTag>
+                  ))}
+              </Space>
             </div>
-            {/* <div className='w-8'></div> */}
-            {/* <div className='w-64 h-96 shadow rounded '></div> */}
+            <Divider></Divider>
+            {/* body */}
+            <ReadOnly html={currentArticle.content}></ReadOnly>
+          </Card>
+          {/* remark */}
+          <div id='remark'>
+            <div className='flex justify-center'>
+              <Button
+                type='dashed'
+                className='shadow m-4'
+                onClick={() => setopenRemarkModal(true)}
+              >
+                #我有一言
+              </Button>
+            </div>
+            <div>
+              {currentArticle.remark &&
+                currentArticle.remark.remarks.map((remark) => (
+                  <RemarkCard
+                    remark={remark}
+                    key={remark.id}
+                  ></RemarkCard>
+                ))}
+            </div>
           </div>
+          {/* <div className='w-8'></div> */}
+          {/* <div className='w-64 h-96 shadow rounded '></div> */}
 
           <div
             className={`w-12 h-12 px-4 fixed top-1/2 right-0 flex flex-col`}
@@ -288,7 +281,7 @@ const Detail: React.FC = () => {
           </Modal>
         </>
       )}
-    </>
+    </div>
   )
 }
 

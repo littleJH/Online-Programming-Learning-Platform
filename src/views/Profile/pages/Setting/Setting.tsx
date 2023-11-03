@@ -50,7 +50,7 @@ const Setting: React.FC = () => {
   }
 
   return (
-    <div style={{ width: '512px' }}>
+    <div style={{ width: '100%' }}>
       <h3 className='label flex items-center'>
         主题设置
         <Button

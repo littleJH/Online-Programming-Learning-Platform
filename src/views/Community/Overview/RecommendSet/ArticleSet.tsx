@@ -31,7 +31,7 @@ const ArticleSet: React.FC = () => {
           paragraph={{ rows: 9 }}
         ></Skeleton>
       )}
-      {articleList.length &&
+      {articleList.length !== 0 &&
         articleList.map((article) => (
           <ArticleCard
             articleProp={article}

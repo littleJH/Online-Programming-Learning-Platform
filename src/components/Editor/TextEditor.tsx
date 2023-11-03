@@ -59,7 +59,8 @@ const TextEditor: React.FC<{
           className='sticky top-0'
           style={{
             zIndex: 1000,
-            boxShadow: token.boxShadowTertiary
+            boxShadow: token.boxShadowTertiary,
+            backgroundColor: token.colorBgBase
           }}
         ></Toolbar>
       )}

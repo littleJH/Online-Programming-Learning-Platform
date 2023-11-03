@@ -26,18 +26,33 @@ body,
   width: 100%;
   height: 100%;
   font-size: 14px;
-  letter-spacing: 0.05rem;
+  letter-spacing: 0.1rem;
   padding: 0;
   margin: 0;
 }
 
+// wangEditor theme config
 :root, :host {
   --w-e-textarea-bg-color: $colorBgBase !important;
   --w-e-textarea-color: $colorTextBase !important;
+  --w-e-textarea-border-color: #ccc;
+  --w-e-textarea-slight-border-color: #e8e8e8;
+  --w-e-textarea-slight-color: #d4d4d4;
+  --w-e-textarea-slight-bg-color: #f5f2f0;
+  --w-e-textarea-selected-border-color: #B4D5FF; // 选中的元素，如选中了分割线
+  --w-e-textarea-handler-bg-color: #4290f7; // 工具，如图片拖拽按钮
+
+  // toolbar - css vars
   --w-e-toolbar-color: $colorTextBase !important;
   --w-e-toolbar-bg-color: $colorBgBlur !important;
   --w-e-toolbar-active-color:  $colorTextBase !important;
   --w-e-toolbar-active-bg-color: $colorBgBlur !important;
+  --w-e-toolbar-disabled-color: #999;
+  --w-e-toolbar-border-color: #e8e8e8;
+
+  // modal - css vars
+  --w-e-modal-button-bg-color: #fafafa;
+  --w-e-modal-button-border-color: #d9d9d9;
   /* ...其他... */
 }
 

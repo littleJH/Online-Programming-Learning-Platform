@@ -8,7 +8,8 @@ import { getRecordListApi } from '@/api/record'
 import { getProblemLabelsApi } from '@/api/problem'
 import AcPercentLabel from '../Label/ProblemLabel/AcPercentLabel'
 import { useRecoilValue } from 'recoil'
-import { themeState } from '@/store/appStore'
+import { notificationApi, themeState } from '@/store/appStore'
+import MyTag from '../Label/MyTag'
 
 interface IProps {
   mode: 'select' | 'default' | 'action'
@@ -36,6 +37,7 @@ const ProblemTable: React.FC<IProps> = (props) => {
   const { mode, pageNum, pageSize, total, tableScrollHeight, setSelectedProblems, selectedRowKeys, problemList, onPageChange, onTitleClick, onDelete, onUpdate, fetchDone, setFetchDone, setPageNum, setPageSize, setFirst } = props
   const [dataSource, setDataSource] = useState<IPrblemTableDataType[]>([])
   const theme = useRecoilValue(themeState)
+  const notification = useRecoilValue(notificationApi)
 
   useEffect(() => console.log('dataSource ==> ', dataSource), [dataSource])
   useEffect(() => {
@@ -46,10 +48,11 @@ const ProblemTable: React.FC<IProps> = (props) => {
   const handleKyeClick = useCallback((value: string) => {
     const flag = copy(value)
     if (flag) {
-      notification.success({
-        message: '已复制到剪切板',
-        duration: 1
-      })
+      notification &&
+        notification.success({
+          message: '已复制到剪切板',
+          duration: 1
+        })
     }
   }, [])
 
@@ -209,15 +212,12 @@ const ProblemTable: React.FC<IProps> = (props) => {
             render={(value) => (
               <>
                 {value.map((item: any, index: number) => {
-                  return (
-                    <Tag
+                  return index <= 2 ? (
+                    <MyTag
                       key={index}
-                      bordered={false}
-                      color='#f1f5f9'
-                    >
-                      <div className='text-slate-700'>{item.label}</div>
-                    </Tag>
-                  )
+                      label={item.label}
+                    ></MyTag>
+                  ) : null
                 })}
               </>
             )}

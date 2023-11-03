@@ -11,7 +11,6 @@ function App() {
   const setNotificationApi = useSetRecoilState(notificationApi)
   const [api, contextHolder] = notification.useNotification({
     placement: 'bottomRight',
-    bottom: 50,
     stack: false,
     maxCount: 6
   })
@@ -44,7 +43,10 @@ function App() {
           wireframe: false,
           ...myTheme
         },
-        algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm
+        algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
+        components: {
+          Menu: {}
+        }
       }}
     >
       {contextHolder}

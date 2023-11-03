@@ -1,4 +1,4 @@
-import { Progress } from 'antd'
+import { Progress, theme } from 'antd'
 import React, { Fragment, useLayoutEffect, useMemo, useState } from 'react'
 
 interface Progress {
@@ -15,9 +15,10 @@ interface Progress {
 const AcPercentLabel: React.FC<{
   total: number
   accept: number
-}> = props => {
+}> = (props) => {
   const { total, accept } = props
   const [exitRecord, setexitRecord] = useState<boolean>()
+  const { token } = theme.useToken()
   // const [exitAccept, setexitAccept] = useState<boolean>()
   // const [progress, setprogress] = useState<Progress>()
 
@@ -44,7 +45,7 @@ const AcPercentLabel: React.FC<{
   }, [])
 
   return (
-    <div className="flex justify-center  text-slate-100 text-sm ">
+    <div className='flex justify-center  text-slate-100 text-sm '>
       {exitRecord && (
         // <Fragment>
         //   <div
@@ -65,13 +66,11 @@ const AcPercentLabel: React.FC<{
         //   </div>
         // </Fragment>
         <Progress
-          type="line"
+          type='line'
           percent={percent}
-          strokeColor={'#10b981'}
-          trailColor="#ef4444"
-          format={percent => (
-            <div className="text-xs">{`${accept}/${total}`}</div>
-          )}
+          strokeColor={token.colorSuccess}
+          trailColor={token.colorError}
+          format={(percent) => <div className='text-xs'>{`${accept}/${total}`}</div>}
         ></Progress>
       )}
       {/* {exitRecord && !exitAccept && (
@@ -84,12 +83,10 @@ const AcPercentLabel: React.FC<{
         //   暂无提交
         // </div>
         <Progress
-          type="line"
+          type='line'
           percent={percent}
-          trailColor="#f59e0b"
-          format={percent => (
-            <div className="text-xs">{`${accept}/${total}`}</div>
-          )}
+          trailColor={token.colorWarning}
+          format={(percent) => <div className='text-xs'>{`${accept}/${total}`}</div>}
         ></Progress>
       )}
     </div>

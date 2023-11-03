@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Problem from './Problem'
-import { Button, Form, Modal, notification, Result, Space, Steps, UploadFile } from 'antd'
+import { Button, Form, Modal, Result, Space, Steps, UploadFile } from 'antd'
 import Program from './Program'
 import { createProgramApi } from '@/api/program'
 import { createProblemApi, createProblemLabelApi, getProblemLabelsApi, getProblemListApi, showProblemApi, uploadProblemByFileApi, uploadVjudgeProblemApi } from '@/api/problem'
 import { IProblem, ProgramMode } from '@/type'
-import { useRecoilState } from 'recoil'
-import { currentProblemState } from '@/store/appStore'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { currentProblemState, notificationApi } from '@/store/appStore'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import Dragger from 'antd/es/upload/Dragger'
 import { createTagApi, createTagAutoApi } from '@/api/tag'
@@ -34,6 +34,7 @@ const Create: React.FC = () => {
   const [loading, setloading] = useState(false)
   const [uploadDone, setUploadDone] = useState(false)
   const [currentProblem, setCurrentProblem] = useRecoilState(currentProblemState)
+  const notification = useRecoilValue(notificationApi)
 
   useEffect(() => {
     if (id.current) {
@@ -56,9 +57,10 @@ const Create: React.FC = () => {
         setcurrentStep((currentStep) => currentStep + 1)
       })
       .catch(() => {
-        notification.warning({
-          message: '请完善表单！'
-        })
+        notification &&
+          notification.warning({
+            message: '请完善表单！'
+          })
       })
   }, [form])
 
@@ -77,9 +79,10 @@ const Create: React.FC = () => {
       const res = await createProgramApi(data1)
       console.log(res.data)
       if (res.data.code !== 200) {
-        notification.warning({
-          message: res.data.msg
-        })
+        notification &&
+          notification.warning({
+            message: res.data.msg
+          })
         return
       }
       const id = res.data.data.program.id
@@ -87,9 +90,10 @@ const Create: React.FC = () => {
     } else {
       const res = await Promise.all([createProgramApi(data1), createProgramApi(data2)])
       if (res[0].data.code !== 200) {
-        notification.warning({
-          message: res[0].data.msg
-        })
+        notification &&
+          notification.warning({
+            message: res[0].data.msg
+          })
         return
       }
       const id1 = res[0].data.data.program.id
@@ -205,7 +209,7 @@ const Create: React.FC = () => {
   return (
     <div className='flex'>
       <div
-        className='px-8 my-4  overflow-y-scroll'
+        className='px-8 my-4'
         style={{ width: '768px' }}
       >
         {currentStep === 0 && <Problem form={form}></Problem>}
