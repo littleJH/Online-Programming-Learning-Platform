@@ -14,6 +14,7 @@ import { getUserInfoApi } from '@/api/user'
 import { iconBaseUrl } from '@/config/apiConfig'
 import ProblemTable from '../ProblemTable'
 import useNavTo from '@/tool/myHooks/useNavTo'
+import MyTag from '@/components/Label/MyTag'
 
 interface ITag {
   label: string
@@ -349,26 +350,39 @@ const ProblemList: React.FC<IProps> = (props) => {
             <div style={{ flexGrow: '1', width: '1/3' }}>
               <Popover
                 overlayStyle={{
-                  maxWidth: '1024px'
+                  maxWidth: '800px'
                 }}
                 trigger={'click'}
                 content={
                   <div>
                     {tagList.map((item: ITag, index) => (
-                      <Tag
+                      // <Tag
+                      //   key={index}
+                      //   style={{
+                      //     margin: '0.5rem 0.25rem'
+                      //   }}
+                      //   color={`${item.checked ? '#6366f1' : '#f1f5f9'}`}
+                      // >
+                      //   <div
+                      //     className={`hover:cursor-pointer select-none ${item.checked ? 'text-white' : 'text-slate-700'}`}
+                      //     onClick={() => handleTagClick(index)}
+                      //   >
+                      //     {item.label}
+                      //   </div>
+                      // </Tag>
+                      <span
                         key={index}
+                        onClick={() => handleTagClick(index)}
                         style={{
-                          margin: '0.5rem 0.25rem'
+                          marginBottom: '0.5rem'
                         }}
-                        color={`${item.checked ? '#6366f1' : '#f1f5f9'}`}
                       >
-                        <div
-                          className={`hover:cursor-pointer select-none ${item.checked ? 'text-white' : 'text-slate-700'}`}
-                          onClick={() => handleTagClick(index)}
-                        >
-                          {item.label}
-                        </div>
-                      </Tag>
+                        <MyTag
+                          label={item.label}
+                          checkable
+                          checked={tagList[index].checked}
+                        ></MyTag>
+                      </span>
                     ))}
                   </div>
                 }

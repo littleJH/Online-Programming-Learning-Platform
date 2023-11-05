@@ -1,5 +1,5 @@
 import useNavTo from '@/tool/myHooks/useNavTo'
-import { Menu } from 'antd'
+import { Card, Menu } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 
@@ -10,9 +10,9 @@ const ProblemSetRoot: React.FC = () => {
     navto('/problemset/all')
   }, [])
   return (
-    <div>
+    <Card style={{ height: 'max-content' }}>
       <Outlet></Outlet>
-    </div>
+    </Card>
   )
 }
 

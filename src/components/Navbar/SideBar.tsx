@@ -53,6 +53,12 @@ const menuItemObj: any = {
       key: 'form'
     }
   ],
+  competitionsetMenuItem: [
+    {
+      label: '全部',
+      key: 'all'
+    }
+  ],
   communityMenuItem: [
     {
       label: '文章',

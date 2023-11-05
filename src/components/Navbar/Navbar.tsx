@@ -4,7 +4,7 @@ import type { MenuProps } from 'antd'
 import { redirect, useLocation, useNavigate } from 'react-router-dom'
 import { getPathArray } from '@/tool/MyUtils/utils'
 import useNavTo from '@/tool/myHooks/useNavTo'
-import { CodeOutlined, GlobalOutlined, BulbOutlined, HomeOutlined } from '@ant-design/icons'
+import { CodeOutlined, GlobalOutlined, BulbOutlined, HomeOutlined, TrophyOutlined } from '@ant-design/icons'
 
 const menuItem = [
   {
@@ -18,10 +18,16 @@ const menuItem = [
     icon: <CodeOutlined />
   },
   {
+    label: '比赛',
+    key: 'competitionset',
+    icon: <TrophyOutlined />
+  },
+  {
     label: '社区',
     key: 'community',
     icon: <GlobalOutlined />
   },
+
   {
     label: '创作中心',
     key: 'creation',

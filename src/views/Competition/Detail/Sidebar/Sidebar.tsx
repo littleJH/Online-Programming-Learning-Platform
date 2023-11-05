@@ -26,7 +26,7 @@ const getDuration = (start: string, end: string): string => {
   return `${duration.hour} 小时 ${duration.min} 分钟`
 }
 
-const Sidebar: React.FC<Iprops> = props => {
+const Sidebar: React.FC<Iprops> = (props) => {
   const { type, competition, setopenUpdateModal } = props
   const [openUserListModal, setopenUserListModal] = useState(false)
   const [duration, setduration] = useState('')
@@ -41,28 +41,23 @@ const Sidebar: React.FC<Iprops> = props => {
       //   setstandardCondition(res.data.data.enter)
       // })
       getUserInfoApi(competition?.user_id as string)
-        .then(res => {
+        .then((res) => {
           setfounder(res.data.data.user.name)
         })
-        .catch(err => {})
-      getCurrentUserinfo().then(res => {
+        .catch((err) => {})
+      getCurrentUserinfo().then((res) => {
         if (res.data.data.user.id === competition?.user_id) {
           setisfounder(true)
         }
       })
-      setduration(
-        getDuration(
-          competition?.start_time as string,
-          competition?.end_time as string
-        )
-      )
+      setduration(getDuration(competition?.start_time as string, competition?.end_time as string))
     }
   }, [competition, type])
 
   const handleClick = () => {
     setopenUserListModal(true)
     if (standardCondition) {
-      getStandardUserListApi(type, competition?.id as string).then(res => {
+      getStandardUserListApi(type, competition?.id as string).then((res) => {
         console.log(res)
       })
     } else {
@@ -70,7 +65,7 @@ const Sidebar: React.FC<Iprops> = props => {
   }
 
   return (
-    <div className="p-4">
+    <div className='p-4'>
       <div className={`${style.item}`}>
         <div className={`${style.itemLabel}`}>标题</div>
         <div className={`${style.itemValue}`}>{competition?.title}</div>
@@ -87,7 +82,7 @@ const Sidebar: React.FC<Iprops> = props => {
         <div className={`${style.itemLabel}`}>类型</div>
         <div className={`${style.itemValue}`}>
           <CompetitionTypeLabel
-            className="icon-small"
+            size={1}
             type={competition?.type as CompetitionType}
           ></CompetitionTypeLabel>
         </div>
@@ -102,13 +97,13 @@ const Sidebar: React.FC<Iprops> = props => {
         </div>
       </div>
       {isfounder && (
-        <div className="flex justify-center">
+        <div className='flex justify-center'>
           <Space>
             {/* <Button type="dashed" danger onClick={() => handleClick()}>
               {standardCondition ? '标准比赛报名列表' : '报名标准比赛'}
             </Button> */}
             <Button
-              type="dashed"
+              type='dashed'
               danger
               onClick={() => setopenUpdateModal(true)}
             >

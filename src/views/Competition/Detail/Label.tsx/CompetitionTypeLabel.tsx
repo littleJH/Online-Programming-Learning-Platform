@@ -1,50 +1,61 @@
+import MySvgIcon from '@/components/Icon/MySvgIcon'
 import { CompetitionType } from '@/type'
 import React, { Fragment, useEffect, useState } from 'react'
+import { theme } from 'antd'
 
 const CompetitionTypeLabel: React.FC<{
   type: CompetitionType
-  className: string
+  size: number
   showLabel?: boolean
-}> = props => {
-  const { className, showLabel } = props
+}> = (props) => {
+  const { size, showLabel } = props
   const [show, setshow] = useState<boolean>()
+  const { token } = theme.useToken()
 
   useEffect(() => {
     showLabel === false ? setshow(false) : setshow(true)
   }, [showLabel])
   return (
-    <div className="flex items-center">
+    <div className='flex items-center'>
       {props.type === 'Single' && (
-        <Fragment>
-          <svg className={className}>
-            <use href="#icon-wode"></use>
-          </svg>
-          {show && <div>个人赛</div>}
-        </Fragment>
+        <>
+          <MySvgIcon
+            href='#icon-wode'
+            size={size}
+            color={token.colorPrimaryTextHover}
+          ></MySvgIcon>
+          {show && <span style={{ padding: '0 0.5rem' }}>个人赛</span>}
+        </>
       )}
       {props.type === 'Group' && (
-        <Fragment>
-          <svg className={className}>
-            <use href="#icon-xiaozu"></use>
-          </svg>
-          {show && <div>小组赛</div>}
-        </Fragment>
+        <>
+          <MySvgIcon
+            href='#icon-xiaozu'
+            size={size}
+            color={token.colorPrimaryTextHover}
+          ></MySvgIcon>
+          {show && <span style={{ padding: '0 0.5rem' }}>小组赛</span>}
+        </>
       )}
       {props.type === 'Match' && (
-        <Fragment>
-          <svg className={className}>
-            <use href="#icon-pipei"></use>
-          </svg>
-          {show && <div>匹配赛</div>}
-        </Fragment>
+        <>
+          <MySvgIcon
+            href='#icon-pipei'
+            size={size}
+            color={token.colorPrimaryTextHover}
+          ></MySvgIcon>
+          {show && <span style={{ padding: '0 0.5rem' }}>匹配赛</span>}
+        </>
       )}
       {props.type === 'OI' && (
-        <Fragment>
-          <svg className={className}>
-            <use href="#icon-pipei"></use>
-          </svg>
-          {show && <div>OI赛</div>}
-        </Fragment>
+        <>
+          <MySvgIcon
+            href='#icon-pipei'
+            size={size}
+            color={token.colorPrimaryTextHover}
+          ></MySvgIcon>
+          {show && <span style={{ padding: '0 0.5rem' }}>OI赛</span>}
+        </>
       )}
     </div>
   )

@@ -39,8 +39,9 @@ const ProblemForm = lazy(() => import('@/views/ProblemSet/form/Form'))
 const ProblemDescription = lazy(() => import('@/views/ProblemDetail/Description'))
 const ProblemSubmitrecord = lazy(() => import('@/views/ProblemDetail/Record/Records'))
 const ProblemCreate = lazy(() => import('@/views/Creation/pages/CreateProblem/Create'))
-const Competition = lazy(() => import('@/views/Competition/CompetitionRoot'))
-const CompetitionList = lazy(() => import('@/views/Competition/List/List'))
+const CompetitionSetRoot = lazy(() => import('@/views/CompetitionSet/CompetitionSetRoot'))
+const CompetitionRoot = lazy(() => import('@/views/Competition/CompetitionRoot'))
+const CompetitionAll = lazy(() => import('@/views/CompetitionSet/set/All'))
 const CompetitionId = lazy(() => import('@/views/Competition/Detail//Detail/Detail'))
 const CompetitionOverview = lazy(() => import('@/views/Competition/Detail/Content/Overview'))
 const CompetitionProblem = lazy(() => import('@/views/Competition/Detail/Content/Problem/Problem'))
@@ -132,7 +133,6 @@ const routes: MyRoute[] = [
       {
         path: 'problemset',
         element: ProblemSetRoot,
-        redirect: '/problemset/all',
         children: [
           {
             path: 'all',
@@ -163,15 +163,21 @@ const routes: MyRoute[] = [
           }
         ]
       },
+      {
+        path: 'competitionset',
+        element: CompetitionSetRoot,
+        children: [
+          {
+            path: 'all',
+            element: CompetitionAll
+          }
+        ]
+      },
       // competition
       {
         path: 'competition',
-        element: Competition,
+        element: CompetitionRoot,
         children: [
-          {
-            path: 'list',
-            element: CompetitionList
-          },
           {
             path: ':competition_id',
             element: CompetitionId,

@@ -1,7 +1,7 @@
 import { IMonacoOptions, ITheme } from '@/type'
 
 export const themeDefault: ITheme = {
-  colorPrimary: '#6366f1',
+  colorPrimary: '#40a9ff',
   colorSuccess: '#10b981',
   colorWarning: '#f59e0b',
   colorError: '#ef4444',

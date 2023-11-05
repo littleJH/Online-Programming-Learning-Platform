@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { getCompetitionListApi } from '@/api/competition'
-import { Skeleton, Table } from 'antd'
+import { Skeleton, Table, theme } from 'antd'
 import { ICompetition } from '@/type'
 import dayjs from 'dayjs'
 import Column from 'antd/es/table/Column'
 import { useNavigate } from 'react-router-dom'
-import CompetitionTypeLabel from '../Detail/Label.tsx/CompetitionTypeLabel'
+import CompetitionTypeLabel from '../../Competition/Detail/Label.tsx/CompetitionTypeLabel'
+import MySvgIcon from '@/components/Icon/MySvgIcon'
+import useNavTo from '@/tool/myHooks/useNavTo'
 
 type State = 'notStart' | 'underway' | 'finished'
 
@@ -22,13 +24,12 @@ interface IDataSource {
   key: string
 }
 
+const stateIconSize = 3
+
 const getState = (start: string, end: string): State => {
   if (dayjs(start).valueOf() > dayjs().valueOf()) {
     return 'notStart'
-  } else if (
-    dayjs(start).valueOf() < dayjs().valueOf() &&
-    dayjs(end).valueOf() > dayjs().valueOf()
-  ) {
+  } else if (dayjs(start).valueOf() < dayjs().valueOf() && dayjs(end).valueOf() > dayjs().valueOf()) {
     return 'underway'
   } else return 'finished'
 }
@@ -46,15 +47,17 @@ const getDuration = (start: string, end: string): string => {
 }
 
 const View: React.FC = () => {
-  const nav = useNavigate()
+  const nav = useNavTo()
   const [competitionList, setcompetitionList] = useState()
   const [dataSource, setdataSource] = useState<IDataSource[]>([])
+  const { token } = theme.useToken()
+
   useEffect(() => {
     getCompetitionListApi()
-      .then(res => res.data.data.competitions)
+      .then((res) => res.data.data.competitions)
       .then(async (data: ICompetition[]) => {
         data.forEach((competition, index) => {
-          setdataSource(value => [
+          setdataSource((value) => [
             ...value,
             {
               id: competition.id,
@@ -62,7 +65,7 @@ const View: React.FC = () => {
                 value: competition.title,
                 label: (
                   <div
-                    className="hover:cursor-pointer"
+                    className='hover:cursor-pointer'
                     onClick={() => handleClick(competition.id)}
                   >
                     {competition.title}
@@ -71,10 +74,7 @@ const View: React.FC = () => {
               },
               type: competition.type,
               start_time: competition.start_time,
-              duration: getDuration(
-                competition.start_time,
-                competition.end_time
-              ),
+              duration: getDuration(competition.start_time, competition.end_time),
               state: getState(competition.start_time, competition.end_time),
               key: competition.id
             }
@@ -88,7 +88,7 @@ const View: React.FC = () => {
     nav(`/competition/${id}`)
   }
   return (
-    <div>
+    <div style={{ minWidth: '800px' }}>
       {dataSource.length === 0 ? (
         <Skeleton
           active
@@ -97,31 +97,39 @@ const View: React.FC = () => {
           }}
         />
       ) : (
-        <Table style={{ width: '800px' }} dataSource={dataSource} size="large">
+        <Table
+          dataSource={dataSource}
+          size='small'
+        >
           <Column
-            align="center"
             key={'state'}
-            title="状态"
+            title='状态'
             dataIndex={'state'}
             render={(value: State) => {
               switch (value) {
                 case 'notStart':
                   return (
-                    <svg className="icon" aria-hidden={true}>
-                      <use href="#icon-weikaishi"></use>
-                    </svg>
+                    <MySvgIcon
+                      href='#icon-weikaishi'
+                      size={stateIconSize}
+                      color={token.colorInfoTextHover}
+                    ></MySvgIcon>
                   )
                 case 'underway':
                   return (
-                    <svg className="icon" aria-hidden={true}>
-                      <use href="#icon-jinhangzhong"></use>
-                    </svg>
+                    <MySvgIcon
+                      href='#icon-jinhangzhong'
+                      size={stateIconSize}
+                      color={token.colorSuccessTextHover}
+                    ></MySvgIcon>
                   )
                 case 'finished':
                   return (
-                    <svg className="icon" aria-hidden={true}>
-                      <use href="#icon-yijieshu"></use>
-                    </svg>
+                    <MySvgIcon
+                      href='#icon-yijieshu'
+                      size={stateIconSize}
+                      color={token.colorErrorTextHover}
+                    ></MySvgIcon>
                   )
                 default:
                   return
@@ -129,33 +137,29 @@ const View: React.FC = () => {
             }}
           ></Column>
           <Column
-            align="center"
             key={'title'}
-            title="比赛名称"
+            title='比赛名称'
             dataIndex={['title', 'label']}
           ></Column>
           <Column
-            align="center"
             key={'type'}
-            title="比赛类型"
+            title='比赛类型'
             dataIndex={'type'}
-            render={value => {
+            render={(value) => {
               return (
                 <CompetitionTypeLabel
-                  className="icon-small"
                   type={value}
+                  size={1}
                 ></CompetitionTypeLabel>
               )
             }}
           ></Column>
           <Column
-            align="center"
             key={'start_time'}
-            title="开始时间"
+            title='开始时间'
             dataIndex={'start_time'}
           ></Column>
           <Column
-            align="center"
             key={'duration'}
             title={'时长'}
             dataIndex={'duration'}

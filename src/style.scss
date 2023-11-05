@@ -31,6 +31,20 @@ body,
   margin: 0;
 }
 
+*::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+*::-webkit-scrollbar-track {
+  background-color: $colorBgBase;
+}
+
+*::-webkit-scrollbar-thumb {
+  @apply rounded-xl;
+  background-color: $colorBgBlur;
+}
+
+
 // wangEditor theme config
 :root, :host {
   --w-e-textarea-bg-color: $colorBgBase !important;
@@ -151,18 +165,6 @@ body,
       margin-left: 1rem;
     }
   }
-}
-*::-webkit-scrollbar {
-  width: 0.5rem;
-}
-
-*::-webkit-scrollbar-track {
-  background-color: $colorBgBase;
-}
-
-*::-webkit-scrollbar-thumb {
-  @apply rounded-xl;
-  background-color: $colorTextBase;
 }
 
 

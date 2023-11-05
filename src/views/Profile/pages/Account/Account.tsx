@@ -109,7 +109,6 @@ const Account: React.FC = () => {
         <h3 className='label grow'>账号信息</h3>
         <Button
           type='dashed'
-          danger
           onClick={handleLogoutClick}
         >
           退出登录

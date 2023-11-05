@@ -7,6 +7,7 @@ import { getCurrentUserinfo, updateInfoApi } from '@/api/user'
 import CodeEditorConfig from '@/components/editor/CodeEditorConfig'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { languageState, monacoOptionsState, monacoThemeState, userInfoState } from '@/store/appStore'
+import MySvgIcon from '../Icon/MySvgIcon'
 
 interface Iprops {
   value: string
@@ -27,6 +28,8 @@ const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
   const [monacoOptions, setMonacoOptions] = useRecoilState(monacoOptionsState)
   const [language, setLanguage] = useRecoilState(languageState)
   const monacoTheme = useRecoilValue(monacoThemeState)
+
+  console.log('monacoTheme ==> ', monacoTheme)
 
   useEffect(() => {
     setLanguageOptions(() => {
@@ -80,9 +83,10 @@ const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
             onClick={() => setopenConfigModal(true)}
             className='hover:cursor-pointer'
           >
-            <svg className='icon'>
-              <use href='#icon-setting'></use>
-            </svg>
+            <MySvgIcon
+              href='#icon-setting'
+              size={2}
+            ></MySvgIcon>
           </div>
         </div>
         <Editor

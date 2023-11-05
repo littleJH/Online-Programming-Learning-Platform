@@ -6,7 +6,7 @@ import { getEnterConditionApi } from '@/api/competitionMixture'
 import dayjs from 'dayjs'
 import Sidebar from '../Sidebar/Sidebar'
 import { CompetitionType, ICompetition, IGroup } from '@/type'
-import { Button, List, Menu, Modal, Steps, Tooltip, notification } from 'antd'
+import { Button, List, Menu, Modal, Steps, Tooltip, notification, Card } from 'antd'
 import Update from '../Update/Update'
 import { getUserInfoApi } from '@/api/user'
 import UserCard from '@/components/user/UserCard'
@@ -15,6 +15,7 @@ import CompetitionTypeLabel from '../Label.tsx/CompetitionTypeLabel'
 import EnterGroup from './Group/EnterGroup'
 import GroupInfo from './Group/GroupInfo'
 import { getMemberGroupListApi } from '@/api/group'
+import useNavTo from '@/tool/myHooks/useNavTo'
 
 type CompetitionState = 'notEnter' | 'underway' | 'enter' | 'finished'
 let interval: ReturnType<typeof setInterval>
@@ -78,7 +79,7 @@ const countDownFun = (endTime: string, setcountDown: Function, setcompetitionSta
 }
 
 const Detail: React.FC = () => {
-  const nav = useNavigate()
+  const nav = useNavTo()
   const location = useLocation()
   const { competition_id } = useParams()
   const [type, settype] = useState<CompetitionType>('')
@@ -262,7 +263,7 @@ const Detail: React.FC = () => {
   return (
     <div className='max-w-screen-xl'>
       {/* header */}
-      <div className='rounded shadow-md p-4'>
+      <Card>
         <div className='flex'>
           <div className='flex flex-col items-center justify-center'>
             <svg
@@ -281,7 +282,7 @@ const Detail: React.FC = () => {
           <div className='flex-grow'>
             <div className=' flex justify-center items-center text-3xl font-bold '>
               <CompetitionTypeLabel
-                className='icon'
+                size={3}
                 showLabel={false}
                 type={competition?.type as CompetitionType}
               ></CompetitionTypeLabel>
@@ -326,7 +327,7 @@ const Detail: React.FC = () => {
             </Tooltip>
           </div>
         </div>
-      </div>
+      </Card>
       <Menu
         className='my-4'
         selectedKeys={[current]}
@@ -353,26 +354,29 @@ const Detail: React.FC = () => {
       ></Menu>
       <div className='flex w-full'>
         {/* content */}
-        <div
-          className='shadow flex-grow'
+        <Card
+          className='flex-grow'
           style={{
             minWidth: '1000px'
           }}
         >
           <Outlet context={[competition, competitionState, setanswering, type]}></Outlet>
-        </div>
+        </Card>
         {/* sidebar */}
         {!answering && (
-          <Fragment>
+          <>
             <div className='w-8'></div>
-            <div className='shadow w-96 h-min'>
+            <Card
+              size='small'
+              className='w-96 h-min'
+            >
               <Sidebar
                 type={type}
                 competition={competition}
                 setopenUpdateModal={setopenUpdateModal}
               ></Sidebar>
-            </div>
-          </Fragment>
+            </Card>
+          </>
         )}
       </div>
       <Modal
