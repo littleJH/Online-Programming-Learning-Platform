@@ -89,6 +89,7 @@ const SubmitRecords: React.FC = () => {
         hack: hack
       })
     }
+    console.log('datasource ==> ', list)
     return list
   }, [recordList, problem])
 
@@ -284,7 +285,7 @@ const SubmitRecords: React.FC = () => {
             ></Column>
           </Table>
         )}
-        {currentState?.state === 'error' && currentCaseList.length && (
+        {currentState?.state === 'error' && currentCaseList.length !== 0 && (
           <Descriptions
             title='未通过用例'
             size='small'

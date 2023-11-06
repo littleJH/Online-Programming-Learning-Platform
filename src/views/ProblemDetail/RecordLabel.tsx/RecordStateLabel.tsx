@@ -4,12 +4,12 @@ import { Tooltip } from 'antd'
 
 const RecordStateLabel: React.FC<{
   value: string
-}> = props => {
+}> = (props) => {
   const [classname, setclassname] = useState<string>('bg-slate-500')
   const [tooltipTitle, settooltipTitle] = useState('')
 
   useEffect(() => {
-    recordStates.forEach(item => {
+    recordStates.forEach((item) => {
       if (props.value === item.value) {
         settooltipTitle(item.label)
         switch (item.state) {
@@ -30,7 +30,7 @@ const RecordStateLabel: React.FC<{
   }, [])
 
   return (
-    <div className="flex justify-center select-none">
+    <div className='flex justify-center select-none mx-4'>
       <Tooltip title={tooltipTitle}>
         <div
           className={`${classname} py-1 px-2 text-white rounded`}

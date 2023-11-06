@@ -11,6 +11,8 @@ import Navbar from '@/components/Navbar/Navbar'
 import { headerNavState } from '@/store/appStore'
 import useNavTo from '@/tool/myHooks/useNavTo'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
+import FooterRight from '@/components/Footer/FooterRight'
+import { footerRightNode } from '@/store/footerStore'
 
 const Root: React.FC = () => {
   const [collapsed, setCollapsed] = useRecoilState(sideBarCollapsed)
@@ -19,6 +21,7 @@ const Root: React.FC = () => {
   const { Header, Content, Footer } = Layout
   const { token } = theme.useToken()
   const [isDark, setIsDark] = useRecoilState(isDarkState)
+  const footerRight = useRecoilValue(footerRightNode)
 
   useEffect(() => {
     setCollapsed(btnCollapsed)
@@ -86,7 +89,6 @@ const Root: React.FC = () => {
         )}
         <Content
           id='mainContent'
-          className='py-4'
           style={{
             backgroundColor: token.colorBgBlur
           }}
@@ -98,11 +100,28 @@ const Root: React.FC = () => {
       </Layout>
 
       <Footer style={footerStyle}>
-        <Button
-          type='text'
-          icon={btnCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-          onClick={() => setBtnCollapsed(!btnCollapsed)}
-        />
+        {/* left */}
+        <div
+          className='w-1/2'
+          style={{
+            display: 'inline-block'
+          }}
+        >
+          <Button
+            type='text'
+            icon={btnCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            onClick={() => setBtnCollapsed(!btnCollapsed)}
+          />
+        </div>
+        {/* right */}
+        <div
+          className='w-1/2 flex items-center'
+          style={{
+            display: 'inline-block'
+          }}
+        >
+          {footerRight}
+        </div>
       </Footer>
     </Layout>
   )

@@ -3,26 +3,8 @@ import { languageList } from '@/components/editor/LanguageList'
 
 const LanaugeLabel: React.FC<{
   value: string
-}> = props => {
-  const [element, setelement] = useState<JSX.Element>()
-
-  useEffect(() => {
-    languageList.forEach(item => {
-      // if (['C++11', 'C++', 'C'].includes(props.value)) {
-      //   setelement(
-      //     <svg className="icon" aria-hidden="true">
-      //       <use href="#icon-cpp"></use>
-      //     </svg>
-      //   )
-      //   return
-      // }
-      if (item.language === props.value) {
-        setelement(item.label)
-      }
-    })
-  }, [])
-
-  return <div>{element}</div>
+}> = (props) => {
+  return <div>{languageList.find((item) => item.value === props.value)?.label}</div>
 }
 
 export default LanaugeLabel

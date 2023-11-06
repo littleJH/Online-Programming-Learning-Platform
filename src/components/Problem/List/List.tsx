@@ -181,8 +181,8 @@ const ProblemList: React.FC<IProps> = (props) => {
     setproblemList(problems)
   }, [])
 
-  const toDetail = (index: number) => {
-    const id = problemList[index].id
+  const toDetail = (record: any) => {
+    const id = record.key
     nav(`/problemdetail/${id}/description`)
   }
 
@@ -469,7 +469,7 @@ const ProblemList: React.FC<IProps> = (props) => {
             setFetchDone={setFetchDone}
             setFirst={setFirst}
             onPageChange={handlePageChange}
-            onTitleClick={toDetail}
+            onLineClick={toDetail}
             tableScrollHeight={tableScrollHeight}
             setSelectedProblems={setSelectedProblems}
             selectedRowKeys={selectedRowKeys}

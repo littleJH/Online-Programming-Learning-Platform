@@ -9,7 +9,7 @@ interface IState extends IRecordState {
 }
 
 interface IProps {
-  tabMode: '' | 'records' | undefined
+  tabMode: string
   openModal: boolean
   setopenModal: Function
   problem_id: string | undefined
@@ -18,21 +18,13 @@ interface IProps {
   setrecordList: Function
 }
 
-const RecordModal: React.FC<IProps> = props => {
-  const {
-    problem_id,
-    openModal,
-    setopenModal,
-    state,
-    tabMode,
-    record,
-    setrecordList
-  } = props
+const RecordModal: React.FC<IProps> = (props) => {
+  const { problem_id, openModal, setopenModal, state, record, setrecordList } = props
   const [totalTest, setTotalTest] = useState(0)
 
   useEffect(() => {
     if (problem_id) {
-      getProblemTestNumApi(problem_id).then(res => {
+      getProblemTestNumApi(problem_id).then((res) => {
         setTotalTest(res.data.data.total)
       })
     }
@@ -52,29 +44,35 @@ const RecordModal: React.FC<IProps> = props => {
   return (
     <Modal
       open={openModal}
-      title=""
+      title=''
       onCancel={() => setopenModal(false)}
       footer={[
-        <Button key={'tijie'} type="primary">
+        <Button
+          key={'tijie'}
+          type='primary'
+        >
           发布题解
         </Button>,
-        <Button key={'taolun'} type="primary">
+        <Button
+          key={'taolun'}
+          type='primary'
+        >
           发起讨论
         </Button>
       ]}
       centered
     >
       {state && (
-        <div className="flex items-center">
+        <div className='flex items-center'>
           <Progress
             size={128}
-            type="circle"
+            type='circle'
             percent={percent}
-            strokeColor="#10b981"
+            strokeColor='#10b981'
             format={() => (
               <Result
                 icon={null}
-                title={<div className="text-base">{state.label}</div>}
+                title={<div className='text-base'>{state.label}</div>}
                 subTitle={`${state?.case_id}/${totalTest}`}
                 status={state.state}
               ></Result>
@@ -84,7 +82,7 @@ const RecordModal: React.FC<IProps> = props => {
             }}
           ></Progress>
           <Descriptions
-            layout="vertical"
+            layout='vertical'
             style={{
               paddingLeft: '4rem',
               paddingTop: '2rem'

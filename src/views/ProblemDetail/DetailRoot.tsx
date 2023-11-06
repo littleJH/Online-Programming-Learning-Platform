@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { getProblemCollectNumApi, getProblemCollectedApi, getProblemLikeNumApi, getProblemLikedApi, getProblemVisibleNumApi, showProblemApi } from '@/api/problem'
 import style from './style.module.scss'
-import { Button, Menu, Modal, Popover, Space, notification } from 'antd'
+import { Button, Menu, Modal, Popover, Space, theme } from 'antd'
 import { Input } from 'antd'
 import { createTestApi } from '@/api/test'
 import { createRecordApi, enterPublishRecordWs, getRecordListApi } from '@/api/record'
@@ -12,12 +12,17 @@ import RecordModal from './Record/RecordModal'
 import CodeEditor from '@/components/Editor/CodeEditor'
 import { recordStates } from '@/assets/recordStates'
 import ojmap from '@/assets/ojmap'
+import MySvgIcon from '@/components/Icon/MySvgIcon'
+import useNavTo from '@/tool/myHooks/useNavTo'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { pathNameState } from '@/store/appStore'
+import { getPathArray } from '@/tool/myUtils/utils'
+import { footerRightNode } from '@/store/footerStore'
+import { DownOutlined, UpOutlined } from '@ant-design/icons'
 
 interface IState extends IRecordState {
   case_id: number
 }
-type TabMode = '' | 'records'
-
 const initTestState: IRecordState = {
   value: '',
   label: '待运行',
@@ -38,16 +43,16 @@ let ws: WebSocket
 
 export const Detail: React.FC = () => {
   const { TextArea } = Input
-  const nav = useNavigate()
-  const loaction = useLocation()
+  const nav = useNavTo()
+  const pathname = useRecoilValue(pathNameState)
   const { id } = useParams()
   const [problem, setproblem] = useState<IProblem>()
-  const [tabHeadMode, settabHeadMode] = useState<TabMode>()
+  const [tabHeadMode, settabHeadMode] = useState<string>(getPathArray(pathname)[2])
   const [caseSamples, setcaseSamples] = useState<ICaseSample[]>([])
   const [language, setLanguage] = useState()
   const [code, setcode] = useState('')
   const [showConsole, setshowConsole] = useState(true)
-  const [consoleMode, setconsoleMode] = useState<'test' | 'result'>('test')
+  const [consoleMode, setconsoleMode] = useState('test')
   const [testTextareaValue, settestTextareaValue] = useState<string>()
   const [runResult, setrunResult] = useState<IRunResult>()
   const [recordList, setrecordList] = useState<IRecord[]>([])
@@ -58,19 +63,23 @@ export const Detail: React.FC = () => {
   const [codeHeight, setcodeHeight] = useState(0)
   const rightCtnRef = useRef(null as any)
   const consoleRef = useRef(null as any)
-  const consoleFooterRef = useRef(null as any)
+  const setFooterRight = useSetRecoilState(footerRightNode)
+  const { token } = theme.useToken()
 
   useLayoutEffect(() => {
     setcodeHeight(resizeEditorHeight())
   }, [consoleMode, currentState, showConsole])
 
   useEffect(() => {
-    settabHeadMode(loaction.pathname.indexOf('records') > 0 ? 'records' : '')
     const code = localStorage.getItem(`code_${id}`)
     setcode(code ? code : '')
     resizebar = document.querySelector('#resizebar') as HTMLElement
     container = document.querySelector('#container') as HTMLElement
   }, [])
+
+  useEffect(() => {
+    setFooterRight(() => renderFooterRight())
+  }, [showConsole])
 
   useEffect(() => {
     window.addEventListener('resize', () => {
@@ -93,19 +102,16 @@ export const Detail: React.FC = () => {
     }
   }, [id])
 
-  const resizeEditorHeight = () => {
-    const height = rightCtnRef.current.clientHeight - (consoleRef.current ? consoleRef.current.clientHeight : 0) - consoleFooterRef?.current.clientHeight
-    return height
-  }
+  const resizeEditorHeight = () => rightCtnRef.current.clientHeight - (consoleRef.current ? consoleRef.current.clientHeight : 0)
 
-  const runCode = useCallback(() => {
+  const runCode = () => {
+    setshowConsole(true)
+    setconsoleMode('result')
     setcurrentState({
       value: 'Running',
       label: '运行中',
       state: 'info'
     })
-    setshowConsole(true)
-    setconsoleMode('result')
 
     const data = {
       language,
@@ -119,9 +125,9 @@ export const Detail: React.FC = () => {
 
       console.log(res.data)
     })
-  }, [code, testTextareaValue, problem])
+  }
 
-  const craeteRecord = useCallback(() => {
+  const craeteRecord = () => {
     const data = {
       language,
       code: code,
@@ -135,7 +141,7 @@ export const Detail: React.FC = () => {
       setrecordResponse(res.data.data.record)
       setopenRecordModal(true)
     })
-  }, [code, problem])
+  }
 
   const handleResizeMousemove = (e: MouseEvent) => {
     console.log(e.clientX)
@@ -150,46 +156,90 @@ export const Detail: React.FC = () => {
     resizebar.addEventListener('mousemove', handleResizeMousemove)
   }
 
-  const openConnect = useCallback((id: string) => {
+  const openConnect = (id: string) => {
     ws = enterPublishRecordWs(id)
     ws.onopen = (e) => handleConnectOpen(e)
     ws.onmessage = (e) => handleConnectMessage(e)
     ws.onclose = (e) => handleConnectClose(e)
-  }, [])
+  }
 
-  const handleConnectOpen = useCallback((e: Event) => {
+  const handleConnectOpen = (e: Event) => {
     setCurrentRecordState(initRecordState)
     console.log('Connection open...', e)
-  }, [])
+  }
 
-  const handleConnectClose = useCallback((e: Event) => {
+  const handleConnectClose = (e: Event) => {
     console.log('Connection Closed...', e)
-  }, [])
+  }
 
-  const handleConnectMessage = useCallback(
-    (e: MessageEvent) => {
-      const message = JSON.parse(e.data)
-      console.log('message', message)
-      const state = recordStates.find((item) => item.value === message.condition)
-      setCurrentRecordState(() =>
-        state
-          ? {
-              case_id: message.case_id,
-              ...state
-            }
-          : {
-              ...initRecordState,
-              case_id: message.case_id
-            }
-      )
-      getRecordListApi({
-        problem_id: id
-      }).then((res) => {
-        console.log(res.data.data)
-        setrecordList(res.data.data.records)
-      })
-    },
-    [id, tabHeadMode]
+  const handleConnectMessage = (e: MessageEvent) => {
+    const message = JSON.parse(e.data)
+    console.log('message', message)
+    const state = recordStates.find((item) => item.value === message.condition)
+    setCurrentRecordState(() =>
+      state
+        ? {
+            case_id: message.case_id,
+            ...state
+          }
+        : {
+            ...initRecordState,
+            case_id: message.case_id
+          }
+    )
+    getRecordListApi({
+      problem_id: id
+    }).then((res) => {
+      console.log(res.data.data)
+      setrecordList(res.data.data.records)
+    })
+  }
+
+  const renderFooterRight = () => (
+    <div
+      className='flex items-center justify-end px-2 h-12'
+      style={{
+        boxSizing: 'border-box'
+      }}
+    >
+      <Space>
+        <Button
+          size='small'
+          type='dashed'
+          icon={
+            showConsole ? (
+              <DownOutlined
+                style={{
+                  fontSize: '0.75rem'
+                }}
+              />
+            ) : (
+              <UpOutlined
+                style={{
+                  fontSize: '0.75rem'
+                }}
+              />
+            )
+          }
+          onClick={() => setshowConsole((value) => !value)}
+        >
+          控制台
+        </Button>
+        <Button
+          size='small'
+          onClick={runCode}
+        >
+          执行代码
+        </Button>
+        <Button
+          size='small'
+          onClick={craeteRecord}
+          type='primary'
+        >
+          提交
+        </Button>
+      </Space>
+    </div>
   )
 
   return (
@@ -197,6 +247,9 @@ export const Detail: React.FC = () => {
       <div
         id='container'
         className='flex h-full w-full'
+        style={{
+          backgroundColor: token.colorBgBase
+        }}
       >
         {/* left */}
         <div
@@ -218,19 +271,18 @@ export const Detail: React.FC = () => {
                 items={[
                   {
                     label: '题目描述',
-                    key: 'detail'
+                    key: 'description'
                   },
                   {
                     label: '提交记录',
                     key: 'records'
                   }
                 ]}
-                className='bg-slate-50'
                 onClick={(e) => {
-                  settabHeadMode(e.key as TabMode)
+                  settabHeadMode(e.key)
                   nav(`${e.key}`)
                 }}
-                activeKey={tabHeadMode}
+                selectedKeys={[tabHeadMode]}
               ></Menu>
             </div>
             {/* body */}
@@ -255,38 +307,31 @@ export const Detail: React.FC = () => {
           onMouseUp={removeResizeListener}
           onMouseLeave={removeResizeListener}
         >
-          <svg
-            className='w-4 h-6 '
-            aria-hidden='true'
-          >
-            <use href='#icon-Scrollvertical'></use>
-          </svg>
-          <svg
-            className='w-4 h-6'
-            aria-hidden='true'
-          >
-            <use href='#icon-Scrollvertical'></use>
-          </svg>
-          <svg
-            className='w-4 h-6'
-            aria-hidden='true'
-          >
-            <use href='#icon-Scrollvertical'></use>
-          </svg>
+          <Space direction='vertical'>
+            <MySvgIcon href='#icon-Scrollvertical'></MySvgIcon>
+            <MySvgIcon href='#icon-Scrollvertical'></MySvgIcon>
+            <MySvgIcon href='#icon-Scrollvertical'></MySvgIcon>
+          </Space>
         </div>
         {/* right */}
         <div
-          className='w-1/2 h-full flex flex-col'
+          className='w-1/2 h-full'
           style={{
             minWidth: '512px'
           }}
         >
           <div
             ref={rightCtnRef}
-            className='flex-auto flex flex-col overflow-hidden'
+            className='h-full flex flex-col'
           >
             {/* codeEditor */}
-            <div className='flex-auto'>
+            <div
+              style={{
+                height: '100px',
+                flexGrow: '1',
+                overflow: 'hidden'
+              }}
+            >
               <CodeEditor
                 height={codeHeight}
                 value={code}
@@ -302,28 +347,31 @@ export const Detail: React.FC = () => {
             {showConsole && (
               <div
                 ref={consoleRef}
-                className=''
+                style={{ height: 'min-content' }}
               >
-                <Menu
-                  activeKey={consoleMode}
-                  style={{
-                    padding: '0'
-                  }}
-                  mode='horizontal'
-                  items={[
-                    {
-                      label: '测试用例',
-                      key: 'test'
-                    },
-                    {
-                      label: '执行结果',
-                      key: 'result'
-                    }
-                  ]}
-                  onClick={(e) => setconsoleMode(e.key as 'test' | 'result')}
-                ></Menu>
-                <div className='w-full h-40 '>
-                  <div className='h-full p-4  overflow-scroll'>
+                <div>
+                  <Menu
+                    selectedKeys={[consoleMode]}
+                    style={{
+                      padding: '0',
+                      height: '3rem'
+                    }}
+                    mode='horizontal'
+                    items={[
+                      {
+                        label: '测试用例',
+                        key: 'test'
+                      },
+                      {
+                        label: '执行结果',
+                        key: 'result'
+                      }
+                    ]}
+                    onClick={(e) => setconsoleMode(e.key)}
+                  ></Menu>
+                </div>
+                <div className='w-full'>
+                  <div className='p-4'>
                     {consoleMode === 'test' ? (
                       <TextArea
                         value={testTextareaValue}
@@ -347,38 +395,6 @@ export const Detail: React.FC = () => {
                 </div>
               </div>
             )}
-            {/* footer */}
-            <div
-              ref={consoleFooterRef}
-              className='flex items-center px-2 h-12  bg-slate-50'
-              style={{
-                boxSizing: 'border-box'
-              }}
-            >
-              <div className='flex-grow'>
-                <Button
-                  size='small'
-                  onClick={() => setshowConsole((value) => !value)}
-                >
-                  控制台
-                </Button>
-              </div>
-              <Space>
-                <Button
-                  size='small'
-                  onClick={runCode}
-                >
-                  执行代码
-                </Button>
-                <Button
-                  size='small'
-                  onClick={craeteRecord}
-                  type='primary'
-                >
-                  提交
-                </Button>
-              </Space>
-            </div>
           </div>
         </div>
       </div>

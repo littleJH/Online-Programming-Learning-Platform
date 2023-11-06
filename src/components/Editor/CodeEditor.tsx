@@ -8,6 +8,7 @@ import CodeEditorConfig from '@/components/editor/CodeEditorConfig'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { languageState, monacoOptionsState, monacoThemeState, userInfoState } from '@/store/appStore'
 import MySvgIcon from '../Icon/MySvgIcon'
+import { cpp } from '@/config/config'
 
 interface Iprops {
   value: string
@@ -17,8 +18,6 @@ interface Iprops {
   setCodeLanguage: Function
   oj: string
 }
-
-const cpp = ['C', 'C++', 'C++11', 'C++14', 'C++17', 'C++20']
 
 const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
   const { height, value, className, codeChange, setCodeLanguage, oj } = props

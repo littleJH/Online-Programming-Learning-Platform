@@ -24,3 +24,5 @@ export const monacoOptionsDefault: IMonacoOptions = {
     top: 10
   }
 }
+
+export const cpp = ['C', 'C++', 'C++11', 'C++14', 'C++17', 'C++20']

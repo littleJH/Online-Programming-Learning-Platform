@@ -35,9 +35,9 @@ const ProfileCretion: React.FC = () => {
     setPageSize(size)
     fetchProblems(num, size)
   }
-  const handleTitleClick = (index: number) => {
-    const id = problemList[index].id
-    nav(`problemdetail/${id}/description`)
+  const handleColumnClick = (record: any) => {
+    const id = record.key
+    nav(`/problemdetail/${id}/description`)
   }
   const handleDelete = (index: number) => {
     deleteProblemApi(problemList[index].id).then((res) => {
@@ -66,7 +66,7 @@ const ProfileCretion: React.FC = () => {
         setFetchDone={setFetchDone}
         setFirst={setFirst}
         onPageChange={handlePageChange}
-        onTitleClick={handleTitleClick}
+        onLineClick={handleColumnClick}
         onDelete={handleDelete}
         onUpdate={handleUpdate}
       ></ProblemTable>

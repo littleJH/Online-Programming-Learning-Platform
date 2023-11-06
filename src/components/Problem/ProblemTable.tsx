@@ -23,7 +23,7 @@ interface IProps {
   setFetchDone: Function
   setFirst: Function
   onPageChange: Function
-  onTitleClick: Function
+  onLineClick: Function
   onDelete?: Function
   onUpdate?: Function
   tableScrollHeight?: number
@@ -34,7 +34,7 @@ interface IProps {
 let flag = false
 
 const ProblemTable: React.FC<IProps> = (props) => {
-  const { mode, pageNum, pageSize, total, tableScrollHeight, setSelectedProblems, selectedRowKeys, problemList, onPageChange, onTitleClick, onDelete, onUpdate, fetchDone, setFetchDone, setPageNum, setPageSize, setFirst } = props
+  const { mode, pageNum, pageSize, total, tableScrollHeight, setSelectedProblems, selectedRowKeys, problemList, onPageChange, onLineClick, onDelete, onUpdate, fetchDone, setFetchDone, setPageNum, setPageSize, setFirst } = props
   const [dataSource, setDataSource] = useState<IPrblemTableDataType[]>([])
   const theme = useRecoilValue(themeState)
   const notification = useRecoilValue(notificationApi)
@@ -45,7 +45,8 @@ const ProblemTable: React.FC<IProps> = (props) => {
     flag = true
   }, [problemList])
 
-  const handleKyeClick = useCallback((value: string) => {
+  const handleKyeClick = (value: string, e: React.MouseEvent) => {
+    e.stopPropagation()
     const flag = copy(value)
     if (flag) {
       notification &&
@@ -54,7 +55,7 @@ const ProblemTable: React.FC<IProps> = (props) => {
           duration: 1
         })
     }
-  }, [])
+  }
 
   const fetchProblems = async (problems: IProblem[]) => {
     console.log('fetchProblems')
@@ -94,6 +95,10 @@ const ProblemTable: React.FC<IProps> = (props) => {
     setDataSource(list)
   }
 
+  const handleTitleClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+  }
+
   return (
     <div>
       {!fetchDone ? (
@@ -131,6 +136,11 @@ const ProblemTable: React.FC<IProps> = (props) => {
                 }
               : undefined
           }
+          onRow={(record) => {
+            return {
+              onClick: () => onLineClick(record)
+            }
+          }}
           size='small'
           pagination={{
             position: ['bottomCenter'],
@@ -163,7 +173,7 @@ const ProblemTable: React.FC<IProps> = (props) => {
               >
                 <div
                   className='select-none hover:cursor-pointer'
-                  onClick={() => handleKyeClick(value)}
+                  onClick={(e) => handleKyeClick(value, e)}
                 >
                   <div
                     className='w-16'
@@ -197,8 +207,13 @@ const ProblemTable: React.FC<IProps> = (props) => {
               >
                 <div
                   color={theme.colorPrimary}
-                  className='hover:cursor-pointer min-w-max'
-                  onClick={() => onTitleClick(index)}
+                  onClick={handleTitleClick}
+                  style={{
+                    width: '196px',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis'
+                  }}
                 >
                   {value}
                 </div>
@@ -225,7 +240,6 @@ const ProblemTable: React.FC<IProps> = (props) => {
           <Column
             title='AC率'
             dataIndex={'acPerc'}
-            width={128}
             render={(value) => <div className=''>{value}</div>}
           ></Column>
           {mode === 'action' && (

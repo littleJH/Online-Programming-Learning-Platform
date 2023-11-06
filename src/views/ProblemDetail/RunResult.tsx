@@ -1,7 +1,8 @@
 import React, { useLayoutEffect } from 'react'
-import { Spin } from 'antd'
+import { Spin, theme } from 'antd'
 import { IRunResult, IRecordState } from '@/type'
 import { recordStates } from '@/assets/recordStates'
+import MySvgIcon from '@/components/Icon/MySvgIcon'
 
 interface IProps {
   caseSample: {
@@ -13,8 +14,11 @@ interface IProps {
   setcurrentState: Function
 }
 
-const RunResult: React.FC<IProps> = props => {
+const iconSize = 2
+
+const RunResult: React.FC<IProps> = (props) => {
   const { caseSample, runResult, currentState, setcurrentState } = props
+  const { token } = theme.useToken()
 
   useLayoutEffect(() => {
     if (runResult) {
@@ -28,32 +32,40 @@ const RunResult: React.FC<IProps> = props => {
   }, [runResult])
 
   return (
-    <div className="w-full h-full flex ">
+    <div className='w-full h-full flex '>
       {/* left */}
-      <div className="">
-        {currentState.state === 'info' ? (
-          <Spin size="large"></Spin>
+      <div className='h-12 pr-4 flex items-center'>
+        {currentState.state === 'info' && currentState.value === '' ? (
+          <MySvgIcon
+            href='#icon-info'
+            size={iconSize}
+            color={token.colorInfo}
+          ></MySvgIcon>
         ) : (
-          <div className="h-12 pr-4 flex items-center">
-            <svg className="w-12" aria-hidden="true">
-              {/* {currentState.state === 'info' && <use href="#icon-info"></use>} */}
-              {currentState.state === 'success' && (
-                <use href="#icon-success"></use>
-              )}
-              {currentState.state === 'error' && <use href="#icon-error"></use>}
-            </svg>
-          </div>
+          <Spin></Spin>
+        )}
+        {currentState.state === 'error' && (
+          <MySvgIcon
+            href='#icon-error'
+            size={iconSize}
+            color={token.colorError}
+          ></MySvgIcon>
+        )}
+        {currentState.state === 'success' && (
+          <MySvgIcon
+            href='#icon-success'
+            size={iconSize}
+            color={token.colorSuccess}
+          ></MySvgIcon>
         )}
       </div>
-      <div className="w-full">
-        {(currentState.state === 'error' || currentState.state === 'info') && (
-          <div className="h-12 flex items-center">{currentState.label}</div>
-        )}
+      <div className='w-full'>
+        {(currentState.state === 'error' || currentState.state === 'info') && <div className='h-12 flex items-center'>{currentState.label}</div>}
         {currentState.state === 'success' && runResult && (
-          <div className="">
-            <div className="">
+          <div className=''>
+            <div className=''>
               <span>Time：{runResult.time}</span>
-              <span className="ml-4">Memory：{runResult.memory}</span>
+              <span className='ml-4'>Memory：{runResult.memory}</span>
             </div>
             <div>
               <p>
@@ -66,15 +78,7 @@ const RunResult: React.FC<IProps> = props => {
               </p>
               <p>
                 <span>当前输出：</span>
-                <span
-                  className={`rounded ${
-                    runResult.output === caseSample.output
-                      ? 'bg-green-300'
-                      : 'bg-red-300'
-                  }`}
-                >
-                  {runResult.output}
-                </span>
+                <span className={`rounded ${runResult.output === caseSample.output ? 'bg-green-300' : 'bg-red-300'}`}>{runResult.output}</span>
               </p>
             </div>
           </div>
