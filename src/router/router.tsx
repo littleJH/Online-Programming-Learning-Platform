@@ -6,7 +6,7 @@ import { pathNameState } from '@/store/appStore'
 // import Article from '@/views/Profile/Creation/Article/Article'
 
 interface MyRoute {
-  path: string
+  path?: string
   element: any
   errorElement?: any
   redirect?: string
@@ -14,6 +14,7 @@ interface MyRoute {
   meta?: {
     title?: string
     needLogin?: boolean
+    redirect?: string
   }
 }
 
@@ -66,6 +67,9 @@ const CreateForm = lazy(() => import('@/views/Creation/pages/CreateForm'))
 const ArticleDetail = lazy(() => import('@/views/Community/Article/Detail'))
 
 const routes: MyRoute[] = [
+  // {
+  //   element: Homepage
+  // },
   {
     path: '/',
     element: Root,
@@ -297,11 +301,9 @@ const Guard: React.FC<{
   element: ReactNode
   meta: { title: string; needLogin: boolean; redirect: string }
 }> = (props) => {
-  let { element, meta = { needLogin: false, title: 'DOJ' } } = props
-  const { needLogin, title } = meta
+  let { element, meta } = props
   const { pathname } = useLocation()
-  if (title) document.title = title
-  if (needLogin && pathname !== '/login') {
+  if (meta && meta.needLogin && pathname !== '/login') {
     if (!localStorage.getItem('token'))
       element = (
         <Navigate

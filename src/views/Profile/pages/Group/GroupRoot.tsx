@@ -1,18 +1,16 @@
-import { Button, Divider, Input, List, Menu, Space } from 'antd'
+import { Button, Divider, Form, Input, List, Menu, Modal, Space, theme } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import React, { useEffect, useMemo, useState } from 'react'
-import {
-  getGroupApi,
-  getMemberGroupListApi,
-  searchGroupByTextApi
-} from '@/api/group'
+import { applyEnterGroupApi, getGroupApi, getMemberGroupListApi, searchGroupByTextApi } from '@/api/group'
 import { useRecoilValue } from 'recoil'
-import { userInfoState } from '@/store/appStore'
+import { notificationApi, userInfoState } from '@/store/appStore'
 import { IGroup } from '@/type'
 import { Outlet, useSearchParams } from 'react-router-dom'
 import Chat from './Chat'
 import { enterPublishChatWs } from '@/api/chat'
-import GroupDetail from './GroupDetail'
+import GroupInfo from '@/components/Group/GroupInfo'
+import TextArea from 'antd/es/input/TextArea'
+import CreateGroupForm from '@/components/Group/CreateGroupForm'
 
 let ws: WebSocket
 const GroupRoot: React.FC = () => {
@@ -23,20 +21,25 @@ const GroupRoot: React.FC = () => {
   const [total, setTotal] = useState(0)
   const [mode, setMode] = useState<'default' | 'search'>('default')
   const [groupList, setGroupList] = useState<IGroup[]>([])
+  const [openEnterModal, setOpenEnterModal] = useState(false)
+  const [openCreateModal, setOpenCreateModal] = useState(false)
+  const [applyContent, setApplyContent] = useState(`我是${info?.name}`)
+  const notification = useRecoilValue(notificationApi)
+  const [form] = Form.useForm()
+  const { token } = theme.useToken()
 
-  const currentGroup = useMemo(() => {
-    const group = groupList.find(item => item.id === group_id)
-    return group
-  }, [group_id, groupList])
+  const currentGroup = useMemo(() => groupList.find((item) => item.id === group_id), [group_id, groupList])
 
-  const menuItems = useMemo(() => {
-    return groupList.map(group => {
-      return {
-        key: group.id,
-        label: <div>{group.title}</div>
-      }
-    })
-  }, [groupList])
+  const menuItems = useMemo(
+    () =>
+      groupList.map((group) => {
+        return {
+          key: group.id,
+          label: <div>{group.title}</div>
+        }
+      }),
+    [groupList]
+  )
 
   useEffect(() => {
     openChatWs()
@@ -46,13 +49,13 @@ const GroupRoot: React.FC = () => {
   const initGroupList = () => {
     if (!info) return
     setMode('default')
-    getMemberGroupListApi(info?.id).then(async res => {
+    getMemberGroupListApi(info?.id).then(async (res) => {
       setTotal(res.data.data.total)
       const groups = res.data.data.userList
       const list: IGroup[] = []
       for (let group of groups) {
         const res = await getGroupApi(group.group_id)
-        list.push(res.data.data.group)
+        list.push({ ...res.data.data.group, entered: true })
       }
       setGroupList(list)
     })
@@ -85,45 +88,112 @@ const GroupRoot: React.FC = () => {
   const handleGroupSearth = async (value: string) => {
     setMode('search')
     const { data } = await searchGroupByTextApi(value)
+
     setGroupList(data.data.groups)
     console.log(data)
   }
 
+  const enterGroup = async () => {
+    if (!currentGroup?.auto && applyContent === '') {
+      notification?.warning({
+        message: '请输入申请信息'
+      })
+      return
+    }
+    const form = new FormData()
+    form.append('content', applyContent)
+    currentGroup?.id && applyEnterGroupApi(currentGroup?.id, form).then((res) => {})
+  }
+
   return (
-    <div className="w-full h-full flex">
-      <div className="w-64 h-full">
-        <Space className="sticky top-0 px-4">
+    <div
+      className='flex'
+      style={{
+        width: '70vw',
+        height: '70vh'
+      }}
+    >
+      {/* left */}
+      <div className='w-64 h-full'>
+        <Space className='sticky top-0 px-4'>
           <Search
-            size="small"
+            size='small'
             enterButton
             allowClear
             onSearch={handleGroupSearth}
-            onChange={e => {
+            onChange={(e) => {
               if (e.target.value === '') initGroupList()
             }}
           ></Search>
-          <Button size="small" icon={<PlusOutlined />}></Button>
+          <Button
+            size='small'
+            icon={<PlusOutlined />}
+            onClick={() => setOpenCreateModal(true)}
+          ></Button>
         </Space>
         <Divider></Divider>
         <Menu
-          className="px-4"
+          className='px-4'
           items={menuItems}
           selectedKeys={[group_id ? group_id : '']}
           onSelect={handleMenuSelected}
         ></Menu>
       </div>
       {/* <Divider type="vertical" className="h-full"></Divider> */}
-      <div className="grow">
+      <div
+        className='grow w-96 h-full rounded'
+        style={{ borderColor: token.colorBorder, borderWidth: '1px', borderRadius: token.borderRadius, borderStyle: 'solid' }}
+      >
         {currentGroup && (
           <>
-            {mode === 'default' ? (
-              <Chat group={currentGroup}></Chat>
-            ) : (
-              <GroupDetail group={currentGroup}></GroupDetail>
+            {mode === 'default' && <Chat group={currentGroup}></Chat>}
+            {mode === 'search' && (
+              <>
+                {currentGroup.entered && <Chat group={currentGroup}></Chat>}
+                {!currentGroup.entered && (
+                  <div className='p-8'>
+                    <GroupInfo group={currentGroup}></GroupInfo>
+                    <div className='w-full text-end'>
+                      <Button
+                        type='primary'
+                        onClick={() => (currentGroup.auto ? enterGroup() : setOpenEnterModal(true))}
+                      >
+                        加入小组
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </>
         )}
       </div>
+      <Modal
+        open={openEnterModal}
+        title='申请信息'
+        onCancel={() => setOpenEnterModal(false)}
+        footer={[
+          <Button
+            type='primary'
+            onClick={enterGroup}
+          >
+            加入
+          </Button>
+        ]}
+      >
+        <TextArea value={applyContent}></TextArea>
+      </Modal>
+      <Modal
+        open={openCreateModal}
+        title='创建用户组'
+        onCancel={() => setOpenCreateModal(false)}
+        footer={[<Button type='primary'>创建</Button>]}
+      >
+        <CreateGroupForm
+          form={form}
+          doneCallback={(group: IGroup) => {}}
+        ></CreateGroupForm>
+      </Modal>
     </div>
   )
 }

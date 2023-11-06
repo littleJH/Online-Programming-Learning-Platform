@@ -1,5 +1,5 @@
 const ctnClass = 'flex items-center'
-const textClass = 'mx-4'
+const textClass = 'mx-4 '
 
 export const languageList = [
   {

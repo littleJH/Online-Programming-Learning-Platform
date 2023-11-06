@@ -227,6 +227,7 @@ export interface IGroup {
   title: string
   updated_at: string
   members?: User[]
+  entered?: boolean
 }
 
 type CompetitionState = 'notEnter' | 'underway' | 'enter' | 'finished'

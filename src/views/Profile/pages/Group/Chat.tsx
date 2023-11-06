@@ -1,6 +1,6 @@
 import { getGroupLettersApi } from '@/api/Letter'
 import { IChat, IGroup } from '@/type'
-import { Avatar, Button, Divider, Drawer, Input, List, Modal, Spin } from 'antd'
+import { Avatar, Button, Divider, Drawer, Input, List, Card, Popover } from 'antd'
 import { TextAreaRef } from 'antd/es/input/TextArea'
 import React, { KeyboardEventHandler, useEffect, useMemo, useRef, useState } from 'react'
 import { EllipsisOutlined } from '@ant-design/icons'
@@ -66,8 +66,12 @@ const Chat: React.FC<IProps> = (props) => {
     console.log('chatWsOpen', e)
   }
 
-  const handleChatWsMessage = (e: Event) => {
+  const handleChatWsMessage = async (e: MessageEvent) => {
     console.log('chatWsMessage', e)
+    console.log('message ==> ', e.data)
+    const message = JSON.parse(e.data)
+    const { data } = await getUserInfoApi(message.author_id)
+    setChatList((value) => [...value, { ...message, user: data.data.user }])
   }
 
   const handleChatWsClose = (e: Event) => {
@@ -78,7 +82,10 @@ const Chat: React.FC<IProps> = (props) => {
     const bool = msgItem.author_id === info?.id
     return (
       <>
-        <div className={`w-full flex justify-${bool ? 'end' : 'start'}`}>
+        <div
+          id={msgItem.group_id}
+          className={`w-full flex justify-${bool ? 'end' : 'start'}`}
+        >
           {!bool && (
             <Avatar
               src={`${iconBaseUrl}/${msgItem.user.icon}`}
@@ -88,8 +95,17 @@ const Chat: React.FC<IProps> = (props) => {
             ></Avatar>
           )}
           <div style={{ maxWidth: '75%' }}>
-            <ChatMessageCard mode={bool ? 'right' : 'left'}>{msgItem.content}</ChatMessageCard>
+            {/* <ChatMessageCard mode={bool ? 'right' : 'left'}>{msgItem.content}</ChatMessageCard> */}
+            <Card
+              size='small'
+              style={{
+                margin: '0 1rem'
+              }}
+            >
+              {msgItem.content}
+            </Card>
           </div>
+
           {bool && (
             <Avatar
               src={`${iconBaseUrl}/${msgItem.user.icon}`}
@@ -117,104 +133,120 @@ const Chat: React.FC<IProps> = (props) => {
     })
   }
 
+  // const handleChatScroll = (e: React.UIEvent) => {
+  //   e.preventDefault()
+  //   console.log('handleChatScroll ==> ', e)
+  // }
+
   return (
-    <>
-      <div
-        className='h-full w-full flex flex-col border border-solid border-slate-300 rounded'
-        style={{
-          width: '768px'
-        }}
-      >
-        <div className='h-3/4 flex flex-col'>
-          <div className='sticky top-0 z-10 flex justify-between items-center'>
-            <span className='mx-8'>{group.title}</span>
-            <span
-              className='mx-2'
-              onClick={() => {
-                setOpenModal(true)
+    <div className='h-full flex flex-col'>
+      <div className='h-3/4 flex flex-col'>
+        <div className='sticky top-0 z-10 flex justify-between items-center'>
+          <span className='mx-8'>{group.title}</span>
+          <span
+            className='mx-2'
+            onClick={() => {
+              setOpenModal(true)
+            }}
+          >
+            <EllipsisOutlined
+              style={{
+                fontSize: '2rem',
+                cursor: 'pointer'
               }}
-            >
-              <EllipsisOutlined
-                style={{
-                  fontSize: '2rem',
-                  cursor: 'pointer'
-                }}
-              />
-            </span>
-          </div>
-          <div className='h-full grow px-8 overflow-scroll'>
-            <div ref={chatBox}>
-              <List
-                loading={loading}
-                split={false}
-                dataSource={chatList}
-                renderItem={(item, index) => (
-                  <>
-                    {item.content && (
-                      <List.Item
-                        onLoad={() => {
-                          if (index === chatList.length - 1) {
-                            chatBox.current?.scrollIntoView(false)
-                          }
-                        }}
-                        key={`${item.author_id}${item.created_at}`}
-                      >
-                        {renderMessageCard(item)}
-                      </List.Item>
-                    )}
-                  </>
-                )}
-              ></List>
-            </div>
-          </div>
+            />
+          </span>
         </div>
         <div
-          className='h-1/4 border-slate-300 relative'
-          style={{
-            borderTopWidth: '1px',
-            borderTopStyle: 'solid'
-          }}
-          onClick={() => inputTextarea.current?.focus()}
+          className='h-full grow px-8 overflow-scroll'
+          // style={{
+          //   transform: 'rotate(180deg)',
+          //   direction: 'rtl'
+          // }}
+          // onScrollCapture={handleChatScroll}
         >
-          <div className='overflow-scroll h-full py-4'>
-            <Input.TextArea
-              ref={inputTextarea}
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              bordered={false}
-              autoSize={{
-                minRows: 6
+          {/* {chatList.map((item, index) => (
+            <div
+              style={{
+                transform: 'rotate(180deg)',
+                direction: 'ltr'
               }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter')
-                  if (e.shiftKey) setText((value) => `${value}\n`)
-                  else {
-                    e.preventDefault()
-                    sendChat()
-                  }
-              }}
-            ></Input.TextArea>
+              key={`${item.created_at}${index}`}
+            >
+              {renderMessageCard(item)}
+            </div>
+          ))} */}
+          <div ref={chatBox}>
+            <List
+              loading={loading}
+              split={false}
+              dataSource={chatList}
+              renderItem={(item, index) => (
+                <>
+                  {item.content && (
+                    <List.Item
+                      onLoad={() => {
+                        if (index === chatList.length - 1) {
+                          chatBox.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+                        }
+                      }}
+                      key={`${item.author_id}${item.created_at}`}
+                    >
+                      {renderMessageCard(item)}
+                    </List.Item>
+                  )}
+                </>
+              )}
+            ></List>
           </div>
-          <Button
-            className='absolute bottom-4 right-4'
-            type='primary'
-            onClick={sendChat}
-          >
-            发送
-          </Button>
         </div>
-        <Drawer
-          closeIcon={null}
-          open={openModal}
-          onClose={() => setOpenModal(false)}
-        >
-          <GroupMember
-            group_id={group.id}
-            showAdd={true}
-          ></GroupMember>
-        </Drawer>
       </div>
-    </>
+      <div
+        className='h-1/4 border-slate-300 relative'
+        style={{
+          borderTopWidth: '1px',
+          borderTopStyle: 'solid'
+        }}
+        onClick={() => inputTextarea.current?.focus()}
+      >
+        <div className='overflow-scroll h-full py-4'>
+          <Input.TextArea
+            ref={inputTextarea}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            bordered={false}
+            autoSize={{
+              minRows: 6
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter')
+                if (e.shiftKey) setText((value) => `${value}\n`)
+                else {
+                  e.preventDefault()
+                  sendChat()
+                }
+            }}
+          ></Input.TextArea>
+        </div>
+        <Button
+          className='absolute bottom-4 right-4'
+          type='primary'
+          onClick={sendChat}
+        >
+          发送
+        </Button>
+      </div>
+      <Drawer
+        closeIcon={null}
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+      >
+        <GroupMember
+          group_id={group.id}
+          showAdd={true}
+        ></GroupMember>
+      </Drawer>
+    </div>
   )
 }
 

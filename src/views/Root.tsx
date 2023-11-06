@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useLayoutEffect } from 'react'
 import { Layout, Button, Avatar, theme } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import { Outlet } from 'react-router-dom'
 import { iconBaseUrl } from '@/config/apiConfig'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { isDarkState, loginStatusState, sideBarCollapsed, themeState, userInfoState } from '@/store/appStore'
+import { isDarkState, loginStatusState, pathNameState, sideBarCollapsed, userInfoState } from '@/store/appStore'
 import Sider from 'antd/es/layout/Sider'
 import SideBar from '@/components/Navbar/SideBar'
 import Navbar from '@/components/Navbar/Navbar'
 import { headerNavState } from '@/store/appStore'
 import useNavTo from '@/tool/myHooks/useNavTo'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
-import FooterRight from '@/components/Footer/FooterRight'
 import { footerRightNode } from '@/store/footerStore'
+import { getPathArray } from '@/tool/myUtils/utils'
 
 const Root: React.FC = () => {
   const [collapsed, setCollapsed] = useRecoilState(sideBarCollapsed)
@@ -22,6 +22,12 @@ const Root: React.FC = () => {
   const { token } = theme.useToken()
   const [isDark, setIsDark] = useRecoilState(isDarkState)
   const footerRight = useRecoilValue(footerRightNode)
+  const pathname = useRecoilValue(pathNameState)
+  const nav = useNavTo()
+
+  useLayoutEffect(() => {
+    ;(pathname === '' || pathname === '/') && nav('/home')
+  }, [])
 
   useEffect(() => {
     setCollapsed(btnCollapsed)
@@ -36,6 +42,8 @@ const Root: React.FC = () => {
     body.style.setProperty('--colorTextBase', token.colorTextBase)
     body.style.setProperty('--colorBgBlur', token.colorBgBlur)
   }, [token])
+
+  const showPaddingY = React.useMemo(() => !['problemdetail', 'competitiondetail'].includes(getPathArray(pathname)[0]), [pathname])
 
   const headerStyle: React.CSSProperties = { backgroundColor: `${isDark ? '#141414' : '#ffffff'}`, boxShadow: token.boxShadowTertiary }
 
@@ -93,7 +101,12 @@ const Root: React.FC = () => {
             backgroundColor: token.colorBgBlur
           }}
         >
-          <div className='w-full h-full flex justify-center overflow-y-scroll scroll-smooth'>
+          <div
+            className='w-full h-full flex justify-center overflow-y-scroll scroll-smooth'
+            style={{
+              padding: `${showPaddingY ? '1rem 0' : '0'}`
+            }}
+          >
             <Outlet></Outlet>
           </div>
         </Content>

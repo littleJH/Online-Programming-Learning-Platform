@@ -1,4 +1,4 @@
-import { notification } from 'antd'
+import { message } from 'antd'
 import axios from 'axios'
 
 const baseUrlObj: {
@@ -78,10 +78,7 @@ export const createRequest = (options: { type?: string; baseURL: string }) => {
     },
     (error) => {
       const { code = '请求错误' } = error
-      notification.error({
-        message: code,
-        description: '请检查网络设置'
-      })
+      message.error(`${code}，请检查网络设置`)
       return Promise.reject(error)
     }
   )

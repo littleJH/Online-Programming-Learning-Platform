@@ -7,6 +7,7 @@ import { applyEnterGroupApi, createUserGroupApi, getGroupApi, getLeaderGroupList
 import { enterCompetitionApi } from '@/api/competitionMixture'
 import GroupInfo from './GroupInfo'
 import { getCurrentUserinfo } from '@/api/user'
+import CreateGroupForm from '@/components/Group/CreateGroupForm'
 
 type Mode = 'create' | 'enter' | 'undetermined' | 'already'
 
@@ -59,25 +60,25 @@ const EnterGroup: React.FC<{
     if (groupIdText) fetchGroupInfo()
   }, [groupIdText])
 
-  const createGroup = () => {
-    form
-      .validateFields()
-      .then(() => {
-        const data = form.getFieldsValue()
-        createUserGroupApi(JSON.stringify(data)).then((res) => {
-          console.log(res.data)
-          if (res.data.code === 200) {
-            setgroup(res.data.data.group)
-            setcurrentStep((value) => value + 1)
-          } else {
-            notification.warning({
-              message: res.data.msg
-            })
-          }
-        })
-      })
-      .catch((err) => {})
-  }
+  // const createGroup = () => {
+  //   form
+  //     .validateFields()
+  //     .then(() => {
+  //       const data = form.getFieldsValue()
+  //       createUserGroupApi(JSON.stringify(data)).then((res) => {
+  //         console.log(res.data)
+  //         if (res.data.code === 200) {
+  //           setgroup(res.data.data.group)
+  //           setcurrentStep((value) => value + 1)
+  //         } else {
+  //           notification.warning({
+  //             message: res.data.msg
+  //           })
+  //         }
+  //       })
+  //     })
+  //     .catch((err) => {})
+  // }
 
   const enterCompetition = (index: number) => {
     const data = {
@@ -240,75 +241,14 @@ const EnterGroup: React.FC<{
       )}
       {currentStep === 1 && mode === 'create' && (
         <div>
-          <Form
-            layout='vertical'
+          <CreateGroupForm
             form={form}
-          >
-            <Form.Item
-              name={'title'}
-              label='小组名'
-              rules={[{ required: true }]}
-            >
-              <Input></Input>
-            </Form.Item>
-            <Form.Item
-              name={'content'}
-              label='小组描述'
-              rules={[{ required: true }]}
-            >
-              <TextArea></TextArea>
-            </Form.Item>
-            <Form.Item
-              name={'auto'}
-              label='自动通过用户申请'
-              rules={[{ required: true }]}
-            >
-              <Switch
-                checked={form.getFieldValue('auto')}
-                onChange={(value) => form.setFieldValue('auto', value)}
-              ></Switch>
-            </Form.Item>
-            <Form.List name={'users'}>
-              {(fields, { add, remove }) => (
-                <>
-                  {fields.map((field, index) => (
-                    <Form.Item
-                      {...field}
-                      label={
-                        <div>
-                          <MinusCircleOutlined
-                            className='dynamic-delete-button'
-                            onClick={() => remove(field.name)}
-                          />
-                          <span className='mx-2'>{`用户${index + 1}`}</span>
-                        </div>
-                      }
-                      colon={false}
-                      key={field.key}
-                    >
-                      <Input placeholder='请填入用户 id'></Input>
-                    </Form.Item>
-                  ))}
-                  <Form.Item
-                    label=' '
-                    colon={false}
-                  >
-                    <Button
-                      size='large'
-                      className=''
-                      type='dashed'
-                      style={{ width: '100%' }}
-                      onClick={() => add()}
-                      icon={<PlusOutlined />}
-                    >
-                      添加用户
-                    </Button>
-                  </Form.Item>
-                </>
-              )}
-            </Form.List>
-          </Form>
-          <div className='flex justify-center mt-8'>
+            doneCallback={(group: IGroup) => {
+              setgroup(group)
+              setcurrentStep((value) => value + 1)
+            }}
+          ></CreateGroupForm>
+          {/* <div className='flex justify-center mt-8'>
             <Space>
               <Button
                 onClick={() => {
@@ -324,7 +264,7 @@ const EnterGroup: React.FC<{
                 创建
               </Button>
             </Space>
-          </div>
+          </div> */}
         </div>
       )}
       {currentStep === 1 && mode === 'enter' && (

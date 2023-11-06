@@ -21,7 +21,6 @@ const ProfileRoot: React.FC = () => {
     <Card
       style={{
         minWidth: '820px',
-        maxWidth: '1024px',
         height: 'max-content'
       }}
     >

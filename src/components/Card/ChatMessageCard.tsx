@@ -1,22 +1,25 @@
 import React from 'react'
 import style from './style.module.scss'
+import { theme, Card } from 'antd'
 
 const ChatMessageCard: React.FC<{
   mode: 'left' | 'right'
   children: string
-}> = props => {
+}> = (props) => {
   const { mode, children } = props
+  const { token } = theme.useToken()
+
   return (
-    <div
-      className={`relative p-4 mx-8 shadow rounded bg-white  ${
-        mode === 'left' ? style.message_left : style.message_right
-      }`}
+    // <div className={`relative ${mode === 'left' ? style.message_left : style.message_right}`}>
+    <Card
+      size='small'
       style={{
-        border: '1px solid black'
+        margin: '0 1rem'
       }}
     >
       {children}
-    </div>
+    </Card>
+    // </div>
   )
 }
 
