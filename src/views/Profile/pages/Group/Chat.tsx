@@ -1,6 +1,6 @@
 import { getGroupLettersApi } from '@/api/Letter'
 import { IChat, IGroup } from '@/type'
-import { Avatar, Button, Divider, Drawer, Input, List, Card, Popover } from 'antd'
+import { Avatar, Button, Divider, Drawer, Input, List, Card, Popover, theme } from 'antd'
 import { TextAreaRef } from 'antd/es/input/TextArea'
 import React, { KeyboardEventHandler, useEffect, useMemo, useRef, useState } from 'react'
 import { EllipsisOutlined } from '@ant-design/icons'
@@ -26,6 +26,7 @@ const Chat: React.FC<IProps> = (props) => {
   const [chatList, setChatList] = useState<IChat[]>([])
   const [loading, setLoading] = useState(true)
   const chatBox = useRef<HTMLDivElement>(null)
+  const { token } = theme.useToken()
 
   useEffect(() => {
     openChatWs(group.id)
@@ -158,7 +159,7 @@ const Chat: React.FC<IProps> = (props) => {
           </span>
         </div>
         <div
-          className='h-full grow px-8 overflow-scroll'
+          className='h-full grow px-8 overflow-auto'
           // style={{
           //   transform: 'rotate(180deg)',
           //   direction: 'rtl'
@@ -202,14 +203,15 @@ const Chat: React.FC<IProps> = (props) => {
         </div>
       </div>
       <div
-        className='h-1/4 border-slate-300 relative'
+        className='h-1/4 relative'
         style={{
           borderTopWidth: '1px',
-          borderTopStyle: 'solid'
+          borderTopStyle: 'solid',
+          borderColor: token.colorBorder
         }}
         onClick={() => inputTextarea.current?.focus()}
       >
-        <div className='overflow-scroll h-full py-4'>
+        <div className='overflow-auto h-full py-4'>
           <Input.TextArea
             ref={inputTextarea}
             value={text}
