@@ -16,7 +16,7 @@ import { getPathArray } from '@/tool/myUtils/utils'
 
 const Root: React.FC = () => {
   const [collapsed, setCollapsed] = useRecoilState(sideBarCollapsed)
-  const [btnCollapsed, setBtnCollapsed] = useState(!collapsed)
+  const [btnCollapsed, setBtnCollapsed] = useState(collapsed)
   const headerNav = useRecoilValue(headerNavState)
   const { Header, Content, Footer } = Layout
   const { token } = theme.useToken()
@@ -26,12 +26,8 @@ const Root: React.FC = () => {
   const nav = useNavTo()
 
   useLayoutEffect(() => {
-    ;(pathname === '' || pathname === '/') && nav('/home')
+    if (pathname === '' || pathname === '/') nav('/home')
   }, [])
-
-  useEffect(() => {
-    setCollapsed(btnCollapsed)
-  }, [btnCollapsed])
 
   useEffect(() => console.log('headerNav ==> ', headerNav), [headerNav])
 
@@ -123,7 +119,10 @@ const Root: React.FC = () => {
           <Button
             type='text'
             icon={btnCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setBtnCollapsed(!btnCollapsed)}
+            onClick={() => {
+              setCollapsed(!btnCollapsed)
+              setBtnCollapsed(!btnCollapsed)
+            }}
           />
         </div>
         {/* right */}

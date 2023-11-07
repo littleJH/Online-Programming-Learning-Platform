@@ -55,8 +55,9 @@ const GroupRoot: React.FC = () => {
       const list: IGroup[] = []
       for (let group of groups) {
         const res = await getGroupApi(group.group_id)
-        list.push({ ...res.data.data.group, entered: true })
+        if (res.data.code === 200) list.push({ ...res.data.data.group, entered: true })
       }
+      console.log('groupList ==> ', list)
       setGroupList(list.reverse())
     })
   }
@@ -149,7 +150,7 @@ const GroupRoot: React.FC = () => {
           <Menu
             className='p-4'
             items={menuItems}
-            selectedKeys={[group_id ? group_id : '']}
+            selectedKeys={[group_id || '']}
             onSelect={handleMenuSelected}
           ></Menu>
         </div>

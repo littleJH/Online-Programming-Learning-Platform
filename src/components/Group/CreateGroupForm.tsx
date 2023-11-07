@@ -16,24 +16,22 @@ const CreateGroupForm: React.FC<IProps> = (props) => {
   const notification = useRecoilValue(notificationApi)
 
   const createGroup = () => {
-    form
-      .validateFields()
-      .then(() => {
-        const data = form.getFieldsValue()
-        createUserGroupApi(JSON.stringify(data)).then((res) => {
-          console.log(res.data)
-          if (res.data.code === 200) {
-            doneCallback(res.data.data.group)
-          } else {
-            notification &&
-              notification.warning({
-                message: res.data.msg
-              })
-          }
-        })
+    form.validateFields().then(() => {
+      const data = form.getFieldsValue()
+      createUserGroupApi(JSON.stringify(data)).then((res) => {
+        console.log(res.data)
+        if (res.data.code === 200) {
+          doneCallback(res.data.data.group)
+        } else {
+          notification &&
+            notification.warning({
+              message: res.data.msg
+            })
+        }
       })
-      .catch((err) => {})
+    })
   }
+
   return (
     <div>
       <Form
@@ -58,11 +56,9 @@ const CreateGroupForm: React.FC<IProps> = (props) => {
           name={'auto'}
           label='自动通过用户申请'
           rules={[{ required: true }]}
+          initialValue={false}
         >
-          <Switch
-            checked={form.getFieldValue('auto')}
-            onChange={(value) => form.setFieldValue('auto', value)}
-          ></Switch>
+          <Switch onChange={(value) => form.setFieldValue('auto', value)}></Switch>
         </Form.Item>
         <Form.List name={'users'}>
           {(fields, { add, remove }) => (

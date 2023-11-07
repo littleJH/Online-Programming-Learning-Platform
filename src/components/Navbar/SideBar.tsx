@@ -137,7 +137,7 @@ const menuItemObj: any = {
     },
     {
       key: 'group',
-      label: '用户组',
+      label: '聊天',
       icon: <TeamOutlined />
       // children: [
       //   {
@@ -170,39 +170,39 @@ const menuItemObj: any = {
       children: [
         {
           key: 'creation/problem',
-          label: '题目',
-          icon: (
-            <svg className='icon-small'>
-              <use href='#icon-problem'></use>
-            </svg>
-          )
+          label: '题目'
+          // icon: (
+          //   <svg className='icon-small'>
+          //     <use href='#icon-problem'></use>
+          //   </svg>
+          // )
         },
         {
           key: 'creation/topic',
-          label: '题单',
-          icon: (
-            <svg className='icon-small'>
-              <use href='#icon-topic'></use>
-            </svg>
-          )
+          label: '题单'
+          // icon: (
+          //   <svg className='icon-small'>
+          //     <use href='#icon-topic'></use>
+          //   </svg>
+          // )
         },
         {
           key: 'creation/form',
-          label: '表单',
-          icon: (
-            <svg className='icon-small'>
-              <use href='#icon-liebiaoqingdan'></use>
-            </svg>
-          )
+          label: '表单'
+          // icon: (
+          //   <svg className='icon-small'>
+          //     <use href='#icon-liebiaoqingdan'></use>
+          //   </svg>
+          // )
         },
         {
           key: 'creation/article',
-          label: '文章',
-          icon: (
-            <svg className='icon-small'>
-              <use href='#icon-article'></use>
-            </svg>
-          )
+          label: '文章'
+          // icon: (
+          //   <svg className='icon-small'>
+          //     <use href='#icon-article'></use>
+          //   </svg>
+          // )
         },
         {
           key: 'creation/group',
@@ -217,39 +217,39 @@ const menuItemObj: any = {
       children: [
         {
           key: 'star/problem',
-          label: '题目',
-          icon: (
-            <svg className='icon-small'>
-              <use href='#icon-problem'></use>
-            </svg>
-          )
+          label: '题目'
+          // icon: (
+          //   <svg className='icon-small'>
+          //     <use href='#icon-problem'></use>
+          //   </svg>
+          // )
         },
         {
           key: 'star/topic',
-          label: '题单',
-          icon: (
-            <svg className='icon-small'>
-              <use href='#icon-topic'></use>
-            </svg>
-          )
+          label: '题单'
+          // icon: (
+          //   <svg className='icon-small'>
+          //     <use href='#icon-topic'></use>
+          //   </svg>
+          // )
         },
         {
           key: 'star/form',
-          label: '表单',
-          icon: (
-            <svg className='icon-small'>
-              <use href='#icon-liebiaoqingdan'></use>
-            </svg>
-          )
+          label: '表单'
+          // icon: (
+          //   <svg className='icon-small'>
+          //     <use href='#icon-liebiaoqingdan'></use>
+          //   </svg>
+          // )
         },
         {
           key: 'star/article',
-          label: '文章',
-          icon: (
-            <svg className='icon-small'>
-              <use href='#icon-article'></use>
-            </svg>
-          )
+          label: '文章'
+          // icon: (
+          //   <svg className='icon-small'>
+          //     <use href='#icon-article'></use>
+          //   </svg>
+          // )
         }
       ]
     },
