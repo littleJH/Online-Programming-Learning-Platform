@@ -20,17 +20,27 @@ const GroupInfo: React.FC<{
   const descItems: DescriptionsItemProps[] = React.useMemo(() => {
     return [
       {
-        key: '2',
+        key: 'id',
+        label: 'ID',
+        children: group.id
+      },
+      {
+        key: 'content',
         label: '描述',
         children: group.content
       },
       {
-        key: '3',
+        key: 'leader',
         label: '创建者',
         children: userInfo?.name
       },
       {
-        key: '4',
+        key: 'auto',
+        label: '自动通过申请',
+        children: group.auto ? '是' : '否'
+      },
+      {
+        key: 'member',
         label: '小组成员',
         children: (
           <GroupMember
@@ -44,6 +54,7 @@ const GroupInfo: React.FC<{
 
   return (
     <Descriptions
+      column={1}
       title={group.title}
       items={descItems}
     ></Descriptions>

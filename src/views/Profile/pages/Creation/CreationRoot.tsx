@@ -13,25 +13,25 @@ const CreationRoot: React.FC = () => {
 
   useEffect(() => {
     if (!info) return
-    getArticleListApi(1, 0).then(res => {
+    getArticleListApi(1, 0).then((res) => {
       setArticleTotal(res.data.data.total)
     })
-    getUserProblemListApi(info.id, 1, 0).then(res => {
+    getUserProblemListApi(info.id, 1, 0).then((res) => {
       setProblemTotal(res.data.data.total)
     })
   }, [])
   return (
     <div
       style={{
-        width: '768px'
+        width: '800px'
       }}
     >
-      <div>
+      {/* <div>
         <Descriptions layout="vertical">
           <Descriptions.Item label="题目">{problemTotal}</Descriptions.Item>
           <Descriptions.Item label="文章">{articleTotal}</Descriptions.Item>
         </Descriptions>
-      </div>
+      </div> */}
       <div>
         <Outlet></Outlet>
       </div>

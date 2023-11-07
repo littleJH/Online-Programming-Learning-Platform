@@ -11,6 +11,7 @@ import { iconBaseUrl } from '@/config/apiConfig'
 import { useRecoilValue } from 'recoil'
 import { userInfoState } from '@/store/appStore'
 import ChatMessageCard from '@/components/card/ChatMessageCard'
+import GroupInfo from '@/components/Group/GroupInfo'
 
 interface IProps {
   group: IGroup
@@ -61,6 +62,7 @@ const Chat: React.FC<IProps> = (props) => {
     ws.onopen = handleChatWsOpen
     ws.onmessage = handleChatWsMessage
     ws.onclose = handleChatWsClose
+    ws.onerror = handleChatWsError
   }
 
   const handleChatWsOpen = (e: Event) => {
@@ -69,54 +71,56 @@ const Chat: React.FC<IProps> = (props) => {
 
   const handleChatWsMessage = async (e: MessageEvent) => {
     console.log('chatWsMessage', e)
-    console.log('message ==> ', e.data)
     const message = JSON.parse(e.data)
     const { data } = await getUserInfoApi(message.author_id)
     setChatList((value) => [...value, { ...message, user: data.data.user }])
   }
 
-  const handleChatWsClose = (e: Event) => {
+  const handleChatWsClose = (e: CloseEvent) => {
     console.log('chatWsClose', e)
+  }
+
+  const handleChatWsError = (e: Event) => {
+    console.log('chatWsError', e)
   }
 
   const renderMessageCard = (msgItem: IChat) => {
     const bool = msgItem.author_id === info?.id
     return (
-      <>
-        <div
-          id={msgItem.group_id}
-          className={`w-full flex justify-${bool ? 'end' : 'start'}`}
-        >
-          {!bool && (
-            <Avatar
-              src={`${iconBaseUrl}/${msgItem.user.icon}`}
-              style={{
-                flex: 'none'
-              }}
-            ></Avatar>
-          )}
-          <div style={{ maxWidth: '75%' }}>
-            {/* <ChatMessageCard mode={bool ? 'right' : 'left'}>{msgItem.content}</ChatMessageCard> */}
-            <Card
-              size='small'
-              style={{
-                margin: '0 1rem'
-              }}
-            >
-              {msgItem.content}
-            </Card>
-          </div>
-
-          {bool && (
-            <Avatar
-              src={`${iconBaseUrl}/${msgItem.user.icon}`}
-              style={{
-                flex: 'none'
-              }}
-            ></Avatar>
-          )}
+      <div
+        id={msgItem.group_id}
+        className={`w-full flex justify-${bool ? 'end' : 'start'}`}
+      >
+        {!bool && (
+          <Avatar
+            src={`${iconBaseUrl}/${msgItem.user.icon}`}
+            style={{
+              flex: 'none'
+            }}
+          ></Avatar>
+        )}
+        <div style={{ maxWidth: '75%' }}>
+          {/* <ChatMessageCard mode={bool ? 'right' : 'left'}>{msgItem.content}</ChatMessageCard> */}
+          <Card
+            size='small'
+            style={{
+              margin: '0 1rem',
+              backgroundColor: `${bool ? token.colorPrimaryBg : ''}`
+            }}
+          >
+            {msgItem.content}
+          </Card>
         </div>
-      </>
+
+        {bool && (
+          <Avatar
+            src={`${iconBaseUrl}/${msgItem.user.icon}`}
+            style={{
+              flex: 'none'
+            }}
+          ></Avatar>
+        )}
+      </div>
     )
   }
 
@@ -142,8 +146,13 @@ const Chat: React.FC<IProps> = (props) => {
   return (
     <div className='h-full flex flex-col'>
       <div className='h-3/4 flex flex-col'>
-        <div className='sticky top-0 z-10 flex justify-between items-center'>
-          <span className='mx-8'>{group.title}</span>
+        <div
+          className='sticky top-0 z-10 flex justify-between items-center'
+          style={{
+            borderBottom: `1px solid ${token.colorBorder}`
+          }}
+        >
+          <span className='mx-4 my-2 text-lg'>{group.title}</span>
           <span
             className='mx-2'
             onClick={() => {
@@ -243,10 +252,7 @@ const Chat: React.FC<IProps> = (props) => {
         open={openModal}
         onClose={() => setOpenModal(false)}
       >
-        <GroupMember
-          group_id={group.id}
-          showAdd={true}
-        ></GroupMember>
+        <GroupInfo group={group}></GroupInfo>
       </Drawer>
     </div>
   )

@@ -1,5 +1,5 @@
 import { IPrblemTableDataType, IProblem } from '@/type'
-import { Button, Popover, Skeleton, Space, Table, Tag, Tooltip, notification } from 'antd'
+import { Button, Popover, Skeleton, Space, Table, Tag, Tooltip, Divider } from 'antd'
 import Column from 'antd/es/table/Column'
 import copy from 'copy-to-clipboard'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -161,15 +161,10 @@ const ProblemTable: React.FC<IProps> = (props) => {
           <Column
             title='KEY'
             dataIndex={'key'}
-            width={128}
             render={(value: string) => (
               <Tooltip
                 mouseEnterDelay={0.3}
                 title={`点击复制 ${value}`}
-                color='white'
-                overlayInnerStyle={{
-                  color: 'black'
-                }}
               >
                 <div
                   className='select-none hover:cursor-pointer'
@@ -225,16 +220,22 @@ const ProblemTable: React.FC<IProps> = (props) => {
             title='标签'
             dataIndex={'labels'}
             render={(value) => (
-              <>
+              <div
+                style={{
+                  width: '10rem',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden'
+                }}
+              >
                 {value.map((item: any, index: number) => {
-                  return index <= 2 ? (
+                  return index <= 1 ? (
                     <MyTag
                       key={index}
                       label={item.label}
                     ></MyTag>
                   ) : null
                 })}
-              </>
+              </div>
             )}
           ></Column>
           <Column
@@ -246,26 +247,33 @@ const ProblemTable: React.FC<IProps> = (props) => {
             <Column
               title='操作'
               render={(_, __, index) => (
-                <>
+                <div style={{ width: '6rem' }}>
                   {onUpdate && (
                     <Button
                       type='link'
                       size='small'
+                      style={{ padding: '0' }}
                       onClick={() => onUpdate(index)}
                     >
                       更新
                     </Button>
                   )}
+
                   {onDelete && (
-                    <Button
-                      type='link'
-                      size='small'
-                      onClick={() => onDelete(index)}
-                    >
-                      删除
-                    </Button>
+                    <>
+                      <Divider type='vertical'></Divider>
+                      <Button
+                        type='link'
+                        style={{ padding: '0' }}
+                        size='small'
+                        danger
+                        onClick={() => onDelete(index)}
+                      >
+                        删除
+                      </Button>
+                    </>
                   )}
-                </>
+                </div>
               )}
             ></Column>
           )}

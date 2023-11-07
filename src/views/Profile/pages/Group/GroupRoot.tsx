@@ -1,11 +1,11 @@
-import { Button, Divider, Form, Input, List, Menu, Modal, Space, theme } from 'antd'
+import { Button, Form, Input, Menu, Modal, Space, theme } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import React, { useEffect, useMemo, useState } from 'react'
 import { applyEnterGroupApi, getGroupApi, getMemberGroupListApi, searchGroupByTextApi } from '@/api/group'
 import { useRecoilValue } from 'recoil'
 import { notificationApi, userInfoState } from '@/store/appStore'
 import { IGroup } from '@/type'
-import { Outlet, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import Chat from './Chat'
 import { enterPublishChatWs } from '@/api/chat'
 import GroupInfo from '@/components/Group/GroupInfo'
@@ -57,7 +57,7 @@ const GroupRoot: React.FC = () => {
         const res = await getGroupApi(group.group_id)
         list.push({ ...res.data.data.group, entered: true })
       }
-      setGroupList(list)
+      setGroupList(list.reverse())
     })
   }
 
@@ -105,6 +105,20 @@ const GroupRoot: React.FC = () => {
     currentGroup?.id && applyEnterGroupApi(currentGroup?.id, form).then((res) => {})
   }
 
+  const handleGroupCreated = (group: IGroup) => {
+    notification &&
+      notification.success({
+        message: '用户组创建成功'
+      })
+    setMode('default')
+    setGroup_id(group.id)
+    setGroupList((value) => [group, ...value])
+    setQuerys({
+      group_id: group.id
+    })
+    setOpenCreateModal(false)
+  }
+
   return (
     <div
       className='flex'
@@ -114,7 +128,7 @@ const GroupRoot: React.FC = () => {
       }}
     >
       {/* left */}
-      <div className='w-64 h-full'>
+      <div className='w-64 h-full flex flex-col'>
         <Space className='sticky top-0 px-4'>
           <Search
             size='small'
@@ -131,13 +145,14 @@ const GroupRoot: React.FC = () => {
             onClick={() => setOpenCreateModal(true)}
           ></Button>
         </Space>
-        <Divider></Divider>
-        <Menu
-          className='px-4'
-          items={menuItems}
-          selectedKeys={[group_id ? group_id : '']}
-          onSelect={handleMenuSelected}
-        ></Menu>
+        <div className='overflow-auto h-96 grow'>
+          <Menu
+            className='p-4'
+            items={menuItems}
+            selectedKeys={[group_id ? group_id : '']}
+            onSelect={handleMenuSelected}
+          ></Menu>
+        </div>
       </div>
       {/* <Divider type="vertical" className="h-full"></Divider> */}
       <div
@@ -187,11 +202,11 @@ const GroupRoot: React.FC = () => {
         open={openCreateModal}
         title='创建用户组'
         onCancel={() => setOpenCreateModal(false)}
-        footer={[<Button type='primary'>创建</Button>]}
+        footer={[]}
       >
         <CreateGroupForm
           form={form}
-          doneCallback={(group: IGroup) => {}}
+          doneCallback={handleGroupCreated}
         ></CreateGroupForm>
       </Modal>
     </div>

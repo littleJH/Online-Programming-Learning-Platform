@@ -13,10 +13,11 @@ import MySvgIcon from '../Icon/MySvgIcon'
 interface IProps {
   articleProp: IArticle
   onclick: Function
+  mode?: 'default' | 'action'
 }
 
 const ArticleCard: React.FC<IProps> = (props) => {
-  const { articleProp, onclick } = props
+  const { articleProp, onclick, mode = 'default' } = props
   const [article, setArticle] = useState<IArticle>(articleProp)
   const { token } = theme.useToken()
 
@@ -54,102 +55,111 @@ const ArticleCard: React.FC<IProps> = (props) => {
 
   const imgUrl = useMemo(() => article.res_long && article.res_long !== '' && JSON.parse(article.res_long).img, [article])
 
-  return (
-    <Card
-      onClick={() => onclick(article)}
-      className='my-4'
-      size='small'
-      hoverable
-    >
-      <div className='flex'>
-        {/* left */}
+  const renderBody = () => (
+    <div className='flex'>
+      {/* left */}
+      <div
+        className='grow'
+        style={{ width: '100px' }}
+      >
+        <div className='flex items-center my-2'>
+          <Avatar
+            className='card-avatar'
+            src={`${iconBaseUrl}/${article.user?.icon}`}
+          ></Avatar>
+          <div className='card-username'>{article.user?.name}</div>
+          <div className='card-time'>{ago}</div>
+          {article.labels && article.labels.length > 0 && (
+            <Space className='mx-8'>
+              {article.labels.map((label) => (
+                <MyTag
+                  key={label.id}
+                  label={label.label}
+                ></MyTag>
+              ))}
+            </Space>
+          )}
+        </div>
+        <div className='card-title'>{article.title}</div>
         <div
-          className='grow'
-          style={{ width: '100px' }}
+          className='card-content'
+          style={{
+            width: '100%',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap'
+          }}
         >
-          <div className='flex items-center my-2'>
-            <Avatar
-              className='card-avatar'
-              src={`${iconBaseUrl}/${article.user?.icon}`}
-            ></Avatar>
-            <div className='card-username'>{article.user?.name}</div>
-            <div className='card-time'>{ago}</div>
-            {article.labels && article.labels.length > 0 && (
-              <Space className='mx-8'>
-                {article.labels.map((label) => (
-                  <MyTag
-                    key={label.id}
-                    label={label.label}
-                  ></MyTag>
-                ))}
-              </Space>
-            )}
-          </div>
-          <div className='card-title'>{article.title}</div>
-          <div
-            className='card-content'
-            style={{
-              width: '100%',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap'
-            }}
-          >
-            {article.content.replace(/<[^<>]+>/g, '')}
-          </div>
+          {article.content.replace(/<[^<>]+>/g, '')}
+        </div>
 
-          {/* footer */}
-          <div className='flex items-center mt-2'>
-            <div className={`${style.footer} grow flex items-center`}>
-              <div>
-                <MySvgIcon
-                  href={article.collected ? '#icon-collected' : '#icon-collect'}
-                  color={article.collected ? token.colorPrimaryTextHover : token.colorTextDescription}
-                ></MySvgIcon>
-                <span>{article.collectNum}</span>
-              </div>
-              <div className='divider-vertical'></div>
-              <div>
-                <MySvgIcon
-                  href={article.liked ? '#icon-liked' : '#icon-like'}
-                  color={article.liked ? token.colorPrimaryTextHover : token.colorTextDescription}
-                ></MySvgIcon>
-                <span>{article.likeNum}</span>
-              </div>
-              <div className='divider-vertical'></div>
-              <div>
-                <MySvgIcon
-                  href={'#icon-comment'}
-                  color={token.colorTextDescription}
-                ></MySvgIcon>
-                <span>{article.remark?.total}</span>
-              </div>
-              <div className='divider-vertical'></div>
-              <div>
-                <MySvgIcon
-                  href={'#icon-visible'}
-                  color={token.colorTextDescription}
-                ></MySvgIcon>
-                <span>{article.visibleNum}</span>
-              </div>
+        {/* footer */}
+        <div className='flex items-center mt-2'>
+          <div className={`${style.footer} grow flex items-center`}>
+            <div>
+              <MySvgIcon
+                href={article.collected ? '#icon-collected' : '#icon-collect'}
+                color={article.collected ? token.colorPrimaryTextHover : token.colorTextDescription}
+              ></MySvgIcon>
+              <span>{article.collectNum}</span>
+            </div>
+            <div className='divider-vertical'></div>
+            <div>
+              <MySvgIcon
+                href={article.liked ? '#icon-liked' : '#icon-like'}
+                color={article.liked ? token.colorPrimaryTextHover : token.colorTextDescription}
+              ></MySvgIcon>
+              <span>{article.likeNum}</span>
+            </div>
+            <div className='divider-vertical'></div>
+            <div>
+              <MySvgIcon
+                href={'#icon-comment'}
+                color={token.colorTextDescription}
+              ></MySvgIcon>
+              <span>{article.remark?.total}</span>
+            </div>
+            <div className='divider-vertical'></div>
+            <div>
+              <MySvgIcon
+                href={'#icon-visible'}
+                color={token.colorTextDescription}
+              ></MySvgIcon>
+              <span>{article.visibleNum}</span>
             </div>
           </div>
         </div>
-
-        {/* right image */}
-        {imgUrl && (
-          <div
-            className='card-img'
-            style={{}}
-          >
-            <img
-              src={`${imgGetBaseUrl}/${imgUrl}`}
-              alt=''
-            />
-          </div>
-        )}
       </div>
-    </Card>
+
+      {/* right image */}
+      {imgUrl && (
+        <div
+          className='card-img'
+          style={{}}
+        >
+          <img
+            src={`${imgGetBaseUrl}/${imgUrl}`}
+            alt=''
+          />
+        </div>
+      )}
+    </div>
+  )
+
+  return (
+    <>
+      {mode === 'default' && (
+        <Card
+          onClick={() => onclick(article)}
+          className='my-4'
+          size='small'
+          hoverable
+        >
+          {renderBody()}
+        </Card>
+      )}
+      {mode === 'action' && renderBody()}
+    </>
   )
 }
 

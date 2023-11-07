@@ -203,6 +203,10 @@ const menuItemObj: any = {
               <use href='#icon-article'></use>
             </svg>
           )
+        },
+        {
+          key: 'creation/group',
+          label: '用户组'
         }
       ]
     },

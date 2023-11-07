@@ -104,12 +104,14 @@ const CreateGroupForm: React.FC<IProps> = (props) => {
           )}
         </Form.List>
       </Form>
-      <Button
-        type='primary'
-        onClick={createGroup}
-      >
-        创建
-      </Button>
+      <div style={{ textAlign: 'end' }}>
+        <Button
+          type='primary'
+          onClick={createGroup}
+        >
+          创建
+        </Button>
+      </div>
     </div>
   )
 }

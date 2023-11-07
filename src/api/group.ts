@@ -6,6 +6,10 @@ export const createUserGroupApi = (data: any) => {
   return request.post('/create', data, jsonConfig())
 }
 
+export const deleteGroupApi = (id: string) => {
+  return request.delete(`/delete/${id}`, baseConfig())
+}
+
 export const getGroupApi = (id: string) => {
   return request.get(`/show/${id}`)
 }

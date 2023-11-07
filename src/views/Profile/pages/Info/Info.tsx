@@ -1,6 +1,6 @@
-import { userInfoState } from '@/store/appStore'
+import { notificationApi, userInfoState } from '@/store/appStore'
 import { iconBaseUrl, imgGetBaseUrl } from '@/config/apiConfig'
-import { Avatar, Button, Col, Descriptions, Divider, Form, Input, Radio, Row, Segmented, Select, Space, Upload, UploadFile } from 'antd'
+import { Avatar, Button, Col, Descriptions, Divider, Form, Input, Radio, Row, Segmented, Select, Space, Tooltip, Upload, UploadFile } from 'antd'
 import React, { useCallback, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { ManOutlined, WomanOutlined } from '@ant-design/icons'
@@ -9,6 +9,7 @@ import gold from '@/assets/gold.svg'
 import sliver from '@/assets/sliver.svg'
 import copper from '@/assets/copper.svg'
 import { uploadImgApi } from '@/api/img'
+import copy from 'copy-to-clipboard'
 // import ImgCrop from 'antd-img-crop'
 
 const Info: React.FC = () => {
@@ -16,6 +17,7 @@ const Info: React.FC = () => {
   const [form] = Form.useForm()
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const [iconUrl, setIconUrl] = useState(info?.icon)
+  const notification = useRecoilValue(notificationApi)
 
   const handleClick = () => {
     const data = form.getFieldsValue()
@@ -41,6 +43,18 @@ const Info: React.FC = () => {
   }
 
   const handleRemove = () => {}
+
+  const handleIdClick = () => {
+    if (!info?.id) return
+    const flag = copy(info?.id)
+    if (flag) {
+      notification &&
+        notification.success({
+          message: '已复制到剪切板'
+        })
+    }
+  }
+
   return (
     <div
       className=''
@@ -87,6 +101,20 @@ const Info: React.FC = () => {
             className='w-24'
           />
         </Space>
+      </div>
+      <div style={{ textAlign: 'center', letterSpacing: '1px' }}>
+        <span> ID：</span>
+        <Tooltip
+          title={`${info?.id} 点击复制`}
+          placement='bottom'
+        >
+          <span
+            onClick={handleIdClick}
+            style={{ userSelect: 'none' }}
+          >
+            {info?.id}
+          </span>
+        </Tooltip>
       </div>
       <Divider></Divider>
       <Descriptions size='small'>
