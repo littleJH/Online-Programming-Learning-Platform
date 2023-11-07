@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { Button, Card, Col, Divider, Menu, Row, Space } from 'antd'
+import { Button, Card, Col, Divider, Statistic, Row, Space } from 'antd'
 import HotRank from './Overview/Side/HotRank'
 import { getArticleListApi } from '@/api/article'
 import { useRecoilValue } from 'recoil'
@@ -81,6 +81,46 @@ const CommunityRoot: React.FC = () => {
                 </Card>
               </Col>
             </Row>
+            <Card title='全站统计'>
+              <Row gutter={16}>
+                <Col span={4}>
+                  <Statistic
+                    title='文章'
+                    value={111}
+                  ></Statistic>
+                </Col>
+                <Col span={4}>
+                  <Statistic
+                    title='讨论'
+                    value={222}
+                  ></Statistic>
+                </Col>
+                <Col span={4}>
+                  <Statistic
+                    title='题解'
+                    value={333}
+                  ></Statistic>
+                </Col>
+                <Col span={4}>
+                  <Statistic
+                    title='题目'
+                    value={444}
+                  ></Statistic>
+                </Col>
+                <Col span={4}>
+                  <Statistic
+                    title='比赛'
+                    value={555}
+                  ></Statistic>
+                </Col>
+                <Col span={4}>
+                  <Statistic
+                    title='用户'
+                    value={666}
+                  ></Statistic>
+                </Col>
+              </Row>
+            </Card>
             <Divider></Divider>
           </div>
         )}
@@ -101,6 +141,7 @@ const CommunityRoot: React.FC = () => {
             className='my-4 flex flex-col justify-center text-xs'
           >
             <div className='font-medium text-base mb-2'>全站统计</div>
+            <Statistic></Statistic>
             <Space size={'large'}>
               <Space
                 size={6}

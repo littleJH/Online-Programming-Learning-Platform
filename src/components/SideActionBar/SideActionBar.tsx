@@ -1,4 +1,4 @@
-import { Space, theme } from 'antd'
+import { Space, theme, Badge } from 'antd'
 import React, { CSSProperties, MouseEventHandler } from 'react'
 import style from './style.module.scss'
 import MySvgIcon from '../Icon/MySvgIcon'
@@ -28,41 +28,59 @@ const SideActionBar: React.FC<Iprops> = (props) => {
         direction='vertical'
         size={'large'}
       >
-        <div
-          className={style.item}
-          onClick={onLikeClick}
-          style={colorStyle}
+        <Badge
+          size='small'
+          count={likeNum}
+          offset={[-5, 5]}
+          color={token.colorPrimary}
         >
-          <div className={style.num}>{likeNum}</div>
-          <MySvgIcon
-            href={liked === 1 ? '#icon-liked' : '#icon-like'}
-            size={1.5}
-            color={liked === 1 ? token.colorPrimaryTextHover : token.colorTextDescription}
-          ></MySvgIcon>
-        </div>
-        <div
-          className={style.item}
-          onClick={onCollectClick}
-          style={colorStyle}
+          <div
+            className={style.item}
+            onClick={onLikeClick}
+            style={colorStyle}
+          >
+            <MySvgIcon
+              href={liked === 1 ? '#icon-liked' : '#icon-like'}
+              size={1.5}
+              color={liked === 1 ? token.colorPrimaryTextHover : token.colorTextDescription}
+            ></MySvgIcon>
+          </div>
+        </Badge>
+        <Badge
+          size='small'
+          count={collectNum}
+          offset={[-5, 5]}
+          color={token.colorPrimary}
         >
-          <div className={style.num}>{collectNum}</div>
-          <MySvgIcon
-            href={collected ? '#icon-collected' : '#icon-collect'}
-            size={1.5}
-            color={collected ? token.colorPrimaryTextHover : token.colorTextDescription}
-          ></MySvgIcon>
-        </div>
-        <div
-          className={style.item}
-          onClick={onCommentClick}
-          style={colorStyle}
+          <div
+            className={style.item}
+            onClick={onCollectClick}
+            style={colorStyle}
+          >
+            <MySvgIcon
+              href={collected ? '#icon-collected' : '#icon-collect'}
+              size={1.5}
+              color={collected ? token.colorPrimaryTextHover : token.colorTextDescription}
+            ></MySvgIcon>
+          </div>
+        </Badge>
+        <Badge
+          size='small'
+          count={remarkNum}
+          offset={[-5, 5]}
+          color={token.colorPrimary}
         >
-          <div className={style.num}>{remarkNum}</div>
-          <MySvgIcon
-            href='#icon-comment'
-            size={1.5}
-          ></MySvgIcon>
-        </div>
+          <div
+            className={style.item}
+            onClick={onCommentClick}
+            style={colorStyle}
+          >
+            <MySvgIcon
+              href='#icon-comment'
+              size={1.5}
+            ></MySvgIcon>
+          </div>
+        </Badge>
         <div
           className={style.item}
           onClick={onArrowupClick}

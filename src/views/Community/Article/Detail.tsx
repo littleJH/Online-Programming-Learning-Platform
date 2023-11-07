@@ -90,13 +90,15 @@ const Detail: React.FC = () => {
       })
     }
     const cancelLike = () => {
-      deleteLikeArticleApi(article_id).then((res) => {
+      deleteLikeArticleApi(article_id).then(async (res) => {
         console.log(res.data)
         if (res.data.code === 200 && currentArticle) {
+          const { data } = await getArticleLikeNumApi(article_id, 'true')
           setcurrentArticle((value) => {
             return {
               ...value,
-              liked: 0
+              liked: 0,
+              likeNum: data.data.total
             } as IArticle
           })
         }
@@ -257,6 +259,7 @@ const Detail: React.FC = () => {
             onCancel={() => setopenRemarkModal(false)}
             footer={[
               <Button
+                key='submit'
                 type='primary'
                 onClick={handleSubmitRemarkClick}
               >
@@ -264,20 +267,13 @@ const Detail: React.FC = () => {
               </Button>
             ]}
             title={'我有一言'}
-            style={{
-              top: '50%',
-              translate: '0 -50%'
-            }}
           >
-            <div>
-              <TextEditor
-                mode='markdown'
-                value={remarkContent}
-                htmlChange={(value: string) => setremarkContent(value)}
-                placeholder=' '
-                className='h-36'
-              ></TextEditor>
-            </div>
+            <TextEditor
+              mode='markdown'
+              value={remarkContent}
+              htmlChange={(value: string) => setremarkContent(value)}
+              placeholder='发表我的看法~~~'
+            ></TextEditor>
           </Modal>
         </>
       )}

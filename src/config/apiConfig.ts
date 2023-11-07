@@ -66,10 +66,8 @@ export const createRequest = (options: { type?: string; baseURL: string }) => {
   //响应拦截器
   request.interceptors.response.use(
     (response) => {
-      const {
-        data: { code }
-      } = response
-      if (code == 201 && !localStorage.getItem('token') && location.pathname !== '/login') {
+      const { data } = response
+      if (data.code == 201 && !localStorage.getItem('token') && location.pathname !== '/login') {
         const a = document.createElement('a')
         a.href = '/login'
         a.click()

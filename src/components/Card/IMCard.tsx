@@ -1,25 +1,25 @@
-import { getGroupLettersApi } from '@/api/Letter'
-import { IChat, IGroup } from '@/type'
+import { craeteLetterApi, enterPublishLetterWS, getLettersApi } from '@/api/Letter'
+import { IChat, IGroup, User } from '@/type'
 import { Avatar, Button, Divider, Drawer, Input, List, Card, Popover, theme } from 'antd'
 import { TextAreaRef } from 'antd/es/input/TextArea'
 import React, { KeyboardEventHandler, useEffect, useMemo, useRef, useState } from 'react'
 import { EllipsisOutlined } from '@ant-design/icons'
-import GroupMember from '@/components/group/GroupMember'
 import { craeteChatApi, enterGroupPublishChatWS, enterPublishChatWs, getGroupChatsApi } from '@/api/chat'
 import { getUserInfoApi } from '@/api/user'
 import { iconBaseUrl } from '@/config/apiConfig'
 import { useRecoilValue } from 'recoil'
 import { userInfoState } from '@/store/appStore'
-import ChatMessageCard from '@/components/card/ChatMessageCard'
 import GroupInfo from '@/components/Group/GroupInfo'
+import UserInfo from '@/components/User/UserInfo'
 
 interface IProps {
-  group: IGroup
+  group?: IGroup
+  friendInfo?: User
 }
 
 let ws: WebSocket
 const Chat: React.FC<IProps> = (props) => {
-  const { group } = props
+  const { group, friendInfo } = props
   const info = useRecoilValue(userInfoState)
   const inputTextarea = useRef<TextAreaRef>(null)
   const [openModal, setOpenModal] = useState(false)
@@ -30,13 +30,13 @@ const Chat: React.FC<IProps> = (props) => {
   const { token } = theme.useToken()
 
   useEffect(() => {
-    openChatWs(group.id)
-    initChatList(group.id)
+    openChatWs()
+    initChatList()
   }, [group])
 
-  const initChatList = (id: string) => {
+  const initChatList = () => {
     setLoading(true)
-    getGroupChatsApi(id).then(async (res) => {
+    const resolveFn = async (res: any) => {
       console.log(res.data.data)
       const chats = res.data.data.chats
       const list: IChat[] = []
@@ -54,11 +54,14 @@ const Chat: React.FC<IProps> = (props) => {
       }
       setChatList(list.reverse())
       setLoading(false)
-    })
+    }
+    group && getGroupChatsApi(group.id).then(resolveFn)
+    friendInfo && getLettersApi(friendInfo.id).then(resolveFn)
   }
 
-  const openChatWs = (id: string) => {
-    ws = enterGroupPublishChatWS(id)
+  const openChatWs = () => {
+    if (group) ws = enterGroupPublishChatWS(group.id)
+    if (friendInfo) ws = enterPublishLetterWS(friendInfo.id)
     ws.onopen = handleChatWsOpen
     ws.onmessage = handleChatWsMessage
     ws.onclose = handleChatWsClose
@@ -126,16 +129,19 @@ const Chat: React.FC<IProps> = (props) => {
 
   const sendChat = () => {
     if (!text.length) return
-    craeteChatApi(
-      group.id,
-      JSON.stringify({
-        content: text
-      })
-    ).then((res) => {
+    const resolveFn = (res: any) => {
       if (res.data.code === 200) {
         setText('')
       }
-    })
+    }
+    group &&
+      craeteChatApi(
+        group.id,
+        JSON.stringify({
+          content: text
+        })
+      ).then(resolveFn)
+    friendInfo && craeteLetterApi(friendInfo.id, JSON.stringify({ content: text })).then(resolveFn)
   }
 
   // const handleChatScroll = (e: React.UIEvent) => {
@@ -152,7 +158,10 @@ const Chat: React.FC<IProps> = (props) => {
             borderBottom: `1px solid ${token.colorBorder}`
           }}
         >
-          <span className='mx-4 my-2 text-lg'>{group.title}</span>
+          <span className='mx-4 my-2 text-lg'>
+            {group && group.title}
+            {friendInfo && friendInfo.name}
+          </span>
           <span
             className='mx-2'
             onClick={() => {
@@ -252,7 +261,8 @@ const Chat: React.FC<IProps> = (props) => {
         open={openModal}
         onClose={() => setOpenModal(false)}
       >
-        <GroupInfo group={group}></GroupInfo>
+        {group && <GroupInfo group={group}></GroupInfo>}
+        {friendInfo && <UserInfo user={friendInfo}></UserInfo>}
       </Drawer>
     </div>
   )

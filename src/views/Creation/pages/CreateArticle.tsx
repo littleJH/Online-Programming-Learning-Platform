@@ -16,7 +16,8 @@ const options: SelectProps['options'] = []
 const creation_article_title = localStorage.getItem('creation_article_title')
 const creation_article_content = localStorage.getItem('creation_article_content')
 
-const CreateArticle: React.FC<{}> = () => {
+const CreateArticle: React.FC<{ mode?: 'create' | 'update' }> = (props) => {
+  const { mode = 'create' } = props
   const [title, settitle] = useState(creation_article_title ? creation_article_title : '')
   const [content, setcontent] = useState(creation_article_content ? creation_article_content : '')
   const [labels, setlabels] = useState([])

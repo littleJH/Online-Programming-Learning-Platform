@@ -6,7 +6,7 @@ import { useRecoilValue } from 'recoil'
 import { notificationApi, userInfoState } from '@/store/appStore'
 import { IGroup } from '@/type'
 import { useSearchParams } from 'react-router-dom'
-import Chat from './Chat'
+import Chat from '../../../../components/Card/IMCard'
 import { enterPublishChatWs } from '@/api/chat'
 import GroupInfo from '@/components/Group/GroupInfo'
 import TextArea from 'antd/es/input/TextArea'
@@ -197,7 +197,10 @@ const GroupRoot: React.FC = () => {
           </Button>
         ]}
       >
-        <TextArea value={applyContent}></TextArea>
+        <TextArea
+          value={applyContent}
+          onChange={(e) => setApplyContent(e.target.value)}
+        ></TextArea>
       </Modal>
       <Modal
         open={openCreateModal}

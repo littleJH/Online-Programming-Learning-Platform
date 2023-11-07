@@ -1,8 +1,8 @@
 import { notificationApi, userInfoState } from '@/store/appStore'
 import { iconBaseUrl, imgGetBaseUrl } from '@/config/apiConfig'
-import { Avatar, Button, Col, Descriptions, Divider, Form, Input, Radio, Row, Segmented, Select, Space, Tooltip, Upload, UploadFile } from 'antd'
+import { Avatar, Button, Col, Descriptions, Divider, Form, Input, Radio, Row, Segmented, Statistic, Space, Tooltip, Upload, UploadFile } from 'antd'
 import React, { useCallback, useState } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { ManOutlined, WomanOutlined } from '@ant-design/icons'
 import diamond from '@/assets/diamond.svg'
 import gold from '@/assets/gold.svg'
@@ -10,18 +10,32 @@ import sliver from '@/assets/sliver.svg'
 import copper from '@/assets/copper.svg'
 import { uploadImgApi } from '@/api/img'
 import copy from 'copy-to-clipboard'
+import { getCurrentUserinfo, updateInfoApi } from '@/api/user'
 // import ImgCrop from 'antd-img-crop'
 
 const Info: React.FC = () => {
-  const info = useRecoilValue(userInfoState)
+  const [info, setInfo] = useRecoilState(userInfoState)
   const [form] = Form.useForm()
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const [iconUrl, setIconUrl] = useState(info?.icon)
   const notification = useRecoilValue(notificationApi)
 
-  const handleClick = () => {
-    const data = form.getFieldsValue()
-    console.log(data)
+  const handleClick = async () => {
+    const formValue = form.getFieldsValue(true)
+    const newInfo = { ...info, ...formValue }
+    if (typeof newInfo.sex === 'string') {
+      if (newInfo.sex === 'true') newInfo.sex = true
+      if (newInfo.sex === 'false') newInfo.sex = false
+    }
+    const { data } = await updateInfoApi(JSON.stringify(newInfo))
+    if (data.code === 200) {
+      const res = await getCurrentUserinfo()
+      setInfo(res.data.data.user)
+      notification &&
+        notification.success({
+          message: '保存成功'
+        })
+    }
   }
   const uploadImg = async (file: UploadFile) => {
     file.status = 'uploading'
@@ -59,7 +73,8 @@ const Info: React.FC = () => {
     <div
       className=''
       style={{
-        width: '768px'
+        width: '768px',
+        padding: '0 10rem'
       }}
     >
       <div className='flex justify-center'>
@@ -78,7 +93,8 @@ const Info: React.FC = () => {
           {/* </ImgCrop> */}
         </div>
       </div>
-      <div className='flex justify-center'>
+      <Divider></Divider>
+      {/* <div className='flex justify-center'>
         <Space>
           <img
             src={diamond}
@@ -101,7 +117,7 @@ const Info: React.FC = () => {
             className='w-24'
           />
         </Space>
-      </div>
+      </div> */}
       <div style={{ textAlign: 'center', letterSpacing: '1px' }}>
         <span> ID：</span>
         <Tooltip
@@ -117,14 +133,65 @@ const Info: React.FC = () => {
         </Tooltip>
       </div>
       <Divider></Divider>
-      <Descriptions size='small'>
-        <Descriptions.Item label={'权限等级'}>{String(info?.level)}</Descriptions.Item>
-        <Descriptions.Item label={'竞赛分数'}>{String(info?.score)}</Descriptions.Item>
-        <Descriptions.Item label={'收到点赞'}>{String(info?.like_num)}</Descriptions.Item>
-        <Descriptions.Item label={'收到点踩'}>{String(info?.unlike_num)}</Descriptions.Item>
-        <Descriptions.Item label={'收到收藏'}>{String(info?.collect_num)}</Descriptions.Item>
-        <Descriptions.Item label={'被游览数'}>{String(info?.visit_num)}</Descriptions.Item>
-      </Descriptions>
+      <Row>
+        <Col
+          style={{ textAlign: 'center' }}
+          span={8}
+        >
+          <Statistic
+            title='权限等级'
+            value={String(info?.level)}
+          ></Statistic>
+        </Col>
+        <Col
+          style={{ textAlign: 'center' }}
+          span={8}
+        >
+          <Statistic
+            title='竞赛分数'
+            value={String(info?.score)}
+          ></Statistic>
+        </Col>
+        <Col
+          style={{ textAlign: 'center' }}
+          span={8}
+        >
+          <Statistic
+            title='被游览数'
+            value={String(info?.visit_num)}
+          ></Statistic>
+        </Col>
+      </Row>
+      <Row>
+        <Col
+          style={{ textAlign: 'center' }}
+          span={8}
+        >
+          <Statistic
+            title='收到点赞'
+            value={String(info?.like_num)}
+          ></Statistic>
+        </Col>
+        <Col
+          style={{ textAlign: 'center' }}
+          span={8}
+        >
+          <Statistic
+            title='收到收藏'
+            value={String(info?.collect_num)}
+          ></Statistic>
+        </Col>
+        <Col
+          style={{ textAlign: 'center' }}
+          span={8}
+        >
+          <Statistic
+            title='收到点踩'
+            value={String(info?.unlike_num)}
+          ></Statistic>
+        </Col>
+      </Row>
+
       <Divider></Divider>
       <Form
         layout='vertical'
@@ -187,10 +254,13 @@ const Info: React.FC = () => {
           <Input defaultValue={info?.blog}></Input>
         </Form.Item>
         <Form.Item
-          name={'introduction'}
+          name={'res_long'}
           label='个人介绍'
         >
-          <Input.TextArea placeholder='关于你的个性、兴趣或经验'></Input.TextArea>
+          <Input.TextArea
+            defaultValue={info?.res_long}
+            placeholder='关于你的个性、兴趣或经验'
+          ></Input.TextArea>
         </Form.Item>
         <div className='text-end'>
           <Button

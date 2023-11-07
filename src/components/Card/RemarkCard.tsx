@@ -2,7 +2,7 @@ import { iconBaseUrl } from '@/config/apiConfig'
 import { getUserInfoApi } from '@/api/user'
 import { cancelLikeRemarkApi, getRemarkLikeNumApi, getRemarkLikedApi, likeRemarkApi } from '@/api/remark'
 import { IRemark, User } from '@/type'
-import { Avatar, Divider, Card } from 'antd'
+import { Avatar, Divider, Card, theme } from 'antd'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import ReadOnly from '../editor/ReadOnly'
 import GetTimeago from '@/tool/myFns/getTimeago'
@@ -13,6 +13,7 @@ const RemarkCard: React.FC<{
   remark: IRemark
 }> = (props) => {
   const [remark, setremark] = useState<IRemark>(props.remark)
+  const { token } = theme.useToken()
 
   useEffect(() => {
     const remarkObj = { ...remark }
@@ -52,7 +53,7 @@ const RemarkCard: React.FC<{
   const calcelLike = useCallback(() => {
     cancelLikeRemarkApi(remark.id).then(async (res) => {
       console.log(res.data)
-      const { data } = await getRemarkLikeNumApi(remark.id)
+      const { data } = await getRemarkLikeNumApi(remark.id, 'false')
       if (res.data.code === 200) {
         setremark((value) => {
           return {
@@ -73,7 +74,10 @@ const RemarkCard: React.FC<{
   }
 
   return (
-    <Card className='w-full'>
+    <Card
+      className='w-full my-4'
+      size='small'
+    >
       <div className='flex items-center'>
         <Avatar
           className='card-avatar'
@@ -88,9 +92,11 @@ const RemarkCard: React.FC<{
       ></ReadOnly>
       <div className={`${style.remarkFooter} flex items-center ml-12`}>
         <div onClick={handleLikeClick}>
-          <svg className='icon-small'>
-            <use href={remark.liked === 1 ? '#icon-liked' : '#icon-like'}></use>
-          </svg>
+          <MySvgIcon
+            href={remark.liked === 1 ? '#icon-liked' : '#icon-like'}
+            size={1}
+            color={remark.liked === 1 ? token.colorPrimaryTextHover : token.colorTextDescription}
+          ></MySvgIcon>
           <span>{remark.likeNum}</span>
         </div>
 
@@ -99,6 +105,7 @@ const RemarkCard: React.FC<{
           <MySvgIcon
             href={remark.liked === -1 ? '#icon-disliked' : '#icon-dislike'}
             size={1}
+            color={remark.liked === -1 ? token.colorPrimaryTextHover : token.colorTextDescription}
           ></MySvgIcon>
           <span>{remark.dislikeNum}</span>
         </div>
