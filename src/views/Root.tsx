@@ -149,7 +149,6 @@ const MyLogin: React.FC = () => {
 
   const handleClick = () => {
     nav('/profile')
-    setSideBarCollapsed(true)
   }
 
   return (

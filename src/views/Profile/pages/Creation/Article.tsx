@@ -49,6 +49,7 @@ const Article: React.FC = () => {
               <Button
                 style={{ padding: '0' }}
                 type='link'
+                onClick={() => nav(`/creation/article?article_id=${item.id}`)}
               >
                 更新
               </Button>,

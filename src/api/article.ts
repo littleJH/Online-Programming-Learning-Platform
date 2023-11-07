@@ -16,6 +16,9 @@ export const getArticleListApi = (pageNum = 1, pageSize = 20) => {
   return request.get(`/list?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 
+export const updateArticleApi = (id: string, data: any) => {
+  return request.put(`/update/${id}`, data, jsonConfig())
+}
 // like
 export const getArticleLikeNumApi = (id: string, type: 'true' | 'false') => {
   return request.get(`/like/number/${id}?like=${type}`)

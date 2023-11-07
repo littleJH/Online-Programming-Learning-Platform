@@ -174,9 +174,6 @@ export const isDarkState = atom<boolean>({
     ({ onSet }) => {
       onSet((newValue) => {
         localStorage.setItem('isDark', String(newValue))
-        // const html = document.getElementsByTagName('html')[0]
-        // html.classList.add('dark')
-        // console.log('html ==> ', html.classList)
       })
     }
   ]

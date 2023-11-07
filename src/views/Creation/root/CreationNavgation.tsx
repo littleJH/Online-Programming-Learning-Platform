@@ -11,7 +11,6 @@ const CreationNavgation: React.FC = () => {
   const nav = useNavTo()
   const setSideBarCollapsed = useSetRecoilState(sideBarCollapsed)
 
-  useEffect(() => setSideBarCollapsed(true), [])
   const handleClick = (e: string) => {
     nav(`${e}`)
     setSideBarCollapsed(false)

@@ -1,9 +1,9 @@
-import { ICategory } from '@/type'
+import { IArticle, IArticleLabel, ICategory } from '@/type'
 import { Select, Input, SelectProps, Button, Space, notification, Card } from 'antd'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { createArticleApi, createArticleLabelApi } from '@/api/article'
+import { createArticleApi, createArticleLabelApi, getArticleApi, getArticleLabelsApi, updateArticleApi } from '@/api/article'
 import Throttle from '@/tool/myFns/throttle'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import Dragger from 'antd/es/upload/Dragger'
 import { UploadChangeParam, UploadFile } from 'antd/es/upload'
 import { UploadRequestOption } from 'rc-upload/lib/interface'
@@ -12,22 +12,49 @@ import { getCategoryListApi } from '@/api/category'
 import TextEditor from '@/components/editor/TextEditor'
 import { iconBaseUrl, imgBaseUrl, imgGetBaseUrl } from '@/config/apiConfig'
 
-const options: SelectProps['options'] = []
 const creation_article_title = localStorage.getItem('creation_article_title')
 const creation_article_content = localStorage.getItem('creation_article_content')
 
-const CreateArticle: React.FC<{ mode?: 'create' | 'update' }> = (props) => {
-  const { mode = 'create' } = props
-  const [title, settitle] = useState(creation_article_title ? creation_article_title : '')
-  const [content, setcontent] = useState(creation_article_content ? creation_article_content : '')
-  const [labels, setlabels] = useState([])
+const CreateArticle: React.FC = () => {
+  const nav = useNavigate()
+  const [querys, setQuerys] = useSearchParams()
+  const [title, settitle] = useState('')
+  const [content, setcontent] = useState('')
+  const [labels, setlabels] = useState<string[]>([])
   const [category, setcategory] = useState('')
   const [categoryList, setcategoryList] = useState<ICategory[]>()
   const [iconUrl, setIconUrl] = useState<string>('')
   const [iconFile, setIconFile] = useState<UploadFile[]>([])
-  const nav = useNavigate()
+  const article_id = querys.get('article_id')
+
+  const labelsOptions = useMemo(
+    () =>
+      labels.map((item) => {
+        return { label: item }
+      }),
+    [labels]
+  )
 
   useEffect(() => {
+    if (article_id) {
+      getArticleApi(article_id).then((res) => {
+        const article: IArticle = res.data.data.article
+        settitle(article.title)
+        setcontent(article.content)
+        setcategory(article.category_id)
+        if (article.res_long !== '') {
+          const icon = JSON.parse(article.res_long).img
+          icon && setIconUrl(icon)
+        }
+      })
+      getArticleLabelsApi(article_id).then((res) => {
+        const labels = res.data.data.articleLabels
+        labels.length !== 0 && setlabels(labels.map((item: IArticleLabel) => item.label))
+      })
+    } else {
+      settitle(creation_article_title || '')
+      setcontent(creation_article_content || '')
+    }
     getCategoryListApi().then((res) => {
       console.log(res.data)
       setcategoryList(res.data.data.categorys)
@@ -50,47 +77,24 @@ const CreateArticle: React.FC<{ mode?: 'create' | 'update' }> = (props) => {
     localStorage.setItem('creation_article_content', value)
   }
 
-  const createArticle = () => {
+  const submit = async () => {
     if (title === '' || content === '') {
       notification.warning({
         message: '标题/正文不能为空'
       })
       return
     }
-    createArticleApi(
-      JSON.stringify({
-        title,
-        content,
-        category,
-        res_long:
-          iconUrl !== ''
-            ? JSON.stringify({
-                img: iconUrl
-              })
-            : ''
-      })
-    )
-      .then((res) => {
-        console.log(res)
-        const article = res.data.data.article
-        if (res.data.code === 200) {
-          settitle('')
-          setcontent('')
-          localStorage.removeItem('creation_article_title')
-          localStorage.removeItem('creation_article_content')
-          nav(`/community/article/${article.id}`)
-        } else {
-          notification.warning({
-            message: '文章发布失败',
-            description: res.data.msg
-          })
-        }
-        return article.id
-      })
-      .then(async (id) => {
+
+    const cb = async (res: any) => {
+      const article = res.data.data.article
+      if (res.data.code === 200) {
+        settitle('')
+        setcontent('')
+        localStorage.removeItem('creation_article_title')
+        localStorage.removeItem('creation_article_content')
         let index = 0
         for (let label of labels) {
-          const res = await createArticleLabelApi(id, label)
+          const res = await createArticleLabelApi(article.id, label)
           index++
           console.log(res)
           if (res?.data.code !== 200) {
@@ -100,10 +104,36 @@ const CreateArticle: React.FC<{ mode?: 'create' | 'update' }> = (props) => {
             })
           }
         }
-      })
+        nav(`/community/article/${article.id}`)
+      } else {
+        notification.warning({
+          message: '文章发布失败',
+          description: res.data.msg
+        })
+      }
+    }
+
+    const data = JSON.stringify({
+      title,
+      content,
+      category,
+      res_long:
+        iconUrl !== ''
+          ? JSON.stringify({
+              img: iconUrl
+            })
+          : ''
+    })
+    if (article_id) {
+      const res = await updateArticleApi(article_id, data)
+      cb(res)
+    } else {
+      const res = await createArticleApi(data)
+      cb(res)
+    }
   }
 
-  const throttle = Throttle(createArticle, 1000)
+  const throttle = Throttle(submit, 1000)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     settitle(e.target.value)
@@ -179,7 +209,8 @@ const CreateArticle: React.FC<{ mode?: 'create' | 'update' }> = (props) => {
             }}
             placeholder={'创建标签'}
             onChange={(value) => setlabels(value)}
-            options={options}
+            options={labelsOptions}
+            value={labels}
           ></Select>
           <Select
             placeholder='选择分类'
@@ -217,7 +248,7 @@ const CreateArticle: React.FC<{ mode?: 'create' | 'update' }> = (props) => {
               type='primary'
               size='large'
             >
-              点击发布
+              {article_id ? '更新' : '发布'}
             </Button>
           </div>
         </Space>
