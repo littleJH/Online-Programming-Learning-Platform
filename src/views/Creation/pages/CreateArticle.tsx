@@ -9,7 +9,7 @@ import { UploadChangeParam, UploadFile } from 'antd/es/upload'
 import { uploadImgApi } from '@/api/img'
 import { getCategoryListApi } from '@/api/category'
 import TextEditor from '@/components/editor/TextEditor'
-import { iconBaseUrl, imgBaseUrl, imgGetBaseUrl } from '@/config/apiConfig'
+import { imgGetBaseUrl } from '@/config/apiConfig'
 
 const creation_article_title = localStorage.getItem('creation_article_title')
 const creation_article_content = localStorage.getItem('creation_article_content')
