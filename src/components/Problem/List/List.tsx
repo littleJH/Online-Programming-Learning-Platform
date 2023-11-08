@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import copy from 'copy-to-clipboard'
 import { getProblemLabelsApi, getProblemListApi, searchProblemByLabelApi, searchProblemByTextAndLabelApi, searchProblemByTextApi, showProblemApi } from '@/api/problem'
 import { Avatar, Collapse, Descriptions, Input, Popover, Select, Skeleton, Space, Table, Tag, Tooltip, notification } from 'antd'
@@ -158,17 +158,34 @@ const ProblemList: React.FC<IProps> = (props) => {
     }
   }, [labelGroup])
 
-  const initProblemList = useCallback((index: number) => {
+  // 监听pageNum, pageSize
+  useEffect(() => {
+    setQuerys((search) => {
+      search.set('pageNum', String(pageNum))
+      search.set('pageSize', String(pageSize))
+      return search
+    })
+    if (!topic_id && !searchText.length && !labelGroup.length) {
+      initProblemList(5)
+    } else {
+      if (searchText.length && labelGroup.length) searchProblemByTextAndLabel()
+      else if (searchText.length) searchProblemByText()
+      else if (labelGroup.length) searchProblemsByLabels(5)
+      else fetchTopics(topic_id)
+    }
+  }, [pageNum, pageSize])
+
+  const initProblemList = (index: number) => {
     setFetchDone(false)
-    console.log('initProblemList', index)
+    // console.log('initProblemList', index)
     getProblemListApi(pageNum, pageSize).then((problemsRes) => {
-      console.log(problemsRes.data.data)
+      // console.log(problemsRes.data.data)
       setTotal(problemsRes.data.data.total)
       setproblemList(problemsRes.data.data.problems)
     })
-  }, [])
+  }
 
-  const fetchTopics = useCallback(async (topic_id: string) => {
+  const fetchTopics = async (topic_id: string) => {
     setFetchDone(false)
     const res = await getTopicProblemsApi(topic_id)
     const list = res.data.data.problemLists
@@ -179,7 +196,7 @@ const ProblemList: React.FC<IProps> = (props) => {
       problems.push(res.data.data.problem)
     }
     setproblemList(problems)
-  }, [])
+  }
 
   const toDetail = (record: any) => {
     const id = record.key
@@ -190,13 +207,13 @@ const ProblemList: React.FC<IProps> = (props) => {
     setFetchDone(false)
     if (topic_id) {
       searchProblemInTopicByTextApi(topic_id, searchText, pageNum, pageSize).then((res) => {
-        console.log(res.data)
+        // console.log(res.data)
         setTotal(res.data.data.total)
         setproblemList(res.data.data.problems)
       })
     } else {
       searchProblemByTextApi(searchText, pageNum, pageSize).then((res) => {
-        console.log(res.data)
+        // console.log(res.data)
         setTotal(res.data.data.total)
         setproblemList(res.data.data.problems)
       })
@@ -204,17 +221,17 @@ const ProblemList: React.FC<IProps> = (props) => {
   }
 
   const searchProblemsByLabels = (index: number) => {
-    console.log('searchProblemsByLabels', index, first)
+    // console.log('searchProblemsByLabels', index, first)
     setFetchDone(false)
     if (topic_id) {
       searchProblemInTopicByLabelApi(topic_id, labelGroup, pageNum, pageSize).then((res) => {
-        console.log(res.data.data)
+        // console.log(res.data.data)
         setTotal(res.data.data.total)
         setproblemList(res.data.data.problems)
       })
     } else {
       searchProblemByLabelApi(labelGroup, pageNum, pageSize).then((res) => {
-        console.log(res.data.data)
+        // console.log(res.data.data)
         setTotal(res.data.data.total)
         setproblemList(res.data.data.problems)
       })
@@ -225,14 +242,14 @@ const ProblemList: React.FC<IProps> = (props) => {
     setFetchDone(false)
     if (topic_id) {
       searchProblemInTopicByTextLabelApi(topic_id, searchText, labelGroup, pageNum, pageSize).then((res) => {
-        console.log(res.data)
+        // console.log(res.data)
         setTotal(res.data.data.total)
-        console.log(res.data)
+        // console.log(res.data)
         setproblemList(res.data.data.problems)
       })
     } else {
       searchProblemByTextAndLabelApi(searchText, labelGroup, pageNum, pageSize).then((res) => {
-        console.log(res.data)
+        // console.log(res.data)
         setTotal(res.data.data.total)
       })
     }
@@ -291,21 +308,8 @@ const ProblemList: React.FC<IProps> = (props) => {
   }
 
   const handlePageChange = (num: number, size: number) => {
-    setQuerys((search) => {
-      search.set('pageNum', String(num))
-      search.set('pageSize', String(size))
-      return search
-    })
     setPageNum(num)
     setPageSize(size)
-    if (!topic_id && !searchText.length && !labelGroup.length) {
-      initProblemList(5)
-    } else {
-      if (searchText.length && labelGroup.length) searchProblemByTextAndLabel()
-      else if (searchText.length) searchProblemByText()
-      else if (labelGroup.length) searchProblemsByLabels(5)
-      else fetchTopics(topic_id)
-    }
   }
 
   const resetPage = () => {

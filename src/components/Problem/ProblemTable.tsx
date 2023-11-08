@@ -10,6 +10,7 @@ import AcPercentLabel from '../Label/ProblemLabel/AcPercentLabel'
 import { useRecoilValue } from 'recoil'
 import { notificationApi, themeState } from '@/store/appStore'
 import MyTag from '../Label/MyTag'
+import { getPagination } from '@/config/config'
 
 interface IProps {
   mode: 'select' | 'default' | 'action'
@@ -99,6 +100,11 @@ const ProblemTable: React.FC<IProps> = (props) => {
     e.stopPropagation()
   }
 
+  const handleShowSizeChange = (current: number, size: number) => {
+    setPageNum(current)
+    setPageSize(size)
+  }
+
   return (
     <div>
       {!fetchDone ? (
@@ -142,19 +148,7 @@ const ProblemTable: React.FC<IProps> = (props) => {
             }
           }}
           size='small'
-          pagination={{
-            position: ['bottomCenter'],
-            current: pageNum,
-            pageSize: pageSize,
-            total: total,
-            showQuickJumper: true,
-            hideOnSinglePage: true,
-            onShowSizeChange: (current, size) => {
-              setPageNum(current)
-              setPageSize(size)
-            },
-            onChange: (page, pageSize) => onPageChange(page, pageSize)
-          }}
+          pagination={getPagination('table', pageNum, pageSize, total, onPageChange)}
           dataSource={dataSource}
         >
           {/* <Column  title="序号" dataIndex={'index'}></Column> */}

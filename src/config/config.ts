@@ -26,3 +26,16 @@ export const monacoOptionsDefault: IMonacoOptions = {
 }
 
 export const cpp = ['C', 'C++', 'C++11', 'C++14', 'C++17', 'C++20']
+
+export const getPagination = (type: 'list' | 'table', pageNum: number, pageSize: number, total: number, handlePageChange: Function) => {
+  return {
+    position: type === 'list' ? 'bottom' : ['bottomCenter'],
+    current: pageNum,
+    pageSize: pageSize,
+    total: total,
+    showQuickJumper: true,
+    // hideOnSinglePage: true,
+    showSizeChanger: true,
+    onChange: (page: number, pageSize: number) => handlePageChange(page, pageSize)
+  } as any
+}

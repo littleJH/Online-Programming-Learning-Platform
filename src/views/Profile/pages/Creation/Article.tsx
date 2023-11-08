@@ -1,85 +1,85 @@
 import React, { useEffect, useState } from 'react'
 import ArticleCard from '@/components/card/ArticleCard'
 import { IArticle } from '@/type'
-import { getArticleListApi } from '@/api/article'
-import { useSetRecoilState } from 'recoil'
-import { currentArticleState } from '@/store/appStore'
-import { useNavigate } from 'react-router-dom'
+import { deleteArticleApi, getArticleListApi } from '@/api/article'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { currentArticleState, notificationApi } from '@/store/appStore'
 import useNavTo from '@/tool/myHooks/useNavTo'
-import { List, Button, Popconfirm } from 'antd'
+import GeneralList from '@/components/List/GeneralList'
+import { useSearchParams } from 'react-router-dom'
 
 const Article: React.FC = () => {
   const nav = useNavTo()
+  const [querys, setQuerys] = useSearchParams()
+  const notification = useRecoilValue(notificationApi)
   const [articleList, setArticleList] = useState<IArticle[]>([])
-  const setcurrentArticle = useSetRecoilState(currentArticleState)
-  const [pageNum, setPageNum] = useState(1)
-  const [pageSize, setPageSize] = useState(20)
+  const [pageNum, setPageNum] = useState(Number(querys.get('pageNum')) || 1)
+  const [pageSize, setPageSize] = useState(Number(querys.get('pageSize')) || 10)
+  const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    setQuerys((search) => {
+      search.set('pageNum', String(pageNum))
+      search.set('pageSize', String(pageSize))
+      return search
+    })
+    fetchPorblems()
+  }, [pageNum, pageSize])
+
+  const fetchPorblems = () => {
+    setLoading(true)
+    setArticleList([])
     getArticleListApi(pageNum, pageSize).then((res) => {
       setArticleList(res.data.data.articles)
+      setTotal(res.data.data.total)
       setLoading(false)
     })
-  }, [])
-
-  const handleArticleClick = (article: IArticle) => {
-    setcurrentArticle(article)
-    nav(`/community/article/${article.id}`)
   }
 
-  const handleDelete = (id: string) => {}
+  const handleDetail = (item: IArticle) => {
+    nav(`/community/article/${item.id}`)
+  }
+  const handleUpdate = (item: IArticle) => {
+    nav(`/creation/article?article_id=${item.id}`)
+  }
+  const handleDelete = async (item: IArticle, index: number) => {
+    const { data } = await deleteArticleApi(item.id)
+    if (data.code === 200) {
+      notification &&
+        notification.success({
+          message: `文章“${item.title}”已删除`
+        })
+      setArticleList((value) => [...value.slice(0, index), ...value.slice(index + 1)])
+    }
+  }
+  const handlePageChange = (num: number, size: number) => {
+    setPageNum(num)
+    setPageSize(size)
+  }
 
   return (
     <div>
-      <List
+      <GeneralList
         dataSource={articleList}
         loading={loading}
-        renderItem={(item, index) => (
-          <List.Item
-            key={item.id}
-            actions={[
-              <Button
-                type='link'
-                style={{ padding: '0' }}
-                onClick={() => nav(`/community/article/${item.id}`)}
-              >
-                详情
-              </Button>,
-              <Button
-                style={{ padding: '0' }}
-                type='link'
-                onClick={() => nav(`/creation/article?article_id=${item.id}`)}
-              >
-                更新
-              </Button>,
-              <Popconfirm
-                title='确定删除该文章？'
-                okText='确认'
-                cancelText='取消'
-                onConfirm={() => handleDelete(item.id)}
-              >
-                <Button
-                  style={{ padding: '0' }}
-                  type='link'
-                  danger
-                >
-                  删除
-                </Button>
-              </Popconfirm>
-            ]}
-          >
-            <div className='w-full'>
-              <ArticleCard
-                key={item.id}
-                articleProp={item}
-                onclick={handleArticleClick}
-                mode='action'
-              ></ArticleCard>
-            </div>
-          </List.Item>
+        onDelete={handleDelete}
+        onDetail={handleDetail}
+        onUpdate={handleUpdate}
+        pageNum={pageNum}
+        pageSize={pageSize}
+        total={total}
+        onPageChange={handlePageChange}
+        itemRender={(item: IArticle) => (
+          <div className='w-full'>
+            <ArticleCard
+              key={item.id}
+              articleProp={item}
+              mode='action'
+            ></ArticleCard>
+          </div>
         )}
-      ></List>
+      ></GeneralList>
     </div>
   )
 }

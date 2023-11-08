@@ -12,7 +12,7 @@ import MySvgIcon from '../Icon/MySvgIcon'
 
 interface IProps {
   articleProp: IArticle
-  onclick: Function
+  onclick?: Function
   mode?: 'default' | 'action'
 }
 
@@ -150,7 +150,7 @@ const ArticleCard: React.FC<IProps> = (props) => {
     <>
       {mode === 'default' && (
         <Card
-          onClick={() => onclick(article)}
+          onClick={() => onclick && onclick(article)}
           className='my-4'
           size='small'
           hoverable

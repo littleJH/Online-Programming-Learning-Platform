@@ -1,11 +1,11 @@
 import { IArticle, IArticleLabel, ICategory } from '@/type'
 import { Select, Input, SelectProps, Button, Space, notification, Card } from 'antd'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { createArticleApi, createArticleLabelApi, getArticleApi, getArticleLabelsApi, updateArticleApi } from '@/api/article'
 import Throttle from '@/tool/myFns/throttle'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import Dragger from 'antd/es/upload/Dragger'
-import { UploadChangeParam, UploadFile } from 'antd/es/upload'
+import { UploadFile } from 'antd/es/upload'
 import { uploadImgApi } from '@/api/img'
 import { getCategoryListApi } from '@/api/category'
 import TextEditor from '@/components/editor/TextEditor'
@@ -94,7 +94,6 @@ const CreateArticle: React.FC = () => {
         let index = 0
         for (let label of labels) {
           const res = await createArticleLabelApi(article.id, label)
-          index++
           console.log(res)
           if (res?.data.code !== 200) {
             notification.warning({
@@ -102,11 +101,12 @@ const CreateArticle: React.FC = () => {
               description: res?.data.msg
             })
           }
+          index++
         }
         nav(`/community/article/${article.id}`)
       } else {
         notification.warning({
-          message: '文章发布失败',
+          message: `文章${article_id ? '更新' : '发布'}失败`,
           description: res.data.msg
         })
       }
@@ -123,13 +123,7 @@ const CreateArticle: React.FC = () => {
             })
           : ''
     })
-    if (article_id) {
-      const res = await updateArticleApi(article_id, data)
-      cb(res)
-    } else {
-      const res = await createArticleApi(data)
-      cb(res)
-    }
+    article_id ? cb(await updateArticleApi(article_id, data)) : cb(await createArticleApi(data))
   }
 
   const throttle = Throttle(submit, 1000)

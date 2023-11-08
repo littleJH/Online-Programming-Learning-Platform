@@ -5,22 +5,38 @@ import React, { useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { List, Button, Popconfirm, Modal } from 'antd'
 import GroupInfo from '@/components/Group/GroupInfo'
+import GeneralList from '@/components/List/GeneralList'
+import { useSearchParams } from 'react-router-dom'
 
 const Group: React.FC = () => {
+  const [querys, setQuerys] = useSearchParams()
   const info = useRecoilValue(userInfoState)
   const [groupList, setGroupList] = useState<IGroup[]>([])
   const [loading, setLoading] = useState(true)
   const [openDetailModal, setOpenDetailModal] = useState(false)
   const [currentGroup, setCurrentGroup] = useState<IGroup>()
   const notification = useRecoilValue(notificationApi)
+  const [pageNum, setPageNum] = useState(Number(querys.get('pageNum')) || 1)
+  const [pageSize, setPageSize] = useState(Number(querys.get('pageSize')) || 10)
+  const [total, setTotal] = useState(0)
 
   React.useEffect(() => {
+    setQuerys((search) => {
+      search.set('pageNum', String(pageNum))
+      search.set('pageSize', String(pageSize))
+      return search
+    })
+    fetchGroups()
+  }, [pageNum, pageSize])
+
+  const fetchGroups = () => {
     info?.id &&
       getLeaderGroupListApi(info?.id).then((res) => {
         setGroupList(res.data.data.groups)
+        setTotal(res.data.data.total)
         setLoading(false)
       })
-  }, [info])
+  }
 
   const handleDelete = async (group: IGroup, index: number) => {
     console.log(index)
@@ -34,54 +50,37 @@ const Group: React.FC = () => {
     }
   }
 
+  const handleDetail = (item: any, index: number) => {
+    setCurrentGroup(item)
+    setOpenDetailModal(true)
+  }
+
+  const handleUpdate = (item: any, index: number) => {}
+
+  const handlePageChange = (pageNum: number, pageSize: number) => {
+    setPageNum(pageNum)
+    setPageSize(pageSize)
+  }
+
   return (
     <div>
-      <List
+      <GeneralList
         dataSource={groupList}
         loading={loading}
-        renderItem={(item, index) => (
-          <List.Item
-            key={item.id}
-            actions={[
-              <Button
-                type='link'
-                style={{ padding: '0' }}
-                onClick={() => {
-                  setCurrentGroup(item)
-                  setOpenDetailModal(true)
-                }}
-              >
-                详情
-              </Button>,
-              <Button
-                style={{ padding: '0' }}
-                type='link'
-              >
-                更新
-              </Button>,
-              <Popconfirm
-                title='确定删除该文章？'
-                okText='确认'
-                cancelText='取消'
-                onConfirm={() => handleDelete(item, index)}
-              >
-                <Button
-                  style={{ padding: '0' }}
-                  type='link'
-                  danger
-                >
-                  删除
-                </Button>
-              </Popconfirm>
-            ]}
-          >
-            <List.Item.Meta
-              title={item.title}
-              description={item.content}
-            ></List.Item.Meta>
-          </List.Item>
+        onDelete={handleDelete}
+        onDetail={handleDetail}
+        onUpdate={handleUpdate}
+        pageNum={pageNum}
+        pageSize={pageSize}
+        total={total}
+        onPageChange={handlePageChange}
+        itemRender={(item: IGroup) => (
+          <List.Item.Meta
+            title={item.title}
+            description={item.content}
+          ></List.Item.Meta>
         )}
-      ></List>
+      ></GeneralList>
       <Modal
         open={openDetailModal}
         onCancel={() => setOpenDetailModal(false)}

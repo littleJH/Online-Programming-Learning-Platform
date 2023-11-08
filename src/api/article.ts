@@ -19,6 +19,9 @@ export const getArticleListApi = (pageNum = 1, pageSize = 20) => {
 export const updateArticleApi = (id: string, data: any) => {
   return request.put(`/update/${id}`, data, jsonConfig())
 }
+export const deleteArticleApi = (id: string) => {
+  return request.delete(`/delete/${id}`, baseConfig())
+}
 // like
 export const getArticleLikeNumApi = (id: string, type: 'true' | 'false') => {
   return request.get(`/like/number/${id}?like=${type}`)
