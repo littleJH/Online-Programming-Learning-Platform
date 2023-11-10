@@ -323,12 +323,14 @@ export interface IForm extends IFormCreate {
 }
 
 export interface IChat {
-  created_at: string
-  group_id: string
-  author_id: string
-  content: string
-  res_long: string
-  res_short: string
+  chat: {
+    created_at: string
+    group_id: string
+    author_id: string
+    content: string
+    res_long: string
+    res_short: string
+  }
   user: User
 }
 

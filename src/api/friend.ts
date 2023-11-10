@@ -6,3 +6,8 @@ const request = createRequest({ baseURL: 'friend' })
 export const applyAddFriendpApi = (id: string, data: any) => {
   return request.post(`/apply/${id}`, data, jsonConfig())
 }
+
+//query
+export const getFriendListApi = () => {
+  return request.get('/list', baseConfig())
+}

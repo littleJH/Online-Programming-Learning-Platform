@@ -7,13 +7,16 @@ interface Iprops {
   id?: string
 }
 
-const UserCard: React.FC<Iprops> = props => {
+const UserCardModal: React.FC<Iprops> = (props) => {
   return (
-    <div className="rounded shadow p-2 flex">
-      <div className="flex justify-center items-center mx-2">
-        <Avatar size={'large'} src={`${props.user?.icon}`}></Avatar>
+    <div className='rounded shadow p-2 flex'>
+      <div className='flex justify-center items-center mx-2'>
+        <Avatar
+          size={'large'}
+          src={`${props.user?.icon}`}
+        ></Avatar>
       </div>
-      <div className="">
+      <div className=''>
         <div>{props.user?.name}</div>
         <div>{props.user?.email}</div>
       </div>
@@ -21,4 +24,4 @@ const UserCard: React.FC<Iprops> = props => {
   )
 }
 
-export default UserCard
+export default UserCardModal

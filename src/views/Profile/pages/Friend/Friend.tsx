@@ -1,7 +1,7 @@
 import { Button, Form, Input, Menu, Modal, Space, theme } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import React, { useEffect, useMemo, useState } from 'react'
-import { applyEnterGroupApi, getGroupApi, getMemberGroupListApi, searchGroupByTextApi } from '@/api/group'
+import { applyEnterGroupApi, getGroupApi, getGroupListApi, getMemberGroupListApi, searchGroupByTextApi } from '@/api/group'
 import { useRecoilValue } from 'recoil'
 import { notificationApi, userInfoState } from '@/store/appStore'
 import { IGroup, User } from '@/type'
@@ -10,7 +10,7 @@ import Chat from '../../../../components/Card/IMCard'
 import { enterPublishChatWs } from '@/api/chat'
 import TextArea from 'antd/es/input/TextArea'
 import CreateGroupForm from '@/components/Group/CreateGroupForm'
-import { applyAddFriendpApi } from '@/api/friend'
+import { applyAddFriendpApi, getFriendListApi } from '@/api/friend'
 
 let ws: WebSocket
 const Friend: React.FC = () => {
@@ -46,20 +46,21 @@ const Friend: React.FC = () => {
     initFriendList()
   }, [])
 
-  const initFriendList = () => {
+  const initFriendList = async () => {
     if (!info) return
     setMode('default')
-    getMemberGroupListApi(info?.id).then(async (res) => {
-      setTotal(res.data.data.total)
-      const groups = res.data.data.userList
-      const list: User[] = []
-      for (let group of groups) {
-        const res = await getGroupApi(group.group_id)
-        if (res.data.code === 200) list.push({ ...res.data.data.group, entered: true })
-      }
-      console.log('groupList ==> ', list)
-      setFirendList(list.reverse())
-    })
+    // getMemberGroupListApi(info?.id).then(async (res) => {
+    //   setTotal(res.data.data.total)
+    //   const groups = res.data.data.userList
+    //   const list: User[] = []
+    //   for (let group of groups) {
+    //     const res = await getFriendListApi(group.group_id)
+    //     if (res.data.code === 200) list.push({ ...res.data.data.group, entered: true })
+    //   }
+    //   console.log('groupList ==> ', list)
+    //   setFirendList(list.reverse())
+    // })
+    const { data } = await getFriendListApi()
   }
 
   const openChatWs = () => {

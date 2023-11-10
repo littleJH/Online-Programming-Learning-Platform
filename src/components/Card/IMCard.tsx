@@ -34,10 +34,22 @@ const Chat: React.FC<IProps> = (props) => {
     initChatList()
   }, [group])
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (ws && ws.readyState === ws.CLOSED) {
+        console.log('reOpenWs...')
+        openChatWs()
+      }
+    }, 5000)
+    return () => {
+      clearInterval(interval)
+      ws.close()
+    }
+  }, [])
+
   const initChatList = () => {
     setLoading(true)
     const resolveFn = async (res: any) => {
-      console.log(res.data.data)
       const chats = res.data.data.chats
       const list: IChat[] = []
       if (!chats) {
@@ -48,7 +60,7 @@ const Chat: React.FC<IProps> = (props) => {
       for (let item of chats) {
         const user = await getUserInfoApi(item.author_id)
         list.push({
-          ...item,
+          chat: { ...item },
           user: user.data.data.user
         })
       }
@@ -73,10 +85,9 @@ const Chat: React.FC<IProps> = (props) => {
   }
 
   const handleChatWsMessage = async (e: MessageEvent) => {
-    console.log('chatWsMessage', e)
     const message = JSON.parse(e.data)
-    const { data } = await getUserInfoApi(message.author_id)
-    setChatList((value) => [...value, { ...message, user: data.data.user }])
+    console.log('chatWsMessage', message)
+    setChatList((value) => [...value, message])
   }
 
   const handleChatWsClose = (e: CloseEvent) => {
@@ -88,10 +99,10 @@ const Chat: React.FC<IProps> = (props) => {
   }
 
   const renderMessageCard = (msgItem: IChat) => {
-    const bool = msgItem.author_id === info?.id
+    const bool = msgItem.chat.author_id === info?.id
     return (
       <div
-        id={msgItem.group_id}
+        id={msgItem.chat.group_id}
         className={`w-full flex justify-${bool ? 'end' : 'start'}`}
       >
         {!bool && (
@@ -111,7 +122,7 @@ const Chat: React.FC<IProps> = (props) => {
               backgroundColor: `${bool ? token.colorPrimaryBg : ''}`
             }}
           >
-            {msgItem.content}
+            {msgItem.chat.content}
           </Card>
         </div>
 
@@ -202,14 +213,14 @@ const Chat: React.FC<IProps> = (props) => {
               dataSource={chatList}
               renderItem={(item, index) => (
                 <>
-                  {item.content && (
+                  {item.chat.content && (
                     <List.Item
                       onLoad={() => {
                         if (index === chatList.length - 1) {
                           chatBox.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
                         }
                       }}
-                      key={`${item.author_id}${item.created_at}`}
+                      key={`${item.chat.author_id}${item.chat.created_at}`}
                     >
                       {renderMessageCard(item)}
                     </List.Item>

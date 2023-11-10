@@ -23,6 +23,8 @@ const GroupMember: React.FC<{
       }
     })
   }, [])
+
+  const handleAvatarClick = () => {}
   return (
     <>
       <div>
@@ -31,6 +33,7 @@ const GroupMember: React.FC<{
             <Avatar
               src={`${iconBaseUrl}/${member.icon}`}
               className='hover:mx-2'
+              onClick={handleAvatarClick}
             ></Avatar>
           ))}
           {showAdd && (
