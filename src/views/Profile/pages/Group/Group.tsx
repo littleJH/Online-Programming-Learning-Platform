@@ -55,7 +55,7 @@ const GroupRoot: React.FC = () => {
       const list: IGroup[] = []
       for (let group of groups) {
         const res = await getGroupApi(group.group_id)
-        if (res.data.code === 200) list.push({ ...res.data.data.group, entered: true })
+        if (res.data.code === 200) list.push({ ...res.data.data.group })
       }
       console.log('groupList ==> ', list)
       setGroupList(list.reverse())
