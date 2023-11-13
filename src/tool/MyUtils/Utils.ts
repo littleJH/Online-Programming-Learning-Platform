@@ -38,8 +38,8 @@ export const getPathArray = (path: string) => {
   return arr
 }
 
-export const generateTOC = () => {
-  const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6')
+export const generateTOC = (container: HTMLElement) => {
+  const headings = container.querySelectorAll('h1, h2, h3, h4, h5, h6')
   const toc: IToc[] = []
 
   headings.forEach((heading) => {
