@@ -9,7 +9,6 @@ const MyTag: React.FC<{
 }> = (props) => {
   const { label, checkable, checked = false } = props
   const { token } = theme.useToken()
-  console.log('theme ==> ', token)
 
   const render = () => {
     const tagProps = {

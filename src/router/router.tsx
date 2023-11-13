@@ -33,6 +33,7 @@ const ProfileCretion = lazy(() => import('@/views/Profile/pages/Creation/Creatio
 const ProfileCreationArticle = lazy(() => import('@/views/Profile/pages/Creation/Article'))
 const ProfileCreationProblem = lazy(() => import('@/views/Profile/pages/Creation/Problem'))
 const ProfileCreationGroup = lazy(() => import('@/views/Profile/pages/Creation/Group'))
+const ProfileCreationTopic = lazy(() => import('@/views/Profile/pages/Creation/Topic'))
 const ProblemDetailRoot = lazy(() => import('@/views/ProblemDetail/DetailRoot'))
 const ProblemSetRoot = lazy(() => import('@/views/ProblemSet/ProblemSetRoot'))
 const PorblemAll = lazy(() => import('@/views/ProblemSet/set/All'))
@@ -133,6 +134,10 @@ const routes: MyRoute[] = [
               {
                 path: 'group',
                 element: ProfileCreationGroup
+              },
+              {
+                path: 'topic',
+                element: ProfileCreationTopic
               }
             ]
           }

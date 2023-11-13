@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import ReadOnly from '../../../../components/editor/ReadOnly'
+import ReadOnly from '../../../../components/editor/Readonly'
 import { Table } from 'antd'
 import Column from 'antd/es/table/Column'
 import { string } from 'slate'
@@ -11,7 +11,7 @@ interface DataSource {
 
 const Submit: React.FC<{
   form: any
-}> = props => {
+}> = (props) => {
   const problemForm = props.form.getFieldsValue(true)
   const formList: DataSource[] = useMemo(() => {
     const arr: DataSource[] = []
@@ -28,16 +28,20 @@ const Submit: React.FC<{
   return (
     <div>
       <Table
-        className="rounded shadow"
+        className='rounded shadow'
         bordered
         showHeader={false}
         dataSource={formList}
         pagination={false}
       >
-        <Column title="key" dataIndex={'key'} key={'key'}></Column>
+        <Column
+          title='key'
+          dataIndex={'key'}
+          key={'key'}
+        ></Column>
         <Column
           width={800}
-          title="value"
+          title='value'
           dataIndex={'value'}
           key={'value'}
           render={(value: any, record: any) => {
@@ -58,7 +62,7 @@ const Submit: React.FC<{
           }}
         ></Column>
       </Table>
-      <div className="h-8"></div>
+      <div className='h-8'></div>
     </div>
   )
 }

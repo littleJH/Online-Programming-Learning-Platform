@@ -14,10 +14,11 @@ interface Iprops {
   onDetail?: Function
   onUpdate?: Function
   bordered?: boolean
+  split?: boolean
 }
 
 const GeneralList: React.FC<Iprops> = (props) => {
-  const { loading, dataSource, onDelete, onDetail, onUpdate, itemRender, bordered, pageNum, pageSize, total, onPageChange } = props
+  const { loading, dataSource, onDelete, onDetail, onUpdate, itemRender, bordered, pageNum, pageSize, total, onPageChange, split = true } = props
 
   const pagination = React.useMemo(() => getPagination('list', pageNum, pageSize, total, onPageChange), [pageNum, pageSize, total, onPageChange])
 
@@ -81,6 +82,7 @@ const GeneralList: React.FC<Iprops> = (props) => {
         loading={loading}
         dataSource={dataSource}
         pagination={pagination}
+        split={split}
         renderItem={(item, index) => (
           <List.Item
             key={JSON.stringify(item)}

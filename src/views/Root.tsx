@@ -32,7 +32,6 @@ const Root: React.FC = () => {
   useEffect(() => console.log('headerNav ==> ', headerNav), [headerNav])
 
   useEffect(() => {
-    console.log('theme ==> ', token)
     const body = document.getElementsByTagName('body')[0]
     body.style.setProperty('--colorBgBase', token.colorBgBase)
     body.style.setProperty('--colorTextBase', token.colorTextBase)

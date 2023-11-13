@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react'
-import ReadOnly from '@/components/editor/ReadOnly'
+import ReadOnly from '@/components/editor/Readonly'
 import { useOutletContext } from 'react-router-dom'
 import { ICompetition } from '@/type'
 
@@ -23,12 +23,15 @@ const Overview: React.FC = () => {
     <div>
       {content && content.type === 'Descendant' && (
         <ReadOnly
-          className="p-4"
+          className='p-4'
           html={JSON.parse(content.value as string)}
         ></ReadOnly>
       )}
       {content && content.type === 'String' && (
-        <ReadOnly className="p-4" html={content.value}></ReadOnly>
+        <ReadOnly
+          className='p-4'
+          html={content.value}
+        ></ReadOnly>
       )}
     </div>
   )

@@ -4,7 +4,7 @@ import { cancelLikeRemarkApi, getRemarkLikeNumApi, getRemarkLikedApi, likeRemark
 import { IRemark, User } from '@/type'
 import { Avatar, Divider, Card, theme } from 'antd'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import ReadOnly from '../editor/ReadOnly'
+import ReadOnly from '../editor/Readonly'
 import GetTimeago from '@/tool/myFns/getTimeago'
 import style from './style.module.scss'
 import MySvgIcon from '../Icon/MySvgIcon'

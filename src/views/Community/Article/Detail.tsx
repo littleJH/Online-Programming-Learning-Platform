@@ -20,7 +20,7 @@ import {
 } from '@/api/article'
 import { createArticleRemarkApi, getArticleRemarkListApi } from '@/api/remark'
 import { getUserInfoApi } from '@/api/user'
-import ReadOnly from '@/components/editor/ReadOnly'
+import ReadOnly from '@/components/editor/Readonly'
 import { Button, Divider, Modal, Space, Card, theme } from 'antd'
 import MyTag from '@/components/Label/MyTag'
 import TextEditor from '@/components/editor/TextEditor'

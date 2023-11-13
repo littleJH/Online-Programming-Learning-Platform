@@ -19,6 +19,15 @@ const TextEditor: React.FC<{
   const { mode, value, htmlChange, placeholder, style, className, defaultHtml } = props
   const { token } = theme.useToken()
 
+  const editorStyle: React.CSSProperties = React.useMemo(
+    () =>
+      style || {
+        border: `1px solid ${token.colorBorder}`,
+        borderRadius: token.borderRadius
+      },
+    [style]
+  )
+
   if (!flag) {
     Boot.registerModule(markdownModule)
     flag = true
@@ -71,7 +80,7 @@ const TextEditor: React.FC<{
         onCreated={seteditor}
         onChange={handleChange}
         mode='default'
-        style={{ minHeight: '300px', flexGrow: '1', backgroundColor: token.colorBgBase, ...style }}
+        style={{ minHeight: '300px', flexGrow: '1', backgroundColor: token.colorBgBase, ...editorStyle }}
         className={className}
       ></Editor>
     </div>

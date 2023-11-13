@@ -11,7 +11,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { MenuOutlined, MinusCircleOutlined, RedoOutlined } from '@ant-design/icons'
 import { IPrblemTableDataType } from '@/type'
 import { createTopicApi } from '@/api/topic'
-import ReadOnly from '@/components/editor/ReadOnly'
+import ReadOnly from '@/components/editor/Readonly'
 import { useNavigate } from 'react-router-dom'
 
 interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {

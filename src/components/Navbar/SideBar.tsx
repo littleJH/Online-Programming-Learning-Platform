@@ -1,5 +1,5 @@
 import { Menu } from 'antd'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { UserOutlined, MenuOutlined, StarOutlined, SafetyCertificateOutlined, SettingOutlined, MessageOutlined, TeamOutlined, InfoCircleOutlined, TrophyOutlined, GlobalOutlined, CodeOutlined } from '@ant-design/icons'
 import useNavTo from '@/tool/myHooks/useNavTo'
 import MySvgIcon from '../Icon/MySvgIcon'
@@ -11,17 +11,40 @@ const SideBar: React.FC<{ header: string }> = (props) => {
   const { header } = props
   const [current, setCurrent] = useState('')
   const [menuItem, setMenuItem] = useState([])
+  const [openKeys, setOpenKeys] = useState<string[]>([])
   const pathname = useRecoilValue(pathNameState)
   const navTo = useNavTo()
 
   useEffect(() => {
-    setCurrent(getPathArray(pathname)[1])
-    setMenuItem(menuItemObj[`${header}MenuItem`])
+    const patharr = getPathArray(pathname)
+    const menuItems = menuItemObj[`${header}MenuItem`]
+    setMenuItem(menuItems)
+    setCurrent(patharr[1])
+    menuItems.forEach((item: any) => {
+      if (item.children && patharr.length > 1) {
+        item.children.forEach((item1: any) => {
+          patharr.length === 2 && patharr[1] === item1.key && setOpenKeys([item.key])
+          patharr.length === 3 && patharr[1] === item.key && setOpenKeys([item.key])
+        })
+      }
+    })
   }, [header, pathname])
+
+  useEffect(() => console.log('openKeys ==> ', openKeys), [openKeys])
 
   const handleMenuClick = (e: any) => {
     setCurrent(e.key)
     navTo(`/${header}/${e.key}`)
+  }
+
+  const handleOpenChange = (keys: string[]) => {
+    // console.log('openKeys ==> ', keys)
+    // if (keys.length > 1) {
+    //   const index = keys.indexOf(openKeys[0])
+    //   index === 0 && keys.shift()
+    //   index === 1 && keys.pop()
+    // }
+    setOpenKeys(keys)
   }
 
   return (
@@ -35,6 +58,8 @@ const SideBar: React.FC<{ header: string }> = (props) => {
       mode='inline'
       onClick={handleMenuClick}
       items={menuItem}
+      openKeys={openKeys}
+      onOpenChange={handleOpenChange}
     ></Menu>
   )
 }

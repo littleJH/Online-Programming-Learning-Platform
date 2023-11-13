@@ -1,5 +1,5 @@
 import { showProblemApi } from '@/api/problem'
-import ReadOnly from '@/components/editor/ReadOnly'
+import ReadOnly from '@/components/editor/Readonly'
 import { IHack, IProblem, IRecord, User } from '@/type'
 import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
@@ -11,27 +11,30 @@ interface IProps {
   record: IRecord
 }
 
-const HackDetail: React.FC<IProps> = props => {
+const HackDetail: React.FC<IProps> = (props) => {
   const { hack, record } = props
   const [problem, setproblem] = useState<IProblem>({} as IProblem)
   const [userInfo, setuserInfo] = useState<User>({} as User)
   useEffect(() => {
-    showProblemApi(record?.problem_id).then(res => {
+    showProblemApi(record?.problem_id).then((res) => {
       setproblem(res.data.data.problem)
     })
-    getUserInfoApi(hack.user_id).then(res => {
+    getUserInfoApi(hack.user_id).then((res) => {
       setuserInfo(res.data.data.user)
     })
   }, [record])
   return (
     <div>
-      <p className="flex">
+      <p className='flex'>
         <div>作者：</div>
-        <NavLink className={'hover:cursor-pointer'} to={``}>
+        <NavLink
+          className={'hover:cursor-pointer'}
+          to={``}
+        >
           {userInfo.name}
         </NavLink>
       </p>
-      <p className="flex">
+      <p className='flex'>
         <div>题目：</div>
         <NavLink
           className={'hover:cursor-pointer'}
@@ -40,11 +43,9 @@ const HackDetail: React.FC<IProps> = props => {
           {problem.title}
         </NavLink>
       </p>
-      <p className="">
+      <p className=''>
         <div>Hack Input：</div>
-        <div className="border border-solid border-slate-500 rounded p-4 my-2">
-          {hack.input}
-        </div>
+        <div className='border border-solid border-slate-500 rounded p-4 my-2'>{hack.input}</div>
       </p>
       <Highlight code={record.code}></Highlight>
     </div>
