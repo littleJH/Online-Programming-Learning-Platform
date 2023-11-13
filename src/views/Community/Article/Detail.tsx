@@ -26,6 +26,7 @@ import MyTag from '@/components/Label/MyTag'
 import TextEditor from '@/components/editor/TextEditor'
 import RemarkCard from '@/components/Card/RemarkCard'
 import SideActionBar from '@/components/SideActionBar/SideActionBar'
+import { generateTOC } from '@/tool/myUtils/utils'
 
 const Detail: React.FC = () => {
   const { article_id } = useParams() as { article_id: string }
@@ -35,15 +36,23 @@ const Detail: React.FC = () => {
   const { token } = theme.useToken()
 
   useEffect(() => {
+    typeof currentArticle?.likeNum !== 'number' && fetch()
+    setArticleVisibleApi(article_id)
+  }, [currentArticle])
+
+  useEffect(() => {
+    const container = document.getElementById('article')
+    if (currentArticle && container) {
+      const toc = generateTOC(container)
+      console.log('toc ==> ', toc)
+    }
+  }, [currentArticle])
+
+  useEffect(() => {
     return () => {
       setcurrentArticle(null)
     }
   }, [])
-
-  useEffect(() => {
-    typeof currentArticle?.likeNum !== 'number' && fetch()
-    setArticleVisibleApi(article_id)
-  }, [currentArticle])
 
   const fetch = async () => {
     const res = await Promise.all([
@@ -181,37 +190,39 @@ const Detail: React.FC = () => {
       {currentArticle && (
         <>
           <div id='top'></div>
-          <Card>
-            {/* header */}
-            <div style={{ letterSpacing: '0.2rem' }}>
-              <h1 className='mt-0'>{currentArticle.title}</h1>
-              <Space
-                size={'large'}
-                className='text-sm'
-                style={{
-                  color: token.colorTextDescription
-                }}
-              >
-                <span>作者：{currentArticle.user?.name}</span>
-                <span>发布于：{currentArticle.created_at}</span>
-                <span>阅读：{currentArticle.visibleNum}</span>
-                <span></span>
-              </Space>
+          <div id='article'>
+            <Card>
+              {/* header */}
+              <div style={{ letterSpacing: '0.2rem' }}>
+                <h1 className='mt-0'>{currentArticle.title}</h1>
+                <Space
+                  size={'large'}
+                  className='text-sm'
+                  style={{
+                    color: token.colorTextDescription
+                  }}
+                >
+                  <span>作者：{currentArticle.user?.name}</span>
+                  <span>发布于：{currentArticle.created_at}</span>
+                  <span>阅读：{currentArticle.visibleNum}</span>
+                  <span></span>
+                </Space>
 
-              <Space>
-                {currentArticle.labels &&
-                  currentArticle.labels.map((label, index) => (
-                    <MyTag
-                      label={label.label}
-                      key={index}
-                    ></MyTag>
-                  ))}
-              </Space>
-            </div>
-            <Divider></Divider>
-            {/* body */}
-            <ReadOnly html={currentArticle.content}></ReadOnly>
-          </Card>
+                <Space>
+                  {currentArticle.labels &&
+                    currentArticle.labels.map((label, index) => (
+                      <MyTag
+                        label={label.label}
+                        key={index}
+                      ></MyTag>
+                    ))}
+                </Space>
+              </div>
+              <Divider></Divider>
+              {/* body */}
+              <ReadOnly html={currentArticle.content}></ReadOnly>
+            </Card>
+          </div>
           {/* remark */}
           <div id='remark'>
             <div className='flex justify-center'>

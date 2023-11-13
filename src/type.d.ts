@@ -338,3 +338,9 @@ export interface INavOptions {
   path: string
   key?: string
 }
+
+export interface IToc {
+  key: string
+  title: string
+  children: IToc[]
+}
