@@ -1,13 +1,12 @@
-import React from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { List, Button, Popconfirm, Skeleton } from 'antd'
 import useListenContentScroll from '@/tool/myHooks/useListenScroll'
 import Loading from '../Loading/Loading'
 
 interface Iprops {
-  loading: boolean
   dataSource: any
   itemRender: Function
-  fetchFn: Function
+  fetchFn: (pageNum: number, pageSize: number, setLoading: Function, callback: () => void) => void
   onDelete?: Function
   onDetail?: Function
   onUpdate?: Function
@@ -16,9 +15,14 @@ interface Iprops {
 }
 
 const LoadMoreList: React.FC<Iprops> = (props) => {
-  const { loading, dataSource, onDelete, onDetail, onUpdate, itemRender, bordered, split = true, fetchFn } = props
+  const { dataSource, onDelete, onDetail, onUpdate, itemRender, bordered, split = true, fetchFn } = props
+  const [loading, setLoading] = useState(false)
+  const pageNum = useRef<number>(1)
+  const pageSize = useRef<number>(10)
 
-  useListenContentScroll({ loadMoreFn: () => fetchFn() })
+  useEffect(() => fetchFn(pageNum.current, pageSize.current, setLoading, () => pageNum.current++), [])
+
+  useListenContentScroll({ loadMoreFn: () => fetchFn(pageNum.current, pageSize.current, setLoading, () => pageNum.current++) })
 
   const renderActions = (item: any, index: number) => {
     const actions: React.ReactNode[] = []
