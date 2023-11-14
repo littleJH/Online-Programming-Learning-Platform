@@ -22,12 +22,16 @@ const Directory: React.FC = () => {
     }
   }
   return (
-    <Tree
-      treeData={treeData}
-      defaultExpandAll={true}
-      selectedKeys={directorySelectKeys}
-      onSelect={handleDirectorySelect}
-    ></Tree>
+    <>
+      {treeData.length > 0 && (
+        <Tree
+          treeData={treeData}
+          defaultExpandAll={true}
+          selectedKeys={directorySelectKeys}
+          onSelect={handleDirectorySelect}
+        ></Tree>
+      )}
+    </>
   )
 }
 

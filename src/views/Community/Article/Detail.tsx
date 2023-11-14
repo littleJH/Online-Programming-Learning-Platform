@@ -1,43 +1,32 @@
-import { IArticle, IToc } from '@/type'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { IArticle } from '@/type'
+import React, { useEffect, useState } from 'react'
 import { currentArticleState, sideBarTypeState } from '@/store/appStore'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { useParams } from 'react-router-dom'
-import {
-  collectArticleApi,
-  deleteCollectArticleApi,
-  deleteLikeArticleApi,
-  getArticleApi,
-  getArticleCollectNumApi,
-  getArticleCollectedApi,
-  getArticleHotRankApi,
-  getArticleLabelsApi,
-  getArticleLikeNumApi,
-  getArticleLikedApi,
-  getArticleVisibleNumApi,
-  likeArticleApi,
-  setArticleVisibleApi
-} from '@/api/article'
+import { collectArticleApi, deleteCollectArticleApi, deleteLikeArticleApi, getArticleApi, getArticleCollectNumApi, getArticleCollectedApi, getArticleLabelsApi, getArticleLikeNumApi, getArticleLikedApi, getArticleVisibleNumApi, likeArticleApi, setArticleVisibleApi } from '@/api/article'
 import { createArticleRemarkApi, getArticleRemarkListApi } from '@/api/remark'
 import { getUserInfoApi } from '@/api/user'
 import ReadOnly from '@/components/editor/Readonly'
-import { Button, Divider, Modal, Space, Card, theme, Tree } from 'antd'
+import { Button, Divider, Modal, Space, Card, theme } from 'antd'
 import MyTag from '@/components/Label/MyTag'
 import TextEditor from '@/components/editor/TextEditor'
 import RemarkCard from '@/components/Card/RemarkCard'
 import SideActionBar from '@/components/SideActionBar/SideActionBar'
 import { generateTOC } from '@/tool/myUtils/utils'
-import Directory from '@/components/directory/Directory'
 import { directoryDataState } from '@/components/directory/store'
+import useListenContentScroll from '@/tool/myHooks/useListenScroll'
 
 const Detail: React.FC = () => {
   const { article_id } = useParams() as { article_id: string }
   const [currentArticle, setcurrentArticle] = useRecoilState(currentArticleState)
   const [openRemarkModal, setopenRemarkModal] = useState(false)
   const [remarkContent, setremarkContent] = useState('')
-  const [directoryTree, setDirectoryTree] = useRecoilState(directoryDataState)
+  const setDirectoryTree = useSetRecoilState(directoryDataState)
   const setSidebarType = useSetRecoilState(sideBarTypeState)
   const { token } = theme.useToken()
+
+  // 监听content滚动
+  useListenContentScroll()
 
   useEffect(() => {
     setSidebarType('directory')
@@ -53,9 +42,9 @@ const Detail: React.FC = () => {
   }, [currentArticle])
 
   useEffect(() => {
-    const container = document.getElementById('article')
-    if (currentArticle && container) {
-      const toc = generateTOC(container)
+    const articleEl = document.getElementById('article')
+    if (currentArticle && articleEl) {
+      const toc = generateTOC(articleEl)
       setDirectoryTree(toc)
     }
   }, [currentArticle])
@@ -267,9 +256,9 @@ const Detail: React.FC = () => {
               onCollectClick={handleCollectClick}
               onCommentClick={handleCommentClick}
               onLikeClick={handleLikeClick}
-              likeNum={currentArticle.likeNum}
-              collectNum={currentArticle.collectNum}
-              remarkNum={currentArticle.remark.total}
+              likeNum={currentArticle.likeNum || 0}
+              collectNum={currentArticle.collectNum || 0}
+              remarkNum={currentArticle.remark.total || 0}
               liked={currentArticle.liked}
               collected={currentArticle.collected}
             ></SideActionBar>

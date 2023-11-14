@@ -14,7 +14,6 @@ import MySvgIcon from '@/components/Icon/MySvgIcon'
 import { footerRightNode } from '@/store/footerStore'
 import { getPathArray } from '@/tool/myUtils/utils'
 import Directory from '@/components/directory/Directory'
-import { directoryDataState } from '@/components/directory/store'
 
 const Root: React.FC = () => {
   const [collapsed, setCollapsed] = useRecoilState(sideBarCollapsed)
@@ -26,7 +25,6 @@ const Root: React.FC = () => {
   const footerRight = useRecoilValue(footerRightNode)
   const pathname = useRecoilValue(pathNameState)
   const sideBarType = useRecoilValue(sideBarTypeState)
-  const directoryData = useRecoilValue(directoryDataState)
   const nav = useNavTo()
 
   useLayoutEffect(() => {
@@ -47,9 +45,8 @@ const Root: React.FC = () => {
   const headerStyle: React.CSSProperties = { backgroundColor: `${isDark ? '#141414' : '#ffffff'}`, boxShadow: token.boxShadowTertiary }
 
   const siderStyle: React.CSSProperties = {
-    lineHeight: '120px',
-    color: '#fff',
-    backgroundColor: '#3ba0e9'
+    color: token.colorTextBase,
+    backgroundColor: token.colorBgBase
   }
 
   const footerStyle: React.CSSProperties = {
@@ -96,15 +93,16 @@ const Root: React.FC = () => {
           </Sider>
         )}
         <Content
-          id='mainContent'
           style={{
             backgroundColor: token.colorBgBlur
           }}
         >
           <div
+            id='content'
             className='w-full h-full flex justify-center overflow-y-scroll scroll-smooth'
             style={{
-              padding: `${showPaddingY ? '1rem 0' : '0'}`
+              padding: `${showPaddingY ? '1rem 0' : '0'}`,
+              position: 'relative'
             }}
           >
             <Outlet></Outlet>

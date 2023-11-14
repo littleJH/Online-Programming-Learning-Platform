@@ -93,7 +93,7 @@ const ProblemList: React.FC<IProps> = (props) => {
 
   useEffect(() => {
     fetchDone &&
-      document.querySelector('#mainContent')?.scrollTo({
+      document.querySelector('#content')?.scrollTo({
         left: 0,
         top: 0
       })
