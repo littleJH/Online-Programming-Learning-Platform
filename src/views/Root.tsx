@@ -4,7 +4,7 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import { Outlet } from 'react-router-dom'
 import { iconBaseUrl } from '@/config/apiConfig'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { isDarkState, loginStatusState, pathNameState, sideBarCollapsed, userInfoState } from '@/store/appStore'
+import { isDarkState, loginStatusState, pathNameState, sideBarCollapsed, sideBarTypeState, userInfoState } from '@/store/appStore'
 import Sider from 'antd/es/layout/Sider'
 import SideBar from '@/components/Navbar/SideBar'
 import Navbar from '@/components/Navbar/Navbar'
@@ -13,6 +13,8 @@ import useNavTo from '@/tool/myHooks/useNavTo'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
 import { footerRightNode } from '@/store/footerStore'
 import { getPathArray } from '@/tool/myUtils/utils'
+import Directory from '@/components/directory/Directory'
+import { directoryDataState } from '@/components/directory/store'
 
 const Root: React.FC = () => {
   const [collapsed, setCollapsed] = useRecoilState(sideBarCollapsed)
@@ -23,6 +25,8 @@ const Root: React.FC = () => {
   const [isDark, setIsDark] = useRecoilState(isDarkState)
   const footerRight = useRecoilValue(footerRightNode)
   const pathname = useRecoilValue(pathNameState)
+  const sideBarType = useRecoilValue(sideBarTypeState)
+  const directoryData = useRecoilValue(directoryDataState)
   const nav = useNavTo()
 
   useLayoutEffect(() => {
@@ -87,7 +91,8 @@ const Root: React.FC = () => {
             trigger={null}
             collapsed={collapsed}
           >
-            <SideBar header={headerNav}></SideBar>
+            {sideBarType === 'nav' && <SideBar header={headerNav}></SideBar>}
+            {sideBarType === 'directory' && <Directory></Directory>}
           </Sider>
         )}
         <Content

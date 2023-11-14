@@ -20,14 +20,15 @@ const SideBar: React.FC<{ header: string }> = (props) => {
     const menuItems = menuItemObj[`${header}MenuItem`]
     setMenuItem(menuItems)
     setCurrent(patharr[1])
-    menuItems.forEach((item: any) => {
-      if (item.children && patharr.length > 1) {
-        item.children.forEach((item1: any) => {
-          patharr.length === 2 && patharr[1] === item1.key && setOpenKeys([item.key])
-          patharr.length === 3 && patharr[1] === item.key && setOpenKeys([item.key])
-        })
-      }
-    })
+    menuItems &&
+      menuItems.forEach((item: any) => {
+        if (item.children && patharr.length > 1) {
+          item.children.forEach((item1: any) => {
+            patharr.length === 2 && patharr[1] === item1.key && setOpenKeys([item.key])
+            patharr.length === 3 && patharr[1] === item.key && setOpenKeys([item.key])
+          })
+        }
+      })
   }, [header, pathname])
 
   useEffect(() => console.log('openKeys ==> ', openKeys), [openKeys])

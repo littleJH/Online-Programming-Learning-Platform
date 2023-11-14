@@ -1,7 +1,7 @@
-import { IArticle } from '@/type'
+import { IArticle, IToc } from '@/type'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { currentArticleState } from '@/store/appStore'
-import { useRecoilState } from 'recoil'
+import { currentArticleState, sideBarTypeState } from '@/store/appStore'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import { useParams } from 'react-router-dom'
 import {
   collectArticleApi,
@@ -21,19 +21,31 @@ import {
 import { createArticleRemarkApi, getArticleRemarkListApi } from '@/api/remark'
 import { getUserInfoApi } from '@/api/user'
 import ReadOnly from '@/components/editor/Readonly'
-import { Button, Divider, Modal, Space, Card, theme } from 'antd'
+import { Button, Divider, Modal, Space, Card, theme, Tree } from 'antd'
 import MyTag from '@/components/Label/MyTag'
 import TextEditor from '@/components/editor/TextEditor'
 import RemarkCard from '@/components/Card/RemarkCard'
 import SideActionBar from '@/components/SideActionBar/SideActionBar'
 import { generateTOC } from '@/tool/myUtils/utils'
+import Directory from '@/components/directory/Directory'
+import { directoryDataState } from '@/components/directory/store'
 
 const Detail: React.FC = () => {
   const { article_id } = useParams() as { article_id: string }
   const [currentArticle, setcurrentArticle] = useRecoilState(currentArticleState)
   const [openRemarkModal, setopenRemarkModal] = useState(false)
   const [remarkContent, setremarkContent] = useState('')
+  const [directoryTree, setDirectoryTree] = useRecoilState(directoryDataState)
+  const setSidebarType = useSetRecoilState(sideBarTypeState)
   const { token } = theme.useToken()
+
+  useEffect(() => {
+    setSidebarType('directory')
+    return () => {
+      setcurrentArticle(null)
+      setSidebarType('nav')
+    }
+  }, [])
 
   useEffect(() => {
     typeof currentArticle?.likeNum !== 'number' && fetch()
@@ -44,15 +56,9 @@ const Detail: React.FC = () => {
     const container = document.getElementById('article')
     if (currentArticle && container) {
       const toc = generateTOC(container)
-      console.log('toc ==> ', toc)
+      setDirectoryTree(toc)
     }
   }, [currentArticle])
-
-  useEffect(() => {
-    return () => {
-      setcurrentArticle(null)
-    }
-  }, [])
 
   const fetch = async () => {
     const res = await Promise.all([
@@ -185,12 +191,13 @@ const Detail: React.FC = () => {
     a.href = '#top'
     a.click()
   }
+
   return (
-    <div style={{ width: '1000px' }}>
+    <div style={{ width: '100%' }}>
       {currentArticle && (
-        <>
+        <div>
           <div id='top'></div>
-          <div id='article'>
+          <div>
             <Card>
               {/* header */}
               <div style={{ letterSpacing: '0.2rem' }}>
@@ -220,7 +227,9 @@ const Detail: React.FC = () => {
               </div>
               <Divider></Divider>
               {/* body */}
-              <ReadOnly html={currentArticle.content}></ReadOnly>
+              <div id='article'>
+                <ReadOnly html={currentArticle.content}></ReadOnly>
+              </div>
             </Card>
           </div>
           {/* remark */}
@@ -286,7 +295,7 @@ const Detail: React.FC = () => {
               placeholder='发表我的看法~~~'
             ></TextEditor>
           </Modal>
-        </>
+        </div>
       )}
     </div>
   )

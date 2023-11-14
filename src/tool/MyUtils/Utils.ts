@@ -42,10 +42,10 @@ export const generateTOC = (container: HTMLElement) => {
   const headings = container.querySelectorAll('h1, h2, h3, h4, h5, h6')
   const toc: IToc[] = []
 
-  headings.forEach((heading) => {
+  headings.forEach((heading, index) => {
     const level = parseInt(heading.tagName.charAt(1)) // 获取标题级别，如从'h1'中提取出1
     const title = heading.textContent
-    const node: IToc = { key: title || '', title: title || '', children: [] }
+    const node: IToc = { key: heading.id, title: title || '', children: [] }
 
     // 在目录树中找到正确的位置插入节点
     let currentNode = toc
