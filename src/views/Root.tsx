@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useLayoutEffect } from 'react'
+import React, { useEffect, useState, useLayoutEffect, useMemo } from 'react'
 import { Layout, Button, Avatar, theme } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import { Outlet } from 'react-router-dom'
 import { iconBaseUrl } from '@/config/apiConfig'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { isDarkState, loginStatusState, pathNameState, sideBarCollapsed, sideBarTypeState, userInfoState } from '@/store/appStore'
+import { isDarkState, loginStatusState, pathNameState, sideBarTypeState, userInfoState } from '@/store/appStore'
 import Sider from 'antd/es/layout/Sider'
 import SideBar from '@/components/Navbar/SideBar'
 import Navbar from '@/components/Navbar/Navbar'
@@ -16,8 +16,8 @@ import { getPathArray } from '@/tool/myUtils/utils'
 import Directory from '@/components/directory/Directory'
 
 const Root: React.FC = () => {
-  const [collapsed, setCollapsed] = useRecoilState(sideBarCollapsed)
-  const [btnCollapsed, setBtnCollapsed] = useState(collapsed)
+  // const [collapsed, setCollapsed] = useRecoilState(sideBarCollapsed)
+  // const [btnCollapsed, setBtnCollapsed] = useState(collapsed)
   const headerNav = useRecoilValue(headerNavState)
   const { Header, Content, Footer } = Layout
   const { token } = theme.useToken()
@@ -40,13 +40,21 @@ const Root: React.FC = () => {
     body.style.setProperty('--colorBgBlur', token.colorBgBlur)
   }, [token])
 
+  const sidebarWidth = useMemo(() => {
+    let width = 0
+    if (sideBarType === 'directory') width = 300
+    if (sideBarType === 'nav') width = 200
+    return width
+  }, [sideBarType])
+
   const showPaddingY = React.useMemo(() => !['problemdetail', 'competitiondetail'].includes(getPathArray(pathname)[0]), [pathname])
 
   const headerStyle: React.CSSProperties = { backgroundColor: `${isDark ? '#141414' : '#ffffff'}`, boxShadow: token.boxShadowTertiary }
 
   const siderStyle: React.CSSProperties = {
     color: token.colorTextBase,
-    backgroundColor: token.colorBgBase
+    backgroundColor: token.colorBgBase,
+    transition: 'all 500'
   }
 
   const footerStyle: React.CSSProperties = {
@@ -81,12 +89,13 @@ const Root: React.FC = () => {
       <Layout hasSider>
         {!['login', 'problemdetail'].includes(headerNav) && (
           <Sider
-            onMouseOver={() => setCollapsed(false)}
-            onMouseLeave={() => setCollapsed(btnCollapsed)}
+            // onMouseOver={() => setCollapsed(false)}
+            // onMouseLeave={() => setCollapsed(btnCollapsed)}
             style={siderStyle}
             collapsible
             trigger={null}
-            collapsed={collapsed}
+            // collapsed={collapsed}
+            width={sidebarWidth}
           >
             {sideBarType === 'nav' && <SideBar header={headerNav}></SideBar>}
             {sideBarType === 'directory' && <Directory></Directory>}
@@ -99,13 +108,18 @@ const Root: React.FC = () => {
         >
           <div
             id='content'
-            className='w-full h-full flex justify-center overflow-y-scroll scroll-smooth'
+            className='w-full h-full overflow-y-scroll scroll-smooth'
             style={{
               padding: `${showPaddingY ? '1rem 0' : '0'}`,
               position: 'relative'
             }}
           >
-            <Outlet></Outlet>
+            <div
+              className='h-full'
+              style={{ width: 'min-content', margin: 'auto' }}
+            >
+              <Outlet></Outlet>
+            </div>
           </div>
         </Content>
       </Layout>
@@ -115,17 +129,18 @@ const Root: React.FC = () => {
         <div
           className='w-1/2'
           style={{
-            display: 'inline-block'
+            display: 'inline-block',
+            minHeight: '2rem'
           }}
         >
-          <Button
+          {/* <Button
             type='text'
             icon={btnCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => {
               setCollapsed(!btnCollapsed)
               setBtnCollapsed(!btnCollapsed)
             }}
-          />
+          /> */}
         </div>
         {/* right */}
         <div
@@ -147,7 +162,7 @@ const MyLogin: React.FC = () => {
   const nav = useNavTo()
   const myInfo = useRecoilValue(userInfoState)
   const loginStatus = useRecoilValue(loginStatusState)
-  const setSideBarCollapsed = useSetRecoilState(sideBarCollapsed)
+  // const setSideBarCollapsed = useSetRecoilState(sideBarCollapsed)
 
   const handleClick = () => {
     nav('/profile')

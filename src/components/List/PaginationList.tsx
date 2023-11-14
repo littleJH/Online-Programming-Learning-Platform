@@ -17,7 +17,7 @@ interface Iprops {
   split?: boolean
 }
 
-const GeneralList: React.FC<Iprops> = (props) => {
+const PaginationList: React.FC<Iprops> = (props) => {
   const { loading, dataSource, onDelete, onDetail, onUpdate, itemRender, bordered, pageNum, pageSize, total, onPageChange, split = true } = props
 
   const pagination = React.useMemo(() => getPagination('list', pageNum, pageSize, total, onPageChange), [pageNum, pageSize, total, onPageChange])
@@ -96,4 +96,4 @@ const GeneralList: React.FC<Iprops> = (props) => {
   )
 }
 
-export default GeneralList
+export default PaginationList

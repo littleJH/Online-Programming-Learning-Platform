@@ -26,7 +26,7 @@ const Detail: React.FC = () => {
   const { token } = theme.useToken()
 
   // 监听content滚动
-  useListenContentScroll()
+  useListenContentScroll({ followScroll: true })
 
   useEffect(() => {
     setSidebarType('directory')
@@ -182,45 +182,43 @@ const Detail: React.FC = () => {
   }
 
   return (
-    <div style={{ width: '100%' }}>
+    <div style={{ width: '1000px' }}>
       {currentArticle && (
         <div>
           <div id='top'></div>
-          <div>
-            <Card>
-              {/* header */}
-              <div style={{ letterSpacing: '0.2rem' }}>
-                <h1 className='mt-0'>{currentArticle.title}</h1>
-                <Space
-                  size={'large'}
-                  className='text-sm'
-                  style={{
-                    color: token.colorTextDescription
-                  }}
-                >
-                  <span>作者：{currentArticle.user?.name}</span>
-                  <span>发布于：{currentArticle.created_at}</span>
-                  <span>阅读：{currentArticle.visibleNum}</span>
-                  <span></span>
-                </Space>
+          <Card>
+            {/* header */}
+            <div style={{ letterSpacing: '0.2rem' }}>
+              <h1 className='mt-0'>{currentArticle.title}</h1>
+              <Space
+                size={'large'}
+                className='text-sm'
+                style={{
+                  color: token.colorTextDescription
+                }}
+              >
+                <span>作者：{currentArticle.user?.name}</span>
+                <span>发布于：{currentArticle.created_at}</span>
+                <span>阅读：{currentArticle.visibleNum}</span>
+                <span></span>
+              </Space>
 
-                <Space>
-                  {currentArticle.labels &&
-                    currentArticle.labels.map((label, index) => (
-                      <MyTag
-                        label={label.label}
-                        key={index}
-                      ></MyTag>
-                    ))}
-                </Space>
-              </div>
-              <Divider></Divider>
-              {/* body */}
-              <div id='article'>
-                <ReadOnly html={currentArticle.content}></ReadOnly>
-              </div>
-            </Card>
-          </div>
+              <Space>
+                {currentArticle.labels &&
+                  currentArticle.labels.map((label, index) => (
+                    <MyTag
+                      label={label.label}
+                      key={index}
+                    ></MyTag>
+                  ))}
+              </Space>
+            </div>
+            <Divider></Divider>
+            {/* body */}
+            <div id='article'>
+              <ReadOnly html={currentArticle.content}></ReadOnly>
+            </div>
+          </Card>
           {/* remark */}
           <div id='remark'>
             <div className='flex justify-center'>
@@ -246,7 +244,7 @@ const Detail: React.FC = () => {
           {/* <div className='w-64 h-96 shadow rounded '></div> */}
 
           <div
-            className={`w-12 h-12 px-4 fixed top-1/2 right-0 flex flex-col`}
+            className={`w-12 h-12 px-4 fixed top-1/3 right-0 flex flex-col`}
             style={{
               translate: '-50% -50%'
             }}
@@ -256,9 +254,9 @@ const Detail: React.FC = () => {
               onCollectClick={handleCollectClick}
               onCommentClick={handleCommentClick}
               onLikeClick={handleLikeClick}
-              likeNum={currentArticle.likeNum || 0}
-              collectNum={currentArticle.collectNum || 0}
-              remarkNum={currentArticle.remark.total || 0}
+              likeNum={currentArticle?.likeNum || 0}
+              collectNum={currentArticle?.collectNum || 0}
+              remarkNum={currentArticle?.remark.total || 0}
               liked={currentArticle.liked}
               collected={currentArticle.collected}
             ></SideActionBar>

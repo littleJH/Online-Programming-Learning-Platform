@@ -2,18 +2,18 @@ import { Space, Card, theme } from 'antd'
 import React, { useEffect } from 'react'
 import useNavTo from '@/tool/myHooks/useNavTo'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { sideBarCollapsed } from '@/store/appStore'
+// import { sideBarCollapsed } from '@/store/appStore'
 
 const lineClass = 'flex'
 const itemClass = 'h-48 w-80 m-8 rounded-xl flex  hover:cursor-pointer hover:-translate-y-4 transition-all duration-300 select-none'
 
 const CreationNavgation: React.FC = () => {
   const nav = useNavTo()
-  const setSideBarCollapsed = useSetRecoilState(sideBarCollapsed)
+  // const setSideBarCollapsed = useSetRecoilState(sideBarCollapsed)
 
   const handleClick = (e: string) => {
     nav(`${e}`)
-    setSideBarCollapsed(false)
+    // setSideBarCollapsed(false)
   }
 
   return (

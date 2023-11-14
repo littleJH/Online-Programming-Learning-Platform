@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil'
 import { notificationApi } from '@/store/appStore'
 import { ITopic } from '@/type'
 import { deleteTopicApi, getTopicListApi } from '@/api/topic'
-import GeneralList from '@/components/List/GeneralList'
+import PaginationList from '@/components/List/PaginationList'
 import TopicCollapse from '@/components/topic/TopicCollapse'
 
 const Topic: React.FC = () => {
@@ -60,7 +60,7 @@ const Topic: React.FC = () => {
 
   return (
     <div>
-      <GeneralList
+      <PaginationList
         dataSource={topicList}
         loading={loading}
         pageNum={pageNum}
@@ -80,7 +80,7 @@ const Topic: React.FC = () => {
             ></TopicCollapse>
           </div>
         )}
-      ></GeneralList>
+      ></PaginationList>
     </div>
   )
 }

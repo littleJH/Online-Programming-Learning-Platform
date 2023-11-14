@@ -28,6 +28,18 @@ const Directory: React.FC = () => {
           treeData={treeData}
           defaultExpandAll={true}
           selectedKeys={directorySelectKeys}
+          // titleRender={(node) => (
+          //   <div
+          //     style={{
+          //       width: '14rem',
+          //       overflow: 'hidden',
+          //       whiteSpace: 'nowrap',
+          //       textOverflow: 'ellipsis'
+          //     }}
+          //   >
+          //     {node.title}
+          //   </div>
+          // )}
           onSelect={handleDirectorySelect}
         ></Tree>
       )}

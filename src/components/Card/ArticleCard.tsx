@@ -62,7 +62,7 @@ const ArticleCard: React.FC<IProps> = (props) => {
         className='grow'
         style={{ width: '100px' }}
       >
-        <div className='flex items-center my-2'>
+        <div className='flex items-center'>
           <Avatar
             className='card-avatar'
             src={`${iconBaseUrl}/${article.user?.icon}`}
@@ -151,9 +151,8 @@ const ArticleCard: React.FC<IProps> = (props) => {
       {mode === 'default' && (
         <Card
           onClick={() => onclick && onclick(article)}
-          className='my-4'
+          className='my-2'
           size='small'
-          hoverable
         >
           {renderBody()}
         </Card>

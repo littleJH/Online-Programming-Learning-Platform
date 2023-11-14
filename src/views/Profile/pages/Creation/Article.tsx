@@ -5,7 +5,7 @@ import { deleteArticleApi, getArticleListApi } from '@/api/article'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { currentArticleState, notificationApi } from '@/store/appStore'
 import useNavTo from '@/tool/myHooks/useNavTo'
-import GeneralList from '@/components/List/GeneralList'
+import PaginationList from '@/components/List/PaginationList'
 import { useSearchParams } from 'react-router-dom'
 
 const Article: React.FC = () => {
@@ -60,7 +60,7 @@ const Article: React.FC = () => {
 
   return (
     <div>
-      <GeneralList
+      <PaginationList
         dataSource={articleList}
         loading={loading}
         onDelete={handleDelete}
@@ -79,7 +79,7 @@ const Article: React.FC = () => {
             ></ArticleCard>
           </div>
         )}
-      ></GeneralList>
+      ></PaginationList>
     </div>
   )
 }

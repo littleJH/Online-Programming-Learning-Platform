@@ -1,7 +1,7 @@
 import { ITopic } from '@/type'
 import React from 'react'
 import { Descriptions, Button, Popconfirm, Space, Avatar, Collapse } from 'antd'
-import GeneralList from '../List/GeneralList'
+import PaginationList from '../List/PaginationList'
 import ProblemTable from '../Problem/ProblemTable'
 import { NavLink } from 'react-router-dom'
 import ReadOnly from '../editor/Readonly'

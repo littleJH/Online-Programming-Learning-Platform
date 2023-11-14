@@ -165,10 +165,10 @@ export const headerNavState = selector<string>({
 })
 
 // sidebar是否隐藏
-export const sideBarCollapsed = atom<boolean>({
-  key: 'sideBarCollapsed',
-  default: false
-})
+// export const sideBarCollapsed = atom<boolean>({
+//   key: 'sideBarCollapsed',
+//   default: false
+// })
 
 // sidebar 类型
 export const sideBarTypeState = atom<'nav' | 'directory'>({
@@ -197,3 +197,15 @@ export const isDarkState = atom<boolean>({
     }
   ]
 })
+
+// 是否开启监听content滚动，加载更多
+// export const openLoadmoreState = atom<boolean>({
+//   key: 'openLoadmoreState',
+//   default: false
+// })
+
+// 是否开启监听content滚动，目录跟随滚动
+// export const openFollowScroll = atom<boolean>({
+//   key: 'openFollowScroll',
+//   default: false
+// })

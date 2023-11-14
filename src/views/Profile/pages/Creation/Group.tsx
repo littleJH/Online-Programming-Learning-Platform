@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { List, Button, Popconfirm, Modal } from 'antd'
 import GroupInfo from '@/components/Group/GroupInfo'
-import GeneralList from '@/components/List/GeneralList'
+import PaginationList from '@/components/List/PaginationList'
 import { useSearchParams } from 'react-router-dom'
 
 const Group: React.FC = () => {
@@ -64,7 +64,7 @@ const Group: React.FC = () => {
 
   return (
     <div>
-      <GeneralList
+      <PaginationList
         dataSource={groupList}
         loading={loading}
         onDelete={handleDelete}
@@ -80,7 +80,7 @@ const Group: React.FC = () => {
             description={item.content}
           ></List.Item.Meta>
         )}
-      ></GeneralList>
+      ></PaginationList>
       <Modal
         open={openDetailModal}
         onCancel={() => setOpenDetailModal(false)}
