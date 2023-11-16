@@ -257,8 +257,8 @@ const Detail: React.FC = () => {
               likeNum={currentArticle?.likeNum || 0}
               collectNum={currentArticle?.collectNum || 0}
               remarkNum={currentArticle?.remark.total || 0}
-              liked={currentArticle.liked}
-              collected={currentArticle.collected}
+              liked={currentArticle?.liked || 0}
+              collected={currentArticle?.collected || false}
             ></SideActionBar>
           </div>
           <Modal

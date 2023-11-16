@@ -9,17 +9,18 @@ import LoadMoreList from '@/components/List/LoadMoreList'
 
 const ArticleSet: React.FC = () => {
   const [articleList, setarticleList] = useState<IArticle[]>()
+  const [total, setTotal] = useState(0)
   const setcurrentArticle = useSetRecoilState(currentArticleState)
   const nav = useNavTo()
 
-  const fetch = (pageNum: number, pageSize: number, setLoading: Function, callback: Function) => {
-    setLoading(true)
-    getArticleListApi(pageNum, pageSize).then((res) => {
+  const fetch = async (pageNum: number, pageSize: number, callback: Function) => {
+    const res = await getArticleListApi(pageNum, pageSize)
+    if (res.data.code === 200) {
       console.log('fetchArticles...')
       setarticleList((value) => (value ? [...value, ...res.data.data.articles] : res.data.data.articles))
-      setLoading(false)
-    })
-    callback()
+      setTotal(res.data.data.total)
+      callback()
+    }
   }
 
   const handleCardClick = (article: IArticle) => {
@@ -31,6 +32,7 @@ const ArticleSet: React.FC = () => {
     <div style={{ width: '820px' }}>
       <LoadMoreList
         dataSource={articleList}
+        total={total}
         fetchFn={fetch}
         split={false}
         itemRender={(item: IArticle) => (

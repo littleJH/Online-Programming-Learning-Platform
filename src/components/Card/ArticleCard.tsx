@@ -152,6 +152,7 @@ const ArticleCard: React.FC<IProps> = (props) => {
         <Card
           onClick={() => onclick && onclick(article)}
           className='my-2'
+          hoverable
           size='small'
         >
           {renderBody()}

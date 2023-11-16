@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { List, Button, Popconfirm, Skeleton } from 'antd'
+import { List, Button, Popconfirm, Skeleton, theme } from 'antd'
 import useListenContentScroll from '@/tool/myHooks/useListenScroll'
-import Loading from '../Loading/Loading'
 
 interface Iprops {
   dataSource: any
+  total: number
   itemRender: Function
-  fetchFn: (pageNum: number, pageSize: number, setLoading: Function, callback: () => void) => void
+  fetchFn: (pageNum: number, pageSize: number, callback: Function) => void
   onDelete?: Function
   onDetail?: Function
   onUpdate?: Function
@@ -15,14 +15,19 @@ interface Iprops {
 }
 
 const LoadMoreList: React.FC<Iprops> = (props) => {
-  const { dataSource, onDelete, onDetail, onUpdate, itemRender, bordered, split = true, fetchFn } = props
-  const [loading, setLoading] = useState(false)
+  const { dataSource, total, onDelete, onDetail, onUpdate, itemRender, bordered, split = true, fetchFn } = props
   const pageNum = useRef<number>(1)
   const pageSize = useRef<number>(10)
+  const { token } = theme.useToken()
 
-  useEffect(() => fetchFn(pageNum.current, pageSize.current, setLoading, () => pageNum.current++), [])
+  useEffect(() => {
+    fetchFn(pageNum.current, pageSize.current, () => pageNum.current++)
+  }, [])
 
-  useListenContentScroll({ loadMoreFn: () => fetchFn(pageNum.current, pageSize.current, setLoading, () => pageNum.current++) })
+  // 监听content滚动触底，因此该LoadMoreList需要在content的底部
+  useListenContentScroll({
+    loadMoreFn: () => fetchFn(pageNum.current, pageSize.current, () => pageNum.current++)
+  })
 
   const renderActions = (item: any, index: number) => {
     const actions: React.ReactNode[] = []
@@ -69,12 +74,20 @@ const LoadMoreList: React.FC<Iprops> = (props) => {
   return (
     <>
       {!dataSource && (
-        <Skeleton
-          style={{
-            width: '100%'
-          }}
-          active
-        />
+        <div>
+          <Skeleton
+            avatar
+            active
+          />
+          <Skeleton
+            avatar
+            active
+          />
+          <Skeleton
+            avatar
+            active
+          />
+        </div>
       )}
       {dataSource && (
         <List
@@ -95,7 +108,24 @@ const LoadMoreList: React.FC<Iprops> = (props) => {
           )}
         ></List>
       )}
-      {loading && dataSource && <Loading></Loading>}
+      {dataSource?.length !== total && total !== 0 && (
+        <div className='w-full my-8'>
+          <Skeleton
+            avatar
+            active
+          />
+        </div>
+      )}
+      {dataSource?.length === total && (
+        <div
+          className='w-full text-center p-8'
+          style={{
+            color: token.colorTextDescription
+          }}
+        >
+          到底啦~
+        </div>
+      )}
     </>
   )
 }

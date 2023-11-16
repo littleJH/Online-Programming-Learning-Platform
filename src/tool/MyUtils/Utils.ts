@@ -1,5 +1,6 @@
 import { IToc } from '@/type'
 import { RcFile } from 'antd/es/upload'
+import dayjs from 'dayjs'
 
 export const formatProblemJson = async (file: RcFile) => {
   const text = await file.text()

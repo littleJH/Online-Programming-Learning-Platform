@@ -83,12 +83,12 @@ const PaginationList: React.FC<Iprops> = (props) => {
         dataSource={dataSource}
         pagination={pagination}
         split={split}
-        renderItem={(item, index) => (
+        renderItem={(item: any, index: number) => (
           <List.Item
-            key={JSON.stringify(item)}
+            key={item?.id || String(Math.random() * 10)}
             actions={renderActions(item, index)}
           >
-            {itemRender(item)}
+            {itemRender(item, index)}
           </List.Item>
         )}
       ></List>
