@@ -344,3 +344,10 @@ export interface IToc {
   title: string
   children: IToc[]
 }
+
+export interface ICountDown {
+  day: string
+  hour: string
+  min: string
+  second: string
+}

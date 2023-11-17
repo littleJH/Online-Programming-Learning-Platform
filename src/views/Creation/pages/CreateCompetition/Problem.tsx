@@ -241,7 +241,7 @@ const Problem: React.FC = () => {
               <div className=''>
                 <span>分数：</span>
                 <InputNumber
-                  min={0}
+                  min={'0'}
                   defaultValue={item.score}
                   onChange={(value) => handleScoreChange(value, index)}
                 ></InputNumber>

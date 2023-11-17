@@ -6,7 +6,7 @@ import { getEnterConditionApi } from '@/api/competitionMixture'
 import dayjs from 'dayjs'
 import Sidebar from '../Sidebar/Sidebar'
 import { CompetitionType, ICompetition, IGroup } from '@/type'
-import { Button, List, Menu, Modal, Steps, Tooltip, notification, Card } from 'antd'
+import { Button, List, Menu, Modal, theme, Tooltip, notification, Card } from 'antd'
 import Update from '../Update/Update'
 import { getUserInfoApi } from '@/api/user'
 import UserCard from '@/components/user/UserCard'
@@ -16,16 +16,12 @@ import EnterGroup from './Group/EnterGroup'
 import GroupInfo from './Group/GroupInfo'
 import { getMemberGroupListApi } from '@/api/group'
 import useNavTo from '@/tool/myHooks/useNavTo'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { competitionStateAtom } from '../../store'
+import CountDown from '@/components/countDown/CountDown'
+import MySvgIcon from '@/components/Icon/MySvgIcon'
 
 type CompetitionState = 'notEnter' | 'underway' | 'enter' | 'finished'
-let interval: ReturnType<typeof setInterval>
-
-interface CountDown {
-  day: string
-  hour: string
-  min: string
-  second: string
-}
 
 const getState = (start: string, end: string, enter: boolean): CompetitionState => {
   if (dayjs(start).valueOf() > dayjs().valueOf()) {
@@ -35,65 +31,23 @@ const getState = (start: string, end: string, enter: boolean): CompetitionState 
   } else return 'finished'
 }
 
-const countDownFun = (endTime: string, setcountDown: Function, setcompetitionState: Function) => {
-  const end = dayjs(endTime)
-  const time: CountDown = {
-    day: '00',
-    hour: '00',
-    min: '00',
-    second: '00'
-  }
-  const fn = () => {
-    const current = dayjs()
-    let duration = end.unix() - current.unix()
-    if (duration >= 0) {
-      if (duration >= 60 * 60 * 24) {
-        time.day = Math.floor(duration / (60 * 60 * 24)) >= 10 ? String(Math.floor(duration / (60 * 60 * 24))) : `0${String(Math.floor(duration / (60 * 60 * 24)))}`
-        duration = duration - 60 * 60 * 24 * Number(time.day)
-      } else if (duration < 60 * 60 * 24 && duration > 60 * 60 * 23) {
-        time.day = '00'
-      }
-      if (duration >= 60 * 60) {
-        time.hour = Math.floor(duration / (60 * 60)) >= 10 ? String(Math.floor(duration / (60 * 60))) : `0${String(Math.floor(duration / (60 * 60)))}`
-        duration = duration - 60 * 60 * Number(time.hour)
-      } else if (duration > 60 * 59 && duration < 60 * 60) {
-        time.hour = '00'
-      }
-      if (duration >= 60) {
-        time.min = Math.floor(duration / 60) >= 10 ? String(Math.floor(duration / 60)) : `0${String(Math.floor(duration / 60))}`
-        duration = duration - 60 * Number(time.min)
-      } else if (duration < 60) {
-        time.min = '00'
-      }
-      time.second = duration >= 10 ? String(duration) : `0${String(duration)}`
-    } else {
-      setcompetitionState('underway')
-      clearInterval(interval)
-    }
-    setcountDown({ ...time })
-  }
-  fn()
-  interval = setInterval(() => {
-    fn()
-  }, 1000)
-}
-
 const Detail: React.FC = () => {
   const nav = useNavTo()
   const location = useLocation()
   const { competition_id } = useParams()
   const [type, settype] = useState<CompetitionType>('')
   const [current, setcurrent] = useState('')
-  const [competitionState, setcompetitionState] = useState<CompetitionState>()
+  const [competitionState, setcompetitionState] = useRecoilState(competitionStateAtom)
   const [competition, setcompetition] = useState<ICompetition>()
   const [enterNum, setenterNum] = useState()
-  const [countDown, setcountDown] = useState<CountDown>()
+  const [endTime, setEndTime] = useState<string>()
   const [openEnterModal, setopenEnterModal] = useState(false)
   const [openUpdateModal, setopenUpdateModal] = useState(false)
   const [openEnterListModal, setopenEnterListModal] = useState(false)
   const [enterList, setenterList] = useState<User[]>([])
   const [answering, setanswering] = useState(false)
-  const [groupInfo, setgroupInfo] = useState<IGroup>({} as IGroup)
+  const [groupInfo, setgroupInfo] = useState<IGroup>()
+  const { token } = theme.useToken()
 
   useLayoutEffect(() => {
     if (location.pathname.indexOf('problem') >= 0) {
@@ -102,44 +56,26 @@ const Detail: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    let type: CompetitionType = ''
-    showCompetitionApi(competition_id as string).then((res) => {
-      const competition = res.data.data.competition as ICompetition
-      switch (competition.type) {
-        case 'Single':
-          type = 'single'
-          settype('single')
-          break
-        case 'Group':
-          type = 'group'
-          settype('group')
-          break
-        case 'Match':
-          type = 'match'
-          settype('match')
-          break
-        default:
-          break
-      }
-      setcompetition(res.data.data.competition)
-      switch (type) {
-        case 'single':
-          fetchSingle(competition)
-          break
-        case 'group':
-          fetchGroup(competition)
-          break
-        case 'match':
-          fetchMatch(competition)
-          break
-        default:
-          break
-      }
-    })
-
-    return () => {
-      clearInterval(interval)
-    }
+    competition_id &&
+      showCompetitionApi(competition_id).then((res) => {
+        const competition = res.data.data.competition as ICompetition
+        const type: CompetitionType = competition.type.toLowerCase() as CompetitionType
+        setcompetition(res.data.data.competition)
+        settype(type)
+        switch (type) {
+          case 'single':
+            fetchSingle(competition)
+            break
+          case 'group':
+            fetchGroup(competition)
+            break
+          case 'match':
+            fetchMatch(competition)
+            break
+          default:
+            break
+        }
+      })
   }, [])
 
   const fetchSingle = async (competition: ICompetition) => {
@@ -148,8 +84,8 @@ const Detail: React.FC = () => {
     console.log(result)
     const state = getState(competition.start_time, competition.end_time, result.data.data.enter)
     setcompetitionState(state)
-    if (state === 'enter' || state === 'notEnter') countDownFun(competition.start_time, setcountDown, setcompetitionState)
-    else if (state === 'underway') countDownFun(competition.end_time, setcountDown, setcompetitionState)
+    if (state === 'enter' || state === 'notEnter') setEndTime(competition.start_time)
+    else if (state === 'underway') setEndTime(competition.end_time)
     getEnterListApi(type, competition.id).then((res) => {
       setenterNum(res.data.data.total)
     })
@@ -176,8 +112,8 @@ const Detail: React.FC = () => {
     }
     const state = getState(competition.start_time, competition.end_time, result.data.data ? true : false)
     setcompetitionState(state)
-    if (state === 'enter' || state === 'notEnter') countDownFun(competition.start_time, setcountDown, setcompetitionState)
-    else if (state === 'underway') countDownFun(competition.end_time, setcountDown, setcompetitionState)
+    if (state === 'enter' || state === 'notEnter') setEndTime(competition.start_time)
+    else if (state === 'underway') setEndTime(competition.end_time)
     // getEnterListApi(type, competition.id).then(res => {
     //   setenterNum(res.data.data.total)
     // })
@@ -210,19 +146,20 @@ const Detail: React.FC = () => {
         }
       })
     } else if (competitionState === 'enter') {
-      cancelEnterApi(type, competition?.id as string, groupInfo.id ? groupInfo.id : '').then((res) => {
-        if (res.data.code === 200) {
-          setopenEnterModal(false)
-          setcompetitionState('notEnter')
-          notification.success({
-            message: '取消报名成功'
-          })
-        } else {
-          notification.warning({
-            message: res.data.msg
-          })
-        }
-      })
+      groupInfo &&
+        cancelEnterApi(type, competition?.id as string, groupInfo.id ? groupInfo.id : '').then((res) => {
+          if (res.data.code === 200) {
+            setopenEnterModal(false)
+            setcompetitionState('notEnter')
+            notification.success({
+              message: '取消报名成功'
+            })
+          } else {
+            notification.warning({
+              message: res.data.msg
+            })
+          }
+        })
     }
   }
 
@@ -242,22 +179,8 @@ const Detail: React.FC = () => {
   const navTo = (e: any) => {
     setanswering(false)
     setcurrent(e.key)
-    switch (e.key) {
-      case 'overview':
-        nav('')
-        break
-      case 'problem':
-        nav('problem')
-        break
-      case 'rank':
-        nav('rank')
-        break
-      case 'record':
-        nav('record')
-        break
-      default:
-        break
-    }
+    if (e.key === 'overview') nav('')
+    else nav(e.key)
   }
 
   return (
@@ -266,66 +189,76 @@ const Detail: React.FC = () => {
       <Card>
         <div className='flex'>
           <div className='flex flex-col items-center justify-center'>
-            <svg
-              onClick={() => {
-                ;['notEnter', 'enter'].includes(competitionState as string) ? setopenEnterModal(true) : null
-              }}
-              className='icon-large hover:cursor-pointer'
-              aria-hidden={true}
+            <span
+              className='cursor-pointer'
+              onClick={() => (['notEnter', 'enter'].includes(competitionState as string) ? setopenEnterModal(true) : null)}
             >
-              {competitionState === 'notEnter' && <use href='#icon-weibaoming'></use>}
-              {competitionState === 'enter' && <use href='#icon-yibaoming'></use>}
-              {competitionState === 'underway' && <use href='#icon-jinhangzhong'></use>}
-              {competitionState === 'finished' && <use href='#icon-yijieshu'></use>}
-            </svg>
+              {competitionState === 'notEnter' && (
+                <MySvgIcon
+                  href='#icon-weibaoming'
+                  color={token.colorWarning}
+                  size={4}
+                ></MySvgIcon>
+              )}
+              {competitionState === 'enter' && (
+                <MySvgIcon
+                  href='#icon-yibaoming'
+                  color={token.colorInfo}
+                  size={4}
+                ></MySvgIcon>
+              )}
+              {competitionState === 'underway' && (
+                <MySvgIcon
+                  href='#icon-jinhangzhong'
+                  color={token.colorSuccess}
+                  size={4}
+                ></MySvgIcon>
+              )}
+              {competitionState === 'finished' && (
+                <MySvgIcon
+                  href='#icon-yijieshu'
+                  color={token.colorError}
+                  size={4}
+                ></MySvgIcon>
+              )}
+            </span>
           </div>
           <div className='flex-grow'>
-            <div className=' flex justify-center items-center text-3xl font-bold '>
+            <div className=' flex justify-center items-center font-bold '>
               <CompetitionTypeLabel
-                size={3}
+                size={2}
                 showLabel={false}
                 type={competition?.type as CompetitionType}
               ></CompetitionTypeLabel>
-              <div className='ml-4'>{competition?.title}</div>
-            </div>
-            <div className='flex justify-center mt-4 h-12'>
-              {competitionState !== 'finished' && (
-                <Fragment>
-                  <div className='countdown-section'>
-                    <span className='countdown-amount'>{countDown?.day}</span>
-                    {/* <span className="countdown-period">天</span> */}
-                  </div>
-                  <div className='countdown-section'>
-                    <span className='countdown-amount'>{countDown?.hour}</span>
-                    {/* <span className="countdown-period">时</span> */}
-                  </div>
-                  <div className='countdown-section'>
-                    <span className='countdown-amount'>{countDown?.min}</span>
-                    {/* <span className="countdown-period">分</span> */}
-                  </div>
-                  <div className='countdown-section'>
-                    <span className='countdown-amount'>{countDown?.second}</span>
-                    {/* <span className="countdown-period">秒</span> */}
-                  </div>
-                </Fragment>
-              )}
-            </div>
-          </div>
-          <div className='flex flex-col items-center justify-center'>
-            <Tooltip title='查看报名列表'>
               <div
-                className=' font-bold hover:cursor-pointer'
-                onClick={() => getEnterList()}
+                className='ml-4'
+                style={{ fontSize: '2rem' }}
               >
-                {typeof enterNum === 'number' && (
-                  <Fragment>
-                    <div className='flex justify-center '>{enterNum}名</div>
-                    <div>参赛者</div>
-                  </Fragment>
-                )}
+                {competition?.title}
               </div>
-            </Tooltip>
+            </div>
+            {competitionState !== 'finished' && endTime && (
+              <CountDown
+                endTime={endTime}
+                onCountZero={() => {
+                  setcompetitionState('finished')
+                }}
+              ></CountDown>
+            )}
           </div>
+          {typeof enterNum === 'number' && (
+            <div className='flex flex-col items-center justify-center'>
+              <Tooltip title='查看报名列表'>
+                <div
+                  className=' font-bold hover:cursor-pointer'
+                  onClick={() => getEnterList()}
+                >
+                  <div className='flex justify-center '>{enterNum}名</div>
+                  <div>参赛者</div>
+                </div>
+              </Tooltip>
+            </div>
+          )}
         </div>
       </Card>
       <Menu
@@ -410,7 +343,7 @@ const Detail: React.FC = () => {
                 type={type}
               ></EnterGroup>
             )}
-            {competitionState === 'enter' && (
+            {competitionState === 'enter' && groupInfo && (
               <Fragment>
                 <GroupInfo group={groupInfo}></GroupInfo>
                 <div className='absolute right-8 bottom-8'>

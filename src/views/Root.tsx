@@ -48,6 +48,7 @@ const Root: React.FC = () => {
   }, [sideBarType])
 
   const showPaddingY = React.useMemo(() => !['problemdetail', 'competitiondetail'].includes(getPathArray(pathname)[0]), [pathname])
+  const full = React.useMemo(() => pathname === '/creation/article', [pathname])
 
   const headerStyle: React.CSSProperties = { backgroundColor: `${isDark ? '#141414' : '#ffffff'}`, boxShadow: token.boxShadowTertiary }
 
@@ -116,7 +117,7 @@ const Root: React.FC = () => {
           >
             <div
               className='h-full'
-              style={{ width: 'min-content', margin: 'auto' }}
+              style={{ width: full ? '100%' : 'min-content', margin: 'auto' }}
             >
               <Outlet></Outlet>
             </div>

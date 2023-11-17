@@ -16,15 +16,6 @@ interface IProps {
 
 const stringArrItem = ['test_input', 'test_output', 'sample_input', 'sample_output']
 
-const initial: Descendant = {
-  type: 'paragraph',
-  children: [
-    {
-      text: ''
-    }
-  ]
-}
-
 const initLocalProblemForm: any = {
   title: '',
   description: '',

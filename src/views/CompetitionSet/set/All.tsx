@@ -66,7 +66,7 @@ const View: React.FC = () => {
                 label: (
                   <div
                     className='hover:cursor-pointer'
-                    onClick={() => handleClick(competition.id)}
+                    onClick={() => handleClick(competition)}
                   >
                     {competition.title}
                   </div>
@@ -83,9 +83,8 @@ const View: React.FC = () => {
       })
   }, [])
 
-  const handleClick = (id: string) => {
-    console.log(id)
-    nav(`/competition/${id}`)
+  const handleClick = (competition: ICompetition) => {
+    nav(`/competition/${competition.id}`)
   }
   return (
     <div style={{ minWidth: '800px' }}>
