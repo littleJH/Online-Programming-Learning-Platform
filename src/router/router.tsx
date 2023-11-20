@@ -67,6 +67,7 @@ const CreatePost = lazy(() => import('@/views/Creation/pages/CreatePost'))
 const CreateTopic = lazy(() => import('@/views/Creation/pages/CreateTopic'))
 const CreateForm = lazy(() => import('@/views/Creation/pages/CreateForm'))
 const ArticleDetail = lazy(() => import('@/views/Community/Article/Detail'))
+const FileRoot = lazy(() => import('@/views/File/FileRoot'))
 
 const routes: MyRoute[] = [
   // {
@@ -302,6 +303,10 @@ const routes: MyRoute[] = [
             element: CreateForm
           }
         ]
+      },
+      {
+        path: 'file',
+        element: FileRoot
       }
     ]
   }

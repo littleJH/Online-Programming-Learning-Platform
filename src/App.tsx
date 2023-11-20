@@ -24,7 +24,7 @@ function App() {
     <ConfigProvider
       form={{
         validateMessages: {
-          required: '"${label}"是必选字段'
+          required: '"${label}"是必填字段'
         }
       }}
       avatar={{

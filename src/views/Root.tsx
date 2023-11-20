@@ -69,6 +69,7 @@ const Root: React.FC = () => {
         style={headerStyle}
       >
         <Navbar headerNav={headerNav}></Navbar>
+
         <Button
           type='text'
           className='flex items-center h-12 p-2'
@@ -78,6 +79,17 @@ const Root: React.FC = () => {
             href={`#icon-${isDark ? 'light' : 'dark'}`}
             size={2}
             color={`${isDark ? '#fff' : '#000'}`}
+          ></MySvgIcon>
+        </Button>
+        <Button
+          type='text'
+          className='flex items-center h-12 p-2'
+          onClick={() => nav('/file')}
+        >
+          <MySvgIcon
+            href='#icon-folder'
+            size={2}
+            color={token.colorPrimary}
           ></MySvgIcon>
         </Button>
         <Button
