@@ -136,7 +136,7 @@ export interface User {
   email: string
   icon: string
   id: string
-  level?: string
+  level?: number
   like_num?: number
   name: string
   score?: string

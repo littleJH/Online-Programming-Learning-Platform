@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useLayoutEffect, useMemo } from 'react'
 import { Layout, Button, Avatar, theme } from 'antd'
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import { Outlet } from 'react-router-dom'
 import { iconBaseUrl } from '@/config/apiConfig'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { isDarkState, loginStatusState, pathNameState, sideBarTypeState, userInfoState } from '@/store/appStore'
 import Sider from 'antd/es/layout/Sider'
 import SideBar from '@/components/Navbar/SideBar'
@@ -25,6 +24,8 @@ const Root: React.FC = () => {
   const footerRight = useRecoilValue(footerRightNode)
   const pathname = useRecoilValue(pathNameState)
   const sideBarType = useRecoilValue(sideBarTypeState)
+  const myInfo = useRecoilValue(userInfoState)
+  const loginStatus = useRecoilValue(loginStatusState)
   const nav = useNavTo()
 
   useLayoutEffect(() => {
@@ -81,22 +82,36 @@ const Root: React.FC = () => {
             color={`${isDark ? '#fff' : '#000'}`}
           ></MySvgIcon>
         </Button>
-        <Button
-          type='text'
-          className='flex items-center h-12 p-2'
-          onClick={() => nav('/file')}
-        >
-          <MySvgIcon
-            href='#icon-folder'
-            size={2}
-            color={token.colorPrimary}
-          ></MySvgIcon>
-        </Button>
+        {myInfo?.level && myInfo?.level >= 4 && (
+          <Button
+            type='text'
+            className='flex items-center h-12 p-2'
+            onClick={() => nav('/file')}
+          >
+            <MySvgIcon
+              href='#icon-folder'
+              size={2}
+              color={token.colorWarning}
+            ></MySvgIcon>
+          </Button>
+        )}
         <Button
           type='text'
           className='flex items-center h-12 p-2 mr-4'
         >
-          <MyLogin></MyLogin>
+          <div
+            className='h-full flex items-center'
+            onClick={() => nav('/profile')}
+          >
+            {loginStatus && (
+              <Avatar
+                className='hover:cursor-pointer'
+                alt='登录'
+                src={`${iconBaseUrl}/${myInfo?.icon}`}
+              ></Avatar>
+            )}
+            {!loginStatus && <Button type='link'>登录</Button>}
+          </div>
         </Button>
       </Header>
       <Layout hasSider>
@@ -170,30 +185,3 @@ const Root: React.FC = () => {
 }
 
 export default Root
-
-const MyLogin: React.FC = () => {
-  const nav = useNavTo()
-  const myInfo = useRecoilValue(userInfoState)
-  const loginStatus = useRecoilValue(loginStatusState)
-  // const setSideBarCollapsed = useSetRecoilState(sideBarCollapsed)
-
-  const handleClick = () => {
-    nav('/profile')
-  }
-
-  return (
-    <div
-      className='h-full flex items-center'
-      onClick={handleClick}
-    >
-      {loginStatus && (
-        <Avatar
-          className='hover:cursor-pointer'
-          alt='登录'
-          src={`${iconBaseUrl}/${myInfo?.icon}`}
-        ></Avatar>
-      )}
-      {!loginStatus && <Button type='link'>登录</Button>}
-    </div>
-  )
-}

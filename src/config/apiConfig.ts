@@ -11,8 +11,8 @@ const baseUrlObj: {
   baseURL: import.meta.env.DEV ? '/api' : 'http://10.141.47.20:1000',
   testBaseUrl: import.meta.env.DEV ? '/test' : 'http://test_oj.mgaronya.com/test',
   tagBaseUrl: import.meta.env.DEV ? '/tag_api' : 'http://api_tag.mgaronya.com',
-  translateBaseUrl: import.meta.env.DEV ? '/translate_api' : 'http://api_translate.mgaronya.com/translator/translate',
-  fileBaseUrl: import.meta.env.Dev ? '' : 'api_file.mgaronya.com'
+  translateBaseUrl: import.meta.env.DEV ? '/translate_api' : 'http://api_translate.mgaronya.com/translator/translate'
+  // fileBaseUrl: import.meta.env.Dev ? '' : 'api_file.mgaronya.com'
 }
 
 export const wsBaseUrl = baseUrlObj.wsBaseUrl
@@ -23,7 +23,7 @@ export const tagBaseUrl = baseUrlObj.tagBaseUrl
 export const baseURL = baseUrlObj.baseURL
 export const imgGetBaseUrl = baseUrlObj.imgGetBaseUrl
 export const testBaseUrl = baseUrlObj.testBaseUrl
-export const fileBaseUrl = baseUrlObj.fileBaseUrl
+// export const fileBaseUrl = baseUrlObj.fileBaseUrl
 
 export const baseConfig = () => {
   return {
