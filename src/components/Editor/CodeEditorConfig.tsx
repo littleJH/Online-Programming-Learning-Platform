@@ -1,6 +1,7 @@
 import { IMonacoOptions } from '@/type'
 import { Button, Col, Form, InputNumber, Row, Select, Switch } from 'antd'
 import React, { useState } from 'react'
+import MySvgIcon from '../Icon/MySvgIcon'
 
 interface IProps {
   monacoOptions: IMonacoOptions
@@ -10,7 +11,6 @@ interface IProps {
 const CodeEditorConfig: React.FC<IProps> = (props) => {
   const { monacoOptions, setMonacoOptions } = props
   const [form] = Form.useForm<IMonacoOptions>()
-  const [config, setconfig] = useState<IMonacoOptions>()
 
   const handleFormChange = () => {
     const fieldsValue = form.getFieldsValue(true)
@@ -29,6 +29,10 @@ const CodeEditorConfig: React.FC<IProps> = (props) => {
       scrollToFirstError
       layout='vertical'
     >
+      <h6 className='label'></h6>
+      <Form.Item label={'编辑器主题'}>
+        <MySvgIcon href={``}></MySvgIcon>
+      </Form.Item>
       <h6 className='label'>字体</h6>
       <Row gutter={32}>
         <Col span={12}>

@@ -1,10 +1,10 @@
 import Editor from '@monaco-editor/react'
 import React, { useCallback, useEffect, useState } from 'react'
-import Loading from '@/components/loading/Loading'
-import { Modal, Select } from 'antd'
-import { languageList, poj_languageList } from './LanguageList'
+import Loading from '@/components/Loading/Loading'
+import { Modal, Select, Button } from 'antd'
+import { languageList, poj_languageList } from '@/components/Editor/LanguageList'
 import { getCurrentUserinfo, updateInfoApi } from '@/api/user'
-import CodeEditorConfig from '@/components/editor/CodeEditorConfig'
+import CodeEditorConfig from '@/components/Editor/CodeEditorConfig'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { languageState, monacoOptionsState, monacoThemeState, userInfoState } from '@/store/appStore'
 import MySvgIcon from '../Icon/MySvgIcon'
@@ -26,9 +26,7 @@ const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
   const [info, setInfo] = useRecoilState(userInfoState)
   const [monacoOptions, setMonacoOptions] = useRecoilState(monacoOptionsState)
   const [language, setLanguage] = useRecoilState(languageState)
-  const monacoTheme = useRecoilValue(monacoThemeState)
-
-  console.log('monacoTheme ==> ', monacoTheme)
+  const [monacoTheme, setMonacoTheme] = useRecoilState(monacoThemeState)
 
   useEffect(() => {
     setLanguageOptions(() => {
@@ -42,17 +40,22 @@ const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
   }, [])
 
   const handleLanguageChange = (value: any) => {
-    console.log(value)
     setCodeLanguage(value)
     setLanguage(value)
     updateConfig(value)
   }
 
-  const updateConfig = (language?: string) => {
-    const newInfo = {
-      ...info,
-      language
+  const handleMonacoThemeChange = () => {
+    setMonacoTheme((value) => (value === 'vs-dark' ? 'light' : 'vs-dark'))
+  }
+
+  const updateConfig = (params: { language?: string; monaco_theme?: string }) => {
+    const { language, monaco_theme } = params
+    let newInfo = {
+      ...info
     }
+    if (language) newInfo = { ...newInfo, language }
+    if(monacoTheme) newInfo = {...newInfo, monaco_theme}
     updateInfoApi(JSON.stringify(newInfo)).then(async (res) => {
       if (res.data.code === 200) {
         const res = await getCurrentUserinfo()
@@ -60,6 +63,7 @@ const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
       }
     })
   }
+
   return (
     <>
       <div
@@ -78,6 +82,19 @@ const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
             onChange={handleLanguageChange}
           ></Select>
           <div className='grow'></div>
+          <div>
+            <Button
+              type='text'
+              className='flex items-center h-12 p-2'
+              onClick={handleMonacoThemeChange}
+            >
+              <MySvgIcon
+                href={`#icon-${monacoTheme === 'light' ? 'light' : 'vs-dark'}`}
+                size={2}
+                color={`${monacoTheme === 'light' ? '#fff' : '#000'}`}
+              ></MySvgIcon>
+            </Button>
+          </div>
           <div
             onClick={() => setopenConfigModal(true)}
             className='hover:cursor-pointer'

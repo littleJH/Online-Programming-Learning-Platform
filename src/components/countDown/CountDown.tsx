@@ -68,15 +68,15 @@ const CountDown: React.FC<IProps> = (props) => {
     <div className='flex justify-center mt-4 h-12'>
       <div className='countdown-section'>
         <span className='countdown-amount'>{countDown?.day}</span>
-        {/* <span className="countdown-period">天</span> */}
+        <span className='countdown-period'>天</span>
       </div>
       <div className='countdown-section'>
         <span className='countdown-amount'>{countDown?.hour}</span>
-        {/* <span className="countdown-period">时</span> */}
+        <span className='countdown-period'>:</span>
       </div>
       <div className='countdown-section'>
         <span className='countdown-amount'>{countDown?.min}</span>
-        {/* <span className="countdown-period">分</span> */}
+        <span className='countdown-period'>:</span>
       </div>
       <div className='countdown-section'>
         <span className='countdown-amount'>{countDown?.second}</span>

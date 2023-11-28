@@ -9,8 +9,7 @@ import { themeDefault } from '@/config/config'
 
 const Setting: React.FC = () => {
   const [form] = Form.useForm()
-  const monacoOptionsValue = useRecoilValue(monacoOptionsState)
-  const [monacoOptions, setMonacoOptions] = useState(monacoOptionsValue)
+  const [monacoOptions, setMonacoOptions] = useRecoilState(monacoOptionsState)
   const [info, setInfo] = useRecoilState(userInfoState)
   const [theme, setTheme] = useRecoilState(themeState)
   const notification = useRecoilValue(notificationApi)

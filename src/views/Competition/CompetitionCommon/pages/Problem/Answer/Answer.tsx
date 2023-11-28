@@ -5,9 +5,9 @@ import { IProblem, ICaseSample, IEditorConfig, IRunResult, IRecordState, Competi
 import ReadOnly from '@/components/editor/Readonly'
 import { Button, Popover, Segmented, Switch, Table, notification } from 'antd'
 import Column from 'antd/es/table/Column'
-import Code from '@/components/editor/CodeEditor'
-import { languageList } from '@/components/editor/LanguageList'
-import RunResult from '@/views/ProblemDetail/RunResult'
+import CodeEditor from '@/components/Editor/CodeEditor'
+import { languageList } from '@/components/Editor/LanguageList'
+import RunResult from '@/views/Problem/RunResult'
 import TextArea from 'antd/es/input/TextArea'
 import { createTestApi } from '@/api/test'
 import { createRecordApi } from '@/api/competitionMixture'
@@ -217,7 +217,7 @@ const Answer: React.FC = () => {
           </div>
         </div>
         <div>
-          <Code
+          <CodeEditor
             value={code}
             height={500}
             className=' '
@@ -225,7 +225,7 @@ const Answer: React.FC = () => {
               localStorage.setItem(`code-${problem_id}`, value)
               setcode(value)
             }}
-          ></Code>
+          ></CodeEditor>
         </div>
       </div>
       {/* footer */}
