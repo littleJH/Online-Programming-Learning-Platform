@@ -22,6 +22,8 @@ const Root = lazy(() => import('@/views/Root'))
 const ErrorPage = lazy(() => import('@/components/error-page'))
 const Homepage = lazy(() => import('@/views/Home/HomeRoot'))
 const LoginRoot = lazy(() => import('@/views/Login/LoginRoot'))
+
+// 个人中心
 const ProfileRoot = lazy(() => import('@/views/Profile/ProfileRoot'))
 const ProfileFriend = lazy(() => import('@/views/Profile/pages/Friend/Friend'))
 const ProfileMessage = lazy(() => import('@/views/Profile/pages/Message/Message'))
@@ -34,31 +36,39 @@ const ProfileCreationArticle = lazy(() => import('@/views/Profile/pages/Creation
 const ProfileCreationProblem = lazy(() => import('@/views/Profile/pages/Creation/Problem'))
 const ProfileCreationGroup = lazy(() => import('@/views/Profile/pages/Creation/Group'))
 const ProfileCreationTopic = lazy(() => import('@/views/Profile/pages/Creation/Topic'))
-const ProblemDetailRoot = lazy(() => import('@/views/ProblemDetail/DetailRoot'))
+
+// 题目
+const ProblemDetailRoot = lazy(() => import('@/views/Problem/DetailRoot'))
 const ProblemSetRoot = lazy(() => import('@/views/ProblemSet/ProblemSetRoot'))
 const PorblemAll = lazy(() => import('@/views/ProblemSet/set/All'))
 const ProblemTopic = lazy(() => import('@/views/ProblemSet/topic/Topic'))
 const ProblemForm = lazy(() => import('@/views/ProblemSet/form/Form'))
-const ProblemDescription = lazy(() => import('@/views/ProblemDetail/Description'))
-const ProblemSubmitrecord = lazy(() => import('@/views/ProblemDetail/Record/Records'))
+const ProblemDescription = lazy(() => import('@/views/Problem/Description'))
+const ProblemSubmitrecord = lazy(() => import('@/views/Problem/Record/Records'))
 const ProblemCreate = lazy(() => import('@/views/Creation/pages/CreateProblem/Create'))
+
+// 比赛
 const CompetitionSetRoot = lazy(() => import('@/views/CompetitionSet/CompetitionSetRoot'))
 const CompetitionRoot = lazy(() => import('@/views/Competition/CompetitionRoot'))
 const CompetitionAll = lazy(() => import('@/views/CompetitionSet/set/All'))
-const CompetitionId = lazy(() => import('@/views/Competition/Detail//Detail/Detail'))
-const CompetitionOverview = lazy(() => import('@/views/Competition/Detail/Content/Overview'))
-const CompetitionProblem = lazy(() => import('@/views/Competition/Detail/Content/Problem/Problem'))
-const CompetitionProblemList = lazy(() => import('@/views/Competition/Detail/Content/Problem/List/List'))
-const CompetitionProblemId = lazy(() => import('@/views/Competition/Detail/Content/Problem/Answer/Answer'))
-const CompetitionRank = lazy(() => import('@/views/Competition/Detail/Content/Rank/Rank'))
-const CompetitionRecord = lazy(() => import('@/views/Competition/Detail/Content/Record/Record'))
+const CompetitionId = lazy(() => import('@/views/Competition/CompetitionCommon/CompetitionCommonRoot'))
+const CompetitionOverview = lazy(() => import('@/views/Competition/CompetitionCommon/pages/OverView/Overview'))
+const CompetitionProblem = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Problem/Problem'))
+const CompetitionProblemList = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Problem/List/List'))
+const CompetitionProblemId = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Problem/Answer/Answer'))
+const CompetitionRank = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Rank/Rank'))
+const CompetitionRecord = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Record/Record'))
 const CompetitionCreate = lazy(() => import('@/views/Creation/pages/CreateCompetition/Create'))
 const CompetitionCreateDeclare = lazy(() => import('@/views/Creation/pages/CreateCompetition/Declare'))
 const CompetitionCreateCompetition = lazy(() => import('@/views/Creation/pages/CreateCompetition/Competition'))
 const CompetitionCreateProblem = lazy(() => import('@/views/Creation/pages/CreateCompetition/Problem'))
 const CompetitionRandom = lazy(() => import('@/views/Competition/CompetitionRandom/CompetitionRandom'))
+
+// 社区
 const CommunityRoot = lazy(() => import('@/views/Community/CommunityRoot'))
 const ArticleSet = lazy(() => import('@/views/Community/Overview/RecommendSet/ArticleSet'))
+
+// 创作中心
 const CreationRoot = lazy(() => import('@/views/Creation/root/CreationRoot'))
 const CreationNavgation = lazy(() => import('@/views/Creation/root/CreationNavgation'))
 const CreateArticle = lazy(() => import('@/views/Creation/pages/CreateArticle'))
@@ -66,13 +76,14 @@ const CreateComment = lazy(() => import('@/views/Creation/pages/CreateComment'))
 const CreatePost = lazy(() => import('@/views/Creation/pages/CreatePost'))
 const CreateTopic = lazy(() => import('@/views/Creation/pages/CreateTopic'))
 const CreateForm = lazy(() => import('@/views/Creation/pages/CreateForm'))
+
+// 文章详情
 const ArticleDetail = lazy(() => import('@/views/Community/Article/Detail'))
+
+// 文件中心
 const FileRoot = lazy(() => import('@/views/File/FileRoot'))
 
 const routes: MyRoute[] = [
-  // {
-  //   element: Homepage
-  // },
   {
     path: '/',
     element: Root,
@@ -90,10 +101,6 @@ const routes: MyRoute[] = [
       //profile
       {
         path: 'profile',
-        // loader: async () => {
-        //   if (!localStorage.getItem('token')) return redirect('/login')
-        //   return null
-        // },
         element: ProfileRoot,
         children: [
           {
@@ -198,7 +205,7 @@ const routes: MyRoute[] = [
             element: CompetitionId,
             children: [
               {
-                path: '',
+                path: 'overview',
                 element: CompetitionOverview
               },
               {

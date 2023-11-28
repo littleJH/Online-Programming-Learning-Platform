@@ -3,7 +3,7 @@ import { getProblemNewApi, getProblemNewListApi } from '@/api/problemNew'
 import { getRecordListApi } from '@/api/competitionMixture'
 import { CompetitionType, ICompetition } from '@/type'
 import { Outlet, useOutletContext } from 'react-router-dom'
-import ProblemStateLabel from '../../Label.tsx/ProblemStateLabel'
+import ProblemStateLabel from '../../component/Label/ProblemStateLabel'
 import { CompetitionState } from '@/type'
 
 interface Problems {
@@ -14,13 +14,9 @@ interface Problems {
   state: JSX.Element
 }
 
-const getProblem = (
-  competition: ICompetition,
-  setproblems: Function,
-  type: CompetitionType
-) => {
+const getProblem = (competition: ICompetition, setproblems: Function, type: CompetitionType) => {
   getProblemNewListApi(competition.id as string)
-    .then(res => {
+    .then((res) => {
       return res.data.data.problemIds
     })
     .then(async (problemIds: string[]) => {
@@ -53,10 +49,7 @@ const getProblem = (
     })
 }
 const Element: React.FC = () => {
-  const [competition, comptitionState, setanswering, type] =
-    useOutletContext<
-      [ICompetition, CompetitionState, Function, CompetitionType]
-    >()
+  const [competition, comptitionState, setanswering, type] = useOutletContext<[ICompetition, CompetitionState, Function, CompetitionType]>()
   const [problems, setproblems] = useState<Problems[]>([])
 
   useEffect(() => {
@@ -65,17 +58,12 @@ const Element: React.FC = () => {
         break
 
       default:
-        if (competition && comptitionState && type)
-          getProblem(competition, setproblems, type)
+        if (competition && comptitionState && type) getProblem(competition, setproblems, type)
         break
     }
   }, [competition, comptitionState, type])
 
-  return (
-    <Outlet
-      context={[problems, setanswering, competition, type, comptitionState]}
-    ></Outlet>
-  )
+  return <Outlet context={[problems, setanswering, competition, type, comptitionState]}></Outlet>
 }
 
 export default Element

@@ -3,7 +3,7 @@ import { getProblemNewApi, getProblemNewListApi, quoteProblemApi, deleteProblemN
 import { MinusCircleOutlined } from '@ant-design/icons'
 import { searchProblemByTextApi, showProblemApi } from '@/api/problem'
 import { Button, InputNumber, List, Select, Spin, notification } from 'antd'
-import ProblemNew from '../../../Creation/pages/createCompetition/ProblemNew'
+import ProblemNew from '../../../../Creation/pages/createCompetition/ProblemNew'
 import ReadOnly from '@/components/editor/Readonly'
 import { ICompetition } from '@/type'
 interface IProblem {

@@ -6,7 +6,7 @@ import dayjs from 'dayjs'
 import { Button, Modal, Space } from 'antd'
 import { getEnterConditionApi } from '@/api/competitionStandardMixture'
 import { getStandardUserListApi } from '@/api/competitionStandardMixture'
-import CompetitionTypeLabel from '../Label.tsx/CompetitionTypeLabel'
+import CompetitionTypeLabel from '../Label/CompetitionTypeLabel'
 
 interface Iprops {
   type: CompetitionType

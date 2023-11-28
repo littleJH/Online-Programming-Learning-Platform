@@ -4,8 +4,7 @@ import { Skeleton, Table, theme } from 'antd'
 import { ICompetition } from '@/type'
 import dayjs from 'dayjs'
 import Column from 'antd/es/table/Column'
-import { useNavigate } from 'react-router-dom'
-import CompetitionTypeLabel from '../../Competition/Detail/Label.tsx/CompetitionTypeLabel'
+import CompetitionTypeLabel from '@/views/Competition/CompetitionCommon/component/Label/CompetitionTypeLabel'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
 import useNavTo from '@/tool/myHooks/useNavTo'
 
@@ -53,10 +52,10 @@ const View: React.FC = () => {
   const { token } = theme.useToken()
 
   useEffect(() => {
-    getCompetitionListApi()
-      .then((res) => res.data.data.competitions)
-      .then(async (data: ICompetition[]) => {
-        data.forEach((competition, index) => {
+    getCompetitionListApi().then((res) => {
+      const competitions: ICompetition[] = res.data.data?.competitions
+      competitions &&
+        competitions.forEach((competition, index) => {
           setdataSource((value) => [
             ...value,
             {
@@ -80,7 +79,7 @@ const View: React.FC = () => {
             }
           ])
         })
-      })
+    })
   }, [])
 
   const handleClick = (competition: ICompetition) => {

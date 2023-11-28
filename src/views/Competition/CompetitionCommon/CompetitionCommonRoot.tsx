@@ -4,20 +4,20 @@ import { showCompetitionApi } from '@/api/competition'
 import { cancelEnterApi, enterCompetitionApi, getEnterListApi } from '@/api/competitionMixture'
 import { getEnterConditionApi } from '@/api/competitionMixture'
 import dayjs from 'dayjs'
-import Sidebar from '../Sidebar/Sidebar'
+import Sidebar from './component/SideBar/Sidebar'
 import { CompetitionType, ICompetition, IGroup } from '@/type'
 import { Button, List, Menu, Modal, theme, Tooltip, notification, Card } from 'antd'
-import Update from '../Update/Update'
+import Update from './component/Update/Update'
 import { getUserInfoApi } from '@/api/user'
-import UserCard from '@/components/user/UserCard'
+import UserCard from '@/components/User/UserCard'
 import { User } from '@/type'
-import CompetitionTypeLabel from '../Label.tsx/CompetitionTypeLabel'
-import EnterGroup from './Group/EnterGroup'
-import GroupInfo from './Group/GroupInfo'
+import CompetitionTypeLabel from './component/Label/CompetitionTypeLabel'
+import EnterGroup from './component/Group/EnterGroup'
+import GroupInfo from './component/Group/GroupInfo'
 import { getMemberGroupListApi } from '@/api/group'
 import useNavTo from '@/tool/myHooks/useNavTo'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { competitionStateAtom } from '../../store'
+import { competitionStateAtom } from '../store'
 import CountDown from '@/components/countDown/CountDown'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
 
@@ -179,8 +179,6 @@ const Detail: React.FC = () => {
   const navTo = (e: any) => {
     setanswering(false)
     setcurrent(e.key)
-    if (e.key === 'overview') nav('')
-    else nav(e.key)
   }
 
   return (
