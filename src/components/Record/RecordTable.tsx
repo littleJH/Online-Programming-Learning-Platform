@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { getRecordListApi as getProRecordListApi, getRecordApi, hackRecordApi as hackProRecordApi, getRecordCaseListApi } from '@/api/record'
 import { getRecordListApi as getCptRecordListApi, hackRecordApi as hackCptRecordApi } from '@/api/competitionMixture'
-import { useOutletContext, useParams } from 'react-router-dom'
 import { Descriptions, Modal, Result, Statistic, Table, Tooltip, notification } from 'antd'
 import Column from 'antd/es/table/Column'
 import RecordStateLabel from './RecordLabel.tsx/RecordStateLabel'
@@ -135,15 +134,16 @@ const RecordTable: React.FC<IProps> = (props) => {
             }
           })
         } else hack = 'unableHack'
+        list.push({
+          key: record.id,
+          condition: <RecordStateLabel value={record.condition}></RecordStateLabel>,
+          create_at: record.created_at,
+          language: <LanaugeLabel value={record.language}></LanaugeLabel>,
+          pass: record.pass,
+          problem,
+          hack: hack
+        })
       }
-      list.push({
-        key: record.id,
-        condition: <RecordStateLabel value={record.condition}></RecordStateLabel>,
-        create_at: record.created_at,
-        language: <LanaugeLabel value={record.language}></LanaugeLabel>,
-        pass: record.pass,
-        hack: hack
-      })
     }
     console.log('datasource ==> ', list)
     return list
@@ -201,6 +201,29 @@ const RecordTable: React.FC<IProps> = (props) => {
         }}
         pagination={false}
       >
+        {mode === 'competition' && (
+          <Column
+            align='center'
+            dataIndex={['problem', 'title']}
+            title='题目'
+            filters={filters}
+            onFilter={(value, record: any) => record.problem.title.indexOf(value) === 0}
+            filterMultiple
+            render={(value, record) => {
+              return (
+                <div
+                  className='hover:cursor-pointer'
+                  onClick={() => {
+                    setcurrentRecord(recordList[record.index])
+                    setopenRecordDetailModal(true)
+                  }}
+                >
+                  {value}
+                </div>
+              )
+            }}
+          ></Column>
+        )}
         <Column
           align='center'
           dataIndex={'condition'}
@@ -308,6 +331,9 @@ const RecordTable: React.FC<IProps> = (props) => {
         onCancel={() => setopenRecordDetailModal(false)}
         footer={null}
       >
+        <pre>
+          <code>{currentRecord?.code}</code>
+        </pre>
         <Result
           status={currentState?.state}
           title={currentState?.label}
