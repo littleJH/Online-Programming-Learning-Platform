@@ -8,7 +8,7 @@ import { createTestApi } from '@/api/test'
 import { createRecordApi, enterPublishRecordWs, getRecordListApi } from '@/api/record'
 import RunResult from './RunResult'
 import { IRecordState, IRunResult, ICaseSample, IRecord, IProblem } from '@/type'
-import RecordModal from './Record/RecordModal'
+import RecordModal from '../../components/Record/RecordModal'
 import CodeEditor from '@/components/Editor/CodeEditor'
 import { recordStates } from '@/assets/recordStates'
 import ojmap from '@/assets/ojmap'
@@ -55,7 +55,7 @@ export const Detail: React.FC = () => {
   const [consoleMode, setconsoleMode] = useState('test')
   const [testTextareaValue, settestTextareaValue] = useState<string>()
   const [runResult, setrunResult] = useState<IRunResult>()
-  const [recordList, setrecordList] = useState<IRecord[]>([])
+  // const [recordList, setrecordList] = useState<IRecord[]>([])
   const [currentState, setcurrentState] = useState<IRecordState>(initTestState)
   const [currentRecordState, setCurrentRecordState] = useState<IState>(initRecordState)
   const [openRecordModal, setopenRecordModal] = useState(false)
@@ -187,12 +187,12 @@ export const Detail: React.FC = () => {
             case_id: message.case_id
           }
     )
-    getRecordListApi({
-      problem_id: id
-    }).then((res) => {
-      console.log(res.data.data)
-      setrecordList(res.data.data.records)
-    })
+    // getRecordListApi({
+    //   problem_id: id
+    // }).then((res) => {
+    //   console.log(res.data.data)
+    //   setrecordList(res.data.data.records)
+    // })
   }
 
   const renderFooterRight = () => (
@@ -287,7 +287,7 @@ export const Detail: React.FC = () => {
             </div>
             {/* body */}
             <div className='grow overflow-scroll'>
-              <Outlet context={[problem, caseSamples, recordList, setrecordList]}></Outlet>
+              <Outlet context={[problem, caseSamples]}></Outlet>
             </div>
             {/* footer */}
             {/* {problem && id && (
@@ -405,7 +405,7 @@ export const Detail: React.FC = () => {
           openModal={openRecordModal}
           setopenModal={setopenRecordModal}
           state={currentRecordState}
-          setrecordList={setrecordList}
+          // setrecordList={setrecordList}
         ></RecordModal>
       )}
     </>

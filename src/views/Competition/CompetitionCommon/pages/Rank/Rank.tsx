@@ -38,14 +38,12 @@ const Rank: React.FC = () => {
         const { data } = await getUserInfoApi(member.member_id)
         setdataSource((value) => [
           ...value,
-          Object.assign(
-            {
-              key: member.member_id,
-              name: data.data.user.name,
-              index: value.length ? value[value.length - 1].index + 1 : 1
-            },
-            member
-          )
+          {
+            ...member,
+            key: member.member_id,
+            name: data.data.user.name,
+            index: value.length ? value[value.length - 1].index + 1 : 1
+          }
         ])
       }
     })

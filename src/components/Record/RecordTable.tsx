@@ -1,51 +1,83 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { getRecordListApi, getRecordApi, hackRecordApi, getRecordCaseListApi } from '@/api/record'
+import { getRecordListApi as getProRecordListApi, getRecordApi, hackRecordApi as hackProRecordApi, getRecordCaseListApi } from '@/api/record'
+import { getRecordListApi as getCptRecordListApi, hackRecordApi as hackCptRecordApi } from '@/api/competitionMixture'
 import { useOutletContext, useParams } from 'react-router-dom'
 import { Descriptions, Modal, Result, Statistic, Table, Tooltip, notification } from 'antd'
 import Column from 'antd/es/table/Column'
-import RecordStateLabel from '../RecordLabel.tsx/RecordStateLabel'
-import LanaugeLabel from '../RecordLabel.tsx/LanaugeLabel'
-import { HackState, ICaseTest, IHack, IProblem, IRecord, IRecordState, IRecordTableDataSource, User } from '@/type'
-import Hack from '@/views/Competition/Detail/Content/Record/Hack'
+import RecordStateLabel from './RecordLabel.tsx/RecordStateLabel'
+import LanaugeLabel from './RecordLabel.tsx/LanaugeLabel'
+import { HackState, ICaseTest, ICompetition, IHack, IProblem, IRecord, IRecordState, IRecordTableDataSource, User } from '@/type'
+import Hack from './Hack'
 import { getUserInfoApi } from '@/api/user'
 import { getHackApi } from '@/api/hack'
 import HackDetail from './HackDetail'
 import { recordStates } from '@/assets/recordStates'
 import { getProblemTestNumApi } from '@/api/problem'
+import { getProblemNewApi } from '@/api/problemNew'
 
-const SubmitRecords: React.FC = () => {
-  const [problem, caseSamples, recordList, setrecordList] = useOutletContext<[IProblem, any, IRecord[], Function]>()
-  const [openHackModal, setopenHackModal] = useState(false)
-  const [openHackDetailModal, setopenHackDetailModal] = useState(false)
+interface IProps {
+  mode: 'problem' | 'competition'
+  problem?: IProblem
+  competition?: ICompetition
+}
+
+interface Filter {
+  text: string
+  value: string
+}
+
+const RecordTable: React.FC<IProps> = (props) => {
+  const { mode, problem, competition } = props
+  const [recordList, setrecordList] = useState<IRecord[]>([])
+  const [userInfo, setuserInfo] = useState<User>()
+  const [currentRecord, setcurrentRecord] = useState<IRecord>()
+  const [hackInput, sethackInput] = useState('')
   const [openRecordDetailModal, setopenRecordDetailModal] = useState(false)
-  const [currentRecord, setcurrentRecord] = useState<IRecord>({} as IRecord)
+  const [openHackDetailModal, setopenHackDetailModal] = useState(false)
+  const [openHackModal, setopenHackModal] = useState(false)
+  const [hackDetail, sethackDetail] = useState<IHack>()
   const [currentState, setCurrentState] = useState<IRecordState>()
   const [currentCaseList, setCurrentCaseList] = useState<ICaseTest[]>([])
-  const [hackInput, sethackInput] = useState('')
-  const [hackDetail, sethackDetail] = useState<IHack>()
-  const [userInfo, setuserInfo] = useState<User>()
   const [totalTest, setTotalTest] = useState()
+  const [filters, setfilters] = useState<Filter[]>([])
 
   useEffect(() => {
-    if (problem) {
+    fetchProblem()
+    fetchRecordList()
+  }, [problem])
+
+  useEffect(() => {
+    fetchUserinfo()
+  }, [currentRecord])
+
+  const fetchProblem = () => {
+    problem &&
       getProblemTestNumApi(problem.id).then((res) => {
         setTotalTest(res.data.data.total)
       })
-      getRecordListApi({
+  }
+
+  const fetchRecordList = () => {
+    if (mode === 'problem' && problem) {
+      getProRecordListApi({
         problem_id: problem.id
       }).then((res) => {
         setrecordList(res.data.data.records)
       })
     }
-  }, [problem])
+    if (mode === 'competition' && competition) {
+      getCptRecordListApi(competition.type, competition.id, {}).then((res) => {
+        setrecordList(res.data.data.records)
+      })
+    }
+  }
 
-  useEffect(() => {
-    if (currentRecord.user_id) {
+  const fetchUserinfo = () => {
+    currentRecord &&
       getUserInfoApi(currentRecord.user_id).then((res) => {
         setuserInfo(res.data.data.user)
       })
-    }
-  }, [currentRecord])
+  }
 
   const caseTableDataSource = useMemo(() => {
     interface IDs {
@@ -70,16 +102,40 @@ const SubmitRecords: React.FC = () => {
     let hack: HackState = 'unableHack'
     const list: IRecordTableDataSource[] = []
     for (let record of recordList) {
-      if (problem.input_check_id.indexOf('0000') && record.condition === 'Accepted') {
-        getHackApi(record.hack_id).then((res) => {
-          if (res.data.code === 400) hack = 'notHack'
-          else if (res.data.code === 200) {
-            console.log('hackDetail: ', res)
-            sethackDetail(res.data.data.hack)
-            hack = 'hacked'
-          }
+      if (mode === 'problem' && problem) fetchHack(problem.input_check_id)
+      if (mode === 'competition') {
+        getProblemNewApi(record.problem_id).then((res) => {
+          const pro = res.data.data.probleml
+          fetchHack(pro.input_check_id)
+          setfilters((value: Filter[]) => {
+            let repetition = false
+            value.forEach((item) => {
+              if (item.text === pro.title) repetition = true
+            })
+            if (repetition) return [...value]
+            else
+              return [
+                ...value,
+                {
+                  text: pro.title,
+                  value: pro.title
+                }
+              ]
+          })
         })
-      } else hack = 'unableHack'
+      }
+      function fetchHack(input_check_id: string) {
+        if (input_check_id.indexOf('0000') && record.condition === 'Accepted') {
+          getHackApi(record.hack_id).then((res) => {
+            if (res.data.code === 400) hack = 'notHack'
+            else if (res.data.code === 200) {
+              console.log('hackDetail: ', res)
+              sethackDetail(res.data.data.hack)
+              hack = 'hacked'
+            }
+          })
+        } else hack = 'unableHack'
+      }
       list.push({
         key: record.id,
         condition: <RecordStateLabel value={record.condition}></RecordStateLabel>,
@@ -91,24 +147,28 @@ const SubmitRecords: React.FC = () => {
     }
     console.log('datasource ==> ', list)
     return list
-  }, [recordList, problem])
+  }, [recordList, problem, competition])
 
   const submit = () => {
-    const data = {
+    const data = JSON.stringify({
       input: hackInput
-    }
-    hackRecordApi(currentRecord.id, JSON.stringify(data)).then((res) => {
-      console.log(res)
-      if (res.data.code === 200) {
-        notification.success({
-          message: res.data.msg
-        })
-      } else {
-        notification.warning({
-          message: res.data.msg
-        })
-      }
     })
+    mode === 'problem' && currentRecord && hackProRecordApi(currentRecord.id, data).then(cb)
+    mode === 'competition' && currentRecord && competition && hackCptRecordApi(competition?.type, currentRecord.id, data).then(cb)
+
+    function cb(res: any) {
+      if (res.data.code === 200) {
+        notification &&
+          notification.success({
+            message: res.data.msg
+          })
+      } else {
+        notification &&
+          notification.warning({
+            message: res.data.msg
+          })
+      }
+    }
   }
 
   const handleRowClick = (e: IRecordTableDataSource) => {
@@ -121,6 +181,7 @@ const SubmitRecords: React.FC = () => {
     })
     setopenRecordDetailModal(true)
   }
+
   return (
     <div
       className=''
@@ -217,7 +278,7 @@ const SubmitRecords: React.FC = () => {
         footer={[]}
         onCancel={() => setopenHackModal(false)}
       >
-        {userInfo && (
+        {userInfo && currentRecord && (
           <Hack
             record={currentRecord}
             hackInput={hackInput}
@@ -234,7 +295,7 @@ const SubmitRecords: React.FC = () => {
         footer={[]}
         onCancel={() => setopenHackDetailModal(false)}
       >
-        {hackDetail && (
+        {hackDetail && currentRecord && (
           <HackDetail
             hack={hackDetail}
             record={currentRecord}
@@ -304,4 +365,4 @@ const SubmitRecords: React.FC = () => {
   )
 }
 
-export default SubmitRecords
+export default RecordTable

@@ -43,8 +43,8 @@ const ProblemSetRoot = lazy(() => import('@/views/ProblemSet/ProblemSetRoot'))
 const PorblemAll = lazy(() => import('@/views/ProblemSet/set/All'))
 const ProblemTopic = lazy(() => import('@/views/ProblemSet/topic/Topic'))
 const ProblemForm = lazy(() => import('@/views/ProblemSet/form/Form'))
-const ProblemDescription = lazy(() => import('@/views/Problem/Description'))
-const ProblemSubmitrecord = lazy(() => import('@/views/Problem/Record/Records'))
+const ProblemDescription = lazy(() => import('@/views/Problem/pages/Description'))
+const ProblemSubmitrecord = lazy(() => import('@/views/Problem/pages/Records'))
 const ProblemCreate = lazy(() => import('@/views/Creation/pages/CreateProblem/Create'))
 
 // 比赛

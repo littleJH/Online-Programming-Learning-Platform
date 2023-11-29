@@ -15,11 +15,10 @@ interface IProps {
   problem_id: string | undefined
   record: IRecord
   state: IState
-  setrecordList: Function
 }
 
 const RecordModal: React.FC<IProps> = (props) => {
-  const { problem_id, openModal, setopenModal, state, record, setrecordList } = props
+  const { problem_id, openModal, setopenModal, state, record } = props
   const [totalTest, setTotalTest] = useState(0)
 
   useEffect(() => {
@@ -41,6 +40,7 @@ const RecordModal: React.FC<IProps> = (props) => {
   const percent = useMemo(() => {
     return Math.floor((state.case_id / totalTest) * 100)
   }, [state, totalTest])
+
   return (
     <Modal
       open={openModal}
