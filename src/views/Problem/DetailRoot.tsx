@@ -19,6 +19,7 @@ import { languageState, pathNameState } from '@/store/appStore'
 import { getPathArray } from '@/tool/MyUtils/Utils'
 import { footerRightNode } from '@/store/footerStore'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
+import useWsConnect from '@/tool/myHooks/useWsConnect'
 
 interface IState extends IRecordState {
   case_id: number
@@ -65,6 +66,11 @@ export const Detail: React.FC = () => {
   const consoleRef = useRef(null as any)
   const setFooterRight = useSetRecoilState(footerRightNode)
   const { token } = theme.useToken()
+  const { connectWs } = useWsConnect({
+    onOpen,
+    onMessage,
+    immediately: false
+  })
 
   useLayoutEffect(() => {
     setcodeHeight(resizeEditorHeight())
@@ -135,10 +141,11 @@ export const Detail: React.FC = () => {
     }
     localStorage.setItem(`code_${problem?.id}`, code)
     createRecordApi(JSON.stringify(data)).then((res) => {
+      const record = res.data.data.record
       console.log(res.data)
-      openConnect(res.data.data.record.id)
+      connectWs(enterPublishRecordWs(record.id))
       // tabHeadMode === 'records' ? null : nav('records')
-      setrecordResponse(res.data.data.record)
+      setrecordResponse(record)
       setopenRecordModal(true)
     })
   }
@@ -156,25 +163,11 @@ export const Detail: React.FC = () => {
     resizebar.addEventListener('mousemove', handleResizeMousemove)
   }
 
-  const openConnect = (id: string) => {
-    ws = enterPublishRecordWs(id)
-    ws.onopen = (e) => handleConnectOpen(e)
-    ws.onmessage = (e) => handleConnectMessage(e)
-    ws.onclose = (e) => handleConnectClose(e)
-  }
-
-  const handleConnectOpen = (e: Event) => {
+  function onOpen() {
     setCurrentRecordState(initRecordState)
-    console.log('Connection open...', e)
   }
 
-  const handleConnectClose = (e: Event) => {
-    console.log('Connection Closed...', e)
-  }
-
-  const handleConnectMessage = (e: MessageEvent) => {
-    const message = JSON.parse(e.data)
-    console.log('message', message)
+  function onMessage(message: any) {
     const state = recordStates.find((item) => item.value === message.condition)
     setCurrentRecordState(() =>
       state

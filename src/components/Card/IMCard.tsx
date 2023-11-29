@@ -29,7 +29,7 @@ const Chat: React.FC<IProps> = (props) => {
   const chatBox = useRef<HTMLDivElement>(null)
   const { token } = theme.useToken()
 
-  useWsConnect(getWs, onWsMessage)
+  useWsConnect({ wsApi: getWs(), onMessage: onWsMessage })
 
   useEffect(() => {
     initChatList()

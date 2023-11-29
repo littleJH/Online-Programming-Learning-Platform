@@ -20,10 +20,9 @@ const Rank: React.FC = () => {
   const { competition_id } = useParams()
   if (!competition_id) return <ErrorPage></ErrorPage>
   const [competition] = useOutletContext<[ICompetition]>()
-  const [rankList, setrankList] = useState<IRank[]>([])
   const [dataSource, setdataSource] = useState<DataSource[]>([])
 
-  useWsConnect(() => rollingRanklistWs(competition_id), onWsMessage)
+  useWsConnect({ wsApi: rollingRanklistWs(competition_id), onMessage: onWsMessage })
 
   useEffect(() => {
     fetchRankList()
@@ -32,7 +31,6 @@ const Rank: React.FC = () => {
   const fetchRankList = () => {
     getCompetitionRankListApi(competition_id as string).then(async (res) => {
       const members = res.data.data.members
-      setrankList(members)
       let index = 0
       for (let member of members) {
         const { data } = await getUserInfoApi(member.member_id)

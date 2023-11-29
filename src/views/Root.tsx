@@ -11,7 +11,7 @@ import { headerNavState } from '@/store/appStore'
 import useNavTo from '@/tool/myHooks/useNavTo'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
 import { footerRightNode } from '@/store/footerStore'
-import { getPathArray } from '@/tool/myUtils/utils'
+import { getPathArray } from '@/tool/MyUtils/Utils'
 import Directory from '@/components/directory/Directory'
 
 const Root: React.FC = () => {
