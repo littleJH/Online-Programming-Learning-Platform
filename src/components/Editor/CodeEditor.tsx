@@ -15,12 +15,11 @@ interface Iprops {
   className?: string
   height: number
   codeChange: Function
-  setCodeLanguage: Function
-  oj: string
+  oj?: string
 }
 
 const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
-  const { height, value, className, codeChange, setCodeLanguage, oj } = props
+  const { height, value, className, codeChange, oj } = props
   const [languageOptions, setLanguageOptions] = useState(languageList)
   const [openConfigModal, setopenConfigModal] = useState(false)
   const [info, setInfo] = useRecoilState(userInfoState)
@@ -40,22 +39,20 @@ const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
   }, [])
 
   const handleLanguageChange = (value: any) => {
-    setCodeLanguage(value)
     setLanguage(value)
-    updateConfig(value)
   }
 
   const handleMonacoThemeChange = () => {
     setMonacoTheme((value) => (value === 'vs-dark' ? 'light' : 'vs-dark'))
   }
 
-  const updateConfig = (params: { language?: string; monaco_theme?: string }) => {
-    const { language, monaco_theme } = params
+  const updateConfig = () => {
     let newInfo = {
-      ...info
+      ...info,
+      monaco_options: monacoOptions
     }
     if (language) newInfo = { ...newInfo, language }
-    if(monacoTheme) newInfo = {...newInfo, monaco_theme}
+    if (monacoTheme) newInfo = { ...newInfo, monaco_theme: monacoTheme }
     updateInfoApi(JSON.stringify(newInfo)).then(async (res) => {
       if (res.data.code === 200) {
         const res = await getCurrentUserinfo()
@@ -121,7 +118,7 @@ const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
         title={<p>代码编辑器配置</p>}
         open={openConfigModal}
         onCancel={() => setopenConfigModal(false)}
-        afterClose={updateConfig}
+        afterClose={() => updateConfig()}
         footer={[]}
         centered
       >

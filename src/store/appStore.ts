@@ -1,7 +1,7 @@
 import { getCurrentUserinfo } from '@/api/user'
 import { IArticle, IProblem, IMonacoOptions, User, IToc } from '@/type'
 import { atom, selector } from 'recoil'
-import { getPathArray } from '@/tool/myUtils/utils'
+import { getPathArray } from '@/tool/MyUtils/Utils'
 import { themeDefault, monacoOptionsDefault } from '@/config/config'
 import { NotificationInstance } from 'antd/es/notification/interface'
 

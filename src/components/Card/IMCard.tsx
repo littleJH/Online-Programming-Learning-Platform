@@ -11,15 +11,15 @@ import { useRecoilValue } from 'recoil'
 import { userInfoState } from '@/store/appStore'
 import GroupInfo from '@/components/Group/GroupInfo'
 import UserInfo from '@/components/User/UserInfo'
+import useWsConnect from '@/tool/myHooks/useWsConnect'
 
 interface IProps {
   group?: IGroup
-  friendInfo?: User
+  friend?: User
 }
 
-let ws: WebSocket
 const Chat: React.FC<IProps> = (props) => {
-  const { group, friendInfo } = props
+  const { group, friend } = props
   const info = useRecoilValue(userInfoState)
   const inputTextarea = useRef<TextAreaRef>(null)
   const [openModal, setOpenModal] = useState(false)
@@ -29,23 +29,11 @@ const Chat: React.FC<IProps> = (props) => {
   const chatBox = useRef<HTMLDivElement>(null)
   const { token } = theme.useToken()
 
-  useEffect(() => {
-    openChatWs()
-    initChatList()
-  }, [group])
+  useWsConnect(getWs, onWsMessage)
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (ws && ws.readyState === ws.CLOSED) {
-        console.log('reOpenWs...')
-        openChatWs()
-      }
-    }, 5000)
-    return () => {
-      clearInterval(interval)
-      ws.close()
-    }
-  }, [])
+    initChatList()
+  }, [group])
 
   const initChatList = () => {
     setLoading(true)
@@ -68,35 +56,39 @@ const Chat: React.FC<IProps> = (props) => {
       setLoading(false)
     }
     group && getGroupChatsApi(group.id).then(resolveFn)
-    friendInfo && getLettersApi(friendInfo.id).then(resolveFn)
+    friend && getLettersApi(friend.id).then(resolveFn)
   }
 
-  const openChatWs = () => {
-    if (group) ws = enterGroupPublishChatWS(group.id)
-    if (friendInfo) ws = enterPublishLetterWS(friendInfo.id)
-    ws.onopen = handleChatWsOpen
-    ws.onmessage = handleChatWsMessage
-    ws.onclose = handleChatWsClose
-    ws.onerror = handleChatWsError
+  function getWs(): any {
+    if (group) return enterGroupPublishChatWS(group.id)
+    if (friend) return enterPublishLetterWS(friend.id)
   }
 
-  const handleChatWsOpen = (e: Event) => {
-    console.log('chatWsOpen', e)
-  }
-
-  const handleChatWsMessage = async (e: MessageEvent) => {
-    const message = JSON.parse(e.data)
-    console.log('chatWsMessage', message)
+  function onWsMessage(message: any) {
     setChatList((value) => [...value, message])
   }
 
-  const handleChatWsClose = (e: CloseEvent) => {
-    console.log('chatWsClose', e)
+  const sendChat = () => {
+    if (!text.length) return
+    const resolveFn = (res: any) => {
+      if (res.data.code === 200) {
+        setText('')
+      }
+    }
+    group &&
+      craeteChatApi(
+        group.id,
+        JSON.stringify({
+          content: text
+        })
+      ).then(resolveFn)
+    friend && craeteLetterApi(friend.id, JSON.stringify({ content: text })).then(resolveFn)
   }
 
-  const handleChatWsError = (e: Event) => {
-    console.log('chatWsError', e)
-  }
+  // const handleChatScroll = (e: React.UIEvent) => {
+  //   e.preventDefault()
+  //   console.log('handleChatScroll ==> ', e)
+  // }
 
   const renderMessageCard = (msgItem: IChat) => {
     const bool = msgItem.chat.author_id === info?.id
@@ -138,28 +130,6 @@ const Chat: React.FC<IProps> = (props) => {
     )
   }
 
-  const sendChat = () => {
-    if (!text.length) return
-    const resolveFn = (res: any) => {
-      if (res.data.code === 200) {
-        setText('')
-      }
-    }
-    group &&
-      craeteChatApi(
-        group.id,
-        JSON.stringify({
-          content: text
-        })
-      ).then(resolveFn)
-    friendInfo && craeteLetterApi(friendInfo.id, JSON.stringify({ content: text })).then(resolveFn)
-  }
-
-  // const handleChatScroll = (e: React.UIEvent) => {
-  //   e.preventDefault()
-  //   console.log('handleChatScroll ==> ', e)
-  // }
-
   return (
     <div className='h-full flex flex-col'>
       <div className='h-3/4 flex flex-col'>
@@ -171,7 +141,7 @@ const Chat: React.FC<IProps> = (props) => {
         >
           <span className='mx-4 my-2 text-lg'>
             {group && group.title}
-            {friendInfo && friendInfo.name}
+            {friend && friend.name}
           </span>
           <span
             className='mx-2'
@@ -273,7 +243,7 @@ const Chat: React.FC<IProps> = (props) => {
         onClose={() => setOpenModal(false)}
       >
         {group && <GroupInfo group={group}></GroupInfo>}
-        {friendInfo && <UserInfo user={friendInfo}></UserInfo>}
+        {friend && <UserInfo user={friend}></UserInfo>}
       </Drawer>
     </div>
   )

@@ -3,7 +3,7 @@ import { useNavigate, useOutletContext, useParams } from 'react-router-dom'
 import { getProblemNewApi } from '@/api/problemNew'
 import { IProblem, ICaseSample, IEditorConfig, IRunResult, IRecordState, CompetitionType } from '@/type'
 import ReadOnly from '@/components/editor/Readonly'
-import { Button, Popover, Segmented, Switch, Table, notification } from 'antd'
+import { Button, Popover, Segmented, Switch, Table } from 'antd'
 import Column from 'antd/es/table/Column'
 import CodeEditor from '@/components/Editor/CodeEditor'
 import { languageList } from '@/components/Editor/LanguageList'
@@ -220,7 +220,6 @@ const Answer: React.FC = () => {
           <CodeEditor
             value={code}
             height={500}
-            className=' '
             codeChange={(value: string) => {
               localStorage.setItem(`code-${problem_id}`, value)
               setcode(value)

@@ -3,7 +3,7 @@ import { Skeleton, Table } from 'antd'
 import Column from 'antd/es/table/Column'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import { CompetitionState } from '@/type'
-import NoData from '@/components/empty/NoData'
+import NoData from '@/components/Empty/NoData'
 
 interface Problems {
   key: string
@@ -31,28 +31,34 @@ const Element: React.FC = () => {
       {dataSource && (
         <Table
           locale={{
-            emptyText: <NoData text="暂无数据" />
+            emptyText: <NoData text='暂无数据' />
           }}
           dataSource={dataSource}
           pagination={false}
         >
-          <Column align="center" dataIndex={'index'} title={'序号'}></Column>
           <Column
-            align="center"
+            align='center'
+            dataIndex={'index'}
+            title={'序号'}
+          ></Column>
+          <Column
+            align='center'
             dataIndex={'title'}
             title={'题目'}
-            render={(value: any, record: any) => {
-              return (
-                <div
-                  className="hover:cursor-pointer"
-                  onClick={() => toDetail(value, record)}
-                >
-                  {value}
-                </div>
-              )
-            }}
+            render={(value: any, record: any) => (
+              <div
+                className='hover:cursor-pointer'
+                onClick={() => toDetail(value, record)}
+              >
+                {value}
+              </div>
+            )}
           ></Column>
-          <Column align="center" dataIndex={'state'} title={'状态'}></Column>
+          <Column
+            align='center'
+            dataIndex={'state'}
+            title={'状态'}
+          ></Column>
         </Table>
       )}
     </div>

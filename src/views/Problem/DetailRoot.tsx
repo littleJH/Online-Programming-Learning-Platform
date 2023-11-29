@@ -14,9 +14,9 @@ import { recordStates } from '@/assets/recordStates'
 import ojmap from '@/assets/ojmap'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
 import useNavTo from '@/tool/myHooks/useNavTo'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { pathNameState } from '@/store/appStore'
-import { getPathArray } from '@/tool/myUtils/utils'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { languageState, pathNameState } from '@/store/appStore'
+import { getPathArray } from '@/tool/MyUtils/Utils'
 import { footerRightNode } from '@/store/footerStore'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
 
@@ -49,7 +49,7 @@ export const Detail: React.FC = () => {
   const [problem, setproblem] = useState<IProblem>()
   const [tabHeadMode, settabHeadMode] = useState<string>(getPathArray(pathname)[2])
   const [caseSamples, setcaseSamples] = useState<ICaseSample[]>([])
-  const [language, setLanguage] = useState()
+  const language = useRecoilValue(languageState)
   const [code, setcode] = useState('')
   const [showConsole, setshowConsole] = useState(true)
   const [consoleMode, setconsoleMode] = useState('test')
@@ -335,7 +335,6 @@ export const Detail: React.FC = () => {
               <CodeEditor
                 height={codeHeight}
                 value={code}
-                setCodeLanguage={setLanguage}
                 codeChange={(value: string) => {
                   localStorage.setItem(`code_${id}`, value)
                   setcode(value)
