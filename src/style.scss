@@ -196,9 +196,7 @@ body,
 
 .countdown-section {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 10px;
+  justify-content: center;
 }
 
 .countdown-amount {
@@ -212,11 +210,13 @@ body,
 }
 
 .countdown-period {
+  width: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 1.5rem;
   font-weight: bold;
   color: #333;
-  text-align: center;
-  margin-top: 10px;
 }
 
 .label::before {

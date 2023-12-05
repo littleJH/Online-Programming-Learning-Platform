@@ -8,17 +8,20 @@ import { NotificationInstance } from 'antd/es/notification/interface'
 // 用户信息初始化
 export const userInfoAtomState = atom<User | null>({
   key: 'userInfoAtomState',
-  default: getCurrentUserinfo()
-    .then((res) => {
-      if (res.data.code === 200) return Promise.resolve(res.data.data.user)
-      else return null
-    })
-    .catch(() => {
-      if (['/login'].includes(location.pathname)) return
-      const a = document.createElement('a')
-      a.href = '/login'
-      a.click()
-    })
+  default: null,
+  // 记得恢复
+  
+  // default: getCurrentUserinfo()
+  //   .then((res) => {
+  //     if (res.data.code === 200) return Promise.resolve(res.data.data.user)
+  //     else return null
+  //   })
+  //   .catch(() => {
+  //     if (['/login'].includes(location.pathname)) return
+  //     const a = document.createElement('a')
+  //     a.href = '/login'
+  //     a.click()
+  //   })
 })
 
 // 用户信息

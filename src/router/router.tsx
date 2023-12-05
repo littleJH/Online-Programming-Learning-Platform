@@ -213,7 +213,7 @@ const routes: MyRoute[] = [
                 element: CompetitionProblem,
                 children: [
                   {
-                    path: '',
+                    path: 'set',
                     element: CompetitionProblemList
                   },
                   {

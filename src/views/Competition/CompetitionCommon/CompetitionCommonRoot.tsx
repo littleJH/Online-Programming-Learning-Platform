@@ -20,6 +20,7 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { competitionStateAtom } from '../store'
 import CountDown from '@/components/countDown/CountDown'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
+import { pathNameState } from '@/store/appStore'
 
 type CompetitionState = 'notEnter' | 'underway' | 'enter' | 'finished'
 
@@ -47,6 +48,7 @@ const Detail: React.FC = () => {
   const [enterList, setenterList] = useState<User[]>([])
   const [answering, setanswering] = useState(false)
   const [groupInfo, setgroupInfo] = useState<IGroup>()
+  const pathname = useRecoilValue(pathNameState)
   const { token } = theme.useToken()
 
   useLayoutEffect(() => {
@@ -179,6 +181,7 @@ const Detail: React.FC = () => {
   const navTo = (e: any) => {
     setanswering(false)
     setcurrent(e.key)
+    nav(`/competition/${competition?.id}/${e.key}`)
   }
 
   return (

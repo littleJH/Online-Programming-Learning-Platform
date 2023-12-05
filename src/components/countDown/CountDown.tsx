@@ -66,10 +66,19 @@ const CountDown: React.FC<IProps> = (props) => {
 
   return (
     <div className='flex justify-center mt-4 h-12'>
-      <div className='countdown-section'>
-        <span className='countdown-amount'>{countDown?.day}</span>
-        <span className='countdown-period'>天</span>
-      </div>
+      {countDown?.day !== '00' && (
+        <div className='countdown-section'>
+          <span className='countdown-amount'>{countDown?.day}</span>
+          <span
+            className='countdown-period'
+            style={{
+              marginRight: '2rem'
+            }}
+          >
+            天
+          </span>
+        </div>
+      )}
       <div className='countdown-section'>
         <span className='countdown-amount'>{countDown?.hour}</span>
         <span className='countdown-period'>:</span>

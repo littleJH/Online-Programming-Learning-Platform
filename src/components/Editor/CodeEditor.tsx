@@ -1,14 +1,19 @@
 import Editor from '@monaco-editor/react'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import Loading from '@/components/Loading/Loading'
-import { Modal, Select, Button } from 'antd'
-import { languageList, poj_languageList } from '@/components/Editor/LanguageList'
-import { getCurrentUserinfo, updateInfoApi } from '@/api/user'
+import {Modal, Select, Button} from 'antd'
+import {languageList, poj_languageList} from '@/components/Editor/LanguageList'
+import {getCurrentUserinfo, updateInfoApi} from '@/api/user'
 import CodeEditorConfig from '@/components/Editor/CodeEditorConfig'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { languageState, monacoOptionsState, monacoThemeState, userInfoState } from '@/store/appStore'
+import {useRecoilState, useRecoilValue} from 'recoil'
+import {
+  languageState,
+  monacoOptionsState,
+  monacoThemeState,
+  userInfoState
+} from '@/store/appStore'
 import MySvgIcon from '../Icon/MySvgIcon'
-import { cpp } from '@/config/config'
+import {cpp} from '@/config/config'
 
 interface Iprops {
   value: string
@@ -19,7 +24,7 @@ interface Iprops {
 }
 
 const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
-  const { height, value, className, codeChange, oj } = props
+  const {height, value, className, codeChange, oj} = props
   const [languageOptions, setLanguageOptions] = useState(languageList)
   const [openConfigModal, setopenConfigModal] = useState(false)
   const [info, setInfo] = useRecoilState(userInfoState)
@@ -51,8 +56,8 @@ const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
       ...info,
       monaco_options: monacoOptions
     }
-    if (language) newInfo = { ...newInfo, language }
-    if (monacoTheme) newInfo = { ...newInfo, monaco_theme: monacoTheme }
+    if (language) newInfo = {...newInfo, language}
+    if (monacoTheme) newInfo = {...newInfo, monaco_theme: monacoTheme}
     updateInfoApi(JSON.stringify(newInfo)).then(async (res) => {
       if (res.data.code === 200) {
         const res = await getCurrentUserinfo()
@@ -66,8 +71,7 @@ const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
       <div
         style={{
           height: `${height}px`
-        }}
-      >
+        }}>
         <div className={'bg-slate-50 h-12 p-2 flex items-center'}>
           <Select
             style={{
@@ -76,31 +80,19 @@ const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
             bordered={false}
             defaultValue={language}
             options={languageOptions}
-            onChange={handleLanguageChange}
-          ></Select>
+            onChange={handleLanguageChange}></Select>
           <div className='grow'></div>
-          <div>
-            <Button
-              type='text'
-              className='flex items-center h-12 p-2'
-              onClick={handleMonacoThemeChange}
-            >
-              <MySvgIcon
-                href={`#icon-${monacoTheme === 'light' ? 'light' : 'vs-dark'}`}
-                size={2}
-                color={`${monacoTheme === 'light' ? '#fff' : '#000'}`}
-              ></MySvgIcon>
-            </Button>
-          </div>
-          <div
-            onClick={() => setopenConfigModal(true)}
-            className='hover:cursor-pointer'
-          >
+          <Button type='text' className='flex items-center' onClick={handleMonacoThemeChange}>
             <MySvgIcon
-              href='#icon-setting'
+              href={`#icon-${monacoTheme === 'light' ? 'light' : 'vs-dark'}`}
               size={2}
-            ></MySvgIcon>
-          </div>
+              color={`${
+                monacoTheme === 'light' ? '#fff' : '#000'
+              }`}></MySvgIcon>
+          </Button>
+          <Button type='text' className='flex items-center'  onClick={() => setopenConfigModal(true)}>
+            <MySvgIcon href='#icon-setting' size={2}></MySvgIcon>
+          </Button>
         </div>
         <Editor
           defaultValue={value}
@@ -120,12 +112,10 @@ const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
         onCancel={() => setopenConfigModal(false)}
         afterClose={() => updateConfig()}
         footer={[]}
-        centered
-      >
+        centered>
         <CodeEditorConfig
           monacoOptions={monacoOptions}
-          setMonacoOptions={setMonacoOptions}
-        ></CodeEditorConfig>
+          setMonacoOptions={setMonacoOptions}></CodeEditorConfig>
       </Modal>
     </>
   )
