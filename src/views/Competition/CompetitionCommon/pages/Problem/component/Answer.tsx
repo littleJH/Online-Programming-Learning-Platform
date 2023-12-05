@@ -1,29 +1,39 @@
-import React, { useEffect, useState, Fragment, useMemo } from 'react'
-import { useNavigate, useOutletContext, useParams } from 'react-router-dom'
-import { getProblemNewApi } from '@/api/problemNew'
-import { IProblem, ICaseSample, IEditorConfig, IRunResult, IRecordState, CompetitionType } from '@/type'
+import React, {useEffect, useState, Fragment, useMemo} from 'react'
+import {useNavigate, useOutletContext, useParams} from 'react-router-dom'
+import {getProblemNewApi} from '@/api/problemNew'
+import {
+  IProblem,
+  ICaseSample,
+  // IEditorConfig,
+  IRunResult,
+  IRecordState,
+  CompetitionType
+} from '@/type'
 import ReadOnly from '@/components/editor/Readonly'
-import { Button, Popover, Segmented, Switch, Table } from 'antd'
+import {Button, Popover, Segmented, Switch, Table} from 'antd'
 import Column from 'antd/es/table/Column'
 import CodeEditor from '@/components/Editor/CodeEditor'
-import { languageList } from '@/components/Editor/LanguageList'
+import {languageList} from '@/components/Editor/LanguageList'
 import RunResult from '@/views/Problem/RunResult'
 import TextArea from 'antd/es/input/TextArea'
-import { createTestApi } from '@/api/test'
-import { createRecordApi } from '@/api/competitionMixture'
-import { useRecoilValue } from 'recoil'
-import { notificationApi } from '@/store/appStore'
+import {createTestApi} from '@/api/test'
+import {createRecordApi} from '@/api/competitionMixture'
+import {useRecoilValue} from 'recoil'
+import {notificationApi} from '@/store/appStore'
 
-const Answer: React.FC = () => {
+const Answer: React.FC<{problem_id: string}> = (props) => {
   const nav = useNavigate()
-  const { competition_id, problem_id } = useParams()
+  const {problem_id} = props
+  const {competition_id} = useParams()
   const [a, b, c, type] = useOutletContext<[any, any, any, CompetitionType]>()
   const [problem, setproblem] = useState<IProblem>()
-  const [dataSource, setdataSource] = useState<{ key: string; input: string; output: string }[]>([])
-  const [editorConfig, setEditorConfig] = useState<IEditorConfig>({
-    language: '',
-    theme: 'vs-dark'
-  })
+  const [dataSource, setdataSource] = useState<
+    {key: string; input: string; output: string}[]
+  >([])
+  // const [editorConfig, setEditorConfig] = useState<IEditorConfig>({
+  //   language: '',
+  //   theme: 'vs-dark'
+  // })
   const [code, setcode] = useState<string>('')
   const [openLanguageList, setopenLanguageList] = useState(false)
   const [showConsole, setshowConsole] = useState(false)
@@ -31,16 +41,18 @@ const Answer: React.FC = () => {
   const [testTextareaValue, settestTextareaValue] = useState<string>('')
   const [caseSamples, setcaseSamples] = useState<ICaseSample[]>([])
   const [runResult, setrunResult] = useState<IRunResult>({} as IRunResult)
-  const [currentState, setcurrentState] = useState<IRecordState>({} as IRecordState)
+  const [currentState, setcurrentState] = useState<IRecordState>(
+    {} as IRecordState
+  )
   const notification = useRecoilValue(notificationApi)
 
-  const currentLang: React.ReactNode = useMemo(() => {
-    let element: JSX.Element = <div></div>
-    languageList.forEach((value) => {
-      if (value.value === editorConfig.language) element = value.label
-    })
-    return element
-  }, [editorConfig])
+  // const currentLang: React.ReactNode = useMemo(() => {
+  //   let element: JSX.Element = <div></div>
+  //   languageList.forEach((value) => {
+  //     if (value.value === editorConfig.language) element = value.label
+  //   })
+  //   return element
+  // }, [editorConfig])
 
   useEffect(() => {
     getProblemNewApi(problem_id as string).then((res) => {
@@ -60,9 +72,9 @@ const Answer: React.FC = () => {
     window.addEventListener('resize', () => {})
   }, [])
 
-  useEffect(() => {
-    localStorage.setItem('editorConfig', JSON.stringify(editorConfig))
-  }, [editorConfig])
+  // useEffect(() => {
+  //   localStorage.setItem('editorConfig', JSON.stringify(editorConfig))
+  // }, [editorConfig])
 
   const runCode = () => {
     setcurrentState({
@@ -92,33 +104,34 @@ const Answer: React.FC = () => {
       code: code,
       problem_id: problem_id
     }
-    createRecordApi(type, competition_id as string, JSON.stringify(data)).then((res) => {
-      console.log(res.data)
-      if (res.data.code === 200) {
-        notification &&
-          notification.success({
-            message: res.data.msg
-          })
-        nav(`/competition/${competition_id}/record`)
-      } else {
-        notification &&
-          notification.info({
-            message: res.data.msg
-          })
+    createRecordApi(type, competition_id as string, JSON.stringify(data)).then(
+      (res) => {
+        console.log(res.data)
+        if (res.data.code === 200) {
+          notification &&
+            notification.success({
+              message: res.data.msg
+            })
+          nav(`/competition/${competition_id}/record`)
+        } else {
+          notification &&
+            notification.info({
+              message: res.data.msg
+            })
+        }
       }
-    })
+    )
   }
 
   return (
     <div className='p-8'>
       {/* description */}
       {problem && (
-        <Fragment>
+        <>
           <ReadOnly
             className='text-base bg-slate-100 rounded px-8 py-2'
             title='题目描述'
-            html={`<p>${JSON.parse(problem?.description)}</p>`}
-          ></ReadOnly>
+            html={problem?.description}></ReadOnly>
           {/* <ReadOnly
             title="时间限制"
             html={`${problem?.time_limit} ms`}
@@ -141,16 +154,9 @@ const Answer: React.FC = () => {
             className=''
             bordered
             dataSource={dataSource}
-            pagination={false}
-          >
-            <Column
-              title='input'
-              dataIndex={'input'}
-            ></Column>
-            <Column
-              title='output'
-              dataIndex={'output'}
-            ></Column>
+            pagination={false}>
+            <Column title='input' dataIndex={'input'}></Column>
+            <Column title='output' dataIndex={'output'}></Column>
           </Table>
           {/* <ReadOnly
             title="提示"
@@ -160,12 +166,12 @@ const Answer: React.FC = () => {
             title="来源"
             value={JSON.parse(problem?.source as string)}
           ></ReadOnly> */}
-        </Fragment>
+        </>
       )}
 
       {/* editor */}
-      <div className='shadow'>
-        <div className={'bg-slate-100 p-2 flex items-center justify-between '}>
+      {/* <div className='shadow'> */}
+      {/* <div className={'bg-slate-100 p-2 flex items-center justify-between '}>
           <Popover
             style={{
               width: '4rem',
@@ -215,18 +221,17 @@ const Answer: React.FC = () => {
               {editorConfig.theme === 'light' ? <use href='#icon-light'></use> : <use href='#icon-dark'></use>}
             </svg>
           </div>
-        </div>
-        <div>
-          <CodeEditor
-            value={code}
-            height={500}
-            codeChange={(value: string) => {
-              localStorage.setItem(`code-${problem_id}`, value)
-              setcode(value)
-            }}
-          ></CodeEditor>
-        </div>
+        </div> */}
+      <div>
+        <CodeEditor
+          value={code}
+          height={500}
+          codeChange={(value: string) => {
+            localStorage.setItem(`code-${problem_id}`, value)
+            setcode(value)
+          }}></CodeEditor>
       </div>
+      {/* </div> */}
       {/* footer */}
       <div className='flex items-center py-1'>
         {/* <div className="flex-grow flex items-center">
@@ -241,16 +246,11 @@ const Answer: React.FC = () => {
             checkedChildren={'控制台'}
             unCheckedChildren={'控制台'}
             checked={showConsole}
-            onChange={(value) => setshowConsole(value)}
-          ></Switch>
+            onChange={(value) => setshowConsole(value)}></Switch>
         </div>
         <div className=''>
           <Button onClick={runCode}>执行代码</Button>
-          <Button
-            onClick={craeteRecord}
-            className='mx-1'
-            type='primary'
-          >
+          <Button onClick={craeteRecord} className='mx-1' type='primary'>
             提交
           </Button>
         </div>
@@ -270,16 +270,18 @@ const Answer: React.FC = () => {
               }
             ]}
             value={consoleMode}
-            onChange={(value) => setconsoleMode(value as 'test' | 'result')}
-          ></Segmented>
+            onChange={(value) =>
+              setconsoleMode(value as 'test' | 'result')
+            }></Segmented>
           <div className='w-full'>
             {consoleMode === 'test' && (
               <div className='p-4'>
                 <TextArea
                   value={testTextareaValue}
-                  style={{ height: '100%' }}
-                  onChange={(e) => settestTextareaValue(e.target.value)}
-                ></TextArea>
+                  style={{height: '100%'}}
+                  onChange={(e) =>
+                    settestTextareaValue(e.target.value)
+                  }></TextArea>
               </div>
             )}
             {consoleMode === 'result' && (
@@ -290,8 +292,7 @@ const Answer: React.FC = () => {
                 }}
                 runResult={runResult}
                 currentState={currentState}
-                setcurrentState={setcurrentState}
-              ></RunResult>
+                setcurrentState={setcurrentState}></RunResult>
             )}
           </div>
         </div>

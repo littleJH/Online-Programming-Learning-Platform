@@ -51,13 +51,12 @@ const ProblemCreate = lazy(() => import('@/views/Creation/pages/CreateProblem/Cr
 const CompetitionSetRoot = lazy(() => import('@/views/CompetitionSet/CompetitionSetRoot'))
 const CompetitionRoot = lazy(() => import('@/views/Competition/CompetitionRoot'))
 const CompetitionAll = lazy(() => import('@/views/CompetitionSet/set/All'))
-const CompetitionId = lazy(() => import('@/views/Competition/CompetitionCommon/CompetitionCommonRoot'))
-const CompetitionOverview = lazy(() => import('@/views/Competition/CompetitionCommon/pages/OverView/Overview'))
-const CompetitionProblem = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Problem/Problem'))
-const CompetitionProblemList = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Problem/List/List'))
-const CompetitionProblemId = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Problem/Answer/Answer'))
-const CompetitionRank = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Rank/Rank'))
-const CompetitionRecord = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Record/Record'))
+const CompetitionId = lazy(() => import('@/views/Competition/CompetitionCommon/Index'))
+const CompetitionOverview = lazy(() => import('@/views/Competition/CompetitionCommon/pages/OverView/Index'))
+const CompetitionProblem = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Problem/Index'))
+const CompetitionProblemId = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Problem/component/Answer'))
+const CompetitionRank = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Rank/Index'))
+const CompetitionRecord = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Record/Index'))
 const CompetitionCreate = lazy(() => import('@/views/Creation/pages/CreateCompetition/Create'))
 const CompetitionCreateDeclare = lazy(() => import('@/views/Creation/pages/CreateCompetition/Declare'))
 const CompetitionCreateCompetition = lazy(() => import('@/views/Creation/pages/CreateCompetition/Competition'))
@@ -211,16 +210,6 @@ const routes: MyRoute[] = [
               {
                 path: 'problem',
                 element: CompetitionProblem,
-                children: [
-                  {
-                    path: 'set',
-                    element: CompetitionProblemList
-                  },
-                  {
-                    path: ':problem_id',
-                    element: CompetitionProblemId
-                  }
-                ]
               },
               {
                 path: 'rank',
