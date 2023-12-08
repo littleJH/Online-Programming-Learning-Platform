@@ -24,8 +24,7 @@ const Element: React.FC = () => {
   const [problems, setproblems] = useState<Problems[]>([])
 
   useEffect(() => {
-        fetch(competition)
-        switch (comptitionState) {
+    switch (comptitionState) {
       case 'notEnter':
         break
       default:
@@ -74,7 +73,11 @@ const Element: React.FC = () => {
     }
   }
 
-  return <Collapse items={items} onChange={() => {}}></Collapse>
+  const handleCollapseChange = (key: string | string[]) => {
+    
+  }
+
+  return <Collapse items={items} onChange={handleCollapseChange}></Collapse>
 }
 
 export default Element

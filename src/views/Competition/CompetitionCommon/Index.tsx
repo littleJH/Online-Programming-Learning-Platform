@@ -181,7 +181,7 @@ const Detail: React.FC = () => {
   const navTo = (e: any) => {
     setanswering(false)
     setcurrent(e.key)
-    nav(`/competition/${competition?.id}/${e.key}`)
+    nav(`/competition/${competition_id}/${e.key}`)
   }
 
   return (
