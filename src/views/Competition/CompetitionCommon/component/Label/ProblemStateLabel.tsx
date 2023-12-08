@@ -1,21 +1,27 @@
-import React, { Fragment, useLayoutEffect, useState } from 'react'
-import { IRecord } from '@/type'
-import { recordStates } from '@/assets/recordStates'
+import React, {Fragment, useLayoutEffect, useState} from 'react'
+import {IRecord} from '@/type'
+import {recordStates} from '@/assets/recordStates'
+import {theme} from 'antd'
 
 type ProblemState = 'unsubmited' | 'unAccepted' | 'accepted'
 
 const ProblemStateLabel: React.FC<{
   problem: any
   records: IRecord[]
-}> = props => {
+}> = (props) => {
   const [element, setelement] = useState<JSX.Element>()
+  const {token} = theme.useToken()
 
   useLayoutEffect(() => {
     if (props.records.length === 0) {
       setelement(
-        <div className="bg-red-500 rounded text-white text-center w-20">
+        <div
+          className='rounded text-white text-center w-20'
+          style={{
+            backgroundColor: token.colorInfo
+          }}>
           未提交
-        </div>,
+        </div>
       )
     } else {
       let state = 'unAccepted'
@@ -31,16 +37,24 @@ const ProblemStateLabel: React.FC<{
       switch (state) {
         case 'unAccepted':
           setelement(
-            <div className="bg-amber-400 rounded text-white text-center w-20">
+            <div
+              className='rounded text-white text-center w-20'
+              style={{
+                backgroundColor: token.colorError
+              }}>
               未通过
-            </div>,
+            </div>
           )
           break
         case 'accepted':
           setelement(
-            <div className="bg-green-500 rounded text-white text-center w-20">
+            <div
+              className='rounded text-white text-center w-20'
+              style={{
+                backgroundColor: token.colorSuccess
+              }}>
               已通过
-            </div>,
+            </div>
           )
           break
 
@@ -50,7 +64,7 @@ const ProblemStateLabel: React.FC<{
     }
   }, [props])
 
-  return <div className="w-full flex justify-center">{element}</div>
+  return <div className='w-full flex justify-center'>{element}</div>
 }
 
 export default ProblemStateLabel

@@ -1,6 +1,6 @@
-import { CompetitionState, ICountDown } from '@/type'
-import React, { useState, useEffect } from 'react'
-import { theme } from 'antd'
+import {CompetitionState, ICountDown} from '@/type'
+import React, {useState, useEffect} from 'react'
+import {theme} from 'antd'
 import dayjs from 'dayjs'
 
 interface IProps {
@@ -9,10 +9,10 @@ interface IProps {
 }
 
 let interval: ReturnType<typeof setInterval>
-const CountDown: React.FC<IProps> = props => {
-  const { endTime, onCountZero: handleCountZero } = props
+const CountDown: React.FC<IProps> = (props) => {
+  const {endTime, onCountZero: handleCountZero} = props
   const [countDown, setcountDown] = useState<ICountDown>()
-  const { token } = theme.useToken()
+  const {token} = theme.useToken()
 
   useEffect(() => {
     countDownFun()
@@ -27,7 +27,7 @@ const CountDown: React.FC<IProps> = props => {
       day: '00',
       hour: '00',
       min: '00',
-      second: '00',
+      second: '00'
     }
     const fn = () => {
       const current = dayjs()
@@ -65,7 +65,7 @@ const CountDown: React.FC<IProps> = props => {
         handleCountZero()
         clearInterval(interval)
       }
-      setcountDown({ ...time })
+      setcountDown({...time})
     }
     fn()
     interval = setInterval(() => {
@@ -74,30 +74,29 @@ const CountDown: React.FC<IProps> = props => {
   }
 
   return (
-    <div className="flex justify-center mt-4 h-12">
+    <div className='flex justify-center mt-4 h-12'>
       {countDown?.day !== '00' && (
-        <div className="countdown-section">
-          <span className="countdown-amount">{countDown?.day}</span>
+        <div className='countdown-section'>
+          <span className='countdown-amount'>{countDown?.day}</span>
           <span
-            className="countdown-period"
+            className='countdown-period'
             style={{
-              marginRight: '2rem',
-            }}
-          >
+              marginRight: '2rem'
+            }}>
             天
           </span>
         </div>
       )}
-      <div className="countdown-section">
-        <span className="countdown-amount">{countDown?.hour}</span>
-        <span className="countdown-period">:</span>
+      <div className='countdown-section'>
+        <span className='countdown-amount'>{countDown?.hour}</span>
+        <span className='countdown-period'>:</span>
       </div>
-      <div className="countdown-section">
-        <span className="countdown-amount">{countDown?.min}</span>
-        <span className="countdown-period">:</span>
+      <div className='countdown-section'>
+        <span className='countdown-amount'>{countDown?.min}</span>
+        <span className='countdown-period'>:</span>
       </div>
-      <div className="countdown-section">
-        <span className="countdown-amount">{countDown?.second}</span>
+      <div className='countdown-section'>
+        <span className='countdown-amount'>{countDown?.second}</span>
         {/* <span className="countdown-period">秒</span> */}
       </div>
     </div>

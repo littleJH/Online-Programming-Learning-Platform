@@ -1,15 +1,15 @@
-import React, { Fragment, useEffect, useLayoutEffect, useState } from 'react'
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { showCompetitionApi } from '@/api/competition'
+import React, {Fragment, useEffect, useLayoutEffect, useState} from 'react'
+import {Outlet, useLocation, useNavigate, useParams} from 'react-router-dom'
+import {showCompetitionApi} from '@/api/competition'
 import {
   cancelEnterApi,
   enterCompetitionApi,
-  getEnterListApi,
+  getEnterListApi
 } from '@/api/competitionMixture'
-import { getEnterConditionApi } from '@/api/competitionMixture'
+import {getEnterConditionApi} from '@/api/competitionMixture'
 import dayjs from 'dayjs'
 import Sidebar from './component/SideBar/Sidebar'
-import { CompetitionType, ICompetition, IGroup } from '@/type'
+import {CompetitionType, ICompetition, IGroup} from '@/type'
 import {
   Button,
   List,
@@ -18,29 +18,29 @@ import {
   theme,
   Tooltip,
   notification,
-  Card,
+  Card
 } from 'antd'
 import Update from './component/Update/Update'
-import { getUserInfoApi } from '@/api/user'
+import {getUserInfoApi} from '@/api/user'
 import UserCard from '@/components/User/UserCard'
-import { User } from '@/type'
+import {User} from '@/type'
 import CompetitionTypeLabel from './component/Label/CompetitionTypeLabel'
 import EnterGroup from './component/Group/EnterGroup'
 import GroupInfo from './component/Group/GroupInfo'
-import { getMemberGroupListApi } from '@/api/group'
+import {getMemberGroupListApi} from '@/api/group'
 import useNavTo from '@/tool/myHooks/useNavTo'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { competitionStateAtom } from '../store'
+import {useRecoilState, useRecoilValue} from 'recoil'
+import {competitionStateAtom} from '../store'
 import CountDown from '@/components/countDown/CountDown'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
-import { pathNameState } from '@/store/appStore'
+import {pathNameState} from '@/store/appStore'
 
 type CompetitionState = 'notEnter' | 'underway' | 'enter' | 'finished'
 
 const getState = (
   start: string,
   end: string,
-  enter: boolean,
+  enter: boolean
 ): CompetitionState => {
   if (dayjs(start).valueOf() > dayjs().valueOf()) {
     return enter ? 'enter' : 'notEnter'
@@ -55,7 +55,7 @@ const getState = (
 const Detail: React.FC = () => {
   const nav = useNavTo()
   const location = useLocation()
-  const { competition_id } = useParams()
+  const {competition_id} = useParams()
   const [type, settype] = useState<CompetitionType>('')
   const [current, setcurrent] = useState('')
   const [competitionState, setcompetitionState] =
@@ -70,7 +70,7 @@ const Detail: React.FC = () => {
   const [answering, setanswering] = useState(false)
   const [groupInfo, setgroupInfo] = useState<IGroup>()
   const pathname = useRecoilValue(pathNameState)
-  const { token } = theme.useToken()
+  const {token} = theme.useToken()
 
   useLayoutEffect(() => {
     if (location.pathname.indexOf('problem') >= 0) {
@@ -78,14 +78,14 @@ const Detail: React.FC = () => {
         location.pathname.slice(location.pathname.indexOf('problem') + 8)
           .length === 0
           ? false
-          : true,
+          : true
       )
     } else setanswering(false)
   }, [])
 
   useEffect(() => {
     competition_id &&
-      showCompetitionApi(competition_id).then(res => {
+      showCompetitionApi(competition_id).then((res) => {
         const competition = res.data.data.competition as ICompetition
         const type: CompetitionType =
           competition.type.toLowerCase() as CompetitionType
@@ -114,13 +114,13 @@ const Detail: React.FC = () => {
     const state = getState(
       competition.start_time,
       competition.end_time,
-      result.data.data.enter,
+      result.data.data.enter
     )
     setcompetitionState(state)
     if (state === 'enter' || state === 'notEnter')
       setEndTime(competition.start_time)
     else if (state === 'underway') setEndTime(competition.end_time)
-    getEnterListApi(type, competition.id).then(res => {
+    getEnterListApi(type, competition.id).then((res) => {
       setenterNum(res.data.data.total)
     })
   }
@@ -130,16 +130,16 @@ const Detail: React.FC = () => {
     const result = await getEnterConditionApi(type, competition.id)
     if (result.data.data) {
       const group = result.data.data.group as IGroup
-      getMemberGroupListApi(group.id).then(async res => {
+      getMemberGroupListApi(group.id).then(async (res) => {
         const members = res.data.data.userList
         const users: User[] = []
         for (let item of members) {
-          await getUserInfoApi(item.user_id).then(res => {
+          await getUserInfoApi(item.user_id).then((res) => {
             users.push(res.data.data.user)
           })
         }
         Object.assign(group, {
-          members: users,
+          members: users
         })
         setgroupInfo(group)
       })
@@ -147,7 +147,7 @@ const Detail: React.FC = () => {
     const state = getState(
       competition.start_time,
       competition.end_time,
-      result.data.data ? true : false,
+      result.data.data ? true : false
     )
     setcompetitionState(state)
     if (state === 'enter' || state === 'notEnter')
@@ -165,30 +165,30 @@ const Detail: React.FC = () => {
     const state = getState(
       competition.start_time,
       competition.end_time,
-      result.data.data ? true : false,
+      result.data.data ? true : false
     )
     setcompetitionState(state)
   }
 
   const enterCompetition = () => {
     const data = {
-      password: '666666',
+      password: '666666'
     }
     if (competitionState === 'notEnter') {
       enterCompetitionApi(
         type,
         competition?.id as string,
-        JSON.stringify(data),
-      ).then(res => {
+        JSON.stringify(data)
+      ).then((res) => {
         if (res.data.code === 200) {
           setopenEnterModal(false)
           setcompetitionState('enter')
           notification.success({
-            message: '报名成功',
+            message: '报名成功'
           })
         } else {
           notification.warning({
-            message: res.data.msg,
+            message: res.data.msg
           })
         }
       })
@@ -197,17 +197,17 @@ const Detail: React.FC = () => {
         cancelEnterApi(
           type,
           competition?.id as string,
-          groupInfo.id ? groupInfo.id : '',
-        ).then(res => {
+          groupInfo.id ? groupInfo.id : ''
+        ).then((res) => {
           if (res.data.code === 200) {
             setopenEnterModal(false)
             setcompetitionState('notEnter')
             notification.success({
-              message: '取消报名成功',
+              message: '取消报名成功'
             })
           } else {
             notification.warning({
-              message: res.data.msg,
+              message: res.data.msg
             })
           }
         })
@@ -217,11 +217,11 @@ const Detail: React.FC = () => {
   const getEnterList = () => {
     setenterList([])
     setopenEnterListModal(true)
-    getEnterListApi(type, competition?.id as string).then(res => {
+    getEnterListApi(type, competition?.id as string).then((res) => {
       console.log('enterlist', res.data.data)
       res.data.data.competitionRanks.forEach((item: any) => {
-        getUserInfoApi(item.member_id).then(result => {
-          setenterList(value => [...value, result.data.data.user])
+        getUserInfoApi(item.member_id).then((result) => {
+          setenterList((value) => [...value, result.data.data.user])
         })
       })
     })
@@ -234,77 +234,73 @@ const Detail: React.FC = () => {
   }
 
   return (
-    <div className="max-w-screen-xl">
+    <div className='max-w-screen-xl'>
       {/* header */}
       <Card>
-        <div className="flex">
-          <div className="flex flex-col items-center justify-center">
+        <div className='flex'>
+          <div className='flex flex-col items-center justify-center'>
             <span
-              className="cursor-pointer"
+              className='cursor-pointer'
               onClick={() =>
                 ['notEnter', 'enter'].includes(competitionState as string)
                   ? setopenEnterModal(true)
                   : null
-              }
-            >
+              }>
               {competitionState === 'notEnter' && (
                 <MySvgIcon
-                  href="#icon-weibaoming"
+                  href='#icon-weibaoming'
                   color={token.colorWarning}
-                  size={4}
-                ></MySvgIcon>
+                  size={4}></MySvgIcon>
               )}
               {competitionState === 'enter' && (
                 <MySvgIcon
-                  href="#icon-yibaoming"
+                  href='#icon-yibaoming'
                   color={token.colorInfo}
-                  size={4}
-                ></MySvgIcon>
+                  size={4}></MySvgIcon>
               )}
               {competitionState === 'underway' && (
                 <MySvgIcon
-                  href="#icon-jinhangzhong"
+                  href='#icon-jinhangzhong'
                   color={token.colorSuccess}
-                  size={4}
-                ></MySvgIcon>
+                  size={4}></MySvgIcon>
               )}
               {competitionState === 'finished' && (
                 <MySvgIcon
-                  href="#icon-yijieshu"
+                  href='#icon-yijieshu'
                   color={token.colorError}
-                  size={4}
-                ></MySvgIcon>
+                  size={4}></MySvgIcon>
               )}
             </span>
           </div>
-          <div className="flex-grow">
-            <div className=" flex justify-center items-center font-bold ">
+          <div className='flex-grow'>
+            <div className=' flex justify-center items-center font-bold '>
               <CompetitionTypeLabel
                 size={2}
                 showLabel={false}
-                type={competition?.type as CompetitionType}
-              ></CompetitionTypeLabel>
-              <div className="ml-4" style={{ fontSize: '2rem' }}>
+                type={
+                  competition?.type as CompetitionType
+                }></CompetitionTypeLabel>
+              <div className='ml-4' style={{fontSize: '2rem'}}>
                 {competition?.title}
               </div>
             </div>
             {competitionState !== 'finished' && endTime && (
-              <CountDown
-                endTime={endTime}
-                onCountZero={() => {
-                  setcompetitionState('finished')
-                }}
-              ></CountDown>
+              <div>
+                <CountDown
+                  endTime={endTime}
+                  onCountZero={() => {
+                    setcompetitionState('finished')
+                  }}></CountDown>
+              </div>
             )}
           </div>
           {typeof enterNum === 'number' && (
-            <div className="flex flex-col items-center justify-center">
-              <Tooltip title="查看报名列表">
+            <div className='flex flex-col items-center justify-center'>
+              <Tooltip title='查看报名列表'>
                 <div
-                  className=" font-bold hover:cursor-pointer"
-                  onClick={() => getEnterList()}
-                >
-                  <div className="flex justify-center ">{enterNum}名</div>
+                  className=' font-bold hover:cursor-pointer'
+                  onClick={() => getEnterList()}>
+                  <div className='flex justify-center '>{enterNum}名</div>
                   <div>参赛者</div>
                 </div>
               </Tooltip>
@@ -313,51 +309,52 @@ const Detail: React.FC = () => {
         </div>
       </Card>
       <Menu
-        className="my-4"
+        className='my-4'
         selectedKeys={[current]}
-        onClick={e => navTo(e)}
-        mode="horizontal"
+        onClick={(e) => navTo(e)}
+        mode='horizontal'
         items={[
           {
             key: 'overview',
-            label: '总览',
+            label: '总览'
           },
           {
             key: 'problem',
-            label: '题目',
+            label: '题目'
           },
           {
             key: 'rank',
-            label: '排名',
+            label: '排名'
           },
           {
             key: 'record',
-            label: '提交',
-          },
-        ]}
-      ></Menu>
-      <div className="flex w-full">
+            label: '提交'
+          }
+        ]}></Menu>
+      <div className='flex w-full'>
         {/* content */}
         <Card
-          className="flex-grow"
+          className='flex-grow'
           style={{
-            minWidth: '1000px',
-          }}
-        >
+            minWidth: '1000px'
+          }}>
           <Outlet
-            context={[competition, competitionState, setanswering, type]}
-          ></Outlet>
+            context={[
+              competition,
+              competitionState,
+              setanswering,
+              type
+            ]}></Outlet>
         </Card>
         {/* sidebar */}
         {!answering && (
           <>
-            <div className="w-8"></div>
-            <Card size="small" className="w-96 h-min">
+            <div className='w-8'></div>
+            <Card size='small' className='w-96 h-min'>
               <Sidebar
                 type={type}
                 competition={competition}
-                setopenUpdateModal={setopenUpdateModal}
-              ></Sidebar>
+                setopenUpdateModal={setopenUpdateModal}></Sidebar>
             </Card>
           </>
         )}
@@ -366,17 +363,16 @@ const Detail: React.FC = () => {
         title={competitionState === 'notEnter' ? '报名' : '取消报名'}
         open={openEnterModal}
         onCancel={() => setopenEnterModal(false)}
-        footer={[]}
-      >
+        footer={[]}>
         {type === 'single' && (
           <Fragment>
             <div>
               {competitionState === 'notEnter' && <div>报名本个人赛？</div>}
               {competitionState === 'enter' && <div>取消报名本个人赛？</div>}
             </div>
-            <div className="flex justify-center mt-8">
+            <div className='flex justify-center mt-8'>
               <Button onClick={() => setopenEnterModal(false)}>取消</Button>
-              <Button type="primary" onClick={enterCompetition}>
+              <Button type='primary' onClick={enterCompetition}>
                 确定
               </Button>
             </div>
@@ -390,12 +386,11 @@ const Detail: React.FC = () => {
             {competitionState === 'enter' && groupInfo && (
               <Fragment>
                 <GroupInfo group={groupInfo}></GroupInfo>
-                <div className="absolute right-8 bottom-8">
+                <div className='absolute right-8 bottom-8'>
                   <Button
-                    type="dashed"
+                    type='dashed'
                     danger
-                    onClick={() => enterCompetition()}
-                  >
+                    onClick={() => enterCompetition()}>
                     取消报名
                   </Button>
                 </div>
@@ -405,32 +400,28 @@ const Detail: React.FC = () => {
         )}
       </Modal>
       <Modal
-        title="报名列表"
+        title='报名列表'
         open={openEnterListModal}
         onCancel={() => setopenEnterListModal(false)}
-        footer={[]}
-      >
+        footer={[]}>
         <List
-          itemLayout="horizontal"
+          itemLayout='horizontal'
           dataSource={enterList}
           renderItem={(item, index) => (
             <Fragment>
               <List.Item>
                 <List.Item.Meta
-                  title={<UserCard user={item}></UserCard>}
-                ></List.Item.Meta>
+                  title={<UserCard user={item}></UserCard>}></List.Item.Meta>
               </List.Item>
             </Fragment>
-          )}
-        ></List>
+          )}></List>
       </Modal>
 
       <Update
         competition={competition}
         setcompetition={setcompetition}
         openUpdateModal={openUpdateModal}
-        setopenUpdateModal={setopenUpdateModal}
-      ></Update>
+        setopenUpdateModal={setopenUpdateModal}></Update>
     </div>
   )
 }

@@ -1,10 +1,10 @@
-import { getCompetitionRankListApi, getMemberRankApi } from '@/api/competition'
-import { ICompetition } from '@/type'
-import { Space, Table } from 'antd'
-import React, { useEffect, useMemo, useState } from 'react'
-import { useOutletContext, useParams } from 'react-router-dom'
-import { rollingRanklistWs } from '@/api/competition'
-import { getUserInfoApi } from '@/api/user'
+import {getCompetitionRankListApi, getMemberRankApi} from '@/api/competition'
+import {ICompetition} from '@/type'
+import {Space, Table, theme} from 'antd'
+import React, {useEffect, useMemo, useState} from 'react'
+import {useOutletContext, useParams} from 'react-router-dom'
+import {rollingRanklistWs} from '@/api/competition'
+import {getUserInfoApi} from '@/api/user'
 import useWsConnect from '@/tool/myHooks/useWsConnect'
 import ErrorPage from '@/components/error-page'
 import RollList from '@/components/List/RollList'
@@ -21,10 +21,11 @@ interface IRank {
 let interval: NodeJS.Timeout
 
 const Rank: React.FC = () => {
-  const { competition_id } = useParams()
+  const {competition_id} = useParams()
   if (!competition_id) return <ErrorPage></ErrorPage>
   const [rankList, setRankList] = useState<IRank[]>([])
-  const spanClass = 'w-16'
+  const {token} = theme.useToken()
+  const spanClass = ''
 
   // useWsConnect({
   //   wsApi: rollingRanklistWs(competition_id),
@@ -33,6 +34,9 @@ const Rank: React.FC = () => {
 
   useEffect(() => {
     initRankList()
+  }, [])
+
+  useEffect(() => {
     interval = setInterval(() => changeRank(), 1000)
     return () => {
       clearInterval(interval)
@@ -52,7 +56,7 @@ const Rank: React.FC = () => {
         name: 'name' + i,
         score: i * 10,
         penalties: String(i * 10),
-        created_at: new Date().toLocaleDateString() + '',
+        created_at: new Date().toLocaleDateString() + ''
       })
     }
     setRankList(list)
@@ -96,14 +100,22 @@ const Rank: React.FC = () => {
         <RollList
           list={rankList}
           renderItem={(item, index) => (
-            <div key={item.id} className="w-full">
-              <Space>
-                <span className={spanClass}>{index}</span>
-                <span className={spanClass}>{item.name}</span>
-                <span className={spanClass}>{item.score}</span>
-                <span className={spanClass}>{item.penalties}</span>
-                <span className={spanClass}>{item.created_at}</span>
-              </Space>
+            <div
+              key={item.ix}
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '0 2rem',
+                height: '3rem',
+                borderBottom: index !== rankList.length - 1 ? '1px solid' : '',
+                borderColor: token.colorBorder
+              }}>
+              <span className={spanClass}>{index}</span>
+              <span className={spanClass}>{item.name}</span>
+              <span className={spanClass}>{item.score}</span>
+              <span className={spanClass}>{item.penalties}</span>
+              <span className={spanClass}>{item.created_at}</span>
             </div>
           )}></RollList>
       )}
