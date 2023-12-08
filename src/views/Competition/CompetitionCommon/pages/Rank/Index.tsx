@@ -1,81 +1,112 @@
 import { getCompetitionRankListApi, getMemberRankApi } from '@/api/competition'
-import { ICompetition, IRank } from '@/type'
-import { Table } from 'antd'
+import { ICompetition } from '@/type'
+import { Space, Table } from 'antd'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useOutletContext, useParams } from 'react-router-dom'
 import { rollingRanklistWs } from '@/api/competition'
 import { getUserInfoApi } from '@/api/user'
-import NoData from '@/components/Empty/NoData'
 import useWsConnect from '@/tool/myHooks/useWsConnect'
 import ErrorPage from '@/components/error-page'
-import GeneralTable from '@/components/table/GeneralTable'
+import RollList from '@/components/List/RollList'
 
-interface DataSource extends IRank {
-  key: string
+interface IRank {
+  id: string | number
   index: number
   name: string
+  score: number
+  penalties: string
+  created_at: string
 }
+
+let interval: NodeJS.Timeout
 
 const Rank: React.FC = () => {
   const { competition_id } = useParams()
   if (!competition_id) return <ErrorPage></ErrorPage>
-  const [dataSource, setdataSource] = useState<DataSource[]>([])
+  const [rankList, setRankList] = useState<IRank[]>([])
+  const spanClass = 'w-16'
 
-  useWsConnect({
-    wsApi: rollingRanklistWs(competition_id),
-    onMessage: onWsMessage,
-  })
+  // useWsConnect({
+  //   wsApi: rollingRanklistWs(competition_id),
+  //   onMessage: onWsMessage,
+  // })
 
   useEffect(() => {
-    fetchRankList()
+    initRankList()
+    interval = setInterval(() => changeRank(), 1000)
+    return () => {
+      clearInterval(interval)
+    }
   }, [])
 
-  const fetchRankList = () => {
-    getCompetitionRankListApi(competition_id).then(async res => {
-      const members = res.data.data.members
-      let index = 0
-      for (let member of members) {
-        const { data } = await getUserInfoApi(member.member_id)
-        setdataSource(value => [
-          ...value,
-          {
-            ...member,
-            key: member.member_id,
-            name: data.data.user.name,
-            index: value.length ? value[value.length - 1].index + 1 : 1,
-          },
-        ])
-      }
-    })
+  useEffect(() => {
+    console.log('list change ==> ', rankList)
+  }, [rankList])
+
+  const initRankList = () => {
+    const list: IRank[] = []
+    for (let i = 0; i < 10; i++) {
+      list.push({
+        id: Math.floor(Math.random() * 10000000),
+        index: i,
+        name: 'name' + i,
+        score: i * 10,
+        penalties: String(i * 10),
+        created_at: new Date().toLocaleDateString() + '',
+      })
+    }
+    setRankList(list)
   }
+
+  const changeRank = () => {
+    if (rankList.length > 0) {
+      const index = Math.floor(Math.random() * 10)
+      const list = [...rankList]
+      list[index - 1].score = Math.floor(Math.random() * 10)
+      list[index - 1].id = Math.floor(Math.random() * 10000000)
+      list.sort((a, b) => b.score - a.score)
+      setRankList(list)
+    }
+  }
+
+  // const initRankList = () => {
+  //   getCompetitionRankListApi(competition_id).then(async res => {
+  //     const members = res.data.data.members
+  //     let index = 0
+  //     for (let member of members) {
+  //       const { data } = await getUserInfoApi(member.member_id)
+  //       setRankList(value => [
+  //         ...value,
+  //         {
+  //           ...member,
+  //           key: member.member_id,
+  //           name: data.data.user.name,
+  //           index: value.length ? value[value.length - 1].index + 1 : 1,
+  //         },
+  //       ])
+  //     }
+  //   })
+  // }
 
   function onWsMessage(message: any) {}
 
   return (
     <div>
-      <Table
-        dataSource={dataSource}
-        locale={{
-          emptyText: <NoData text="暂无数据" />,
-        }}
-        columns={[
-          { title: '排名', dataIndex: 'index', key: 'index', align: 'center' },
-          { title: '选手', dataIndex: 'name', key: 'name', align: 'center' },
-          { title: '得分', dataIndex: 'score', key: 'score', align: 'center' },
-          {
-            title: '罚时',
-            dataIndex: 'penalties',
-            key: 'penalties',
-            align: 'center',
-          },
-          {
-            title: '时间',
-            dataIndex: 'created_at',
-            key: 'time',
-            align: 'center',
-          },
-        ]}
-      ></Table>
+      {rankList && (
+        <RollList
+          list={rankList}
+          renderItem={(item, index) => (
+            <div key={item.id} className="w-full">
+              <Space>
+                <span className={spanClass}>{index}</span>
+                <span className={spanClass}>{item.name}</span>
+                <span className={spanClass}>{item.score}</span>
+                <span className={spanClass}>{item.penalties}</span>
+                <span className={spanClass}>{item.created_at}</span>
+              </Space>
+            </div>
+          )}></RollList>
+      )}
     </div>
   )
 }
