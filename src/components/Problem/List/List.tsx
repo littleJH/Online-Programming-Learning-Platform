@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import copy from 'copy-to-clipboard'
 import {
   getProblemLabelsApi,
   getProblemListApi,
@@ -383,8 +382,7 @@ const ProblemList: React.FC<IProps> = props => {
         style={{
           width: `${width}px`,
           maxWidth: '1024px',
-        }}
-      >
+        }}>
         <div ref={leftCtn} className="grow w-full" style={{ width: '1px' }}>
           <div ref={searchCtn} className="py-4 w-full flex">
             <div style={{ flexGrow: '1', width: '1/3' }}>
@@ -396,8 +394,7 @@ const ProblemList: React.FC<IProps> = props => {
                 placeholder="选择题单"
                 value={selectedTopic?.id}
                 onChange={handleTopicChange}
-                options={topicOptions}
-              ></Select>
+                options={topicOptions}></Select>
             </div>
             <div className="w-4"></div>
             <div style={{ flexGrow: '1', width: '1/3' }}>
@@ -428,18 +425,15 @@ const ProblemList: React.FC<IProps> = props => {
                         onClick={() => handleTagClick(index)}
                         style={{
                           marginBottom: '0.5rem',
-                        }}
-                      >
+                        }}>
                         <MyTag
                           label={item.label}
                           checkable
-                          checked={tagList[index].checked}
-                        ></MyTag>
+                          checked={tagList[index].checked}></MyTag>
                       </span>
                     ))}
                   </div>
-                }
-              >
+                }>
                 <Select
                   mode="multiple"
                   showSearch={false}
@@ -450,8 +444,7 @@ const ProblemList: React.FC<IProps> = props => {
                   open={false}
                   value={labelGroup}
                   onDeselect={handleDeselect}
-                  onClear={handleClear}
-                ></Select>
+                  onClear={handleClear}></Select>
               </Popover>
             </div>
             <div className="w-4"></div>
@@ -464,8 +457,7 @@ const ProblemList: React.FC<IProps> = props => {
                 placeholder="文本搜索"
                 enterButton
                 onSearch={handleSearch}
-                onChange={handleTextChange}
-              ></Search>
+                onChange={handleTextChange}></Search>
             </div>
           </div>
           {selectedTopic && (
@@ -485,14 +477,12 @@ const ProblemList: React.FC<IProps> = props => {
                         <Descriptions.Item label={'创建者'}>
                           <Space>
                             <Avatar
-                              src={`${iconBaseUrl}/${selectedTopic.user?.icon}`}
-                            ></Avatar>
+                              src={`${iconBaseUrl}/${selectedTopic.user?.icon}`}></Avatar>
                             <NavLink
                               to={''}
                               className={
                                 'text-indigo-500 hover:text-indigo-500'
-                              }
-                            >
+                              }>
                               {selectedTopic.user?.name}
                             </NavLink>
                           </Space>
@@ -512,8 +502,7 @@ const ProblemList: React.FC<IProps> = props => {
                     </>
                   ),
                 },
-              ]}
-            ></MyCollapse>
+              ]}></MyCollapse>
           )}
           <ProblemTable
             mode={mode}
@@ -530,8 +519,7 @@ const ProblemList: React.FC<IProps> = props => {
             onLineClick={toDetail}
             tableScrollHeight={tableScrollHeight}
             setSelectedProblems={setSelectedProblems}
-            selectedRowKeys={selectedRowKeys}
-          ></ProblemTable>
+            selectedRowKeys={selectedRowKeys}></ProblemTable>
         </div>
       </div>
     </>
