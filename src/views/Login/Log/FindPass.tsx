@@ -30,7 +30,7 @@ const FindPass: React.FC<{
         setVerifyBtnDisable(true)
         notification.success({
           message: '验证码获取成功',
-          description: `验证码已发送至您的邮箱 ${email}`
+          description: `验证码已发送至您的邮箱 ${email}`,
         })
       }
     })
@@ -46,11 +46,11 @@ const FindPass: React.FC<{
           notification.success({
             message: '密码已重置',
             description: `系统重置的新密码已发送至您的邮箱 ${info?.email}，出于安全考虑，请尽快更改密码。`,
-            duration: 10
+            duration: 10,
           })
         } else {
           notification.error({
-            message: res.data.msg
+            message: res.data.msg,
           })
         }
       })
@@ -64,7 +64,7 @@ const FindPass: React.FC<{
         open={openFindPwModal}
         onCancel={() => setOpenFindPwModal(false)}
         style={{
-          translate: '0 50%'
+          translate: '0 50%',
         }}
         footer={[
           <Button
@@ -73,7 +73,7 @@ const FindPass: React.FC<{
             onClick={handleFindBtnClick}
           >
             找回密码
-          </Button>
+          </Button>,
         ]}
       >
         <Form form={form2} layout="vertical">
@@ -83,8 +83,8 @@ const FindPass: React.FC<{
             rules={[
               {
                 type: 'email',
-                message: '邮箱格式错误'
-              }
+                message: '邮箱格式错误',
+              },
             ]}
           >
             <Input defaultValue={info?.email}></Input>
@@ -98,8 +98,8 @@ const FindPass: React.FC<{
                   {
                     type: 'string',
                     len: 6,
-                    message: '验证码格式错误'
-                  }
+                    message: '验证码格式错误',
+                  },
                 ]}
               >
                 <Input></Input>

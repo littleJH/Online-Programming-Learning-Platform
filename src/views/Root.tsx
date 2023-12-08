@@ -3,7 +3,13 @@ import { Layout, Button, Avatar, theme } from 'antd'
 import { Outlet } from 'react-router-dom'
 import { iconBaseUrl } from '@/config/apiConfig'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { isDarkState, loginStatusState, pathNameState, sideBarTypeState, userInfoState } from '@/store/appStore'
+import {
+  isDarkState,
+  loginStatusState,
+  pathNameState,
+  sideBarTypeState,
+  userInfoState,
+} from '@/store/appStore'
 import Sider from 'antd/es/layout/Sider'
 import SideBar from '@/components/Navbar/SideBar'
 import Navbar from '@/components/Navbar/Navbar'
@@ -48,33 +54,42 @@ const Root: React.FC = () => {
     return width
   }, [sideBarType])
 
-  const showPaddingY = React.useMemo(() => !['problemdetail', 'competitiondetail'].includes(getPathArray(pathname)[0]), [pathname])
+  const showPaddingY = React.useMemo(
+    () =>
+      !['problemdetail', 'competitiondetail'].includes(
+        getPathArray(pathname)[0],
+      ),
+    [pathname],
+  )
   const full = React.useMemo(() => pathname === '/creation/article', [pathname])
 
-  const headerStyle: React.CSSProperties = { backgroundColor: `${isDark ? '#141414' : '#ffffff'}`, boxShadow: token.boxShadowTertiary }
+  const headerStyle: React.CSSProperties = {
+    backgroundColor: `${isDark ? '#141414' : '#ffffff'}`,
+    boxShadow: token.boxShadowTertiary,
+  }
 
   const siderStyle: React.CSSProperties = {
     color: token.colorTextBase,
     backgroundColor: token.colorBgBase,
-    transition: 'all 500'
+    transition: 'all 500',
   }
 
   const footerStyle: React.CSSProperties = {
-    padding: '0'
+    padding: '0',
   }
 
   return (
-    <Layout className='w-full h-full'>
+    <Layout className="w-full h-full">
       <Header
-        className='sticky top-0 z-10 p-0 flex items-center'
+        className="sticky top-0 z-10 p-0 flex items-center"
         style={headerStyle}
       >
         <Navbar headerNav={headerNav}></Navbar>
 
         <Button
-          type='text'
-          className='flex items-center h-12 p-2'
-          onClick={() => setIsDark((value) => !value)}
+          type="text"
+          className="flex items-center h-12 p-2"
+          onClick={() => setIsDark(value => !value)}
         >
           <MySvgIcon
             href={`#icon-${isDark ? 'light' : 'dark'}`}
@@ -84,33 +99,30 @@ const Root: React.FC = () => {
         </Button>
         {myInfo?.level && myInfo?.level >= 4 && (
           <Button
-            type='text'
-            className='flex items-center h-12 p-2'
+            type="text"
+            className="flex items-center h-12 p-2"
             onClick={() => nav('/file')}
           >
             <MySvgIcon
-              href='#icon-folder'
+              href="#icon-folder"
               size={2}
               color={token.colorWarning}
             ></MySvgIcon>
           </Button>
         )}
-        <Button
-          type='text'
-          className='flex items-center h-12 p-2 mr-4'
-        >
+        <Button type="text" className="flex items-center h-12 p-2 mr-4">
           <div
-            className='h-full flex items-center'
+            className="h-full flex items-center"
             onClick={() => nav('/profile')}
           >
             {loginStatus && (
               <Avatar
-                className='hover:cursor-pointer'
-                alt='登录'
+                className="hover:cursor-pointer"
+                alt="登录"
                 src={`${iconBaseUrl}/${myInfo?.icon}`}
               ></Avatar>
             )}
-            {!loginStatus && <Button type='link'>登录</Button>}
+            {!loginStatus && <Button type="link">登录</Button>}
           </div>
         </Button>
       </Header>
@@ -131,19 +143,19 @@ const Root: React.FC = () => {
         )}
         <Content
           style={{
-            backgroundColor: token.colorBgBlur
+            backgroundColor: token.colorBgBlur,
           }}
         >
           <div
-            id='content'
-            className='w-full h-full overflow-y-scroll scroll-smooth'
+            id="content"
+            className="w-full h-full overflow-y-scroll scroll-smooth"
             style={{
               padding: `${showPaddingY ? '1rem 0' : '0'}`,
-              position: 'relative'
+              position: 'relative',
             }}
           >
             <div
-              className='h-full'
+              className="h-full"
               style={{ width: full ? '100%' : 'min-content', margin: 'auto' }}
             >
               <Outlet></Outlet>
@@ -155,10 +167,10 @@ const Root: React.FC = () => {
       <Footer style={footerStyle}>
         {/* left */}
         <div
-          className='w-1/2'
+          className="w-1/2"
           style={{
             display: 'inline-block',
-            minHeight: '2rem'
+            minHeight: '2rem',
           }}
         >
           {/* <Button
@@ -172,9 +184,9 @@ const Root: React.FC = () => {
         </div>
         {/* right */}
         <div
-          className='w-1/2 flex items-center'
+          className="w-1/2 flex items-center"
           style={{
-            display: 'inline-block'
+            display: 'inline-block',
           }}
         >
           {footerRight}

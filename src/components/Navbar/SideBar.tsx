@@ -1,13 +1,25 @@
 import { Menu } from 'antd'
 import React, { useEffect, useMemo, useState } from 'react'
-import { UserOutlined, MenuOutlined, StarOutlined, SafetyCertificateOutlined, SettingOutlined, MessageOutlined, TeamOutlined, InfoCircleOutlined, TrophyOutlined, GlobalOutlined, CodeOutlined } from '@ant-design/icons'
+import {
+  UserOutlined,
+  MenuOutlined,
+  StarOutlined,
+  SafetyCertificateOutlined,
+  SettingOutlined,
+  MessageOutlined,
+  TeamOutlined,
+  InfoCircleOutlined,
+  TrophyOutlined,
+  GlobalOutlined,
+  CodeOutlined,
+} from '@ant-design/icons'
 import useNavTo from '@/tool/myHooks/useNavTo'
 import MySvgIcon from '../Icon/MySvgIcon'
 import { useRecoilValue } from 'recoil'
 import { pathNameState } from '@/store/appStore'
 import { getPathArray } from '@/tool/MyUtils/utils'
 
-const SideBar: React.FC<{ header: string }> = (props) => {
+const SideBar: React.FC<{ header: string }> = props => {
   const { header } = props
   const [current, setCurrent] = useState('')
   const [menuItem, setMenuItem] = useState([])
@@ -24,8 +36,12 @@ const SideBar: React.FC<{ header: string }> = (props) => {
       menuItems.forEach((item: any) => {
         if (item.children && patharr.length > 1) {
           item.children.forEach((item1: any) => {
-            patharr.length === 2 && patharr[1] === item1.key && setOpenKeys([item.key])
-            patharr.length === 3 && patharr[1] === item.key && setOpenKeys([item.key])
+            patharr.length === 2 &&
+              patharr[1] === item1.key &&
+              setOpenKeys([item.key])
+            patharr.length === 3 &&
+              patharr[1] === item.key &&
+              setOpenKeys([item.key])
           })
         }
       })
@@ -53,10 +69,10 @@ const SideBar: React.FC<{ header: string }> = (props) => {
       style={{
         height: '100%',
         userSelect: 'none',
-        padding: '0 1rem'
+        padding: '0 1rem',
       }}
       selectedKeys={[current]}
-      mode='inline'
+      mode="inline"
       onClick={handleMenuClick}
       items={menuItem}
       openKeys={openKeys}
@@ -68,36 +84,36 @@ const menuItemObj: any = {
   problemsetMenuItem: [
     {
       label: '全部',
-      key: 'all'
+      key: 'all',
     },
     {
       label: '题单',
-      key: 'topic'
+      key: 'topic',
     },
     {
       label: '表单',
-      key: 'form'
-    }
+      key: 'form',
+    },
   ],
   competitionsetMenuItem: [
     {
       label: '全部',
-      key: 'all'
-    }
+      key: 'all',
+    },
   ],
   communityMenuItem: [
     {
       label: '文章',
-      key: 'articleset'
+      key: 'articleset',
     },
     {
       label: '讨论',
-      key: 'commentset'
+      key: 'commentset',
     },
     {
       label: '题解',
-      key: 'solvingset'
-    }
+      key: 'solvingset',
+    },
   ],
   creationMenuItem: [
     {
@@ -107,21 +123,21 @@ const menuItemObj: any = {
       children: [
         {
           label: '题目',
-          key: 'problem'
+          key: 'problem',
         },
         {
           label: '题单',
-          key: 'topic'
+          key: 'topic',
         },
         {
           label: '表单',
-          key: 'form'
+          key: 'form',
         },
         {
           label: '题解',
-          key: 'post'
-        }
-      ]
+          key: 'post',
+        },
+      ],
     },
     {
       key: 'sub2',
@@ -130,13 +146,13 @@ const menuItemObj: any = {
       children: [
         {
           label: '文章',
-          key: 'article'
+          key: 'article',
         },
         {
           label: '讨论',
-          key: 'comment'
-        }
-      ]
+          key: 'comment',
+        },
+      ],
     },
     {
       key: 'sub3',
@@ -145,26 +161,26 @@ const menuItemObj: any = {
       children: [
         {
           label: '比赛',
-          key: 'competition'
-        }
-      ]
-    }
+          key: 'competition',
+        },
+      ],
+    },
   ],
   profileMenuItem: [
     {
       key: 'friend',
       label: '好友',
-      icon: <UserOutlined />
+      icon: <UserOutlined />,
     },
     {
       key: 'message',
       label: '留言板',
-      icon: <MessageOutlined />
+      icon: <MessageOutlined />,
     },
     {
       key: 'group',
       label: '聊天',
-      icon: <TeamOutlined />
+      icon: <TeamOutlined />,
       // children: [
       //   {
       //     key: 'creation',
@@ -178,16 +194,16 @@ const menuItemObj: any = {
     },
     {
       key: 'divider3',
-      type: 'divider'
+      type: 'divider',
     },
     {
       key: 'info',
       label: '个人信息',
-      icon: <InfoCircleOutlined />
+      icon: <InfoCircleOutlined />,
     },
     {
       type: 'divider',
-      key: 'divider1'
+      key: 'divider1',
     },
     {
       key: 'creation',
@@ -196,7 +212,7 @@ const menuItemObj: any = {
       children: [
         {
           key: 'creation/problem',
-          label: '题目'
+          label: '题目',
           // icon: (
           //   <svg className='icon-small'>
           //     <use href='#icon-problem'></use>
@@ -205,7 +221,7 @@ const menuItemObj: any = {
         },
         {
           key: 'creation/topic',
-          label: '题单'
+          label: '题单',
           // icon: (
           //   <svg className='icon-small'>
           //     <use href='#icon-topic'></use>
@@ -214,7 +230,7 @@ const menuItemObj: any = {
         },
         {
           key: 'creation/form',
-          label: '表单'
+          label: '表单',
           // icon: (
           //   <svg className='icon-small'>
           //     <use href='#icon-liebiaoqingdan'></use>
@@ -223,7 +239,7 @@ const menuItemObj: any = {
         },
         {
           key: 'creation/article',
-          label: '文章'
+          label: '文章',
           // icon: (
           //   <svg className='icon-small'>
           //     <use href='#icon-article'></use>
@@ -232,9 +248,9 @@ const menuItemObj: any = {
         },
         {
           key: 'creation/group',
-          label: '用户组'
-        }
-      ]
+          label: '用户组',
+        },
+      ],
     },
     {
       key: 'star',
@@ -243,7 +259,7 @@ const menuItemObj: any = {
       children: [
         {
           key: 'star/problem',
-          label: '题目'
+          label: '题目',
           // icon: (
           //   <svg className='icon-small'>
           //     <use href='#icon-problem'></use>
@@ -252,7 +268,7 @@ const menuItemObj: any = {
         },
         {
           key: 'star/topic',
-          label: '题单'
+          label: '题单',
           // icon: (
           //   <svg className='icon-small'>
           //     <use href='#icon-topic'></use>
@@ -261,7 +277,7 @@ const menuItemObj: any = {
         },
         {
           key: 'star/form',
-          label: '表单'
+          label: '表单',
           // icon: (
           //   <svg className='icon-small'>
           //     <use href='#icon-liebiaoqingdan'></use>
@@ -270,30 +286,30 @@ const menuItemObj: any = {
         },
         {
           key: 'star/article',
-          label: '文章'
+          label: '文章',
           // icon: (
           //   <svg className='icon-small'>
           //     <use href='#icon-article'></use>
           //   </svg>
           // )
-        }
-      ]
+        },
+      ],
     },
     {
       type: 'divider',
-      key: 'divider2'
+      key: 'divider2',
     },
     {
       key: 'setting',
       label: '偏好设置',
-      icon: <SettingOutlined />
+      icon: <SettingOutlined />,
     },
     {
       key: 'account',
       label: '账号安全',
-      icon: <SafetyCertificateOutlined />
-    }
-  ]
+      icon: <SafetyCertificateOutlined />,
+    },
+  ],
 }
 
 export default SideBar

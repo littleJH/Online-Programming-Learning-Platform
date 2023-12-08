@@ -1,9 +1,26 @@
 import { CompetitionType, ICompetition, IGroup } from '@/type'
-import { Button, Space, Steps, Form, Input, Switch, Result, notification, List, Modal } from 'antd'
+import {
+  Button,
+  Space,
+  Steps,
+  Form,
+  Input,
+  Switch,
+  Result,
+  notification,
+  List,
+  Modal,
+} from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import React, { Fragment, useEffect, useState } from 'react'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
-import { applyEnterGroupApi, createUserGroupApi, getGroupApi, getLeaderGroupListApi, searchGroupByTextApi } from '@/api/group'
+import {
+  applyEnterGroupApi,
+  createUserGroupApi,
+  getGroupApi,
+  getLeaderGroupListApi,
+  searchGroupByTextApi,
+} from '@/api/group'
 import { enterCompetitionApi } from '@/api/competitionMixture'
 import GroupInfo from './GroupInfo'
 import { getCurrentUserinfo } from '@/api/user'
@@ -19,7 +36,7 @@ interface IDataSource {
 const EnterGroup: React.FC<{
   competition: ICompetition | undefined
   type: CompetitionType
-}> = (props) => {
+}> = props => {
   const [form] = Form.useForm()
   const { competition, type } = props
   const [currentStep, setcurrentStep] = useState(0)
@@ -82,7 +99,7 @@ const EnterGroup: React.FC<{
 
   const enterCompetition = (index: number) => {
     const data = {
-      passwd_id: ' '
+      passwd_id: ' ',
     }
     let id: string = ''
     switch (mode) {
@@ -92,16 +109,21 @@ const EnterGroup: React.FC<{
       case 'already':
         id = dataSource[index].group.id
     }
-    enterCompetitionApi(type, competition?.id as string, JSON.stringify(data), id).then((res) => {
+    enterCompetitionApi(
+      type,
+      competition?.id as string,
+      JSON.stringify(data),
+      id,
+    ).then(res => {
       if (res.data.code === 200) {
         notification.success({
-          message: res.data.msg
+          message: res.data.msg,
         })
         setgroup(index >= 0 ? dataSource[index].group : group)
-        setcurrentStep((value) => value + 1)
+        setcurrentStep(value => value + 1)
       } else {
         notification.warning({
-          message: res.data.msg
+          message: res.data.msg,
         })
       }
     })
@@ -121,50 +143,52 @@ const EnterGroup: React.FC<{
 
   const searchGroup = () => {
     setdataSource([])
-    searchGroupByTextApi(searchText).then((res) => {
+    searchGroupByTextApi(searchText).then(res => {
       console.log(res)
       const groups = res.data.data.groups as IGroup[]
       setdataSource(
-        groups.map((item) => {
+        groups.map(item => {
           return {
             key: item.id,
-            group: item
+            group: item,
           }
-        })
+        }),
       )
     })
   }
 
   const enterGroup = (index: number) => {
     const data = {
-      content: applyContent
+      content: applyContent,
     }
-    applyEnterGroupApi(dataSource[index].group.id, JSON.stringify(data)).then((res) => {
-      if (res.data.code === 200) {
-        notification.success({
-          message: res.data.msg
-        })
-        setgroup(dataSource[index].group)
-        setcurrentStep((value) => value + 1)
-      } else {
-        notification.warning({
-          message: res.data.msg
-        })
-      }
-    })
+    applyEnterGroupApi(dataSource[index].group.id, JSON.stringify(data)).then(
+      res => {
+        if (res.data.code === 200) {
+          notification.success({
+            message: res.data.msg,
+          })
+          setgroup(dataSource[index].group)
+          setcurrentStep(value => value + 1)
+        } else {
+          notification.warning({
+            message: res.data.msg,
+          })
+        }
+      },
+    )
   }
 
   const fetchMyGroupList = () => {
-    getCurrentUserinfo().then((res) => {
-      getLeaderGroupListApi(res.data.data.user.id).then((res) => {
+    getCurrentUserinfo().then(res => {
+      getLeaderGroupListApi(res.data.data.user.id).then(res => {
         const groups = res.data.data.groups as IGroup[]
         setdataSource(
-          groups.map((item) => {
+          groups.map(item => {
             return {
               key: item.id,
-              group: item
+              group: item,
             }
-          })
+          }),
         )
       })
     })
@@ -172,14 +196,14 @@ const EnterGroup: React.FC<{
 
   const fetchGroupInfo = () => {
     setdataSource([])
-    getGroupApi(groupIdText).then((res) => {
+    getGroupApi(groupIdText).then(res => {
       if (res.data.code === 200) {
         const group = res.data.data.group as IGroup
         setdataSource([
           {
             key: group.id,
-            group: group
-          }
+            group: group,
+          },
         ])
       }
     })
@@ -187,27 +211,27 @@ const EnterGroup: React.FC<{
   return (
     <div>
       <Steps
-        className='py-8 px-16'
+        className="py-8 px-16"
         current={currentStep}
         items={[
           {
-            title: ''
+            title: '',
           },
           {
-            title: title2
+            title: title2,
           },
           {
-            title: ''
-          }
+            title: '',
+          },
         ]}
       ></Steps>
       {currentStep === 0 && (
-        <div className='flex justify-center'>
+        <div className="flex justify-center">
           <Space>
             <Button
               onClick={() => {
                 setmode('create')
-                setcurrentStep((value) => value + 1)
+                setcurrentStep(value => value + 1)
               }}
             >
               创建用户组
@@ -215,7 +239,7 @@ const EnterGroup: React.FC<{
             <Button
               onClick={() => {
                 setmode('enter')
-                setcurrentStep((value) => value + 1)
+                setcurrentStep(value => value + 1)
               }}
             >
               加入用户组
@@ -223,7 +247,7 @@ const EnterGroup: React.FC<{
             <Button
               onClick={() => {
                 setmode('already')
-                setcurrentStep((value) => value + 1)
+                setcurrentStep(value => value + 1)
               }}
             >
               已有用户组
@@ -231,7 +255,7 @@ const EnterGroup: React.FC<{
             <Button
               onClick={() => {
                 setmode('create')
-                setcurrentStep((value) => value + 1)
+                setcurrentStep(value => value + 1)
               }}
             >
               创建标准用户组
@@ -245,7 +269,7 @@ const EnterGroup: React.FC<{
             form={form}
             doneCallback={(group: IGroup) => {
               setgroup(group)
-              setcurrentStep((value) => value + 1)
+              setcurrentStep(value => value + 1)
             }}
           ></CreateGroupForm>
           {/* <div className='flex justify-center mt-8'>
@@ -270,32 +294,32 @@ const EnterGroup: React.FC<{
       {currentStep === 1 && mode === 'enter' && (
         <div>
           <div>
-            <div className='searchInput flex'>
+            <div className="searchInput flex">
               <Input
-                size='large'
+                size="large"
                 autoFocus
-                placeholder='搜索用户组'
-                onKeyDown={(e) => {
+                placeholder="搜索用户组"
+                onKeyDown={e => {
                   handleKeydown(e)
                 }}
                 value={searchText}
-                onChange={(value) => setsearchText(value.target.value)}
-                className='border-0 border-b border-slate-500'
+                onChange={value => setsearchText(value.target.value)}
+                className="border-0 border-b border-slate-500"
               ></Input>
               <svg
-                className='icon ml-4 hover:cursor-pointer '
+                className="icon ml-4 hover:cursor-pointer "
                 onClick={searchGroup}
               >
-                <use href='#icon-search'></use>
+                <use href="#icon-search"></use>
               </svg>
             </div>
           </div>
           <GroupList
             dataSource={dataSource}
             callBack={enterGroup}
-            extra='申请加入'
+            extra="申请加入"
           ></GroupList>
-          <div className='flex justify-center'>
+          <div className="flex justify-center">
             <Button
               onClick={() => {
                 setcurrentStep(0)
@@ -308,14 +332,14 @@ const EnterGroup: React.FC<{
       )}
       {currentStep === 1 && mode === 'already' && (
         <Fragment>
-          <div className='flex items-center'>
+          <div className="flex items-center">
             <Input
-              placeholder='请输入用户组的id'
+              placeholder="请输入用户组的id"
               value={groupIdText}
-              onChange={(value) => setgroupIdText(value.target.value)}
+              onChange={value => setgroupIdText(value.target.value)}
               onKeyDown={handleKeydown}
             ></Input>
-            <span className='px-4'>或</span>
+            <span className="px-4">或</span>
             <Button
               onClick={() => {
                 fetchMyGroupList()
@@ -327,9 +351,9 @@ const EnterGroup: React.FC<{
           <GroupList
             dataSource={dataSource}
             callBack={enterCompetition}
-            extra='点击报名'
+            extra="点击报名"
           ></GroupList>
-          <div className='flex justify-center'>
+          <div className="flex justify-center">
             <Button
               onClick={() => {
                 setcurrentStep(0)
@@ -350,7 +374,9 @@ const EnterGroup: React.FC<{
                 <Fragment>
                   <GroupInfo group={group}></GroupInfo>
                   <Space>
-                    <Button onClick={() => enterCompetition(-1)}>点击报名</Button>
+                    <Button onClick={() => enterCompetition(-1)}>
+                      点击报名
+                    </Button>
                     <Button
                       onClick={() => {
                         setcurrentStep(1)
@@ -376,19 +402,16 @@ const GroupList: React.FC<{
   dataSource: IDataSource[]
   callBack: Function
   extra: string
-}> = (props) => {
+}> = props => {
   const { dataSource, callBack, extra } = props
   return (
     <List
-      className='mx-4'
+      className="mx-4"
       dataSource={dataSource}
       renderItem={(item, index) => (
         <List.Item
           extra={
-            <Button
-              size='small'
-              onClick={() => callBack(index)}
-            >
+            <Button size="small" onClick={() => callBack(index)}>
               {extra}
             </Button>
           }

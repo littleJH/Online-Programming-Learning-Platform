@@ -1,7 +1,12 @@
 import { Button, Form, Input, Menu, Modal, Space, theme } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import React, { useEffect, useMemo, useState } from 'react'
-import { applyEnterGroupApi, getGroupApi, getMemberGroupListApi, searchGroupByTextApi } from '@/api/group'
+import {
+  applyEnterGroupApi,
+  getGroupApi,
+  getMemberGroupListApi,
+  searchGroupByTextApi,
+} from '@/api/group'
 import { useRecoilValue } from 'recoil'
 import { notificationApi, userInfoState } from '@/store/appStore'
 import { IGroup } from '@/type'
@@ -28,17 +33,20 @@ const GroupRoot: React.FC = () => {
   const [form] = Form.useForm()
   const { token } = theme.useToken()
 
-  const currentGroup = useMemo(() => groupList.find((item) => item.id === group_id), [group_id, groupList])
+  const currentGroup = useMemo(
+    () => groupList.find(item => item.id === group_id),
+    [group_id, groupList],
+  )
 
   const menuItems = useMemo(
     () =>
-      groupList.map((group) => {
+      groupList.map(group => {
         return {
           key: group.id,
-          label: <div>{group.title}</div>
+          label: <div>{group.title}</div>,
         }
       }),
-    [groupList]
+    [groupList],
   )
 
   useEffect(() => {
@@ -49,7 +57,7 @@ const GroupRoot: React.FC = () => {
   const initGroupList = () => {
     if (!info) return
     setMode('default')
-    getMemberGroupListApi(info?.id).then(async (res) => {
+    getMemberGroupListApi(info?.id).then(async res => {
       setTotal(res.data.data.total)
       const groups = res.data.data.userList
       const list: IGroup[] = []
@@ -97,58 +105,59 @@ const GroupRoot: React.FC = () => {
   const enterGroup = async () => {
     if (!currentGroup?.auto && applyContent === '') {
       notification?.warning({
-        message: '请输入申请信息'
+        message: '请输入申请信息',
       })
       return
     }
     const form = new FormData()
     form.append('content', applyContent)
-    currentGroup?.id && applyEnterGroupApi(currentGroup?.id, form).then((res) => {})
+    currentGroup?.id &&
+      applyEnterGroupApi(currentGroup?.id, form).then(res => {})
   }
 
   const handleGroupCreated = (group: IGroup) => {
     notification &&
       notification.success({
-        message: '用户组创建成功'
+        message: '用户组创建成功',
       })
     setMode('default')
     setGroup_id(group.id)
-    setGroupList((value) => [group, ...value])
+    setGroupList(value => [group, ...value])
     setQuerys({
-      group_id: group.id
+      group_id: group.id,
     })
     setOpenCreateModal(false)
   }
 
   return (
     <div
-      className='flex'
+      className="flex"
       style={{
         width: '70vw',
-        height: '70vh'
+        height: '70vh',
       }}
     >
       {/* left */}
-      <div className='w-64 h-full flex flex-col'>
-        <Space className='sticky top-0 px-4'>
+      <div className="w-64 h-full flex flex-col">
+        <Space className="sticky top-0 px-4">
           <Search
-            size='small'
+            size="small"
             enterButton
             allowClear
             onSearch={handleGroupSearth}
-            onChange={(e) => {
+            onChange={e => {
               if (e.target.value === '') initGroupList()
             }}
           ></Search>
           <Button
-            size='small'
+            size="small"
             icon={<PlusOutlined />}
             onClick={() => setOpenCreateModal(true)}
           ></Button>
         </Space>
-        <div className='overflow-auto h-96 grow'>
+        <div className="overflow-auto h-96 grow">
           <Menu
-            className='p-4'
+            className="p-4"
             items={menuItems}
             selectedKeys={[group_id || '']}
             onSelect={handleMenuSelected}
@@ -157,8 +166,13 @@ const GroupRoot: React.FC = () => {
       </div>
       {/* <Divider type="vertical" className="h-full"></Divider> */}
       <div
-        className='grow w-96 h-full rounded'
-        style={{ borderColor: token.colorBorder, borderWidth: '1px', borderRadius: token.borderRadius, borderStyle: 'solid' }}
+        className="grow w-96 h-full rounded"
+        style={{
+          borderColor: token.colorBorder,
+          borderWidth: '1px',
+          borderRadius: token.borderRadius,
+          borderStyle: 'solid',
+        }}
       >
         {currentGroup && (
           <>
@@ -167,12 +181,16 @@ const GroupRoot: React.FC = () => {
               <>
                 {currentGroup.entered && <Chat group={currentGroup}></Chat>}
                 {!currentGroup.entered && (
-                  <div className='p-8'>
+                  <div className="p-8">
                     <GroupInfo group={currentGroup}></GroupInfo>
-                    <div className='w-full text-end'>
+                    <div className="w-full text-end">
                       <Button
-                        type='primary'
-                        onClick={() => (currentGroup.auto ? enterGroup() : setOpenEnterModal(true))}
+                        type="primary"
+                        onClick={() =>
+                          currentGroup.auto
+                            ? enterGroup()
+                            : setOpenEnterModal(true)
+                        }
                       >
                         加入小组
                       </Button>
@@ -186,25 +204,22 @@ const GroupRoot: React.FC = () => {
       </div>
       <Modal
         open={openEnterModal}
-        title='申请信息'
+        title="申请信息"
         onCancel={() => setOpenEnterModal(false)}
         footer={[
-          <Button
-            type='primary'
-            onClick={enterGroup}
-          >
+          <Button type="primary" onClick={enterGroup}>
             加入
-          </Button>
+          </Button>,
         ]}
       >
         <TextArea
           value={applyContent}
-          onChange={(e) => setApplyContent(e.target.value)}
+          onChange={e => setApplyContent(e.target.value)}
         ></TextArea>
       </Modal>
       <Modal
         open={openCreateModal}
-        title='创建用户组'
+        title="创建用户组"
         onCancel={() => setOpenCreateModal(false)}
         footer={[]}
       >

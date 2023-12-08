@@ -1,6 +1,11 @@
 import React, { useEffect } from 'react'
 
-const useWsConnect = (options: { wsApi?: WebSocket; onMessage?: (message: any) => void; onOpen?: () => void; immediately?: boolean }) => {
+const useWsConnect = (options: {
+  wsApi?: WebSocket
+  onMessage?: (message: any) => void
+  onOpen?: () => void
+  immediately?: boolean
+}) => {
   const { wsApi, onMessage, onOpen, immediately = true } = options
   let ws: WebSocket
 

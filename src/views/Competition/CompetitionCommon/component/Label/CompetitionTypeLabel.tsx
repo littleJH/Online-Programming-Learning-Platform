@@ -7,7 +7,7 @@ const CompetitionTypeLabel: React.FC<{
   type: CompetitionType
   size: number
   showLabel?: boolean
-}> = (props) => {
+}> = props => {
   const { size, showLabel } = props
   const [show, setshow] = useState<boolean>()
   const { token } = theme.useToken()
@@ -16,11 +16,11 @@ const CompetitionTypeLabel: React.FC<{
     showLabel === false ? setshow(false) : setshow(true)
   }, [showLabel])
   return (
-    <div className='flex items-center'>
+    <div className="flex items-center">
       {props.type === 'Single' && (
         <>
           <MySvgIcon
-            href='#icon-wode'
+            href="#icon-wode"
             size={size}
             color={token.colorPrimaryTextHover}
           ></MySvgIcon>
@@ -30,7 +30,7 @@ const CompetitionTypeLabel: React.FC<{
       {props.type === 'Group' && (
         <>
           <MySvgIcon
-            href='#icon-xiaozu'
+            href="#icon-xiaozu"
             size={size}
             color={token.colorPrimaryTextHover}
           ></MySvgIcon>
@@ -40,7 +40,7 @@ const CompetitionTypeLabel: React.FC<{
       {props.type === 'Match' && (
         <>
           <MySvgIcon
-            href='#icon-pipei'
+            href="#icon-pipei"
             size={size}
             color={token.colorPrimaryTextHover}
           ></MySvgIcon>
@@ -50,7 +50,7 @@ const CompetitionTypeLabel: React.FC<{
       {props.type === 'OI' && (
         <>
           <MySvgIcon
-            href='#icon-pipei'
+            href="#icon-pipei"
             size={size}
             color={token.colorPrimaryTextHover}
           ></MySvgIcon>

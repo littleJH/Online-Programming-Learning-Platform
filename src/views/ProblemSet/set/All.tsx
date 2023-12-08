@@ -4,10 +4,7 @@ import React from 'react'
 const All: React.FC = () => {
   return (
     <div>
-      <ProblemList
-        mode='default'
-        width={768}
-      ></ProblemList>
+      <ProblemList mode="default" width={768}></ProblemList>
     </div>
   )
 }

@@ -15,7 +15,7 @@ interface Progress {
 const AcPercentLabel: React.FC<{
   total: number
   accept: number
-}> = (props) => {
+}> = props => {
   const { total, accept } = props
   const [exitRecord, setexitRecord] = useState<boolean>()
   const { token } = theme.useToken()
@@ -46,24 +46,28 @@ const AcPercentLabel: React.FC<{
 
   return (
     <div
-      className='flex justify-center  text-slate-100 text-sm '
+      className="flex justify-center  text-slate-100 text-sm "
       style={{ minWidth: '128px' }}
     >
       {exitRecord && (
         <Progress
-          type='line'
+          type="line"
           percent={percent}
           strokeColor={token.colorSuccess}
           trailColor={token.colorError}
-          format={(percent) => <div className='text-xs'>{`${accept}/${total}`}</div>}
+          format={percent => (
+            <div className="text-xs">{`${accept}/${total}`}</div>
+          )}
         ></Progress>
       )}
       {!exitRecord && (
         <Progress
-          type='line'
+          type="line"
           percent={percent}
           trailColor={token.colorWarning}
-          format={(percent) => <div className='text-xs'>{`${accept}/${total}`}</div>}
+          format={percent => (
+            <div className="text-xs">{`${accept}/${total}`}</div>
+          )}
         ></Progress>
       )}
     </div>

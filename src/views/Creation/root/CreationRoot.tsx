@@ -25,11 +25,11 @@ const CreationRoot: React.FC = () => {
           style={{
             height: `${full ? '100%' : 'max-content'}`,
             width: `${full ? '100%' : 'max-content'}`,
-            margin: `${full ? '0 1rem' : '0'}`
+            margin: `${full ? '0 1rem' : '0'}`,
           }}
           bodyStyle={{
             height: `${full ? '100%' : 'max-content'}`,
-            width: `${full ? '100%' : 'max-content'}`
+            width: `${full ? '100%' : 'max-content'}`,
           }}
         >
           <Outlet></Outlet>

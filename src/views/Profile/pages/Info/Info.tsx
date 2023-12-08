@@ -1,6 +1,22 @@
 import { notificationApi, userInfoState } from '@/store/appStore'
 import { iconBaseUrl, imgGetBaseUrl } from '@/config/apiConfig'
-import { Avatar, Button, Col, Descriptions, Divider, Form, Input, Radio, Row, Segmented, Statistic, Space, Tooltip, Upload, UploadFile } from 'antd'
+import {
+  Avatar,
+  Button,
+  Col,
+  Descriptions,
+  Divider,
+  Form,
+  Input,
+  Radio,
+  Row,
+  Segmented,
+  Statistic,
+  Space,
+  Tooltip,
+  Upload,
+  UploadFile,
+} from 'antd'
 import React, { useCallback, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { ManOutlined, WomanOutlined } from '@ant-design/icons'
@@ -33,7 +49,7 @@ const Info: React.FC = () => {
       setInfo(res.data.data.user)
       notification &&
         notification.success({
-          message: '保存成功'
+          message: '保存成功',
         })
     }
   }
@@ -43,7 +59,7 @@ const Info: React.FC = () => {
     const form = new FormData()
     form.append('file', file as any)
     const {
-      data: { code, data, msg }
+      data: { code, data, msg },
     } = await uploadImgApi(form)
     if (code === 200) {
       file.status = 'done'
@@ -64,20 +80,20 @@ const Info: React.FC = () => {
     if (flag) {
       notification &&
         notification.success({
-          message: '已复制到剪切板'
+          message: '已复制到剪切板',
         })
     }
   }
 
   return (
     <div
-      className=''
+      className=""
       style={{
         width: '768px',
-        padding: '0 10rem'
+        padding: '0 10rem',
       }}
     >
-      <div className='flex justify-center'>
+      <div className="flex justify-center">
         <div>
           {/* <ImgCrop rotationSlider> */}
           <Upload
@@ -85,10 +101,7 @@ const Info: React.FC = () => {
             fileList={fileList}
             onRemove={handleRemove}
           >
-            <Avatar
-              src={`${imgGetBaseUrl}/${iconUrl}`}
-              size={128}
-            ></Avatar>
+            <Avatar src={`${imgGetBaseUrl}/${iconUrl}`} size={128}></Avatar>
           </Upload>
           {/* </ImgCrop> */}
         </div>
@@ -120,108 +133,65 @@ const Info: React.FC = () => {
       </div> */}
       <div style={{ textAlign: 'center', letterSpacing: '1px' }}>
         <span> ID：</span>
-        <Tooltip
-          title={`${info?.id} 点击复制`}
-          placement='bottom'
-        >
-          <span
-            onClick={handleIdClick}
-            style={{ userSelect: 'none' }}
-          >
+        <Tooltip title={`${info?.id} 点击复制`} placement="bottom">
+          <span onClick={handleIdClick} style={{ userSelect: 'none' }}>
             {info?.id}
           </span>
         </Tooltip>
       </div>
       <Divider></Divider>
       <Row>
-        <Col
-          style={{ textAlign: 'center' }}
-          span={8}
-        >
-          <Statistic
-            title='权限等级'
-            value={String(info?.level)}
-          ></Statistic>
+        <Col style={{ textAlign: 'center' }} span={8}>
+          <Statistic title="权限等级" value={String(info?.level)}></Statistic>
         </Col>
-        <Col
-          style={{ textAlign: 'center' }}
-          span={8}
-        >
-          <Statistic
-            title='竞赛分数'
-            value={String(info?.score)}
-          ></Statistic>
+        <Col style={{ textAlign: 'center' }} span={8}>
+          <Statistic title="竞赛分数" value={String(info?.score)}></Statistic>
         </Col>
-        <Col
-          style={{ textAlign: 'center' }}
-          span={8}
-        >
+        <Col style={{ textAlign: 'center' }} span={8}>
           <Statistic
-            title='被游览数'
+            title="被游览数"
             value={String(info?.visit_num)}
           ></Statistic>
         </Col>
       </Row>
       <Row>
-        <Col
-          style={{ textAlign: 'center' }}
-          span={8}
-        >
+        <Col style={{ textAlign: 'center' }} span={8}>
           <Statistic
-            title='收到点赞'
+            title="收到点赞"
             value={String(info?.like_num)}
           ></Statistic>
         </Col>
-        <Col
-          style={{ textAlign: 'center' }}
-          span={8}
-        >
+        <Col style={{ textAlign: 'center' }} span={8}>
           <Statistic
-            title='收到收藏'
+            title="收到收藏"
             value={String(info?.collect_num)}
           ></Statistic>
         </Col>
-        <Col
-          style={{ textAlign: 'center' }}
-          span={8}
-        >
+        <Col style={{ textAlign: 'center' }} span={8}>
           <Statistic
-            title='收到点踩'
+            title="收到点踩"
             value={String(info?.unlike_num)}
           ></Statistic>
         </Col>
       </Row>
 
       <Divider></Divider>
-      <Form
-        layout='vertical'
-        title='基本信息'
-        form={form}
-      >
-        <Row className='w-full'>
+      <Form layout="vertical" title="基本信息" form={form}>
+        <Row className="w-full">
           <Col span={8}>
-            <Form.Item
-              name={'name'}
-              label='昵称'
-            >
+            <Form.Item name={'name'} label="昵称">
               <Input defaultValue={info?.name}></Input>
             </Form.Item>
           </Col>
           <Col span={1}></Col>
           <Col span={6}>
-            <Form.Item
-              name={'address'}
-              label='城市'
-            >
+            <Form.Item name={'address'} label="城市">
               <Input defaultValue={info?.address}></Input>
             </Form.Item>
           </Col>
           <Col span={1}></Col>
           <Col span={8}>
-            <Form.Item
-              name={'sex'}
-              label='性别'
-            >
+            <Form.Item name={'sex'} label="性别">
               <Segmented
                 block
                 defaultValue={String(info?.sex)}
@@ -232,7 +202,7 @@ const Info: React.FC = () => {
                         <ManOutlined />男
                       </span>
                     ),
-                    value: 'false'
+                    value: 'false',
                   },
                   {
                     label: (
@@ -240,33 +210,24 @@ const Info: React.FC = () => {
                         <WomanOutlined />女
                       </span>
                     ),
-                    value: 'true'
-                  }
+                    value: 'true',
+                  },
                 ]}
               ></Segmented>
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item
-          name={'blog'}
-          label='个人网站'
-        >
+        <Form.Item name={'blog'} label="个人网站">
           <Input defaultValue={info?.blog}></Input>
         </Form.Item>
-        <Form.Item
-          name={'res_long'}
-          label='个人介绍'
-        >
+        <Form.Item name={'res_long'} label="个人介绍">
           <Input.TextArea
             defaultValue={info?.res_long}
-            placeholder='关于你的个性、兴趣或经验'
+            placeholder="关于你的个性、兴趣或经验"
           ></Input.TextArea>
         </Form.Item>
-        <div className='text-end'>
-          <Button
-            type='primary'
-            onClick={handleClick}
-          >
+        <div className="text-end">
+          <Button type="primary" onClick={handleClick}>
             保存
           </Button>
         </div>

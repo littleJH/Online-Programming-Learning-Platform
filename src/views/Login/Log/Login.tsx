@@ -9,7 +9,7 @@ import FindPass from './FindPass'
 
 const App: React.FC<{
   setmode: Function
-}> = (props) => {
+}> = props => {
   const setUserInfo = useSetRecoilState(userInfoState)
   const [openFindpassModal, setOpenFindpassModal] = useState(false)
 
@@ -18,43 +18,43 @@ const App: React.FC<{
     form.append('Email', values.Email)
     form.append('Password', values.Password)
     loginApi(form)
-      .then((res) => {
+      .then(res => {
         if (res.data.code === 200) {
           console.log(res)
           const token = res.data.data.token
           localStorage.setItem('token', token)
           notification.success({
             message: '欢迎',
-            duration: 1
+            duration: 1,
           })
           window.history.back()
           return Promise.resolve()
         } else {
           notification.error({
-            message: res.data.msg
+            message: res.data.msg,
           })
         }
       })
       .then(() => {
-        getCurrentUserinfo().then((res) => {
+        getCurrentUserinfo().then(res => {
           console.log(res.data)
           setUserInfo(res.data.data.user)
         })
       })
-      .catch((err) => {
+      .catch(err => {
         notification.error({
           message: '登录失败',
-          description: ''
+          description: '',
         })
       })
   }
 
   return (
-    <div className='w-full h-full flex justify-center items-center'>
-      <div className=''>
-        <div className='text-end my-4'>
+    <div className="w-full h-full flex justify-center items-center">
+      <div className="">
+        <div className="text-end my-4">
           <Button
-            type='link'
+            type="link"
             icon={<RightOutlined />}
             onClick={() => props.setmode('Register')}
           >
@@ -62,53 +62,44 @@ const App: React.FC<{
           </Button>
         </div>
         <Form
-          size='large'
+          size="large"
           style={{ width: '28rem' }}
-          name='normal_login'
+          name="normal_login"
           onFinish={onFinish}
         >
           <Form.Item
-            name='Email'
+            name="Email"
             rules={[
               {
                 type: 'email',
-                message: '邮箱格式错误'
-              }
+                message: '邮箱格式错误',
+              },
             ]}
           >
-            <Input
-              prefix={<UserOutlined />}
-              placeholder='邮箱'
-            />
+            <Input prefix={<UserOutlined />} placeholder="邮箱" />
           </Form.Item>
           <Form.Item
-            name='Password'
+            name="Password"
             rules={[
               {
                 required: true,
-                message: '请输入密码'
-              }
+                message: '请输入密码',
+              },
             ]}
           >
             <Input
               prefix={<LockOutlined />}
-              type='Password'
-              placeholder='密码'
+              type="Password"
+              placeholder="密码"
             />
           </Form.Item>
           <Form.Item>
-            <Button
-              type='link'
-              onClick={() => setOpenFindpassModal(true)}
-            >
+            <Button type="link" onClick={() => setOpenFindpassModal(true)}>
               忘记密码
             </Button>
           </Form.Item>
-          <Form.Item className='text-center'>
-            <Button
-              type='primary'
-              htmlType='submit'
-            >
+          <Form.Item className="text-center">
+            <Button type="primary" htmlType="submit">
               登录
             </Button>
           </Form.Item>

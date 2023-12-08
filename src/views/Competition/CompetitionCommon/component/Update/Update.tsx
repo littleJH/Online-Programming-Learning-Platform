@@ -15,7 +15,7 @@ const Update: React.FC<Iprops> = props => {
   const { competition, setcompetition, openUpdateModal, setopenUpdateModal } =
     props
   const [current, setcurrent] = useState<'competition' | 'problem'>(
-    'competition'
+    'competition',
   )
   return (
     <div>
@@ -40,7 +40,7 @@ const Update: React.FC<Iprops> = props => {
                 >
                   比赛信息
                 </div>
-              )
+              ),
             },
             {
               key: 'problem',
@@ -52,8 +52,8 @@ const Update: React.FC<Iprops> = props => {
                 >
                   题目列表
                 </div>
-              )
-            }
+              ),
+            },
           ]}
         ></Menu>
         {current === 'competition' && (

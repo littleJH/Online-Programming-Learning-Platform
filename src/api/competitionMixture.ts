@@ -4,11 +4,19 @@ import { CompetitionType } from '@/type'
 
 const request = createRequest({ baseURL: 'competition/' })
 
-export const createRecordApi = (type: CompetitionType, id: string, data: any) => {
+export const createRecordApi = (
+  type: CompetitionType,
+  id: string,
+  data: any,
+) => {
   return request.post(`${type}/submit/${id}`, data, jsonConfig())
 }
 
-export const getRecordApi = (type: CompetitionType, id: string, config = baseConfig()) => {
+export const getRecordApi = (
+  type: CompetitionType,
+  id: string,
+  config = baseConfig(),
+) => {
   return request.get(`${type}/show/${id}`, config)
 }
 
@@ -28,7 +36,7 @@ export const getRecordListApi = (
     pass_low?: string
     pass_top?: string
     hack?: string
-  }
+  },
 ) => {
   let params = ''
   let length = 0
@@ -43,16 +51,32 @@ export const getRecordListApi = (
   return request.get(`${type}/search/list/${id}${params}`, baseConfig())
 }
 
-export const enterCompetitionApi = (type: CompetitionType, competition_id: string, data: any, group_id?: string) => {
-  return request.post(`${type}/enter/${competition_id}${group_id ? `/${group_id}` : ''}`, data, baseConfig())
+export const enterCompetitionApi = (
+  type: CompetitionType,
+  competition_id: string,
+  data: any,
+  group_id?: string,
+) => {
+  return request.post(
+    `${type}/enter/${competition_id}${group_id ? `/${group_id}` : ''}`,
+    data,
+    baseConfig(),
+  )
 }
 
 export const getEnterConditionApi = (type: CompetitionType, id: string) => {
   return request.get(`${type}/enter/condition/${id}`, baseConfig())
 }
 
-export const cancelEnterApi = (type: CompetitionType, competition_id: string, group_id?: string) => {
-  return request.delete(`${type}/cancel/enter/${competition_id}${group_id ? `/${group_id}` : ''}`, baseConfig())
+export const cancelEnterApi = (
+  type: CompetitionType,
+  competition_id: string,
+  group_id?: string,
+) => {
+  return request.delete(
+    `${type}/cancel/enter/${competition_id}${group_id ? `/${group_id}` : ''}`,
+    baseConfig(),
+  )
 }
 
 export const getEnterListApi = (type: CompetitionType, id: string) => {

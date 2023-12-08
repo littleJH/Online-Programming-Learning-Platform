@@ -15,7 +15,7 @@ export const unzipFileApi = (
     path: string
     name: string
   },
-  second: string
+  second: string,
 ) => {
   const { path, name } = first
   const data = new FormData()
@@ -37,7 +37,7 @@ export const moveCopyFileApi = (
     path: string
     name: string
   },
-  second: string
+  second: string,
 ) => {
   const { path, name } = first
   const data = new FormData()
@@ -55,7 +55,7 @@ export const renameFileApi = (
     path: string
     name: string
   },
-  second: string
+  second: string,
 ) => {
   const { path, name } = first
   const data = new FormData()

@@ -2,7 +2,12 @@ import { Button, ColorPicker, Divider, Form, notification, theme } from 'antd'
 import React, { useCallback, useState } from 'react'
 import CodeEditorConfig from '@/components/Editor/CodeEditorConfig'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { monacoOptionsState, notificationApi, themeState, userInfoState } from '@/store/appStore'
+import {
+  monacoOptionsState,
+  notificationApi,
+  themeState,
+  userInfoState,
+} from '@/store/appStore'
 import { getCurrentUserinfo, updateInfoApi } from '@/api/user'
 import { Color } from 'antd/es/color-picker'
 import { themeDefault } from '@/config/config'
@@ -24,15 +29,15 @@ const Setting: React.FC = () => {
     const newInfo = {
       ...info,
       theme: JSON.stringify(newTheme),
-      manaco: JSON.stringify(monacoOptions)
+      manaco: JSON.stringify(monacoOptions),
     }
-    updateInfoApi(JSON.stringify(newInfo)).then(async (res) => {
+    updateInfoApi(JSON.stringify(newInfo)).then(async res => {
       if (res.data.code === 200) {
         const res = await getCurrentUserinfo()
         setInfo(res.data.data.user)
         notification &&
           notification.success({
-            message: '保存成功'
+            message: '保存成功',
           })
       }
     })
@@ -50,12 +55,12 @@ const Setting: React.FC = () => {
 
   return (
     <div style={{ width: '100%' }}>
-      <h3 className='label flex items-center'>
+      <h3 className="label flex items-center">
         主题设置
         <Button
-          size='small'
+          size="small"
           style={{ fontSize: '0.75rem', marginLeft: '1rem' }}
-          type='dashed'
+          type="dashed"
           onClick={handleResetClick}
         >
           重置
@@ -63,59 +68,44 @@ const Setting: React.FC = () => {
       </h3>
       <Divider></Divider>
       <Form form={form}>
-        <Form.Item
-          name={'colorPrimary'}
-          label='主题色'
-        >
+        <Form.Item name={'colorPrimary'} label="主题色">
           <ColorPicker
             defaultValue={theme['colorPrimary']}
             showText={true}
-            format='hex'
-            onChangeComplete={(value) => handleColorChange(value, 'colorPrimary')}
+            format="hex"
+            onChangeComplete={value => handleColorChange(value, 'colorPrimary')}
           ></ColorPicker>
         </Form.Item>
-        <Form.Item
-          name={'colorSuccess'}
-          label='成功色'
-        >
+        <Form.Item name={'colorSuccess'} label="成功色">
           <ColorPicker
             defaultValue={theme['colorSuccess']}
             showText={true}
-            format='hex'
-            onChangeComplete={(value) => handleColorChange(value, 'colorSuccess')}
+            format="hex"
+            onChangeComplete={value => handleColorChange(value, 'colorSuccess')}
           ></ColorPicker>
         </Form.Item>
-        <Form.Item
-          name={'colorWarning'}
-          label='警告色'
-        >
+        <Form.Item name={'colorWarning'} label="警告色">
           <ColorPicker
             defaultValue={theme['colorWarning']}
             showText={true}
-            format='hex'
-            onChangeComplete={(value) => handleColorChange(value, 'colorWarning')}
+            format="hex"
+            onChangeComplete={value => handleColorChange(value, 'colorWarning')}
           ></ColorPicker>
         </Form.Item>
-        <Form.Item
-          name={'colorError'}
-          label='错误色'
-        >
+        <Form.Item name={'colorError'} label="错误色">
           <ColorPicker
             defaultValue={theme['colorError']}
             showText={true}
-            format='hex'
-            onChangeComplete={(value) => handleColorChange(value, 'colorError')}
+            format="hex"
+            onChangeComplete={value => handleColorChange(value, 'colorError')}
           ></ColorPicker>
         </Form.Item>
-        <Form.Item
-          name={'colorInfo'}
-          label='信息色'
-        >
+        <Form.Item name={'colorInfo'} label="信息色">
           <ColorPicker
             defaultValue={theme['colorInfo']}
             showText={true}
-            format='hex'
-            onChangeComplete={(value) => handleColorChange(value, 'colorInfo')}
+            format="hex"
+            onChangeComplete={value => handleColorChange(value, 'colorInfo')}
           ></ColorPicker>
         </Form.Item>
         {/* <Form.Item
@@ -129,17 +119,14 @@ const Setting: React.FC = () => {
           ></ColorPicker>
         </Form.Item> */}
       </Form>
-      <h3 className='label'>代码编辑器设置</h3>
+      <h3 className="label">代码编辑器设置</h3>
       <Divider></Divider>
       <CodeEditorConfig
         monacoOptions={monacoOptions}
         setMonacoOptions={setMonacoOptions}
       ></CodeEditorConfig>
-      <div className='text-end'>
-        <Button
-          type='primary'
-          onClick={handleClick}
-        >
+      <div className="text-end">
+        <Button type="primary" onClick={handleClick}>
           保存
         </Button>
       </div>

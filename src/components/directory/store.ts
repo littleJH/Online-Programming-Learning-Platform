@@ -3,10 +3,10 @@ import { atom } from 'recoil'
 
 export const directoryDataState = atom<IToc[]>({
   key: 'directoryDataState',
-  default: []
+  default: [],
 })
 
 export const directorySelectKeysState = atom<string[]>({
   key: 'directorySelectKeysState',
-  default: []
+  default: [],
 })

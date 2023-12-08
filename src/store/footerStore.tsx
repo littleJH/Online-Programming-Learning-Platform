@@ -3,7 +3,7 @@ import { atom } from 'recoil'
 
 export const footerRightNode = atom<React.ReactNode>({
   key: 'footerRightNodeState',
-  default: ''
+  default: '',
 })
 
 export const footerLeftNode = atom<React.ReactNode>({
@@ -11,5 +11,5 @@ export const footerLeftNode = atom<React.ReactNode>({
   default: (async () => {
     const node: React.ReactNode = ''
     return Promise.resolve(node)
-  })()
+  })(),
 })

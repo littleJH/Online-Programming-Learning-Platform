@@ -18,10 +18,22 @@ export const deleteProblemNewApi = (id: string) => {
   return request.delete(`/delete/${id}`, baseConfig())
 }
 
-export const getProblemNewListApi = (id: string, pageNum = 1, pageSize = 20) => {
+export const getProblemNewListApi = (
+  id: string,
+  pageNum = 1,
+  pageSize = 20,
+) => {
   return request.get(`/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 
-export const quoteProblemApi = (competition_id: string, problem_id: string, score: string) => {
-  return request.post(`/quote/${competition_id}/${problem_id}/${score}`, {}, baseConfig())
+export const quoteProblemApi = (
+  competition_id: string,
+  problem_id: string,
+  score: string,
+) => {
+  return request.post(
+    `/quote/${competition_id}/${problem_id}/${score}`,
+    {},
+    baseConfig(),
+  )
 }

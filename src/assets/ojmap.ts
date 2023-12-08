@@ -8,7 +8,7 @@ const oj: any = {
   UOJ: '00000007',
   URAL: '00000008',
   HACKERRANK: '00000009',
-  ATCODER: '0000000a'
+  ATCODER: '0000000a',
 }
 
 const ojmap = new Map()

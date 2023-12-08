@@ -36,20 +36,20 @@ const Program: React.FC<Iprops> = props => {
           options={[
             {
               label: <div>标准程序</div>,
-              value: 'standard'
+              value: 'standard',
             },
             {
               label: <div>特判程序</div>,
-              value: 'special_judge'
+              value: 'special_judge',
             },
             {
               label: <div>标准Hack程序</div>,
-              value: 'standardHack'
+              value: 'standardHack',
             },
             {
               label: <div>特判Hack程序</div>,
-              value: 'specialHack'
-            }
+              value: 'specialHack',
+            },
           ]}
         ></Radio.Group>
       </div>

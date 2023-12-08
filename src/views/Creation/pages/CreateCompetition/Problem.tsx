@@ -1,10 +1,24 @@
 import { searchProblemByTextApi, showProblemApi } from '@/api/problem'
 import ReadOnly from '@/components/editor/Readonly'
-import { Button, InputNumber, List, Popover, Select, Spin, notification } from 'antd'
+import {
+  Button,
+  InputNumber,
+  List,
+  Popover,
+  Select,
+  Spin,
+  notification,
+} from 'antd'
 import { MinusCircleOutlined } from '@ant-design/icons'
 import React, { Fragment, useEffect, useState } from 'react'
 import ProblemNew from './ProblemNew'
-import { getProblemNewApi, getProblemNewListApi, quoteProblemApi, deleteProblemNewApi, updateProblemNewApi } from '@/api/problemNew'
+import {
+  getProblemNewApi,
+  getProblemNewListApi,
+  quoteProblemApi,
+  deleteProblemNewApi,
+  updateProblemNewApi,
+} from '@/api/problemNew'
 import { ICompetition } from '@/type'
 import useNavTo from '@/tool/myHooks/useNavTo'
 
@@ -17,7 +31,9 @@ interface IProblem {
 
 let timeout: ReturnType<typeof setTimeout> | null
 let currentValue: string
-const competition: ICompetition = localStorage.getItem('competitionInfo') ? JSON.parse(localStorage.getItem('competitionInfo') as string) : null
+const competition: ICompetition = localStorage.getItem('competitionInfo')
+  ? JSON.parse(localStorage.getItem('competitionInfo') as string)
+  : null
 
 const fetch = (value: string, setoptions: Function) => {
   if (timeout) {
@@ -26,7 +42,7 @@ const fetch = (value: string, setoptions: Function) => {
   }
   currentValue = value
   const fake = () => {
-    searchProblemByTextApi(value).then((res) => {
+    searchProblemByTextApi(value).then(res => {
       console.log(res)
       if (!res.data.data.problems) {
         setoptions([])
@@ -36,7 +52,7 @@ const fetch = (value: string, setoptions: Function) => {
           const data = res.data.data.problems.map((item: any, index: any) => ({
             value: item.title,
             label: item.title,
-            key: item.id
+            key: item.id,
           }))
           setoptions(data)
         }
@@ -64,8 +80,8 @@ const initProblemList = async (setproblemList: Function) => {
           id: data.data.problem.id,
           score: data.data.problem.score,
           title: data.data.problem.title,
-          description: data.data.problem.description
-        }
+          description: data.data.problem.description,
+        },
       ])
     })
   }
@@ -94,24 +110,27 @@ const Problem: React.FC = () => {
 
   const handleSelect = (option: any) => {
     console.log(option)
-    showProblemApi(option.key).then((res) => {
+    showProblemApi(option.key).then(res => {
       console.log(res)
-      setproblemList((value) => [
+      setproblemList(value => [
         ...value,
         {
           id: res.data.data.problem.id,
           score: '1',
           title: res.data.data.problem.title,
-          description: res.data.data.problem.description
-        }
+          description: res.data.data.problem.description,
+        },
       ])
     })
   }
 
   const handleDelete = (index: number) => {
     console.log(index)
-    setproblemList((value) => [...value.slice(0, index), ...value.slice(index + 1)])
-    deleteProblemNewApi(problemList[index].id).then((res) => {
+    setproblemList(value => [
+      ...value.slice(0, index),
+      ...value.slice(index + 1),
+    ])
+    deleteProblemNewApi(problemList[index].id).then(res => {
       console.log(res.data)
     })
   }
@@ -145,69 +164,69 @@ const Problem: React.FC = () => {
       delete problem.id
       delete problem.updated_at
       delete problem.user_id
-      await updateProblemNewApi(id, JSON.stringify(problem)).then((res) => {
+      await updateProblemNewApi(id, JSON.stringify(problem)).then(res => {
         console.log('update', res)
         resState = {
           code: res.data.code,
-          msg: res.data.msg
+          msg: res.data.msg,
         }
       })
     } else {
-      await quoteProblemApi(competition.id, id, score).then((res) => {
+      await quoteProblemApi(competition.id, id, score).then(res => {
         console.log('quote', res)
         console.log(res)
         resState = {
           code: res.data.code,
-          msg: res.data.msg
+          msg: res.data.msg,
         }
       })
     }
     if (resState.code === 200) {
       notification.success({
-        message: resState.msg
+        message: resState.msg,
       })
     } else {
       notification.success({
-        message: resState.msg
+        message: resState.msg,
       })
     }
   }
 
   return (
-    <div className='w-full'>
+    <div className="w-full">
       <Select
-        size='large'
+        size="large"
         showSearch
-        mode='multiple'
+        mode="multiple"
         value={selectValue}
-        placeholder='Search problem ...'
+        placeholder="Search problem ..."
         defaultActiveFirstOption={false}
         filterOption={false}
         onSearch={search}
-        onChange={(newValue) => setselectValue(newValue)}
+        onChange={newValue => setselectValue(newValue)}
         onSelect={handleSelect}
-        className='w-full'
+        className="w-full"
         labelInValue
-        notFoundContent={searching ? <Spin size='small'></Spin> : null}
+        notFoundContent={searching ? <Spin size="small"></Spin> : null}
         options={options}
         autoFocus={true}
       ></Select>
       {/* <Table dataSource={dataSource}></Table> */}
       <List
         style={{ width: '100%' }}
-        itemLayout='horizontal'
+        itemLayout="horizontal"
         dataSource={problemList}
         renderItem={(item: IProblem, index) => (
           <Fragment>
             <List.Item
               actions={[
                 <Button
-                  type='text'
+                  type="text"
                   danger
-                  shape='circle'
+                  shape="circle"
                   onClick={() => handleDelete(index)}
                   icon={<MinusCircleOutlined />}
-                ></Button>
+                ></Button>,
               ]}
             >
               <List.Item.Meta
@@ -215,22 +234,19 @@ const Problem: React.FC = () => {
                   <Popover
                     mouseEnterDelay={0.3}
                     overlayStyle={{
-                      maxWidth: '512px'
+                      maxWidth: '512px',
                     }}
                     overlayInnerStyle={{
                       maxHeight: '256px',
-                      overflow: 'scroll'
+                      overflow: 'scroll',
                     }}
                     title={item.title}
                     content={
-                      <ReadOnly
-                        style={{}}
-                        html={item.description}
-                      ></ReadOnly>
+                      <ReadOnly style={{}} html={item.description}></ReadOnly>
                     }
                   >
                     <div
-                      className='hover:cursor-pointer text-indigo-500 min-w-max'
+                      className="hover:cursor-pointer text-indigo-500 min-w-max"
                       onClick={() => handleItemClick(item.id)}
                     >
                       {item.title}
@@ -238,19 +254,19 @@ const Problem: React.FC = () => {
                   </Popover>
                 }
               ></List.Item.Meta>
-              <div className=''>
+              <div className="">
                 <span>分数：</span>
                 <InputNumber
                   min={'0'}
                   defaultValue={item.score}
-                  onChange={(value) => handleScoreChange(value, index)}
+                  onChange={value => handleScoreChange(value, index)}
                 ></InputNumber>
               </div>
             </List.Item>
           </Fragment>
         )}
       ></List>
-      <div className='w-full flex justify-end'>
+      <div className="w-full flex justify-end">
         {/* <Button
           onClick={() => {
             setisModelOpen(true)

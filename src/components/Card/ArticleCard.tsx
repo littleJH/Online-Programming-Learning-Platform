@@ -6,7 +6,14 @@ import style from './style.module.scss'
 import GetTimeago from '@/tool/myFns/GetTimeago'
 import MyTag from '../Label/MyTag'
 import { getUserInfoApi } from '@/api/user'
-import { getArticleCollectNumApi, getArticleCollectedApi, getArticleLabelsApi, getArticleLikeNumApi, getArticleLikedApi, getArticleVisibleNumApi } from '@/api/article'
+import {
+  getArticleCollectNumApi,
+  getArticleCollectedApi,
+  getArticleLabelsApi,
+  getArticleLikeNumApi,
+  getArticleLikedApi,
+  getArticleVisibleNumApi,
+} from '@/api/article'
 import { getArticleRemarkListApi } from '@/api/remark'
 import MySvgIcon from '../Icon/MySvgIcon'
 
@@ -16,7 +23,7 @@ interface IProps {
   mode?: 'default' | 'action'
 }
 
-const ArticleCard: React.FC<IProps> = (props) => {
+const ArticleCard: React.FC<IProps> = props => {
   const { articleProp, onclick, mode = 'default' } = props
   const [article, setArticle] = useState<IArticle>(articleProp)
   const { token } = theme.useToken()
@@ -31,8 +38,8 @@ const ArticleCard: React.FC<IProps> = (props) => {
       getArticleCollectNumApi(articleProp.id),
       getArticleVisibleNumApi(articleProp.id),
       getArticleLabelsApi(articleProp.id),
-      getArticleRemarkListApi(articleProp.id)
-    ]).then((res) => {
+      getArticleRemarkListApi(articleProp.id),
+    ]).then(res => {
       article.user = res[0].data.data.user
       article.liked = res[1].data.data.like
       article.likeNum = res[2].data.data.total
@@ -42,7 +49,7 @@ const ArticleCard: React.FC<IProps> = (props) => {
       article.labels = res[6].data.data.articleLabels
       article.remark = {
         remarks: res[7].data.data.remarks,
-        total: res[7].data.data.total
+        total: res[7].data.data.total,
       }
       setArticle(article)
     })
@@ -53,65 +60,73 @@ const ArticleCard: React.FC<IProps> = (props) => {
     return `${num}${unit}前`
   }, [article])
 
-  const imgUrl = useMemo(() => article.res_long && article.res_long !== '' && JSON.parse(article.res_long).img, [article])
+  const imgUrl = useMemo(
+    () =>
+      article.res_long &&
+      article.res_long !== '' &&
+      JSON.parse(article.res_long).img,
+    [article],
+  )
 
   const renderBody = () => (
-    <div className='flex'>
+    <div className="flex">
       {/* left */}
-      <div
-        className='grow'
-        style={{ width: '100px' }}
-      >
-        <div className='flex items-center'>
+      <div className="grow" style={{ width: '100px' }}>
+        <div className="flex items-center">
           <Avatar
-            className='card-avatar'
+            className="card-avatar"
             src={`${iconBaseUrl}/${article.user?.icon}`}
           ></Avatar>
-          <div className='card-username'>{article.user?.name}</div>
-          <div className='card-time'>{ago}</div>
+          <div className="card-username">{article.user?.name}</div>
+          <div className="card-time">{ago}</div>
           {article.labels && article.labels.length > 0 && (
-            <Space className='mx-8'>
-              {article.labels.map((label) => (
-                <MyTag
-                  key={label.id}
-                  label={label.label}
-                ></MyTag>
+            <Space className="mx-8">
+              {article.labels.map(label => (
+                <MyTag key={label.id} label={label.label}></MyTag>
               ))}
             </Space>
           )}
         </div>
-        <div className='card-title'>{article.title}</div>
+        <div className="card-title">{article.title}</div>
         <div
-          className='card-content'
+          className="card-content"
           style={{
             width: '100%',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap'
+            whiteSpace: 'nowrap',
           }}
         >
           {article.content.replace(/<[^<>]+>/g, '')}
         </div>
 
         {/* footer */}
-        <div className='flex items-center mt-2'>
+        <div className="flex items-center mt-2">
           <div className={`${style.footer} grow flex items-center`}>
             <div>
               <MySvgIcon
                 href={article.collected ? '#icon-collected' : '#icon-collect'}
-                color={article.collected ? token.colorPrimaryTextHover : token.colorTextDescription}
+                color={
+                  article.collected
+                    ? token.colorPrimaryTextHover
+                    : token.colorTextDescription
+                }
               ></MySvgIcon>
               <span>{article.collectNum}</span>
             </div>
-            <div className='divider-vertical'></div>
+            <div className="divider-vertical"></div>
             <div>
               <MySvgIcon
                 href={article.liked ? '#icon-liked' : '#icon-like'}
-                color={article.liked ? token.colorPrimaryTextHover : token.colorTextDescription}
+                color={
+                  article.liked
+                    ? token.colorPrimaryTextHover
+                    : token.colorTextDescription
+                }
               ></MySvgIcon>
               <span>{article.likeNum}</span>
             </div>
-            <div className='divider-vertical'></div>
+            <div className="divider-vertical"></div>
             <div>
               <MySvgIcon
                 href={'#icon-comment'}
@@ -119,7 +134,7 @@ const ArticleCard: React.FC<IProps> = (props) => {
               ></MySvgIcon>
               <span>{article.remark?.total}</span>
             </div>
-            <div className='divider-vertical'></div>
+            <div className="divider-vertical"></div>
             <div>
               <MySvgIcon
                 href={'#icon-visible'}
@@ -133,14 +148,8 @@ const ArticleCard: React.FC<IProps> = (props) => {
 
       {/* right image */}
       {imgUrl && (
-        <div
-          className='card-img'
-          style={{}}
-        >
-          <img
-            src={`${imgGetBaseUrl}/${imgUrl}`}
-            alt=''
-          />
+        <div className="card-img" style={{}}>
+          <img src={`${imgGetBaseUrl}/${imgUrl}`} alt="" />
         </div>
       )}
     </div>
@@ -151,9 +160,9 @@ const ArticleCard: React.FC<IProps> = (props) => {
       {mode === 'default' && (
         <Card
           onClick={() => onclick && onclick(article)}
-          className='my-2'
+          className="my-2"
           hoverable
-          size='small'
+          size="small"
         >
           {renderBody()}
         </Card>

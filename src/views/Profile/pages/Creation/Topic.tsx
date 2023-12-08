@@ -19,7 +19,7 @@ const Topic: React.FC = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setQuerys((search) => {
+    setQuerys(search => {
       search.set('pageNum', String(pageNum))
       search.set('pageSize', String(pageSize))
       return search
@@ -30,7 +30,7 @@ const Topic: React.FC = () => {
   const fetch = () => {
     setLoading(true)
     setTopicList([])
-    getTopicListApi(pageNum, pageSize).then((res) => {
+    getTopicListApi(pageNum, pageSize).then(res => {
       setTopicList(res.data.data.topics)
       setTotal(res.data.data.total)
       setLoading(false)
@@ -48,9 +48,12 @@ const Topic: React.FC = () => {
     if (data.code === 200) {
       notification &&
         notification.success({
-          message: `文章“${item.title}”已删除`
+          message: `文章“${item.title}”已删除`,
         })
-      setTopicList((value) => [...value.slice(0, index), ...value.slice(index + 1)])
+      setTopicList(value => [
+        ...value.slice(0, index),
+        ...value.slice(index + 1),
+      ])
     }
   }
   const handlePageChange = (num: number, size: number) => {
@@ -69,7 +72,7 @@ const Topic: React.FC = () => {
         onPageChange={handlePageChange}
         split={false}
         itemRender={(item: ITopic, index: number) => (
-          <div className='w-full'>
+          <div className="w-full">
             <TopicCollapse
               topic={item}
               index={index}

@@ -1,4 +1,9 @@
-import { createRequest, baseConfig, jsonConfig, wsBaseUrl } from '../config/apiConfig'
+import {
+  createRequest,
+  baseConfig,
+  jsonConfig,
+  wsBaseUrl,
+} from '../config/apiConfig'
 
 const request = createRequest({ baseURL: 'record' })
 
@@ -6,8 +11,8 @@ export const createRecordApi = (data: any) => {
   return request.post('/create', data, {
     headers: {
       Authorization: 'Bearer ' + localStorage.getItem('token'),
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   })
 }
 

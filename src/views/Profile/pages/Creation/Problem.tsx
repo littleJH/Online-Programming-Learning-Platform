@@ -1,5 +1,9 @@
 import { userInfoState } from '@/store/appStore'
-import { deleteProblemApi, getProblemListApi, getUserProblemListApi } from '@/api/problem'
+import {
+  deleteProblemApi,
+  getProblemListApi,
+  getUserProblemListApi,
+} from '@/api/problem'
 import ProblemTable from '@/components/Problem/ProblemTable'
 import { IProblem } from '@/type'
 import React, { useEffect, useState } from 'react'
@@ -24,7 +28,7 @@ const ProfileCretion: React.FC = () => {
   const fetchProblems = (num: number, size: number) => {
     if (!info) return
     setFetchDone(false)
-    getUserProblemListApi(info.id, num, size).then((res) => {
+    getUserProblemListApi(info.id, num, size).then(res => {
       setTotal(res.data.data.total)
       setProblemList(res.data.data.problems)
     })
@@ -40,10 +44,13 @@ const ProfileCretion: React.FC = () => {
     nav(`/problemdetail/${id}/description`)
   }
   const handleDelete = (index: number) => {
-    deleteProblemApi(problemList[index].id).then((res) => {
+    deleteProblemApi(problemList[index].id).then(res => {
       if (res.data.code === 200) {
-        setTotal((value) => value - 1)
-        setProblemList((value) => [...value.slice(0, index), ...value.slice(index + 1)])
+        setTotal(value => value - 1)
+        setProblemList(value => [
+          ...value.slice(0, index),
+          ...value.slice(index + 1),
+        ])
       }
     })
   }
@@ -55,7 +62,7 @@ const ProfileCretion: React.FC = () => {
   return (
     <div>
       <ProblemTable
-        mode='action'
+        mode="action"
         problemList={problemList}
         pageNum={pageNum}
         pageSize={pageSize}

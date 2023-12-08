@@ -1,10 +1,12 @@
 import React from 'react'
 import { Table, Button, Popconfirm, Skeleton } from 'antd'
 import { getPagination } from '@/config/config'
+import { ColumnGroupType, ColumnsType } from 'antd/es/table'
 
 interface Iprops {
   loading: boolean
   dataSource: any
+  columns: any[]
   itemRender: Function
   pageNum: number
   pageSize: number
@@ -16,16 +18,36 @@ interface Iprops {
   bordered?: boolean
 }
 
-const GeneralTable: React.FC<Iprops> = (props) => {
-  const { loading, dataSource, onDelete, onDetail, onUpdate, itemRender, bordered, pageNum, pageSize, total, onPageChange, split = true } = props
+const GeneralTable: React.FC<Iprops> = props => {
+  const {
+    loading,
+    dataSource,
+    onDelete,
+    onDetail,
+    onUpdate,
+    itemRender,
+    bordered,
+    pageNum,
+    pageSize,
+    total,
+    onPageChange,
+    columns,
+  } = props
 
   return (
     <div>
       <Table
-        size='small'
+        size="small"
         loading={loading}
         dataSource={dataSource}
-        pagination={getPagination('table', pageNum, pageSize, total, onPageChange)}
+        columns={columns}
+        pagination={getPagination(
+          'table',
+          pageNum,
+          pageSize,
+          total,
+          onPageChange,
+        )}
       ></Table>
     </div>
   )

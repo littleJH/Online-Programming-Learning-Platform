@@ -8,7 +8,7 @@ import {
   Col,
   message,
   Upload,
-  Space
+  Space,
 } from 'antd'
 import { LoadingOutlined, PlusOutlined, LeftOutlined } from '@ant-design/icons'
 import useCountdown from '@/tool/myHooks/useCountDown'
@@ -93,7 +93,7 @@ const Register: React.FC<{
             label="邮箱："
             rules={[
               { required: true, message: '请输入邮箱地址' },
-              { type: 'email', message: '邮箱格式错误' }
+              { type: 'email', message: '邮箱格式错误' },
             ]}
           >
             <Input></Input>
@@ -117,8 +117,8 @@ const Register: React.FC<{
                     return Promise.resolve()
                   }
                   return Promise.reject(new Error('密码不一致'))
-                }
-              })
+                },
+              }),
             ]}
           >
             <Input.Password></Input.Password>
@@ -129,9 +129,9 @@ const Register: React.FC<{
             rules={[
               {
                 required: true,
-                message: '您还没有取一个昵称'
+                message: '您还没有取一个昵称',
               },
-              { max: 20, min: 1, message: '昵称长度限制在1-20' }
+              { max: 20, min: 1, message: '昵称长度限制在1-20' },
             ]}
           >
             <Input></Input>

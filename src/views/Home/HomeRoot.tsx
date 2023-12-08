@@ -9,7 +9,7 @@ import CodeEditor from '@/components/Editor/CodeEditor'
 export default function Homepage() {
   return (
     <>
-    <CodeEditor value='111' height={400} codeChange={() => {}}></CodeEditor>
+      <CodeEditor value="111" height={400} codeChange={() => {}}></CodeEditor>
       <div className="h-full flex justify-center items-center">
         <img src={ac_1} width={128}></img>
         <img src={ac_2} width={128}></img>

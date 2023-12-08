@@ -7,7 +7,7 @@ import {
   Row,
   Col,
   InputNumber,
-  DatePicker
+  DatePicker,
 } from 'antd'
 import { ICompetition } from '@/type'
 import dayjs from 'dayjs'
@@ -28,7 +28,7 @@ const Competition: React.FC<Iprops> = props => {
 
   const timeRange: any = [
     dayjs(competition?.start_time),
-    dayjs(competition?.end_time)
+    dayjs(competition?.end_time),
   ]
 
   useEffect(() => {
@@ -65,7 +65,7 @@ const Competition: React.FC<Iprops> = props => {
       res => {
         console.log(res)
         setcompetition(res.data.data.competition)
-      }
+      },
     )
   }
   const textChange = (value: any, name: string) => {
@@ -75,7 +75,7 @@ const Competition: React.FC<Iprops> = props => {
   const timeRangeChange = (value: any, dateString: any) => {
     form.setFieldValue('timeRange', [
       dayjs(dateString[0]),
-      dayjs(dateString[1])
+      dayjs(dateString[1]),
     ])
   }
 

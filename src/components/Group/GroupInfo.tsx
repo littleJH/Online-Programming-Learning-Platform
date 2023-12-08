@@ -7,12 +7,12 @@ import GroupMember from './GroupMember'
 
 const GroupInfo: React.FC<{
   group: IGroup
-}> = (props) => {
+}> = props => {
   const { group } = props
   const [userInfo, setUserInfo] = React.useState<User>()
 
   React.useEffect(() => {
-    getUserInfoApi(group.leader_id).then((res) => {
+    getUserInfoApi(group.leader_id).then(res => {
       setUserInfo(res.data.data.user)
     })
   }, [])
@@ -22,33 +22,30 @@ const GroupInfo: React.FC<{
       {
         key: 'id',
         label: 'ID',
-        children: group.id
+        children: group.id,
       },
       {
         key: 'content',
         label: '描述',
-        children: group.content
+        children: group.content,
       },
       {
         key: 'leader',
         label: '创建者',
-        children: userInfo?.name
+        children: userInfo?.name,
       },
       {
         key: 'auto',
         label: '自动通过申请',
-        children: group.auto ? '是' : '否'
+        children: group.auto ? '是' : '否',
       },
       {
         key: 'member',
         label: '小组成员',
         children: (
-          <GroupMember
-            group_id={group.id}
-            showAdd={false}
-          ></GroupMember>
-        )
-      }
+          <GroupMember group_id={group.id} showAdd={false}></GroupMember>
+        ),
+      },
     ]
   }, [group, userInfo])
 

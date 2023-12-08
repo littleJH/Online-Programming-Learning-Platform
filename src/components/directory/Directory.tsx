@@ -5,7 +5,9 @@ import { directoryDataState, directorySelectKeysState } from './store'
 
 const Directory: React.FC = () => {
   const treeData = useRecoilValue(directoryDataState)
-  const [directorySelectKeys, setDirectorySelectKeys] = useRecoilState(directorySelectKeysState)
+  const [directorySelectKeys, setDirectorySelectKeys] = useRecoilState(
+    directorySelectKeysState,
+  )
 
   const handleDirectorySelect = (keys: any) => {
     console.log('handleDirectorySelect ==> ', keys)

@@ -1,7 +1,6 @@
 @import '../../style.scss';
 @tailwind base;
 
-
 .item {
   // h-12 w-12 flex justify-center items-center rounded-full bg-slate-200
   height: 3rem;
@@ -13,7 +12,9 @@
   position: relative;
   border-radius: 100%;
   background-color: #f8fafc;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  box-shadow:
+    0 1px 3px 0 rgb(0 0 0 / 0.1),
+    0 1px 2px -1px rgb(0 0 0 / 0.1);
   transition: all;
   transition-duration: 150ms;
   user-select: none;
@@ -21,10 +22,11 @@
 
 .item:hover {
   cursor: pointer;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
-  
 .num {
   position: absolute;
   top: 0;

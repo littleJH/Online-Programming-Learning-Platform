@@ -18,7 +18,7 @@ const ReadOnly: React.FC<Iprops> = props => {
       {title && title}
       <Editor
         defaultConfig={{
-          readOnly: true
+          readOnly: true,
         }}
         defaultHtml={html}
         mode="default"

@@ -17,13 +17,13 @@ interface IProps {
   state: IState
 }
 
-const RecordModal: React.FC<IProps> = (props) => {
+const RecordModal: React.FC<IProps> = props => {
   const { problem_id, openModal, setopenModal, state, record } = props
   const [totalTest, setTotalTest] = useState(0)
 
   useEffect(() => {
     if (problem_id) {
-      getProblemTestNumApi(problem_id).then((res) => {
+      getProblemTestNumApi(problem_id).then(res => {
         setTotalTest(res.data.data.total)
       })
     }
@@ -44,48 +44,42 @@ const RecordModal: React.FC<IProps> = (props) => {
   return (
     <Modal
       open={openModal}
-      title=''
+      title=""
       onCancel={() => setopenModal(false)}
       footer={[
-        <Button
-          key={'tijie'}
-          type='primary'
-        >
+        <Button key={'tijie'} type="primary">
           发布题解
         </Button>,
-        <Button
-          key={'taolun'}
-          type='primary'
-        >
+        <Button key={'taolun'} type="primary">
           发起讨论
-        </Button>
+        </Button>,
       ]}
       centered
     >
       {state && (
-        <div className='flex items-center'>
+        <div className="flex items-center">
           <Progress
             size={128}
-            type='circle'
+            type="circle"
             percent={percent}
-            strokeColor='#10b981'
+            strokeColor="#10b981"
             format={() => (
               <Result
                 icon={null}
-                title={<div className='text-base'>{state.label}</div>}
+                title={<div className="text-base">{state.label}</div>}
                 subTitle={`${state?.case_id}/${totalTest}`}
                 status={state.state}
               ></Result>
             )}
             style={{
-              marginRight: 8
+              marginRight: 8,
             }}
           ></Progress>
           <Descriptions
-            layout='vertical'
+            layout="vertical"
             style={{
               paddingLeft: '4rem',
-              paddingTop: '2rem'
+              paddingTop: '2rem',
             }}
             column={2}
           >

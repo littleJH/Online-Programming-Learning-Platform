@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react'
 const useThrottleFn = <T, U extends any[]>(
   fn: (...args: U) => T,
   ms: number = 500,
-  args: U
+  args: U,
 ) => {
   const [state, setstate] = useState<T | null>(null)
   const timeout = useRef<ReturnType<typeof setTimeout>>()

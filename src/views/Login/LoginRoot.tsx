@@ -7,24 +7,18 @@ import { Divider } from 'antd'
 const LoginRoot: React.FC = () => {
   const [mode, setmode] = useState<'Login' | 'Register'>('Login')
   return (
-    <div className='w-full h-full flex'>
+    <div className="w-full h-full flex">
       <div
-        className='grow flex justify-center'
+        className="grow flex justify-center"
         style={{
           fontSize: '3rem',
-          fontWeight: '600'
+          fontWeight: '600',
         }}
       >
-        <img
-          src={LoginPic}
-          className='w-1/2'
-        ></img>
+        <img src={LoginPic} className="w-1/2"></img>
       </div>
-      <Divider
-        type='vertical'
-        className='h-full w-16 '
-      ></Divider>
-      <div className='grow flex justify-center'>
+      <Divider type="vertical" className="h-full w-16 "></Divider>
+      <div className="grow flex justify-center">
         {mode === 'Login' && <Login setmode={setmode}></Login>}
         {mode === 'Register' && <Register setmode={setmode}></Register>}
       </div>

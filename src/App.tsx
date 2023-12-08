@@ -12,7 +12,7 @@ function App() {
   const [api, contextHolder] = notification.useNotification({
     placement: 'bottomRight',
     stack: false,
-    maxCount: 6
+    maxCount: 6,
   })
   const isDark = useRecoilValue(isDarkState)
 
@@ -24,8 +24,8 @@ function App() {
     <ConfigProvider
       form={{
         validateMessages: {
-          required: '"${label}"是必填字段'
-        }
+          required: '"${label}"是必填字段',
+        },
       }}
       avatar={{
         style: {
@@ -33,20 +33,20 @@ function App() {
           opacity: '100%',
           cursor: 'pointer',
           transition: 'all',
-          transitionDuration: '300ms'
-        }
+          transitionDuration: '300ms',
+        },
       }}
       theme={{
         token: {
           fontSize: 14,
           borderRadius: 4,
           wireframe: false,
-          ...myTheme
+          ...myTheme,
         },
         algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
         components: {
-          Menu: {}
-        }
+          Menu: {},
+        },
       }}
     >
       {contextHolder}

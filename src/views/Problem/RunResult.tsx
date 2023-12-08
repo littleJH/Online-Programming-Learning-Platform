@@ -16,7 +16,7 @@ interface IProps {
 
 const iconSize = 2
 
-const RunResult: React.FC<IProps> = (props) => {
+const RunResult: React.FC<IProps> = props => {
   const { caseSample, runResult, currentState, setcurrentState } = props
   const { token } = theme.useToken()
 
@@ -32,12 +32,12 @@ const RunResult: React.FC<IProps> = (props) => {
   }, [runResult])
 
   return (
-    <div className='w-full h-full flex '>
+    <div className="w-full h-full flex ">
       {/* left */}
-      <div className='h-12 pr-4 flex items-center'>
+      <div className="h-12 pr-4 flex items-center">
         {currentState.state === 'info' && currentState.value === '' ? (
           <MySvgIcon
-            href='#icon-info'
+            href="#icon-info"
             size={iconSize}
             color={token.colorInfo}
           ></MySvgIcon>
@@ -46,26 +46,28 @@ const RunResult: React.FC<IProps> = (props) => {
         )}
         {currentState.state === 'error' && (
           <MySvgIcon
-            href='#icon-error'
+            href="#icon-error"
             size={iconSize}
             color={token.colorError}
           ></MySvgIcon>
         )}
         {currentState.state === 'success' && (
           <MySvgIcon
-            href='#icon-success'
+            href="#icon-success"
             size={iconSize}
             color={token.colorSuccess}
           ></MySvgIcon>
         )}
       </div>
-      <div className='w-full'>
-        {(currentState.state === 'error' || currentState.state === 'info') && <div className='h-12 flex items-center'>{currentState.label}</div>}
+      <div className="w-full">
+        {(currentState.state === 'error' || currentState.state === 'info') && (
+          <div className="h-12 flex items-center">{currentState.label}</div>
+        )}
         {currentState.state === 'success' && runResult && (
-          <div className=''>
-            <div className=''>
+          <div className="">
+            <div className="">
               <span>Time：{runResult.time}</span>
-              <span className='ml-4'>Memory：{runResult.memory}</span>
+              <span className="ml-4">Memory：{runResult.memory}</span>
             </div>
             <div>
               <p>
@@ -78,7 +80,15 @@ const RunResult: React.FC<IProps> = (props) => {
               </p>
               <p>
                 <span>当前输出：</span>
-                <span className={`rounded ${runResult.output === caseSample.output ? 'bg-green-300' : 'bg-red-300'}`}>{runResult.output}</span>
+                <span
+                  className={`rounded ${
+                    runResult.output === caseSample.output
+                      ? 'bg-green-300'
+                      : 'bg-red-300'
+                  }`}
+                >
+                  {runResult.output}
+                </span>
               </p>
             </div>
           </div>

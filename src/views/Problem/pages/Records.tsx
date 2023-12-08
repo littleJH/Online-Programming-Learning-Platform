@@ -7,12 +7,7 @@ import RecordTable from '@/components/Record/RecordTable'
 const Records: React.FC = () => {
   const [problem] = useOutletContext<[IProblem]>()
 
-  return (
-    <RecordTable
-      mode='problem'
-      problem={problem}
-    ></RecordTable>
-  )
+  return <RecordTable mode="problem" problem={problem}></RecordTable>
 }
 
 export default Records

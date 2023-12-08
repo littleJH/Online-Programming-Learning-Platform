@@ -1,5 +1,13 @@
 // import { getRecordListApi, hackRecordApi } from '@/api/competitionMixture'
-import { CompetitionState, CompetitionType, HackState, ICompetition, IHack, IRecord, User } from '@/type'
+import {
+  CompetitionState,
+  CompetitionType,
+  HackState,
+  ICompetition,
+  IHack,
+  IRecord,
+  User,
+} from '@/type'
 import React, { useEffect, useState } from 'react'
 import { useOutletContext, useParams } from 'react-router-dom'
 // import { IRecordTableDataSource } from '@/type'
@@ -22,7 +30,8 @@ import RecordTable from '@/components/Record/RecordTable'
 // }
 
 const Record: React.FC = () => {
-  const [competition, competitionState, c, type] = useOutletContext<[ICompetition, CompetitionState, any, CompetitionType]>()
+  const [competition, competitionState, c, type] =
+    useOutletContext<[ICompetition, CompetitionState, any, CompetitionType]>()
   // const [mode, setmode] = useState<'self' | 'all'>('self')
   // const [recordList, setrecordList] = useState<IRecord[]>([])
   // const [openRecordModal, setopenRecordModal] = useState(false)
@@ -123,10 +132,7 @@ const Record: React.FC = () => {
 
   return (
     <>
-      <RecordTable
-        mode='competition'
-        competition={competition}
-      ></RecordTable>
+      <RecordTable mode="competition" competition={competition}></RecordTable>
       {/* <div>
         <div>
         <Switch checkedChildren={'个人'} unCheckedChildren={'全部'}  checked={ mode === 'all' ? true : false}></Switch>

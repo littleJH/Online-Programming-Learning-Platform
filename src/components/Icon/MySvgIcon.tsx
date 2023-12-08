@@ -6,7 +6,7 @@ const MySvgIcon: React.FC<{
   color?: string
   classname?: string
   size?: number
-}> = (props) => {
+}> = props => {
   const { href, size = 1, classname = '', color } = props
   return (
     <svg
@@ -14,7 +14,7 @@ const MySvgIcon: React.FC<{
       style={{
         width: `${size}rem`,
         height: `${size}rem`,
-        color: color
+        color: color,
       }}
     >
       <use href={`${href.includes('#icon-') ? '' : '#icon-'}${href}`}></use>

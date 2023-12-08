@@ -1,6 +1,11 @@
 import { iconBaseUrl } from '@/config/apiConfig'
 import { getUserInfoApi } from '@/api/user'
-import { cancelLikeRemarkApi, getRemarkLikeNumApi, getRemarkLikedApi, likeRemarkApi } from '@/api/remark'
+import {
+  cancelLikeRemarkApi,
+  getRemarkLikeNumApi,
+  getRemarkLikedApi,
+  likeRemarkApi,
+} from '@/api/remark'
 import { IRemark, User } from '@/type'
 import { Avatar, Divider, Card, theme } from 'antd'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -11,13 +16,18 @@ import MySvgIcon from '../Icon/MySvgIcon'
 
 const RemarkCard: React.FC<{
   remark: IRemark
-}> = (props) => {
+}> = props => {
   const [remark, setremark] = useState<IRemark>(props.remark)
   const { token } = theme.useToken()
 
   useEffect(() => {
     const remarkObj = { ...remark }
-    Promise.all([getRemarkLikedApi(remark.id), getRemarkLikeNumApi(remark.id, 'true'), getRemarkLikeNumApi(remark.id, 'false'), getUserInfoApi(remark.user_id)]).then((res) => {
+    Promise.all([
+      getRemarkLikedApi(remark.id),
+      getRemarkLikeNumApi(remark.id, 'true'),
+      getRemarkLikeNumApi(remark.id, 'false'),
+      getUserInfoApi(remark.user_id),
+    ]).then(res => {
       remarkObj.liked = res[0].data.data.like
       remarkObj.likeNum = res[1].data.data.total
       remarkObj.dislikeNum = res[2].data.data.total
@@ -33,33 +43,33 @@ const RemarkCard: React.FC<{
 
   const like = useCallback(
     (bool: boolean) => {
-      likeRemarkApi(remark.id, bool ? 'true' : 'false').then(async (res) => {
+      likeRemarkApi(remark.id, bool ? 'true' : 'false').then(async res => {
         console.log(res.data)
         const { data } = await getRemarkLikeNumApi(remark.id)
         if (res.data.code === 200) {
-          setremark((value) => {
+          setremark(value => {
             return {
               ...value,
               liked: bool ? 1 : -1,
-              likeNum: data.data.total
+              likeNum: data.data.total,
             }
           })
         }
       })
     },
-    [remark]
+    [remark],
   )
 
   const calcelLike = useCallback(() => {
-    cancelLikeRemarkApi(remark.id).then(async (res) => {
+    cancelLikeRemarkApi(remark.id).then(async res => {
       console.log(res.data)
       const { data } = await getRemarkLikeNumApi(remark.id, 'false')
       if (res.data.code === 200) {
-        setremark((value) => {
+        setremark(value => {
           return {
             ...value,
             liked: 0,
-            likeNum: data.data.total
+            likeNum: data.data.total,
           }
         })
       }
@@ -74,38 +84,40 @@ const RemarkCard: React.FC<{
   }
 
   return (
-    <Card
-      className='w-full my-4'
-      size='small'
-    >
-      <div className='flex items-center'>
+    <Card className="w-full my-4" size="small">
+      <div className="flex items-center">
         <Avatar
-          className='card-avatar'
+          className="card-avatar"
           src={<img src={`${iconBaseUrl}/${remark.user?.icon}`}></img>}
         ></Avatar>
-        <div className='card-username'>{remark.user?.name}</div>
-        <div className='card-time'>{ago}</div>
+        <div className="card-username">{remark.user?.name}</div>
+        <div className="card-time">{ago}</div>
       </div>
-      <ReadOnly
-        html={remark.content}
-        className='mx-9'
-      ></ReadOnly>
+      <ReadOnly html={remark.content} className="mx-9"></ReadOnly>
       <div className={`${style.remarkFooter} flex items-center ml-12`}>
         <div onClick={handleLikeClick}>
           <MySvgIcon
             href={remark.liked === 1 ? '#icon-liked' : '#icon-like'}
             size={1}
-            color={remark.liked === 1 ? token.colorPrimaryTextHover : token.colorTextDescription}
+            color={
+              remark.liked === 1
+                ? token.colorPrimaryTextHover
+                : token.colorTextDescription
+            }
           ></MySvgIcon>
           <span>{remark.likeNum}</span>
         </div>
 
-        <Divider type='vertical'></Divider>
+        <Divider type="vertical"></Divider>
         <div onClick={handleDislikeClick}>
           <MySvgIcon
             href={remark.liked === -1 ? '#icon-disliked' : '#icon-dislike'}
             size={1}
-            color={remark.liked === -1 ? token.colorPrimaryTextHover : token.colorTextDescription}
+            color={
+              remark.liked === -1
+                ? token.colorPrimaryTextHover
+                : token.colorTextDescription
+            }
           ></MySvgIcon>
           <span>{remark.dislikeNum}</span>
         </div>

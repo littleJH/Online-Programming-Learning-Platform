@@ -3,5 +3,5 @@ import { atom } from 'recoil'
 
 export const competitionStateAtom = atom<CompetitionState | null>({
   key: 'competitionStateAtom',
-  default: null
+  default: null,
 })

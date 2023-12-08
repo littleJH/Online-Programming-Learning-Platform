@@ -1,0 +1,6 @@
+**/*.png
+**/*.svg
+*.d.ts
+package.json
+dist
+node_modules

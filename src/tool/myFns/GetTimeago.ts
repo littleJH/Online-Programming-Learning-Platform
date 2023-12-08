@@ -11,32 +11,32 @@ const GetTimeago = (time: string) => {
   if (gap <= 60) {
     ago = {
       num: gap + 1,
-      unit: '秒'
+      unit: '秒',
     }
   } else if (gap > 60 && gap <= 60 * 60) {
     ago = {
       num: current.diff(previous, 'minute'),
-      unit: '分钟'
+      unit: '分钟',
     }
   } else if (gap > 60 * 60 && gap <= 60 * 60 * 24) {
     ago = {
       num: current.diff(previous, 'hour'),
-      unit: '小时'
+      unit: '小时',
     }
   } else if (gap > 60 * 60 * 24 && gap <= 60 * 60 * 24 * 30) {
     ago = {
       num: current.diff(previous, 'day'),
-      unit: '天'
+      unit: '天',
     }
   } else if (gap > 60 * 60 * 24 * 30 && gap <= 60 * 60 * 24 * 365) {
     ago = {
       num: current.diff(previous, 'month'),
-      unit: '月'
+      unit: '月',
     }
   } else {
     ago = {
       num: current.diff(previous, 'year'),
-      unit: '年'
+      unit: '年',
     }
   }
 

@@ -29,7 +29,7 @@ const useCountdown = (initCount = 10, callback: any) => {
 
   return {
     count,
-    start
+    start,
   }
 }
 

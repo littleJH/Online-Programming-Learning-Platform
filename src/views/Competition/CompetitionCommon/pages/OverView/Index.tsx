@@ -11,7 +11,7 @@ const Overview: React.FC = () => {
       const content = competition.content as string
       let obj: { type: 'String' | 'Descendant'; value: string } = {
         type: 'String',
-        value: content
+        value: content,
       }
       if (content.includes('[{')) {
         obj.type = 'Descendant'
@@ -23,15 +23,12 @@ const Overview: React.FC = () => {
     <div>
       {content && content.type === 'Descendant' && (
         <ReadOnly
-          className='p-4'
+          className="p-4"
           html={JSON.parse(content.value as string)}
         ></ReadOnly>
       )}
       {content && content.type === 'String' && (
-        <ReadOnly
-          className='p-4'
-          html={content.value}
-        ></ReadOnly>
+        <ReadOnly className="p-4" html={content.value}></ReadOnly>
       )}
     </div>
   )

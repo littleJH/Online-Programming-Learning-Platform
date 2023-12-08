@@ -6,7 +6,7 @@ import {
   getRandomEnterConditionApi,
   enterPublishWs,
   cancelEnterRandomCompetitionApi,
-  getEnterRandomCompetitionListApi
+  getEnterRandomCompetitionListApi,
 } from '@/api/CompetitionRandom'
 import { useParams } from 'react-router-dom'
 import { CompetitionType, User } from '@/type'
@@ -38,10 +38,10 @@ const addMove = (index: number) => {
     const top = Math.floor(Math.random() * 200 - 100)
     const left = Math.floor(Math.random() * 200 - 100)
     const topNum = Number(
-      element.style.top.slice(0, element.style.top.indexOf('px'))
+      element.style.top.slice(0, element.style.top.indexOf('px')),
     )
     const leftNum = Number(
-      element.style.left.slice(0, element.style.left.indexOf('px'))
+      element.style.left.slice(0, element.style.left.indexOf('px')),
     )
 
     element.style.top =
@@ -65,7 +65,7 @@ const CompetitionRandom: React.FC = () => {
   const { competition_type } = useParams()
   const [enterCondition, setenterCondition] = useState<State>('undetermined')
   const [type, settype] = useState<CompetitionType>(
-    competition_type as CompetitionType
+    competition_type as CompetitionType,
   )
   const [memberList, setmemberList] = useState<Member[]>([])
   const memberListRef = useRef<Member[]>([])
@@ -118,7 +118,7 @@ const CompetitionRandom: React.FC = () => {
         const user = await getUserInfoApi(item.Member)
         list.push({
           enter_time: dayjs.unix(item.Score).format().toString(),
-          member: user.data.data.user
+          member: user.data.data.user,
         })
       }
       setmemberList([...list])
@@ -183,8 +183,8 @@ const CompetitionRandom: React.FC = () => {
             ...value,
             {
               enter_time: dayjs.unix(message.Score).format().toString(),
-              member: res.data.data.user
-            }
+              member: res.data.data.user,
+            },
           ])
         })
         break
@@ -203,7 +203,7 @@ const CompetitionRandom: React.FC = () => {
             ref={matchContainer}
             style={{
               height: '500px',
-              width: '800px'
+              width: '800px',
             }}
             className="flex justify-center items-center shadow-lg rounded"
           >
@@ -236,7 +236,7 @@ const CompetitionRandom: React.FC = () => {
               </div>
               <Button
                 style={{
-                  width: '6rem'
+                  width: '6rem',
                 }}
                 type="dashed"
                 onClick={() => {

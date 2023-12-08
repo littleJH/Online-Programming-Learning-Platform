@@ -1,12 +1,13 @@
-import React, {useEffect, useState, useMemo} from 'react'
-import {getProblemNewApi, getProblemNewListApi} from '@/api/problemNew'
-import {getRecordListApi} from '@/api/competitionMixture'
-import {CompetitionType, ICompetition} from '@/type'
-import {Outlet, useOutletContext} from 'react-router-dom'
+import React, { useEffect, useState, useMemo } from 'react'
+import { getProblemNewApi, getProblemNewListApi } from '@/api/problemNew'
+import { getRecordListApi } from '@/api/competitionMixture'
+import { CompetitionType, ICompetition } from '@/type'
+import { useOutletContext } from 'react-router-dom'
 import ProblemStateLabel from '../../component/Label/ProblemStateLabel'
-import {CompetitionState} from '@/type'
-import {Collapse, Table} from 'antd'
+import { CompetitionState } from '@/type'
+import { theme } from 'antd'
 import Answer from './component/Answer'
+import MyCollapse from '@/components/Collapse/MyCollapse'
 
 interface Problems {
   key: string
@@ -22,6 +23,7 @@ const Element: React.FC = () => {
       [ICompetition, CompetitionState, Function, CompetitionType]
     >()
   const [problems, setproblems] = useState<Problems[]>([])
+  const { token } = theme.useToken()
 
   useEffect(() => {
     switch (comptitionState) {
@@ -39,7 +41,13 @@ const Element: React.FC = () => {
       return {
         key: item.key,
         label: item.title,
-        children: <Answer problem_id={item.key}></Answer>
+        children: <Answer problem_id={item.key}></Answer>,
+        style: {
+          marginBottom: 24,
+          background: token.colorFillAlter,
+          borderRadius: token.borderRadiusLG,
+          border: 'none',
+        },
       }
     })
   }, [problems])
@@ -51,8 +59,8 @@ const Element: React.FC = () => {
       const res = await Promise.all([
         getProblemNewApi(id),
         getRecordListApi(type, competition.id, {
-          problem_id: id
-        })
+          problem_id: id,
+        }),
       ])
       const problem = res[0].data.data.problem
       const records = res[1].data.data.records
@@ -66,18 +74,17 @@ const Element: React.FC = () => {
           state: (
             <ProblemStateLabel
               problem={problem}
-              records={records}></ProblemStateLabel>
-          )
-        }
+              records={records}
+            ></ProblemStateLabel>
+          ),
+        },
       ])
     }
   }
 
-  const handleCollapseChange = (key: string | string[]) => {
-    
-  }
+  const handleCollapseChange = (key: string | string[]) => {}
 
-  return <Collapse items={items} onChange={handleCollapseChange}></Collapse>
+  return <MyCollapse items={items} onChange={handleCollapseChange}></MyCollapse>
 }
 
 export default Element

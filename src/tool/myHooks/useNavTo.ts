@@ -1,6 +1,10 @@
 import { useNavigate } from 'react-router-dom'
 import { INavOptions } from '@/type'
-import { headerNavState, loginStatusState, pathNameState } from '@/store/appStore'
+import {
+  headerNavState,
+  loginStatusState,
+  pathNameState,
+} from '@/store/appStore'
 import { useSetRecoilState, useResetRecoilState, useRecoilValue } from 'recoil'
 import { getPathArray } from '../MyUtils/utils'
 

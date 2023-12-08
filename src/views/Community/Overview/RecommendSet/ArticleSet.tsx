@@ -13,11 +13,17 @@ const ArticleSet: React.FC = () => {
   const setcurrentArticle = useSetRecoilState(currentArticleState)
   const nav = useNavTo()
 
-  const fetch = async (pageNum: number, pageSize: number, callback: Function) => {
+  const fetch = async (
+    pageNum: number,
+    pageSize: number,
+    callback: Function,
+  ) => {
     const res = await getArticleListApi(pageNum, pageSize)
     if (res.data.code === 200) {
       console.log('fetchArticles...')
-      setarticleList((value) => (value ? [...value, ...res.data.data.articles] : res.data.data.articles))
+      setarticleList(value =>
+        value ? [...value, ...res.data.data.articles] : res.data.data.articles,
+      )
       setTotal(res.data.data.total)
       callback()
     }

@@ -26,16 +26,32 @@ const LoginRoot = lazy(() => import('@/views/Login/LoginRoot'))
 // 个人中心
 const ProfileRoot = lazy(() => import('@/views/Profile/ProfileRoot'))
 const ProfileFriend = lazy(() => import('@/views/Profile/pages/Friend/Friend'))
-const ProfileMessage = lazy(() => import('@/views/Profile/pages/Message/Message'))
+const ProfileMessage = lazy(
+  () => import('@/views/Profile/pages/Message/Message'),
+)
 const ProfileGroup = lazy(() => import('@/views/Profile/pages/Group/Group'))
 const ProfileInfo = lazy(() => import('@/views/Profile/pages/Info/Info'))
-const ProfileSetting = lazy(() => import('@/views/Profile/pages/Setting/Setting'))
-const ProfileAccount = lazy(() => import('@/views/Profile/pages/Account/Account'))
-const ProfileCretion = lazy(() => import('@/views/Profile/pages/Creation/CreationRoot'))
-const ProfileCreationArticle = lazy(() => import('@/views/Profile/pages/Creation/Article'))
-const ProfileCreationProblem = lazy(() => import('@/views/Profile/pages/Creation/Problem'))
-const ProfileCreationGroup = lazy(() => import('@/views/Profile/pages/Creation/Group'))
-const ProfileCreationTopic = lazy(() => import('@/views/Profile/pages/Creation/Topic'))
+const ProfileSetting = lazy(
+  () => import('@/views/Profile/pages/Setting/Setting'),
+)
+const ProfileAccount = lazy(
+  () => import('@/views/Profile/pages/Account/Account'),
+)
+const ProfileCretion = lazy(
+  () => import('@/views/Profile/pages/Creation/CreationRoot'),
+)
+const ProfileCreationArticle = lazy(
+  () => import('@/views/Profile/pages/Creation/Article'),
+)
+const ProfileCreationProblem = lazy(
+  () => import('@/views/Profile/pages/Creation/Problem'),
+)
+const ProfileCreationGroup = lazy(
+  () => import('@/views/Profile/pages/Creation/Group'),
+)
+const ProfileCreationTopic = lazy(
+  () => import('@/views/Profile/pages/Creation/Topic'),
+)
 
 // 题目
 const ProblemDetailRoot = lazy(() => import('@/views/Problem/DetailRoot'))
@@ -43,33 +59,70 @@ const ProblemSetRoot = lazy(() => import('@/views/ProblemSet/ProblemSetRoot'))
 const PorblemAll = lazy(() => import('@/views/ProblemSet/set/All'))
 const ProblemTopic = lazy(() => import('@/views/ProblemSet/topic/Topic'))
 const ProblemForm = lazy(() => import('@/views/ProblemSet/form/Form'))
-const ProblemDescription = lazy(() => import('@/views/Problem/pages/Description'))
+const ProblemDescription = lazy(
+  () => import('@/views/Problem/pages/Description'),
+)
 const ProblemSubmitrecord = lazy(() => import('@/views/Problem/pages/Records'))
-const ProblemCreate = lazy(() => import('@/views/Creation/pages/CreateProblem/Create'))
+const ProblemCreate = lazy(
+  () => import('@/views/Creation/pages/CreateProblem/Create'),
+)
 
 // 比赛
-const CompetitionSetRoot = lazy(() => import('@/views/CompetitionSet/CompetitionSetRoot'))
-const CompetitionRoot = lazy(() => import('@/views/Competition/CompetitionRoot'))
+const CompetitionSetRoot = lazy(
+  () => import('@/views/CompetitionSet/CompetitionSetRoot'),
+)
+const CompetitionRoot = lazy(
+  () => import('@/views/Competition/CompetitionRoot'),
+)
 const CompetitionAll = lazy(() => import('@/views/CompetitionSet/set/All'))
-const CompetitionId = lazy(() => import('@/views/Competition/CompetitionCommon/Index'))
-const CompetitionOverview = lazy(() => import('@/views/Competition/CompetitionCommon/pages/OverView/Index'))
-const CompetitionProblem = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Problem/Index'))
-const CompetitionProblemId = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Problem/component/Answer'))
-const CompetitionRank = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Rank/Index'))
-const CompetitionRecord = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Record/Index'))
-const CompetitionCreate = lazy(() => import('@/views/Creation/pages/CreateCompetition/Create'))
-const CompetitionCreateDeclare = lazy(() => import('@/views/Creation/pages/CreateCompetition/Declare'))
-const CompetitionCreateCompetition = lazy(() => import('@/views/Creation/pages/CreateCompetition/Competition'))
-const CompetitionCreateProblem = lazy(() => import('@/views/Creation/pages/CreateCompetition/Problem'))
-const CompetitionRandom = lazy(() => import('@/views/Competition/CompetitionRandom/CompetitionRandom'))
+const CompetitionId = lazy(
+  () => import('@/views/Competition/CompetitionCommon/CompetitionCommonRoot'),
+)
+const CompetitionOverview = lazy(
+  () => import('@/views/Competition/CompetitionCommon/pages/OverView/Index'),
+)
+const CompetitionProblem = lazy(
+  () => import('@/views/Competition/CompetitionCommon/pages/Problem/Index'),
+)
+const CompetitionProblemId = lazy(
+  () =>
+    import(
+      '@/views/Competition/CompetitionCommon/pages/Problem/component/Answer'
+    ),
+)
+const CompetitionRank = lazy(
+  () => import('@/views/Competition/CompetitionCommon/pages/Rank/Index'),
+)
+const CompetitionRecord = lazy(
+  () => import('@/views/Competition/CompetitionCommon/pages/Record/Index'),
+)
+const CompetitionCreate = lazy(
+  () => import('@/views/Creation/pages/CreateCompetition/Create'),
+)
+const CompetitionCreateDeclare = lazy(
+  () => import('@/views/Creation/pages/CreateCompetition/Declare'),
+)
+const CompetitionCreateCompetition = lazy(
+  () => import('@/views/Creation/pages/CreateCompetition/Competition'),
+)
+const CompetitionCreateProblem = lazy(
+  () => import('@/views/Creation/pages/CreateCompetition/Problem'),
+)
+const CompetitionRandom = lazy(
+  () => import('@/views/Competition/CompetitionRandom/CompetitionRandom'),
+)
 
 // 社区
 const CommunityRoot = lazy(() => import('@/views/Community/CommunityRoot'))
-const ArticleSet = lazy(() => import('@/views/Community/Overview/RecommendSet/ArticleSet'))
+const ArticleSet = lazy(
+  () => import('@/views/Community/Overview/RecommendSet/ArticleSet'),
+)
 
 // 创作中心
 const CreationRoot = lazy(() => import('@/views/Creation/root/CreationRoot'))
-const CreationNavgation = lazy(() => import('@/views/Creation/root/CreationNavgation'))
+const CreationNavgation = lazy(
+  () => import('@/views/Creation/root/CreationNavgation'),
+)
 const CreateArticle = lazy(() => import('@/views/Creation/pages/CreateArticle'))
 const CreateComment = lazy(() => import('@/views/Creation/pages/CreateComment'))
 const CreatePost = lazy(() => import('@/views/Creation/pages/CreatePost'))
@@ -91,11 +144,11 @@ const routes: MyRoute[] = [
       // home
       {
         path: 'home',
-        element: Homepage
+        element: Homepage,
       },
       {
         path: 'login',
-        element: LoginRoot
+        element: LoginRoot,
       },
       //profile
       {
@@ -104,27 +157,27 @@ const routes: MyRoute[] = [
         children: [
           {
             path: 'friend',
-            element: ProfileFriend
+            element: ProfileFriend,
           },
           {
             path: 'message',
-            element: ProfileMessage
+            element: ProfileMessage,
           },
           {
             path: 'group',
-            element: ProfileGroup
+            element: ProfileGroup,
           },
           {
             path: 'info',
-            element: ProfileInfo
+            element: ProfileInfo,
           },
           {
             path: 'setting',
-            element: ProfileSetting
+            element: ProfileSetting,
           },
           {
             path: 'account',
-            element: ProfileAccount
+            element: ProfileAccount,
           },
           {
             path: 'creation',
@@ -132,23 +185,23 @@ const routes: MyRoute[] = [
             children: [
               {
                 path: 'article',
-                element: ProfileCreationArticle
+                element: ProfileCreationArticle,
               },
               {
                 path: 'problem',
-                element: ProfileCreationProblem
+                element: ProfileCreationProblem,
               },
               {
                 path: 'group',
-                element: ProfileCreationGroup
+                element: ProfileCreationGroup,
               },
               {
                 path: 'topic',
-                element: ProfileCreationTopic
-              }
-            ]
-          }
-        ]
+                element: ProfileCreationTopic,
+              },
+            ],
+          },
+        ],
       },
       // problemset
       {
@@ -157,17 +210,17 @@ const routes: MyRoute[] = [
         children: [
           {
             path: 'all',
-            element: PorblemAll
+            element: PorblemAll,
           },
           {
             path: 'topic',
-            element: ProblemTopic
+            element: ProblemTopic,
           },
           {
             path: 'form',
-            element: ProblemForm
-          }
-        ]
+            element: ProblemForm,
+          },
+        ],
       },
       //problemDetail
       {
@@ -176,13 +229,13 @@ const routes: MyRoute[] = [
         children: [
           {
             path: 'description',
-            element: ProblemDescription
+            element: ProblemDescription,
           },
           {
             path: 'records',
-            element: ProblemSubmitrecord
-          }
-        ]
+            element: ProblemSubmitrecord,
+          },
+        ],
       },
       {
         path: 'competitionset',
@@ -190,9 +243,9 @@ const routes: MyRoute[] = [
         children: [
           {
             path: 'all',
-            element: CompetitionAll
-          }
-        ]
+            element: CompetitionAll,
+          },
+        ],
       },
       // competition
       {
@@ -205,7 +258,7 @@ const routes: MyRoute[] = [
             children: [
               {
                 path: 'overview',
-                element: CompetitionOverview
+                element: CompetitionOverview,
               },
               {
                 path: 'problem',
@@ -213,20 +266,20 @@ const routes: MyRoute[] = [
               },
               {
                 path: 'rank',
-                element: CompetitionRank
+                element: CompetitionRank,
               },
               {
                 path: 'record',
-                element: CompetitionRecord
-              }
-            ]
+                element: CompetitionRecord,
+              },
+            ],
           },
 
           {
             path: 'random/:competition_type',
-            element: CompetitionRandom
-          }
-        ]
+            element: CompetitionRandom,
+          },
+        ],
       },
       // community
       {
@@ -235,13 +288,13 @@ const routes: MyRoute[] = [
         children: [
           {
             path: 'articleset',
-            element: ArticleSet
+            element: ArticleSet,
           },
           {
             path: 'article/:article_id',
-            element: ArticleDetail
-          }
-        ]
+            element: ArticleDetail,
+          },
+        ],
       },
       {
         path: 'creation',
@@ -252,24 +305,24 @@ const routes: MyRoute[] = [
             element: CreationNavgation,
             meta: {
               title: '创作中心',
-              needLogin: false
-            }
+              needLogin: false,
+            },
           },
           {
             path: 'article',
-            element: CreateArticle
+            element: CreateArticle,
           },
           {
             path: 'comment',
-            element: CreateComment
+            element: CreateComment,
           },
           {
             path: 'post',
-            element: CreatePost
+            element: CreatePost,
           },
           {
             path: 'problem',
-            element: ProblemCreate
+            element: ProblemCreate,
           },
           {
             path: 'competition',
@@ -277,51 +330,46 @@ const routes: MyRoute[] = [
             children: [
               {
                 path: 'declare',
-                element: CompetitionCreateDeclare
+                element: CompetitionCreateDeclare,
               },
 
               {
                 path: 'competition',
-                element: CompetitionCreateCompetition
+                element: CompetitionCreateCompetition,
               },
               {
                 path: 'problem',
-                element: CompetitionCreateProblem
-              }
-            ]
+                element: CompetitionCreateProblem,
+              },
+            ],
           },
           {
             path: 'topic',
-            element: CreateTopic
+            element: CreateTopic,
           },
           {
             path: 'form',
-            element: CreateForm
-          }
-        ]
+            element: CreateForm,
+          },
+        ],
       },
       {
         path: 'file',
-        element: FileRoot
-      }
-    ]
-  }
+        element: FileRoot,
+      },
+    ],
+  },
 ]
 
 const Guard: React.FC<{
   element: ReactNode
   meta: { title: string; needLogin: boolean; redirect: string }
-}> = (props) => {
+}> = props => {
   let { element, meta } = props
   const { pathname } = useLocation()
   if (meta && meta.needLogin && pathname !== '/login') {
     if (!localStorage.getItem('token'))
-      element = (
-        <Navigate
-          to={'/login'}
-          replace={true}
-        ></Navigate>
-      )
+      element = <Navigate to={'/login'} replace={true}></Navigate>
   }
 
   return element
@@ -333,17 +381,12 @@ const load = (Result: any, meta: any) => {
       <Result></Result>
     </Suspense>
   )
-  return (
-    <Guard
-      element={element}
-      meta={meta}
-    ></Guard>
-  )
+  return <Guard element={element} meta={meta}></Guard>
 }
 
 const transformRoutes = (routes: MyRoute[]) => {
   const list: RouteObject[] = []
-  routes.forEach((item) => {
+  routes.forEach(item => {
     const obj = { ...item }
     if (!obj.path) return
     obj.element = load(obj.element, obj.meta)

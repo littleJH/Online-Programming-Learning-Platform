@@ -28,7 +28,10 @@ const stateIconSize = 3
 const getState = (start: string, end: string): State => {
   if (dayjs(start).valueOf() > dayjs().valueOf()) {
     return 'notStart'
-  } else if (dayjs(start).valueOf() < dayjs().valueOf() && dayjs(end).valueOf() > dayjs().valueOf()) {
+  } else if (
+    dayjs(start).valueOf() < dayjs().valueOf() &&
+    dayjs(end).valueOf() > dayjs().valueOf()
+  ) {
     return 'underway'
   } else return 'finished'
 }
@@ -37,7 +40,7 @@ const getDuration = (start: string, end: string): string => {
   const mill = dayjs(end).unix() - dayjs(start).unix()
   const duration = {
     hour: 0,
-    min: 0
+    min: 0,
   }
   duration.hour = Math.floor(mill / 3600)
   duration.min = (mill - duration.hour * 3600) / 60
@@ -52,11 +55,11 @@ const View: React.FC = () => {
   const { token } = theme.useToken()
 
   useEffect(() => {
-    getCompetitionListApi().then((res) => {
+    getCompetitionListApi().then(res => {
       const competitions: ICompetition[] = res.data.data?.competitions
       competitions &&
         competitions.forEach((competition, index) => {
-          setdataSource((value) => [
+          setdataSource(value => [
             ...value,
             {
               id: competition.id,
@@ -64,19 +67,22 @@ const View: React.FC = () => {
                 value: competition.title,
                 label: (
                   <div
-                    className='hover:cursor-pointer'
+                    className="hover:cursor-pointer"
                     onClick={() => handleClick(competition)}
                   >
                     {competition.title}
                   </div>
-                )
+                ),
               },
               type: competition.type,
               start_time: competition.start_time,
-              duration: getDuration(competition.start_time, competition.end_time),
+              duration: getDuration(
+                competition.start_time,
+                competition.end_time,
+              ),
               state: getState(competition.start_time, competition.end_time),
-              key: competition.id
-            }
+              key: competition.id,
+            },
           ])
         })
     })
@@ -91,24 +97,21 @@ const View: React.FC = () => {
         <Skeleton
           active
           paragraph={{
-            rows: 10
+            rows: 10,
           }}
         />
       ) : (
-        <Table
-          dataSource={dataSource}
-          size='small'
-        >
+        <Table dataSource={dataSource} size="small">
           <Column
             key={'state'}
-            title='状态'
+            title="状态"
             dataIndex={'state'}
             render={(value: State) => {
               switch (value) {
                 case 'notStart':
                   return (
                     <MySvgIcon
-                      href='#icon-weikaishi'
+                      href="#icon-weikaishi"
                       size={stateIconSize}
                       color={token.colorInfoTextHover}
                     ></MySvgIcon>
@@ -116,7 +119,7 @@ const View: React.FC = () => {
                 case 'underway':
                   return (
                     <MySvgIcon
-                      href='#icon-jinhangzhong'
+                      href="#icon-jinhangzhong"
                       size={stateIconSize}
                       color={token.colorSuccessTextHover}
                     ></MySvgIcon>
@@ -124,7 +127,7 @@ const View: React.FC = () => {
                 case 'finished':
                   return (
                     <MySvgIcon
-                      href='#icon-yijieshu'
+                      href="#icon-yijieshu"
                       size={stateIconSize}
                       color={token.colorErrorTextHover}
                     ></MySvgIcon>
@@ -136,14 +139,14 @@ const View: React.FC = () => {
           ></Column>
           <Column
             key={'title'}
-            title='比赛名称'
+            title="比赛名称"
             dataIndex={['title', 'label']}
           ></Column>
           <Column
             key={'type'}
-            title='比赛类型'
+            title="比赛类型"
             dataIndex={'type'}
-            render={(value) => {
+            render={value => {
               return (
                 <CompetitionTypeLabel
                   type={value}
@@ -154,7 +157,7 @@ const View: React.FC = () => {
           ></Column>
           <Column
             key={'start_time'}
-            title='开始时间'
+            title="开始时间"
             dataIndex={'start_time'}
           ></Column>
           <Column

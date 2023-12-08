@@ -26,11 +26,18 @@ export const getMemberRankApi = (competition_id: string, member_id: string) => {
   return request.get(`/member/rank/${competition_id}/${member_id}`)
 }
 
-export const getMemberPenaltiesApi = (competition_id: string, member_id: string) => {
+export const getMemberPenaltiesApi = (
+  competition_id: string,
+  member_id: string,
+) => {
   return request.get(`/member/show/${competition_id}/${member_id}`)
 }
 
-export const getCompetitionRankListApi = (id: string, pageNum = 1, pageSize = 20) => {
+export const getCompetitionRankListApi = (
+  id: string,
+  pageNum = 1,
+  pageSize = 20,
+) => {
   return request.get(`/rank/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 

@@ -20,7 +20,7 @@ const CommunityRoot: React.FC = () => {
   const [stats, setstats] = useState<IStats>({
     article: 0,
     comment: 0,
-    solve: 0
+    solve: 0,
   })
 
   useEffect(() => {
@@ -29,95 +29,67 @@ const CommunityRoot: React.FC = () => {
 
   useEffect(() => {
     Promise.all([
-      getArticleListApi(1, 0).then((res) => {
-        setstats((value) => {
+      getArticleListApi(1, 0).then(res => {
+        setstats(value => {
           return {
             ...value,
-            article: res.data.data.total
+            article: res.data.data.total,
           }
         })
-      })
+      }),
     ])
   }, [])
 
-  const showHeaderSider = useMemo(() => getPathArray(pathname).length > 1 && getPathArray(pathname)[1].includes('set'), [pathname])
+  const showHeaderSider = useMemo(
+    () =>
+      getPathArray(pathname).length > 1 &&
+      getPathArray(pathname)[1].includes('set'),
+    [pathname],
+  )
 
   return (
-    <div
-      className='flex'
-      style={{ width: 'min-content' }}
-    >
+    <div className="flex" style={{ width: 'min-content' }}>
       {/* left */}
-      <div className='grow h-full'>
+      <div className="grow h-full">
         {/* 公告 */}
         {showHeaderSider && (
-          <div className='w-full my-4'>
+          <div className="w-full my-4">
             <Row gutter={16}>
               <Col span={8}>
-                <Card
-                  title='公告1'
-                  size='small'
-                  hoverable
-                >
+                <Card title="公告1" size="small" hoverable>
                   公告1的内容...
                 </Card>
               </Col>
               <Col span={8}>
-                <Card
-                  title='公告2'
-                  size='small'
-                  hoverable
-                >
+                <Card title="公告2" size="small" hoverable>
                   公告2的内容...
                 </Card>
               </Col>
               <Col span={8}>
-                <Card
-                  title='公告3'
-                  size='small'
-                  hoverable
-                >
+                <Card title="公告3" size="small" hoverable>
                   公告3的内容...
                 </Card>
               </Col>
             </Row>
-            <Card title='全站统计'>
+            <Card title="全站统计">
               <Row gutter={16}>
                 <Col span={4}>
-                  <Statistic
-                    title='文章'
-                    value={111}
-                  ></Statistic>
+                  <Statistic title="文章" value={111}></Statistic>
                 </Col>
                 <Col span={4}>
-                  <Statistic
-                    title='讨论'
-                    value={222}
-                  ></Statistic>
+                  <Statistic title="讨论" value={222}></Statistic>
                 </Col>
                 <Col span={4}>
-                  <Statistic
-                    title='题解'
-                    value={333}
-                  ></Statistic>
+                  <Statistic title="题解" value={333}></Statistic>
                 </Col>
                 <Col span={4}>
-                  <Statistic
-                    title='题目'
-                    value={444}
-                  ></Statistic>
+                  <Statistic title="题目" value={444}></Statistic>
                 </Col>
                 <Col span={4}>
-                  <Statistic
-                    title='比赛'
-                    value={555}
-                  ></Statistic>
+                  <Statistic title="比赛" value={555}></Statistic>
                 </Col>
                 <Col span={4}>
-                  <Statistic
-                    title='用户'
-                    value={666}
-                  ></Statistic>
+                  <Statistic title="用户" value={666}></Statistic>
                 </Col>
               </Row>
             </Card>
@@ -131,30 +103,21 @@ const CommunityRoot: React.FC = () => {
       {/* right */}
       {showHeaderSider && (
         <div
-          className='mx-8'
+          className="mx-8"
           style={{
-            width: '16rem'
+            width: '16rem',
           }}
         >
-          <Card
-            hoverable
-            className='my-4 flex flex-col justify-center text-xs'
-          >
-            <div className='font-medium text-base mb-2'>全站统计</div>
+          <Card hoverable className="my-4 flex flex-col justify-center text-xs">
+            <div className="font-medium text-base mb-2">全站统计</div>
             <Statistic></Statistic>
             <Space size={'large'}>
-              <Space
-                size={6}
-                direction='vertical'
-              >
+              <Space size={6} direction="vertical">
                 <div>文章：{stats?.article}</div>
                 <div>讨论：10154</div>
                 <div>题解：1325</div>
               </Space>
-              <Space
-                size={6}
-                direction='vertical'
-              >
+              <Space size={6} direction="vertical">
                 <div>题目：{stats?.article}</div>
                 <div>比赛：10154</div>
                 <div>用户：1325</div>

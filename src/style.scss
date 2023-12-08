@@ -11,14 +11,12 @@ $colorBgBase: var(--colorBgBase);
 $colorTextBase: var(--colorTextBase);
 $colorBgBlur: var(--colorBgBlur);
 
-
 @font-face {
   font-family: 'Canger';
   src: url('../src/assets/font/TsangerYuYangT_W04_W04.ttf');
   font-weight: normal;
   font-style: normal;
 }
-
 
 html,
 body,
@@ -44,16 +42,16 @@ body,
   background-color: $colorBgBlur;
 }
 
-
 // wangEditor theme config
-:root, :host {
+:root,
+:host {
   --w-e-textarea-bg-color: $colorBgBase !important;
   --w-e-textarea-color: $colorTextBase !important;
   --w-e-textarea-border-color: #ccc;
   --w-e-textarea-slight-border-color: #e8e8e8;
   --w-e-textarea-slight-color: #d4d4d4;
   --w-e-textarea-slight-bg-color: #f5f2f0;
-  --w-e-textarea-selected-border-color: #B4D5FF; // 选中的元素，如选中了分割线
+  --w-e-textarea-selected-border-color: #b4d5ff; // 选中的元素，如选中了分割线
   --w-e-textarea-handler-bg-color: #4290f7; // 工具，如图片拖拽按钮
 
   // toolbar - css vars
@@ -69,7 +67,6 @@ body,
   --w-e-modal-button-border-color: #d9d9d9;
   /* ...其他... */
 }
-
 
 @layer components {
   .center {
@@ -109,7 +106,7 @@ body,
     @apply my-4  border-t border border-solid border-slate-300 dark:border-slate-700;
   }
   .divider-vertical {
-    @apply  p-0 mx-4  border-r border-solid border-slate-200 dark:border-slate-700;
+    @apply p-0 mx-4  border-r border-solid border-slate-200 dark:border-slate-700;
     height: 0.75rem;
     border-width: 1px;
   }
@@ -130,9 +127,9 @@ body,
   }
   .circle-border {
     @apply h-6 w-6 border border-solid border-slate-500  rounded-full flex justify-center items-center text-white;
-  }  
+  }
   .label-single {
-    @apply p-2 m-0 rounded shadow bg-blue-300 ;
+    @apply p-2 m-0 rounded shadow bg-blue-300;
   }
   .code {
     @apply rounded font-mono tracking-wide;
@@ -141,7 +138,7 @@ body,
     @apply p-2;
   }
   .card-avatar {
-    @apply h-8 w-8 border border-solid border-slate-500 select-none ;
+    @apply h-8 w-8 border border-solid border-slate-500 select-none;
   }
   .card-username {
     @apply mx-4 font-medium hover:transition-all;
@@ -150,7 +147,7 @@ body,
     color: $colorPrimary;
   }
   .card-title {
-    @apply  font-semibold;
+    @apply font-semibold;
   }
   .card-content {
     @apply mt-2 text-slate-500 text-sm;
@@ -167,9 +164,9 @@ body,
   }
 }
 
-
 .icon {
-  width: 2rem;height: 2rem;
+  width: 2rem;
+  height: 2rem;
   fill: currentColor;
   overflow: hidden;
 }
@@ -180,19 +177,18 @@ body,
 }
 
 .icon-small {
-  width: 1rem;height: 1rem;
+  width: 1rem;
+  height: 1rem;
   fill: currentColor;
   overflow: hidden;
 }
-
 
 .icon-large {
-  width: 4rem;height: 4rem;
+  width: 4rem;
+  height: 4rem;
   fill: currentColor;
   overflow: hidden;
 }
-
-
 
 .countdown-section {
   display: flex;

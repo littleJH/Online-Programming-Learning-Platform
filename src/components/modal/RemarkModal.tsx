@@ -16,7 +16,7 @@ const RemarkModal: React.FC<{
       title={title}
       style={{
         top: '50%',
-        translate: '0 -50%'
+        translate: '0 -50%',
       }}
     >
       {content}

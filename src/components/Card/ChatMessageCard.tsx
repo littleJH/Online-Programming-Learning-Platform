@@ -5,16 +5,16 @@ import { theme, Card } from 'antd'
 const ChatMessageCard: React.FC<{
   mode: 'left' | 'right'
   children: string
-}> = (props) => {
+}> = props => {
   const { mode, children } = props
   const { token } = theme.useToken()
 
   return (
     // <div className={`relative ${mode === 'left' ? style.message_left : style.message_right}`}>
     <Card
-      size='small'
+      size="small"
       style={{
-        margin: '0 1rem'
+        margin: '0 1rem',
       }}
     >
       {children}

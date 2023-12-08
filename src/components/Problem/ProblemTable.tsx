@@ -1,5 +1,14 @@
 import { IPrblemTableDataType, IProblem } from '@/type'
-import { Button, Popover, Skeleton, Space, Table, Tag, Tooltip, Divider } from 'antd'
+import {
+  Button,
+  Popover,
+  Skeleton,
+  Space,
+  Table,
+  Tag,
+  Tooltip,
+  Divider,
+} from 'antd'
 import Column from 'antd/es/table/Column'
 import copy from 'copy-to-clipboard'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -34,8 +43,26 @@ interface IProps {
 
 let flag = false
 
-const ProblemTable: React.FC<IProps> = (props) => {
-  const { mode, pageNum, pageSize, total, tableScrollHeight, setSelectedProblems, selectedRowKeys, problemList, onPageChange, onLineClick, onDelete, onUpdate, fetchDone, setFetchDone, setPageNum, setPageSize, setFirst } = props
+const ProblemTable: React.FC<IProps> = props => {
+  const {
+    mode,
+    pageNum,
+    pageSize,
+    total,
+    tableScrollHeight,
+    setSelectedProblems,
+    selectedRowKeys,
+    problemList,
+    onPageChange,
+    onLineClick,
+    onDelete,
+    onUpdate,
+    fetchDone,
+    setFetchDone,
+    setPageNum,
+    setPageSize,
+    setFirst,
+  } = props
   const [dataSource, setDataSource] = useState<IPrblemTableDataType[]>([])
   const theme = useRecoilValue(themeState)
   const notification = useRecoilValue(notificationApi)
@@ -53,7 +80,7 @@ const ProblemTable: React.FC<IProps> = (props) => {
       notification &&
         notification.success({
           message: '已复制到剪切板',
-          duration: 1
+          duration: 1,
         })
     }
   }
@@ -65,13 +92,13 @@ const ProblemTable: React.FC<IProps> = (props) => {
     for (let problem of problems) {
       const res = await Promise.all([
         getRecordListApi({
-          problem_id: problem.id
+          problem_id: problem.id,
         }),
         getRecordListApi({
           problem_id: problem.id,
-          condition: 'Accepted'
+          condition: 'Accepted',
         }),
-        getProblemLabelsApi(problem.id)
+        getProblemLabelsApi(problem.id),
       ])
       list.push({
         key: problem.id as string,
@@ -86,7 +113,7 @@ const ProblemTable: React.FC<IProps> = (props) => {
             accept={res[1].data.data.total}
           ></AcPercentLabel>
         ),
-        labels: res[2].data.data.problemLabels
+        labels: res[2].data.data.problemLabels,
       })
       index++
     }
@@ -110,11 +137,11 @@ const ProblemTable: React.FC<IProps> = (props) => {
       {!fetchDone ? (
         <Skeleton
           style={{
-            width: '100%'
+            width: '100%',
           }}
           active
           paragraph={{
-            rows: pageSize
+            rows: pageSize,
           }}
         />
       ) : (
@@ -122,7 +149,7 @@ const ProblemTable: React.FC<IProps> = (props) => {
           scroll={
             mode === 'select'
               ? {
-                  y: tableScrollHeight
+                  y: tableScrollHeight,
                 }
               : undefined
           }
@@ -133,39 +160,63 @@ const ProblemTable: React.FC<IProps> = (props) => {
                   selectedRowKeys: selectedRowKeys,
                   onChange: (value, selectedRows, info) => {
                     if (info.type === 'all') {
-                      value.length ? setSelectedProblems((prev: any) => [...prev, ...selectedRows]) : setSelectedProblems((prev: IPrblemTableDataType[]) => [...prev.filter((value) => dataSource.findIndex((val) => val.key === value.key) === -1)])
+                      value.length
+                        ? setSelectedProblems((prev: any) => [
+                            ...prev,
+                            ...selectedRows,
+                          ])
+                        : setSelectedProblems(
+                            (prev: IPrblemTableDataType[]) => [
+                              ...prev.filter(
+                                value =>
+                                  dataSource.findIndex(
+                                    val => val.key === value.key,
+                                  ) === -1,
+                              ),
+                            ],
+                          )
                     }
                   },
                   onSelect: (record, selected) => {
-                    selected ? setSelectedProblems((prev: IPrblemTableDataType[]) => [...prev, record]) : setSelectedProblems((prev: IPrblemTableDataType[]) => [...prev.filter((value) => value.key !== record.key)])
-                  }
+                    selected
+                      ? setSelectedProblems((prev: IPrblemTableDataType[]) => [
+                          ...prev,
+                          record,
+                        ])
+                      : setSelectedProblems((prev: IPrblemTableDataType[]) => [
+                          ...prev.filter(value => value.key !== record.key),
+                        ])
+                  },
                 }
               : undefined
           }
-          onRow={(record) => {
+          onRow={record => {
             return {
-              onClick: () => onLineClick(record)
+              onClick: () => onLineClick(record),
             }
           }}
-          size='small'
-          pagination={getPagination('table', pageNum, pageSize, total, onPageChange)}
+          size="small"
+          pagination={getPagination(
+            'table',
+            pageNum,
+            pageSize,
+            total,
+            onPageChange,
+          )}
           dataSource={dataSource}
         >
           {/* <Column  title="序号" dataIndex={'index'}></Column> */}
           <Column
-            title='KEY'
+            title="KEY"
             dataIndex={'key'}
             render={(value: string) => (
-              <Tooltip
-                mouseEnterDelay={0.3}
-                title={`点击复制 ${value}`}
-              >
+              <Tooltip mouseEnterDelay={0.3} title={`点击复制 ${value}`}>
                 <div
-                  className='select-none hover:cursor-pointer'
-                  onClick={(e) => handleKyeClick(value, e)}
+                  className="select-none hover:cursor-pointer"
+                  onClick={e => handleKyeClick(value, e)}
                 >
                   <div
-                    className='w-16'
+                    className="w-16"
                     // style={{
                     //   overflow: 'hidden',
                     //   textOverflow: 'ellipsis',
@@ -179,19 +230,21 @@ const ProblemTable: React.FC<IProps> = (props) => {
             )}
           ></Column>
           <Column
-            title='标题'
+            title="标题"
             dataIndex={'title'}
             render={(value, _, index) => (
               <Popover
                 mouseEnterDelay={0.3}
                 title={value}
-                content={<ReadOnly html={dataSource[index].description}></ReadOnly>}
+                content={
+                  <ReadOnly html={dataSource[index].description}></ReadOnly>
+                }
                 overlayStyle={{
-                  maxWidth: '512px'
+                  maxWidth: '512px',
                 }}
                 overlayInnerStyle={{
                   maxHeight: '256px',
-                  overflow: 'scroll'
+                  overflow: 'scroll',
                 }}
               >
                 <div
@@ -201,7 +254,7 @@ const ProblemTable: React.FC<IProps> = (props) => {
                     width: '196px',
                     overflow: 'hidden',
                     whiteSpace: 'nowrap',
-                    textOverflow: 'ellipsis'
+                    textOverflow: 'ellipsis',
                   }}
                 >
                   {value}
@@ -211,41 +264,38 @@ const ProblemTable: React.FC<IProps> = (props) => {
           ></Column>
 
           <Column
-            title='标签'
+            title="标签"
             dataIndex={'labels'}
-            render={(value) => (
+            render={value => (
               <div
                 style={{
                   width: '10rem',
                   whiteSpace: 'nowrap',
-                  overflow: 'hidden'
+                  overflow: 'hidden',
                 }}
               >
                 {value.map((item: any, index: number) => {
                   return index <= 1 ? (
-                    <MyTag
-                      key={index}
-                      label={item.label}
-                    ></MyTag>
+                    <MyTag key={index} label={item.label}></MyTag>
                   ) : null
                 })}
               </div>
             )}
           ></Column>
           <Column
-            title='AC率'
+            title="AC率"
             dataIndex={'acPerc'}
-            render={(value) => <div className=''>{value}</div>}
+            render={value => <div className="">{value}</div>}
           ></Column>
           {mode === 'action' && (
             <Column
-              title='操作'
+              title="操作"
               render={(_, __, index) => (
                 <div style={{ width: '6rem' }}>
                   {onUpdate && (
                     <Button
-                      type='link'
-                      size='small'
+                      type="link"
+                      size="small"
                       style={{ padding: '0' }}
                       onClick={() => onUpdate(index)}
                     >
@@ -255,11 +305,11 @@ const ProblemTable: React.FC<IProps> = (props) => {
 
                   {onDelete && (
                     <>
-                      <Divider type='vertical'></Divider>
+                      <Divider type="vertical"></Divider>
                       <Button
-                        type='link'
+                        type="link"
                         style={{ padding: '0' }}
-                        size='small'
+                        size="small"
                         danger
                         onClick={() => onDelete(index)}
                       >

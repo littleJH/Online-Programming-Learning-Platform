@@ -22,34 +22,44 @@ interface IProps {
   setOpenUploadModal: Function
 }
 
-export const UploadProblemModal: React.FC<IProps> = (props) => {
+export const UploadProblemModal: React.FC<IProps> = props => {
   const { openUploadModal, setOpenUploadModal } = props
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const [total, setTotal] = useState(0)
   const [loadCount, setLoadCount] = useState(0)
-  const percent = useMemo(() => Math.ceil((loadCount / total) * 100), [total, loadCount])
+  const percent = useMemo(
+    () => Math.ceil((loadCount / total) * 100),
+    [total, loadCount],
+  )
   const theme = useRecoilValue<ITheme>(themeState)
 
-  useEffect(() => console.log('count, total, percent ==> ', loadCount, total, percent), [loadCount, total, percent])
+  useEffect(
+    () => console.log('count, total, percent ==> ', loadCount, total, percent),
+    [loadCount, total, percent],
+  )
 
-  const handleUpload = async (file: RcFile, fileList?: RcFile[], length?: number) => {
+  const handleUpload = async (
+    file: RcFile,
+    fileList?: RcFile[],
+    length?: number,
+  ) => {
     fileList && total !== fileList.length && setTotal(fileList.length)
     length && total !== length && setTotal(length)
     const data = await formatProblemJson(file)
     const {
-      data: { code, data: resData, msg }
+      data: { code, data: resData, msg },
     } = await uploadVjudgeProblemApi(JSON.stringify(data))
     if (code === 200) createTagAuto(resData)
-    setLoadCount((value) => value + 1)
-    setFileList((value) => [
+    setLoadCount(value => value + 1)
+    setFileList(value => [
       ...value,
       {
         uid: file.uid,
         name: file.name,
         status: code === 200 ? 'done' : 'error',
         originFileObj: file,
-        message: msg || ''
-      } as UploadFile
+        message: msg || '',
+      } as UploadFile,
     ])
     return false
   }
@@ -60,7 +70,7 @@ export const UploadProblemModal: React.FC<IProps> = (props) => {
     const res = await createTagAutoApi(text.slice(0, 50))
     const {
       code,
-      data: { tagCount }
+      data: { tagCount },
     } = res.data
     if (code === 200) {
       let index1 = 0
@@ -77,11 +87,14 @@ export const UploadProblemModal: React.FC<IProps> = (props) => {
     setTotal(list.length)
     setLoadCount(0)
     setFileList([])
-    for (let file of list) file.status === 'error' && file.originFileObj && handleUpload(file.originFileObj, undefined, list.length)
+    for (let file of list)
+      file.status === 'error' &&
+        file.originFileObj &&
+        handleUpload(file.originFileObj, undefined, list.length)
   }
 
   const handleRemove = (file: UploadFile) => {
-    const index = fileList.findIndex((value) => value.uid === file.uid)
+    const index = fileList.findIndex(value => value.uid === file.uid)
     const newFileList = fileList.slice()
     newFileList.splice(index, 1)
     setFileList(newFileList)
@@ -108,15 +121,12 @@ export const UploadProblemModal: React.FC<IProps> = (props) => {
   const renderModalFooter = () => {
     let count = 0
     const footer = []
-    fileList.forEach((file) => file.status === 'error' && count++)
+    fileList.forEach(file => file.status === 'error' && count++)
     if (count)
       footer.push(
-        <Button
-          key={'btn1'}
-          onClick={handleReUpload}
-        >
+        <Button key={'btn1'} onClick={handleReUpload}>
           重新上传错误文件
-        </Button>
+        </Button>,
       )
     return footer
   }
@@ -189,7 +199,7 @@ export const UploadProblemModal: React.FC<IProps> = (props) => {
         setOpenUploadModal(false)
         setFileList([])
       }}
-      footer={<div>{renderModalFooter().map((item) => item)}</div>}
+      footer={<div>{renderModalFooter().map(item => item)}</div>}
       maskClosable={false}
       width={512}
       keyboard={false}
@@ -199,7 +209,7 @@ export const UploadProblemModal: React.FC<IProps> = (props) => {
         showUploadList={{
           showDownloadIcon: false,
           showRemoveIcon: false,
-          showPreviewIcon: false
+          showPreviewIcon: false,
         }}
         height={200}
         fileList={fileList}
@@ -215,13 +225,13 @@ export const UploadProblemModal: React.FC<IProps> = (props) => {
           <Progress
             strokeColor={{
               '0%': '',
-              '100%': theme.colorSuccess
+              '100%': theme.colorSuccess,
             }}
-            type='circle'
+            type="circle"
             percent={percent}
           ></Progress>
         ) : (
-          <div className='p-2'>
+          <div className="p-2">
             点击或拖拽<br></br>批量上传外站题目.json文件
           </div>
         )}

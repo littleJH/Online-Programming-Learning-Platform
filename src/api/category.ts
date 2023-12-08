@@ -17,6 +17,9 @@ export const deleteCategoryApi = (id: string) => {
   return request.delete(`/delete/${id}`, baseConfig())
 }
 
-export const getCategoryListApi = (pageNum: number = 1, pageSize: number = 20) => {
+export const getCategoryListApi = (
+  pageNum: number = 1,
+  pageSize: number = 20,
+) => {
   return request.get(`/list?pageNum=${pageNum}&pageSize=${pageSize}`)
 }

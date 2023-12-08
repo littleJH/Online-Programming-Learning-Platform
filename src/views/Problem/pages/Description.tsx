@@ -11,7 +11,9 @@ const titleClassname = 'font-semibold'
 
 const Description: React.FC = () => {
   const [problem, caseSamples] = useOutletContext<[IProblem, ICaseSample[]]>()
-  const [dataSource, setdataSource] = useState<{ key: string; input: string; output: string }[]>([])
+  const [dataSource, setdataSource] = useState<
+    { key: string; input: string; output: string }[]
+  >([])
   const [fetchDone, setfetchDone] = useState(false)
   const [mouseoverLike, setmouseoverLike] = useState(false)
 
@@ -20,20 +22,20 @@ const Description: React.FC = () => {
   useLayoutEffect(() => {
     caseSamples
       ? caseSamples.forEach((item, index) => {
-          setdataSource((value) => [
+          setdataSource(value => [
             ...value,
             {
               key: String(item.cid),
               input: item.input,
-              output: item.output
-            }
+              output: item.output,
+            },
           ])
         })
       : null
   }, [caseSamples])
 
   return (
-    <div className='px-8'>
+    <div className="px-8">
       {problem && (
         <>
           <div>
@@ -67,7 +69,7 @@ const Description: React.FC = () => {
           </div> */}
           <Divider
             style={{
-              margin: '1rem'
+              margin: '1rem',
             }}
           ></Divider>
           <ReadOnly
@@ -88,28 +90,28 @@ const Description: React.FC = () => {
             html={problem?.output}
           ></ReadOnly>
           <div className={ctnClassname}>
-            <div className='font-bold'>示例</div>
+            <div className="font-bold">示例</div>
             <Table
-              size='small'
-              className='m-4 '
+              size="small"
+              className="m-4 "
               bordered
               dataSource={dataSource}
               pagination={false}
             >
               <Column
-                title='input'
-                key='input'
+                title="input"
+                key="input"
                 dataIndex={'input'}
-                render={(value) => {
-                  return <div className='mx-4 min-w-max '>{value}</div>
+                render={value => {
+                  return <div className="mx-4 min-w-max ">{value}</div>
                 }}
               ></Column>
               <Column
-                title='output'
-                key='output'
+                title="output"
+                key="output"
                 dataIndex={'output'}
-                render={(value) => {
-                  return <div className='mx-4 min-w-max '>{value}</div>
+                render={value => {
+                  return <div className="mx-4 min-w-max ">{value}</div>
                 }}
               ></Column>
             </Table>

@@ -15,39 +15,46 @@ interface Iprops {
   collected: boolean
 }
 
-const SideActionBar: React.FC<Iprops> = (props) => {
-  const { onLikeClick, onCollectClick, onCommentClick, onArrowupClick, likeNum, collectNum, remarkNum, liked, collected } = props
+const SideActionBar: React.FC<Iprops> = props => {
+  const {
+    onLikeClick,
+    onCollectClick,
+    onCommentClick,
+    onArrowupClick,
+    likeNum,
+    collectNum,
+    remarkNum,
+    liked,
+    collected,
+  } = props
   const { token } = theme.useToken()
   const colorStyle: CSSProperties = {
     backgroundColor: token.colorBgBase,
-    color: token.colorTextDescription
+    color: token.colorTextDescription,
   }
   return (
     <div>
-      <Space
-        direction='vertical'
-        size={'large'}
-      >
+      <Space direction="vertical" size={'large'}>
         <Badge
-          size='small'
+          size="small"
           count={likeNum}
           offset={[-5, 5]}
           color={token.colorPrimary}
         >
-          <div
-            className={style.item}
-            onClick={onLikeClick}
-            style={colorStyle}
-          >
+          <div className={style.item} onClick={onLikeClick} style={colorStyle}>
             <MySvgIcon
               href={liked === 1 ? '#icon-liked' : '#icon-like'}
               size={1.5}
-              color={liked === 1 ? token.colorPrimaryTextHover : token.colorTextDescription}
+              color={
+                liked === 1
+                  ? token.colorPrimaryTextHover
+                  : token.colorTextDescription
+              }
             ></MySvgIcon>
           </div>
         </Badge>
         <Badge
-          size='small'
+          size="small"
           count={collectNum}
           offset={[-5, 5]}
           color={token.colorPrimary}
@@ -60,12 +67,16 @@ const SideActionBar: React.FC<Iprops> = (props) => {
             <MySvgIcon
               href={collected ? '#icon-collected' : '#icon-collect'}
               size={1.5}
-              color={collected ? token.colorPrimaryTextHover : token.colorTextDescription}
+              color={
+                collected
+                  ? token.colorPrimaryTextHover
+                  : token.colorTextDescription
+              }
             ></MySvgIcon>
           </div>
         </Badge>
         <Badge
-          size='small'
+          size="small"
           count={remarkNum}
           offset={[-5, 5]}
           color={token.colorPrimary}
@@ -75,21 +86,11 @@ const SideActionBar: React.FC<Iprops> = (props) => {
             onClick={onCommentClick}
             style={colorStyle}
           >
-            <MySvgIcon
-              href='#icon-comment'
-              size={1.5}
-            ></MySvgIcon>
+            <MySvgIcon href="#icon-comment" size={1.5}></MySvgIcon>
           </div>
         </Badge>
-        <div
-          className={style.item}
-          onClick={onArrowupClick}
-          style={colorStyle}
-        >
-          <MySvgIcon
-            href='#icon-arrowup'
-            size={1.5}
-          ></MySvgIcon>
+        <div className={style.item} onClick={onArrowupClick} style={colorStyle}>
+          <MySvgIcon href="#icon-arrowup" size={1.5}></MySvgIcon>
         </div>
       </Space>
     </div>

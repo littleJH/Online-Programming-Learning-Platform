@@ -6,7 +6,7 @@ const MyTag: React.FC<{
   label: string
   checkable?: boolean
   checked?: boolean
-}> = (props) => {
+}> = props => {
   const { label, checkable, checked = false } = props
   const { token } = theme.useToken()
 
@@ -16,17 +16,18 @@ const MyTag: React.FC<{
       color: token.colorPrimary,
       style: {
         fontSize: '0.75rem',
-        backgroundColor: checked ? `${token.colorSuccessBg}` : `${token.colorPrimaryBg}`,
-        color: checked ? `${token.colorSuccessTextHover}` : `${token.colorPrimaryText}`
+        backgroundColor: checked
+          ? `${token.colorSuccessBg}`
+          : `${token.colorPrimaryBg}`,
+        color: checked
+          ? `${token.colorSuccessTextHover}`
+          : `${token.colorPrimaryText}`,
       },
-      children: label
+      children: label,
     }
 
     return checkable ? (
-      <CheckableTag
-        {...tagProps}
-        checked={checked}
-      ></CheckableTag>
+      <CheckableTag {...tagProps} checked={checked}></CheckableTag>
     ) : (
       <Tag {...tagProps}></Tag>
     )

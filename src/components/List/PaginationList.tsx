@@ -17,49 +17,61 @@ interface Iprops {
   split?: boolean
 }
 
-const PaginationList: React.FC<Iprops> = (props) => {
-  const { loading, dataSource, onDelete, onDetail, onUpdate, itemRender, bordered, pageNum, pageSize, total, onPageChange, split = true } = props
+const PaginationList: React.FC<Iprops> = props => {
+  const {
+    loading,
+    dataSource,
+    onDelete,
+    onDetail,
+    onUpdate,
+    itemRender,
+    bordered,
+    pageNum,
+    pageSize,
+    total,
+    onPageChange,
+    split = true,
+  } = props
 
-  const pagination = React.useMemo(() => getPagination('list', pageNum, pageSize, total, onPageChange), [pageNum, pageSize, total, onPageChange])
+  const pagination = React.useMemo(
+    () => getPagination('list', pageNum, pageSize, total, onPageChange),
+    [pageNum, pageSize, total, onPageChange],
+  )
 
   const renderActions = (item: any, index: number) => {
     const actions: React.ReactNode[] = []
     onDetail &&
       actions.push(
         <Button
-          type='link'
+          type="link"
           style={{ padding: '0' }}
           onClick={() => onDetail(item, index)}
         >
           详情
-        </Button>
+        </Button>,
       )
     onUpdate &&
       actions.push(
         <Button
           style={{ padding: '0' }}
-          type='link'
+          type="link"
           onClick={() => onUpdate(item, index)}
         >
           更新
-        </Button>
+        </Button>,
       )
     onDelete &&
       actions.push(
         <Popconfirm
-          title='确定删除该文章？'
-          okText='确认'
-          cancelText='取消'
+          title="确定删除该文章？"
+          okText="确认"
+          cancelText="取消"
           onConfirm={() => onDelete(item, index)}
         >
-          <Button
-            style={{ padding: '0' }}
-            type='link'
-            danger
-          >
+          <Button style={{ padding: '0' }} type="link" danger>
             删除
           </Button>
-        </Popconfirm>
+        </Popconfirm>,
       )
     return actions
   }
@@ -69,11 +81,11 @@ const PaginationList: React.FC<Iprops> = (props) => {
       {loading && (
         <Skeleton
           style={{
-            width: '100%'
+            width: '100%',
           }}
           active
           paragraph={{
-            rows: pageSize
+            rows: pageSize,
           }}
         />
       )}

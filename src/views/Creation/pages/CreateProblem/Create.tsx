@@ -3,7 +3,15 @@ import Problem from './Problem'
 import { Button, Form, Modal, Result, Space, Steps, UploadFile } from 'antd'
 import Program from './Program'
 import { createProgramApi } from '@/api/program'
-import { createProblemApi, createProblemLabelApi, getProblemLabelsApi, getProblemListApi, showProblemApi, uploadProblemByFileApi, uploadVjudgeProblemApi } from '@/api/problem'
+import {
+  createProblemApi,
+  createProblemLabelApi,
+  getProblemLabelsApi,
+  getProblemListApi,
+  showProblemApi,
+  uploadProblemByFileApi,
+  uploadVjudgeProblemApi,
+} from '@/api/problem'
 import { IProblem, ProgramMode } from '@/type'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { currentProblemState, notificationApi } from '@/store/appStore'
@@ -14,13 +22,20 @@ import { RcFile, UploadChangeParam } from 'antd/es/upload'
 import { UploadProblemModal } from '@/components/Problem/uploadProblem/UploadProblemModal'
 import { CloudUploadOutlined } from '@ant-design/icons'
 
-const stringArrItem = ['test_input', 'test_output', 'sample_input', 'sample_output']
+const stringArrItem = [
+  'test_input',
+  'test_output',
+  'sample_input',
+  'sample_output',
+]
 
 const Create: React.FC = () => {
   const [querys, setQuerys] = useSearchParams()
   const id = useRef(querys.get('id'))
   const [problem, setProblem] = useState<IProblem>()
-  const [stepStatus, setstepStatus] = useState<'wait' | 'process' | 'finish' | 'error'>('process')
+  const [stepStatus, setstepStatus] = useState<
+    'wait' | 'process' | 'finish' | 'error'
+  >('process')
   const nav = useNavigate()
   const [form] = Form.useForm()
   const [codeLanguage, setcodeLanguage] = useState('C')
@@ -33,12 +48,13 @@ const Create: React.FC = () => {
   const [failMessage, setfailMessage] = useState()
   const [loading, setloading] = useState(false)
   const [uploadDone, setUploadDone] = useState(false)
-  const [currentProblem, setCurrentProblem] = useRecoilState(currentProblemState)
+  const [currentProblem, setCurrentProblem] =
+    useRecoilState(currentProblemState)
   const notification = useRecoilValue(notificationApi)
 
   useEffect(() => {
     if (id.current) {
-      showProblemApi(id.current).then((res) => {
+      showProblemApi(id.current).then(res => {
         const problem = res.data.data.problem
         setProblem(problem)
       })
@@ -53,13 +69,16 @@ const Create: React.FC = () => {
     form
       .validateFields()
       .then(() => {
-        localStorage.setItem('problemForm', JSON.stringify(form.getFieldsValue()))
-        setcurrentStep((currentStep) => currentStep + 1)
+        localStorage.setItem(
+          'problemForm',
+          JSON.stringify(form.getFieldsValue()),
+        )
+        setcurrentStep(currentStep => currentStep + 1)
       })
       .catch(() => {
         notification &&
           notification.warning({
-            message: '请完善表单！'
+            message: '请完善表单！',
           })
       })
   }, [form])
@@ -67,11 +86,11 @@ const Create: React.FC = () => {
   const nextStep1 = useCallback(async () => {
     const data1 = JSON.stringify({
       language: 'C++11',
-      code: code1
+      code: code1,
     })
     const data2 = JSON.stringify({
       language: 'java',
-      code: code2
+      code: code2,
     })
 
     if (programMode === 'standard' || programMode === 'special_judge') {
@@ -81,24 +100,31 @@ const Create: React.FC = () => {
       if (res.data.code !== 200) {
         notification &&
           notification.warning({
-            message: res.data.msg
+            message: res.data.msg,
           })
         return
       }
       const id = res.data.data.program.id
-      programMode === 'standard' ? form.setFieldValue('standard', id) : form.setFieldValue('special_judge', id)
+      programMode === 'standard'
+        ? form.setFieldValue('standard', id)
+        : form.setFieldValue('special_judge', id)
     } else {
-      const res = await Promise.all([createProgramApi(data1), createProgramApi(data2)])
+      const res = await Promise.all([
+        createProgramApi(data1),
+        createProgramApi(data2),
+      ])
       if (res[0].data.code !== 200) {
         notification &&
           notification.warning({
-            message: res[0].data.msg
+            message: res[0].data.msg,
           })
         return
       }
       const id1 = res[0].data.data.program.id
       const id2 = res[1].data.data.program.id
-      programMode === 'standardHack' ? form.setFieldValue('standard', id1) : form.setFieldValue('special_judge', id1)
+      programMode === 'standardHack'
+        ? form.setFieldValue('standard', id1)
+        : form.setFieldValue('special_judge', id1)
       form.setFieldValue('input_check', id2)
     }
     submit()
@@ -109,7 +135,10 @@ const Create: React.FC = () => {
     Object.keys(result).forEach((key: string) => {
       if (key === 'sample_case') {
         if (result.sample_case_expand) {
-          result.sample_case = [result.sample_case, ...(result.sample_case_expand as any)]
+          result.sample_case = [
+            result.sample_case,
+            ...(result.sample_case_expand as any),
+          ]
         } else {
           result.sample_case = [result.sample_case]
         }
@@ -117,13 +146,20 @@ const Create: React.FC = () => {
 
       if (key === 'test_case') {
         if (result.test_case_expand) {
-          result.test_case = [result.test_case, ...(result.test_case_expand as any)]
+          result.test_case = [
+            result.test_case,
+            ...(result.test_case_expand as any),
+          ]
         } else {
           result.test_case = [result.test_case]
         }
       }
 
-      if (typeof result[key] !== 'string' && key !== 'sample_case' && key !== 'test_case') {
+      if (
+        typeof result[key] !== 'string' &&
+        key !== 'sample_case' &&
+        key !== 'test_case'
+      ) {
         result[key] = JSON.stringify(result[key])
       }
 
@@ -139,9 +175,9 @@ const Create: React.FC = () => {
       delete result.test_case_expand
     })
     console.log(result)
-    createProblemApi(JSON.stringify(result)).then((res) => {
+    createProblemApi(JSON.stringify(result)).then(res => {
       console.log(res.data)
-      setcurrentStep((currentStep) => currentStep + 1)
+      setcurrentStep(currentStep => currentStep + 1)
       if (res.data.code === 200) {
         // localStorage.removeItem('problemForm')
         // localStorage.removeItem('code1')
@@ -174,11 +210,11 @@ const Create: React.FC = () => {
   const createTagAuto = useCallback(() => {
     let index = 0
     getProblemListApi(1, 10)
-      .then((res) => {
+      .then(res => {
         console.log(res.data.data)
         return res.data.data.total
       })
-      .then(async (total) => {
+      .then(async total => {
         while (index <= total + 1) {
           console.log(index, total + 1)
           const res = await getProblemListApi(index, 1)
@@ -203,15 +239,12 @@ const Create: React.FC = () => {
           index++
         }
       })
-      .catch((err) => console.log(err))
+      .catch(err => console.log(err))
   }, [])
 
   return (
-    <div className='flex'>
-      <div
-        className='px-8 my-4'
-        style={{ width: '768px' }}
-      >
+    <div className="flex">
+      <div className="px-8 my-4" style={{ width: '768px' }}>
         {currentStep === 0 && <Problem form={form}></Problem>}
         {currentStep === 1 && (
           <Program
@@ -228,11 +261,11 @@ const Create: React.FC = () => {
             {stepStatus === 'finish' && (
               <Result
                 status={'success'}
-                title='题目创建成功！'
+                title="题目创建成功！"
                 extra={[
                   <Button
                     key={'0'}
-                    type='primary'
+                    type="primary"
                     onClick={() => {
                       setcurrentStep(0)
                       setstepStatus('process')
@@ -240,13 +273,9 @@ const Create: React.FC = () => {
                   >
                     继续创建下一题
                   </Button>,
-                  <Button
-                    key={'1'}
-                    type='primary'
-                    onClick={handleNextClick}
-                  >
+                  <Button key={'1'} type="primary" onClick={handleNextClick}>
                     查看题目详情
-                  </Button>
+                  </Button>,
                 ]}
               ></Result>
             )}
@@ -272,7 +301,7 @@ const Create: React.FC = () => {
                     }}
                   >
                     返回“创建题目"
-                  </Button>
+                  </Button>,
                 ]}
               ></Result>
             )}
@@ -282,12 +311,9 @@ const Create: React.FC = () => {
           <Submit form={form}></Submit>
         )} */}
         {stepStatus === 'process' && (
-          <div className='text-end'>
+          <div className="text-end">
             {currentStep === 0 && (
-              <Button
-                type='primary'
-                onClick={() => handleNextClick()}
-              >
+              <Button type="primary" onClick={() => handleNextClick()}>
                 下一步
               </Button>
             )}
@@ -295,13 +321,13 @@ const Create: React.FC = () => {
               <Space>
                 <Button
                   onClick={() => {
-                    setcurrentStep((currentStep) => currentStep - 1)
+                    setcurrentStep(currentStep => currentStep - 1)
                   }}
                 >
                   上一步
                 </Button>
                 <Button
-                  type='primary'
+                  type="primary"
                   onClick={() => handleNextClick()}
                   loading={loading}
                 >
@@ -312,29 +338,29 @@ const Create: React.FC = () => {
           </div>
         )}
       </div>
-      <div className='w-16'></div>
+      <div className="w-16"></div>
       <div>
         <Steps
-          className='w-24 h-48 mt-8 sticky top-8'
-          direction='vertical'
+          className="w-24 h-48 mt-8 sticky top-8"
+          direction="vertical"
           progressDot
           status={stepStatus}
           current={currentStep}
           items={[
             { title: '题目', description: '' },
             { title: '程序', description: '' },
-            { title: '结果', description: '' }
+            { title: '结果', description: '' },
           ]}
         ></Steps>
         {/* <Button type="dashed" onClick={() => setOpenUploadModal(true)}>
           上传题目
         </Button> */}
-        <div className='fixed bottom-16 right-4'>
+        <div className="fixed bottom-16 right-4">
           <Button
-            type='dashed'
+            type="dashed"
             style={{
               height: '4rem',
-              width: '4rem'
+              width: '4rem',
             }}
             onClick={() => setOpenUploadModal(true)}
           >
@@ -349,12 +375,12 @@ const Create: React.FC = () => {
       ></UploadProblemModal>
 
       <Modal
-        title='自动创建标签'
+        title="自动创建标签"
         open={openCreateTagModal}
         footer={[]}
         onCancel={() => setOpenCreateTagModal(false)}
         style={{
-          translate: '0 50%'
+          translate: '0 50%',
         }}
       >
         <Button onClick={createTagAuto}>自动创建标签</Button>
