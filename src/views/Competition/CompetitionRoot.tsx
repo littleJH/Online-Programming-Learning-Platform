@@ -1,16 +1,16 @@
-import React, { useState } from 'react'
-import { Button, Space, Card, Tooltip } from 'antd'
-import { Outlet, useNavigate } from 'react-router-dom'
+import React, {useState} from 'react'
+import {Button, Space, Card, Tooltip} from 'antd'
+import {Outlet, useNavigate} from 'react-router-dom'
 import {
   CompetitionState,
   CompetitionType,
   ICompetition,
-  ICountDown,
+  ICountDown
 } from '@/type'
 import CompetitionTypeLabel from './CompetitionCommon/component/Label/CompetitionTypeLabel'
 import CountDown from '@/components/countDown/CountDown'
-import { useRecoilState } from 'recoil'
-import { competitionStateAtom } from './store'
+import {useRecoilState} from 'recoil'
+import {competitionStateAtom} from './competitionStore'
 import useNavTo from '@/tool/myHooks/useNavTo'
 
 const Competition: React.FC = () => {
@@ -22,7 +22,7 @@ const Competition: React.FC = () => {
   // const [countDown, setcountDown] = useState<ICountDown>()
 
   return (
-    <div className="flex-grow h-full w-full flex justify-center">
+    <div className='flex-grow h-full w-full flex justify-center'>
       {/* header */}
       {/* <Card>
         <div className='flex'>

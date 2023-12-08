@@ -8,6 +8,8 @@ import {getUserInfoApi} from '@/api/user'
 import useWsConnect from '@/tool/myHooks/useWsConnect'
 import ErrorPage from '@/components/error-page'
 import RollList from '@/components/List/RollList'
+import {useRecoilValue} from 'recoil'
+import {currentCompetitionAtom} from '@/views/Competition/competitionStore'
 
 interface IRank {
   id: string | number
@@ -21,8 +23,7 @@ interface IRank {
 let interval: NodeJS.Timeout
 
 const Rank: React.FC = () => {
-  const {competition_id} = useParams()
-  if (!competition_id) return <ErrorPage></ErrorPage>
+  const competition = useRecoilValue(currentCompetitionAtom)
   const [rankList, setRankList] = useState<IRank[]>([])
   const {token} = theme.useToken()
   const spanClass = ''
@@ -74,7 +75,7 @@ const Rank: React.FC = () => {
   }
 
   // const initRankList = () => {
-  //   getCompetitionRankListApi(competition_id).then(async res => {
+  //   getCompetitionRankListApi(competition.id).then(async res => {
   //     const members = res.data.data.members
   //     let index = 0
   //     for (let member of members) {

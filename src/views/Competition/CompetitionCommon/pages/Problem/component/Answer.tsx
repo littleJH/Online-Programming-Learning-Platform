@@ -20,6 +20,7 @@ import {createTestApi} from '@/api/test'
 import {createRecordApi} from '@/api/competitionMixture'
 import {useRecoilValue} from 'recoil'
 import {notificationApi} from '@/store/appStore'
+import {currentCompetitionAtom} from '@/views/Competition/competitionStore'
 
 export interface ChangeOptions {
   code: string
@@ -34,9 +35,8 @@ interface IProps {
 
 const Answer: React.FC<IProps> = (props) => {
   const nav = useNavigate()
+  const competition = useRecoilValue(currentCompetitionAtom)
   const {problem_id, onStateChange} = props
-  const {competition_id} = useParams()
-  const [a, b, c, type] = useOutletContext<[any, any, any, CompetitionType]>()
   const [problem, setproblem] = useState<IProblem>()
   const [dataSource, setdataSource] = useState<
     {key: string; input: string; output: string}[]
@@ -118,28 +118,31 @@ const Answer: React.FC<IProps> = (props) => {
     })
   }
   const craeteRecord = () => {
+    if (!competition) return
     const data = {
       language: 'C++11',
       code: code,
       problem_id: problem_id
     }
-    createRecordApi(type, competition_id as string, JSON.stringify(data)).then(
-      (res) => {
-        console.log(res.data)
-        if (res.data.code === 200) {
-          notification &&
-            notification.success({
-              message: res.data.msg
-            })
-          nav(`/competition/${competition_id}/record`)
-        } else {
-          notification &&
-            notification.info({
-              message: res.data.msg
-            })
-        }
+    createRecordApi(
+      competition.type,
+      competition.id,
+      JSON.stringify(data)
+    ).then((res) => {
+      console.log(res.data)
+      if (res.data.code === 200) {
+        notification &&
+          notification.success({
+            message: res.data.msg
+          })
+        nav(`/competition/${competition.id}/record`)
+      } else {
+        notification &&
+          notification.info({
+            message: res.data.msg
+          })
       }
-    )
+    })
   }
 
   return (

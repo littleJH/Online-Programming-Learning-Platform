@@ -29,8 +29,8 @@ import EnterGroup from './component/Group/EnterGroup'
 import GroupInfo from './component/Group/GroupInfo'
 import {getMemberGroupListApi} from '@/api/group'
 import useNavTo from '@/tool/myHooks/useNavTo'
-import {useRecoilState, useRecoilValue} from 'recoil'
-import {competitionStateAtom} from '../store'
+import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil'
+import {competitionStateAtom, currentCompetitionAtom} from '../competitionStore'
 import CountDown from '@/components/countDown/CountDown'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
 import {pathNameState} from '@/store/appStore'
@@ -60,7 +60,7 @@ const Detail: React.FC = () => {
   const [current, setcurrent] = useState('')
   const [competitionState, setcompetitionState] =
     useRecoilState(competitionStateAtom)
-  const [competition, setcompetition] = useState<ICompetition>()
+  const [competition, setCompetition] = useRecoilState(currentCompetitionAtom)
   const [enterNum, setenterNum] = useState()
   const [endTime, setEndTime] = useState<string>()
   const [openEnterModal, setopenEnterModal] = useState(false)
@@ -70,6 +70,7 @@ const Detail: React.FC = () => {
   const [answering, setanswering] = useState(false)
   const [groupInfo, setgroupInfo] = useState<IGroup>()
   const pathname = useRecoilValue(pathNameState)
+
   const {token} = theme.useToken()
 
   useLayoutEffect(() => {
@@ -86,10 +87,11 @@ const Detail: React.FC = () => {
   useEffect(() => {
     competition_id &&
       showCompetitionApi(competition_id).then((res) => {
-        const competition = res.data.data.competition as ICompetition
+        const competition = res.data.data.competition
         const type: CompetitionType =
           competition.type.toLowerCase() as CompetitionType
-        setcompetition(res.data.data.competition)
+        competition.type = type
+        setCompetition(res.data.data.competition)
         settype(type)
         switch (type) {
           case 'single':
@@ -338,16 +340,10 @@ const Detail: React.FC = () => {
           style={{
             minWidth: '1000px'
           }}>
-          <Outlet
-            context={[
-              competition,
-              competitionState,
-              setanswering,
-              type
-            ]}></Outlet>
+          <Outlet></Outlet>
         </Card>
         {/* sidebar */}
-        {!answering && (
+        {!answering && competition && (
           <>
             <div className='w-8'></div>
             <Card size='small' className='w-96 h-min'>
@@ -378,7 +374,7 @@ const Detail: React.FC = () => {
             </div>
           </Fragment>
         )}
-        {type === 'group' && (
+        {type === 'group' && competition && (
           <div>
             {competitionState === 'notEnter' && (
               <EnterGroup competition={competition} type={type}></EnterGroup>
@@ -417,11 +413,13 @@ const Detail: React.FC = () => {
           )}></List>
       </Modal>
 
-      <Update
-        competition={competition}
-        setcompetition={setcompetition}
-        openUpdateModal={openUpdateModal}
-        setopenUpdateModal={setopenUpdateModal}></Update>
+      {competition && (
+        <Update
+          competition={competition}
+          setcompetition={setCompetition}
+          openUpdateModal={openUpdateModal}
+          setopenUpdateModal={setopenUpdateModal}></Update>
+      )}
     </div>
   )
 }

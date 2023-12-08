@@ -6,10 +6,10 @@ import {
   ICompetition,
   IHack,
   IRecord,
-  User,
+  User
 } from '@/type'
-import React, { useEffect, useState } from 'react'
-import { useOutletContext, useParams } from 'react-router-dom'
+import React, {useEffect, useState} from 'react'
+import {useOutletContext, useParams} from 'react-router-dom'
 // import { IRecordTableDataSource } from '@/type'
 // import { Table, Modal, Switch, Input, notification } from 'antd'
 // import Column from 'antd/es/table/Column'
@@ -23,6 +23,8 @@ import { useOutletContext, useParams } from 'react-router-dom'
 // import { notificationApi } from '@/store/appStore'
 // import { useRecoilValue } from 'recoil'
 import RecordTable from '@/components/Record/RecordTable'
+import {useRecoilValue} from 'recoil'
+import {currentCompetitionAtom} from '@/views/Competition/competitionStore'
 
 // interface Filter {
 //   text: string
@@ -30,8 +32,7 @@ import RecordTable from '@/components/Record/RecordTable'
 // }
 
 const Record: React.FC = () => {
-  const [competition, competitionState, c, type] =
-    useOutletContext<[ICompetition, CompetitionState, any, CompetitionType]>()
+  const competition = useRecoilValue(currentCompetitionAtom)
   // const [mode, setmode] = useState<'self' | 'all'>('self')
   // const [recordList, setrecordList] = useState<IRecord[]>([])
   // const [openRecordModal, setopenRecordModal] = useState(false)
@@ -132,7 +133,9 @@ const Record: React.FC = () => {
 
   return (
     <>
-      <RecordTable mode="competition" competition={competition}></RecordTable>
+      {competition && (
+        <RecordTable mode='competition' competition={competition}></RecordTable>
+      )}
       {/* <div>
         <div>
         <Switch checkedChildren={'个人'} unCheckedChildren={'全部'}  checked={ mode === 'all' ? true : false}></Switch>

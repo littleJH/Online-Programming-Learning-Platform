@@ -9,7 +9,11 @@ import {theme} from 'antd'
 import Answer, {ChangeOptions} from './component/Answer'
 import MyCollapse from '@/components/Collapse/MyCollapse'
 import Loading from '@/components/Loading/Loading'
-import ErrorPage from '@/components/error-page'
+import {useRecoilValue} from 'recoil'
+import {
+  competitionStateAtom,
+  currentCompetitionAtom
+} from '@/views/Competition/competitionStore'
 
 interface Problems {
   key: string
@@ -20,24 +24,22 @@ interface Problems {
 }
 
 const Element: React.FC = () => {
-  const {competition_id} = useParams()
-  if (!competition_id) return <ErrorPage></ErrorPage>
-  const [competition, comptitionState, setanswering, type] =
-    useOutletContext<
-      [ICompetition, CompetitionState, Function, CompetitionType]
-    >()
+  const competition = useRecoilValue(currentCompetitionAtom)
+  const comptitionState = useRecoilValue(competitionStateAtom)
   const [problems, setproblems] = useState<Problems[]>([])
   const {token} = theme.useToken()
 
   useEffect(() => {
-    switch (comptitionState) {
-      case 'notEnter':
-        break
-      default:
-        competition_id && fetch()
-        break
+    if (competition && comptitionState) {
+      switch (comptitionState) {
+        case 'notEnter':
+          break
+        default:
+          fetch()
+          break
+      }
     }
-  }, [])
+  }, [competition, comptitionState])
 
   const items = useMemo(() => {
     return problems.map((item, index) => {
@@ -69,18 +71,17 @@ const Element: React.FC = () => {
   }
 
   const fetch = async () => {
-    if (!competition_id) return
-    const res = await getProblemNewListApi(competition_id)
+    console.log('competition ==> ', competition)
+    if (!competition) return
+    const res = await getProblemNewListApi(competition.id)
     const problemIds = res.data.data.problemIds
     for (let id of problemIds) {
-      const res = await Promise.all([
-        getProblemNewApi(id),
-        getRecordListApi(type, competition_id, {
-          problem_id: id
-        })
-      ])
-      const problem = res[0].data.data.problem
-      const records = res[1].data.data.records
+      const res = await getProblemNewApi(id)
+      const res1 = await getRecordListApi(competition.type, competition.id, {
+        problem_id: id
+      })
+      const problem = res.data.data.problem
+      const records = res1.data.data.records
       setproblems((value: Problems[]) => [
         ...value,
         {
