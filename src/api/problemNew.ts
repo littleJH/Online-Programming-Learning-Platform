@@ -1,6 +1,6 @@
-import { createRequest, baseConfig, jsonConfig } from '../config/apiConfig'
+import {createRequest, baseConfig, jsonConfig} from '../config/apiConfig'
 
-const request = createRequest({ baseURL: '/problem/new' })
+const request = createRequest({baseURL: 'problem/new'})
 
 export const createProblemNewApi = (data: any) => {
   return request.post('/create', data, jsonConfig())
@@ -21,7 +21,7 @@ export const deleteProblemNewApi = (id: string) => {
 export const getProblemNewListApi = (
   id: string,
   pageNum = 1,
-  pageSize = 20,
+  pageSize = 20
 ) => {
   return request.get(`/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
@@ -29,11 +29,11 @@ export const getProblemNewListApi = (
 export const quoteProblemApi = (
   competition_id: string,
   problem_id: string,
-  score: string,
+  score: string
 ) => {
   return request.post(
     `/quote/${competition_id}/${problem_id}/${score}`,
     {},
-    baseConfig(),
+    baseConfig()
   )
 }

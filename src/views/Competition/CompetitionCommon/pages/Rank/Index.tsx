@@ -35,33 +35,33 @@ const Rank: React.FC = () => {
 
   useEffect(() => {
     initRankList()
-  }, [])
+  }, [competition])
 
-  useEffect(() => {
-    interval = setInterval(() => changeRank(), 1000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [])
+  // useEffect(() => {
+  //   interval = setInterval(() => changeRank(), 1000)
+  //   return () => {
+  //     clearInterval(interval)
+  //   }
+  // }, [])
 
   useEffect(() => {
     console.log('list change ==> ', rankList)
   }, [rankList])
 
-  const initRankList = () => {
-    const list: IRank[] = []
-    for (let i = 0; i < 10; i++) {
-      list.push({
-        id: Math.floor(Math.random() * 10000000),
-        index: i,
-        name: 'name' + i,
-        score: i * 10,
-        penalties: String(i * 10),
-        created_at: new Date().toLocaleDateString() + ''
-      })
-    }
-    setRankList(list)
-  }
+  // const initRankList = () => {
+  //   const list: IRank[] = []
+  //   for (let i = 0; i < 10; i++) {
+  //     list.push({
+  //       id: Math.floor(Math.random() * 10000000),
+  //       index: i,
+  //       name: 'name' + i,
+  //       score: i * 10,
+  //       penalties: String(i * 10),
+  //       created_at: new Date().toLocaleDateString() + ''
+  //     })
+  //   }
+  //   setRankList(list)
+  // }
 
   const changeRank = () => {
     if (rankList.length > 0) {
@@ -74,24 +74,24 @@ const Rank: React.FC = () => {
     }
   }
 
-  // const initRankList = () => {
-  //   getCompetitionRankListApi(competition.id).then(async res => {
-  //     const members = res.data.data.members
-  //     let index = 0
-  //     for (let member of members) {
-  //       const { data } = await getUserInfoApi(member.member_id)
-  //       setRankList(value => [
-  //         ...value,
-  //         {
-  //           ...member,
-  //           key: member.member_id,
-  //           name: data.data.user.name,
-  //           index: value.length ? value[value.length - 1].index + 1 : 1,
-  //         },
-  //       ])
-  //     }
-  //   })
-  // }
+  const initRankList = () => {
+    competition &&
+      getCompetitionRankListApi(competition.id).then(async (res) => {
+        const members = res.data.data.members
+        for (let member of members) {
+          const {data} = await getUserInfoApi(member.member_id)
+          setRankList((value) => [
+            ...value,
+            {
+              ...member,
+              key: member.member_id,
+              name: data.data.user.name,
+              index: value.length ? value[value.length - 1].index + 1 : 1
+            }
+          ])
+        }
+      })
+  }
 
   function onWsMessage(message: any) {}
 

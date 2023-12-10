@@ -1,14 +1,11 @@
-import { useNavigate } from 'react-router-dom'
-import { INavOptions } from '@/type'
-import {
-  headerNavState,
-  loginStatusState,
-  pathNameState,
-} from '@/store/appStore'
-import { useSetRecoilState, useResetRecoilState, useRecoilValue } from 'recoil'
-import { getPathArray } from '../MyUtils/utils'
+import {useNavigate} from 'react-router-dom'
+import {INavOptions} from '@/type'
+import {headerNavState, loginStatusState, pathNameState} from '@/store/appStore'
+import {useSetRecoilState, useResetRecoilState, useRecoilValue} from 'recoil'
+import {getPathArray} from '../MyUtils/utils'
 
-const useNavTo = () => {
+const useNavTo = (options?: {back?: number}) => {
+  const {back = 1} = options || {}
   const nav = useNavigate()
   const setPathNameState = useSetRecoilState(pathNameState)
   const loginStatus = useRecoilValue(loginStatusState)

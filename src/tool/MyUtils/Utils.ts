@@ -1,6 +1,7 @@
-import { IToc } from '@/type'
-import { RcFile } from 'antd/es/upload'
+import {IToc} from '@/type'
+import {RcFile} from 'antd/es/upload'
 import dayjs from 'dayjs'
+import {notificationApi} from '@/store/appStore'
 
 export const formatProblemJson = async (file: RcFile) => {
   const text = await file.text()
@@ -20,8 +21,8 @@ export const formatProblemJson = async (file: RcFile) => {
       data.sample_case = [
         {
           input: data.sample_case.sample_input,
-          output: data.sample_case.sample_outpit,
-        },
+          output: data.sample_case.sample_outpit
+        }
       ]
       break
     case 'ATCODER':
@@ -45,10 +46,10 @@ export const generateTOC = (container: HTMLElement) => {
   const headings = container.querySelectorAll('h1, h2, h3, h4, h5, h6')
   const toc: IToc[] = []
 
-  headings.forEach(heading => {
+  headings.forEach((heading) => {
     const level = parseInt(heading.tagName.charAt(1)) // 获取标题级别，如从'h1'中提取出1
     const title = heading.textContent
-    const node: IToc = { key: heading.id, title: title || '', children: [] }
+    const node: IToc = {key: heading.id, title: title || '', children: []}
 
     // 在目录树中找到正确的位置插入节点
     let currentNode = toc
@@ -63,4 +64,16 @@ export const generateTOC = (container: HTMLElement) => {
   })
 
   return toc
+}
+
+export const getDuration = (start: string, end: string): string => {
+  const mill = dayjs(end).unix() - dayjs(start).unix()
+  const duration = {
+    hour: 0,
+    min: 0
+  }
+  duration.hour = Math.floor(mill / 3600)
+  duration.min = (mill - duration.hour * 3600) / 60
+
+  return `${duration.hour} 小时 ${duration.min} 分钟`
 }

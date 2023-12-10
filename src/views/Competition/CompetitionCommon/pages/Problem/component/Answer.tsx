@@ -10,7 +10,7 @@ import {
   CompetitionType
 } from '@/type'
 import ReadOnly from '@/components/editor/Readonly'
-import {Button, Popover, Segmented, Switch, Table} from 'antd'
+import {Button, Menu, Popover, Segmented, Switch, Table} from 'antd'
 import Column from 'antd/es/table/Column'
 import CodeEditor from '@/components/Editor/CodeEditor'
 import {languageList} from '@/components/Editor/LanguageList'
@@ -33,6 +33,12 @@ interface IProps {
   onStateChange: (options: ChangeOptions) => void
 }
 
+const initTestState: IRecordState = {
+  value: '',
+  label: '待运行',
+  state: 'info'
+}
+
 const Answer: React.FC<IProps> = (props) => {
   const nav = useNavigate()
   const competition = useRecoilValue(currentCompetitionAtom)
@@ -48,13 +54,11 @@ const Answer: React.FC<IProps> = (props) => {
   const [code, setcode] = useState<string>('')
   const [openLanguageList, setopenLanguageList] = useState(false)
   const [showConsole, setshowConsole] = useState(false)
-  const [consoleMode, setconsoleMode] = useState<'test' | 'result'>('test')
+  const [consoleMode, setconsoleMode] = useState('test')
   const [testTextareaValue, settestTextareaValue] = useState<string>('')
   const [caseSamples, setcaseSamples] = useState<ICaseSample[]>([])
   const [runResult, setrunResult] = useState<IRunResult>({} as IRunResult)
-  const [currentState, setcurrentState] = useState<IRecordState>(
-    {} as IRecordState
-  )
+  const [currentState, setcurrentState] = useState<IRecordState>(initTestState)
   const notification = useRecoilValue(notificationApi)
 
   // const currentLang: React.ReactNode = useMemo(() => {
@@ -68,7 +72,7 @@ const Answer: React.FC<IProps> = (props) => {
   useEffect(() => {
     getProblemNewApi(problem_id as string).then((res) => {
       setproblem(res.data.data.problem)
-      settestTextareaValue(res.data.data.caseSamples[0].input)
+      settestTextareaValue(res.data.data.caseSamples[0]?.input)
       res.data.data.caseSamples.forEach((item: ICaseSample, index: number) => {
         setdataSource((value) => [
           ...value,
@@ -113,8 +117,6 @@ const Answer: React.FC<IProps> = (props) => {
     }
     createTestApi(JSON.stringify(data)).then((res) => {
       setrunResult(res.data.data)
-
-      console.log(res.data)
     })
   }
   const craeteRecord = () => {
@@ -130,15 +132,15 @@ const Answer: React.FC<IProps> = (props) => {
       JSON.stringify(data)
     ).then((res) => {
       console.log(res.data)
-      if (res.data.code === 200) {
+      if (res.data.code !== 200 || res.data.msg === '未报名') {
         notification &&
-          notification.success({
+          notification.error({
             message: res.data.msg
           })
-        nav(`/competition/${competition.id}/record`)
+        // nav(`/competition/${competition.id}/record`)
       } else {
         notification &&
-          notification.info({
+          notification.success({
             message: res.data.msg
           })
       }
@@ -271,8 +273,14 @@ const Answer: React.FC<IProps> = (props) => {
             onChange={(value) => setshowConsole(value)}></Switch>
         </div>
         <div className=''>
-          <Button onClick={runCode}>执行代码</Button>
-          <Button onClick={craeteRecord} className='mx-1' type='primary'>
+          <Button size='small' onClick={runCode}>
+            执行代码
+          </Button>
+          <Button
+            size='small'
+            onClick={craeteRecord}
+            className='mx-1'
+            type='primary'>
             提交
           </Button>
         </div>
@@ -280,42 +288,47 @@ const Answer: React.FC<IProps> = (props) => {
       {/* console */}
       {showConsole && (
         <div className=' border border-solid border-slate-300 rounded'>
-          <Segmented
-            options={[
+          <Menu
+            selectedKeys={[consoleMode]}
+            style={{
+              padding: '0',
+              height: '3rem'
+            }}
+            mode='horizontal'
+            items={[
               {
                 label: '测试用例',
-                value: 'test'
+                key: 'test'
               },
               {
                 label: '执行结果',
-                value: 'result'
+                key: 'result'
               }
             ]}
-            value={consoleMode}
-            onChange={(value) =>
-              setconsoleMode(value as 'test' | 'result')
-            }></Segmented>
+            onClick={(e) => setconsoleMode(e.key)}></Menu>
           <div className='w-full'>
-            {consoleMode === 'test' && (
-              <div className='p-4'>
+            <div className='p-4'>
+              {consoleMode === 'test' && (
                 <TextArea
                   value={testTextareaValue}
-                  style={{height: '100%'}}
+                  autoSize={{
+                    minRows: 3
+                  }}
                   onChange={(e) =>
                     settestTextareaValue(e.target.value)
                   }></TextArea>
-              </div>
-            )}
-            {consoleMode === 'result' && (
-              <RunResult
-                caseSample={{
-                  input: testTextareaValue,
-                  output: runResult.output
-                }}
-                runResult={runResult}
-                currentState={currentState}
-                setcurrentState={setcurrentState}></RunResult>
-            )}
+              )}
+              {consoleMode === 'result' && (
+                <RunResult
+                  caseSample={{
+                    input: testTextareaValue,
+                    output: caseSamples[0]?.output
+                  }}
+                  runResult={runResult}
+                  currentState={currentState}
+                  setcurrentState={setcurrentState}></RunResult>
+              )}
+            </div>
           </div>
         </div>
       )}

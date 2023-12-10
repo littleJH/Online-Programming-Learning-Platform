@@ -2,6 +2,7 @@ import React, {Fragment, useLayoutEffect, useState} from 'react'
 import {IRecord} from '@/type'
 import {recordStates} from '@/assets/recordStates'
 import {theme} from 'antd'
+import MyTag from '@/components/Label/MyTag'
 
 type ProblemState = 'unsubmited' | 'unAccepted' | 'accepted'
 
@@ -14,15 +15,7 @@ const ProblemStateLabel: React.FC<{
 
   useLayoutEffect(() => {
     if (props.records.length === 0) {
-      setelement(
-        <div
-          className='rounded text-white text-center w-20'
-          style={{
-            backgroundColor: token.colorInfo
-          }}>
-          未提交
-        </div>
-      )
+      setelement(<MyTag type={'Info'}>未提交</MyTag>)
     } else {
       let state = 'unAccepted'
       props.records.forEach((record, index) => {
@@ -36,26 +29,10 @@ const ProblemStateLabel: React.FC<{
       })
       switch (state) {
         case 'unAccepted':
-          setelement(
-            <div
-              className='rounded text-white text-center w-20'
-              style={{
-                backgroundColor: token.colorError
-              }}>
-              未通过
-            </div>
-          )
+          setelement(<MyTag type={'Warning'}>未通过</MyTag>)
           break
         case 'accepted':
-          setelement(
-            <div
-              className='rounded text-white text-center w-20'
-              style={{
-                backgroundColor: token.colorSuccess
-              }}>
-              已通过
-            </div>
-          )
+          setelement(<MyTag type={'Success'}>已通过</MyTag>)
           break
 
         default:

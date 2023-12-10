@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useLayoutEffect, useState} from 'react'
+import React, {useEffect, useLayoutEffect, useMemo, useState} from 'react'
 import {Outlet, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {showCompetitionApi} from '@/api/competition'
 import {
@@ -8,7 +8,6 @@ import {
 } from '@/api/competitionMixture'
 import {getEnterConditionApi} from '@/api/competitionMixture'
 import dayjs from 'dayjs'
-import Sidebar from './component/SideBar/Sidebar'
 import {CompetitionType, ICompetition, IGroup} from '@/type'
 import {
   Button,
@@ -18,7 +17,8 @@ import {
   theme,
   Tooltip,
   notification,
-  Card
+  Card,
+  Space
 } from 'antd'
 import Update from './component/Update/Update'
 import {getUserInfoApi} from '@/api/user'
@@ -33,7 +33,9 @@ import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil'
 import {competitionStateAtom, currentCompetitionAtom} from '../competitionStore'
 import CountDown from '@/components/countDown/CountDown'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
+import Loading from '@/components/Loading/Loading'
 import {pathNameState} from '@/store/appStore'
+import {getPathArray} from '@/tool/MyUtils/Utils'
 
 type CompetitionState = 'notEnter' | 'underway' | 'enter' | 'finished'
 
@@ -54,10 +56,9 @@ const getState = (
 
 const Detail: React.FC = () => {
   const nav = useNavTo()
-  const location = useLocation()
+  const pathname = useRecoilValue(pathNameState)
   const {competition_id} = useParams()
   const [type, settype] = useState<CompetitionType>('')
-  const [current, setcurrent] = useState('')
   const [competitionState, setcompetitionState] =
     useRecoilState(competitionStateAtom)
   const [competition, setCompetition] = useRecoilState(currentCompetitionAtom)
@@ -67,23 +68,10 @@ const Detail: React.FC = () => {
   const [openUpdateModal, setopenUpdateModal] = useState(false)
   const [openEnterListModal, setopenEnterListModal] = useState(false)
   const [enterList, setenterList] = useState<User[]>([])
-  const [answering, setanswering] = useState(false)
   const [groupInfo, setgroupInfo] = useState<IGroup>()
-  const pathname = useRecoilValue(pathNameState)
-
   const {token} = theme.useToken()
 
-  useLayoutEffect(() => {
-    if (location.pathname.indexOf('problem') >= 0) {
-      setanswering(
-        location.pathname.slice(location.pathname.indexOf('problem') + 8)
-          .length === 0
-          ? false
-          : true
-      )
-    } else setanswering(false)
-  }, [])
-
+  const selectedKey = useMemo(() => getPathArray(pathname)[2], [pathname])
   useEffect(() => {
     competition_id &&
       showCompetitionApi(competition_id).then((res) => {
@@ -230,8 +218,6 @@ const Detail: React.FC = () => {
   }
 
   const navTo = (e: any) => {
-    setanswering(false)
-    setcurrent(e.key)
     nav(`/competition/${competition_id}/${e.key}`)
   }
 
@@ -239,121 +225,112 @@ const Detail: React.FC = () => {
     <div className='max-w-screen-xl'>
       {/* header */}
       <Card>
-        <div className='flex'>
-          <div className='flex flex-col items-center justify-center'>
-            <span
-              className='cursor-pointer'
-              onClick={() =>
-                ['notEnter', 'enter'].includes(competitionState as string)
-                  ? setopenEnterModal(true)
-                  : null
-              }>
-              {competitionState === 'notEnter' && (
-                <MySvgIcon
-                  href='#icon-weibaoming'
-                  color={token.colorWarning}
-                  size={4}></MySvgIcon>
-              )}
-              {competitionState === 'enter' && (
-                <MySvgIcon
-                  href='#icon-yibaoming'
-                  color={token.colorInfo}
-                  size={4}></MySvgIcon>
-              )}
-              {competitionState === 'underway' && (
-                <MySvgIcon
-                  href='#icon-jinhangzhong'
-                  color={token.colorSuccess}
-                  size={4}></MySvgIcon>
-              )}
-              {competitionState === 'finished' && (
-                <MySvgIcon
-                  href='#icon-yijieshu'
-                  color={token.colorError}
-                  size={4}></MySvgIcon>
-              )}
-            </span>
-          </div>
-          <div className='flex-grow'>
-            <div className=' flex justify-center items-center font-bold '>
-              <CompetitionTypeLabel
-                size={2}
-                showLabel={false}
-                type={
-                  competition?.type as CompetitionType
-                }></CompetitionTypeLabel>
-              <div className='ml-4' style={{fontSize: '2rem'}}>
-                {competition?.title}
-              </div>
+        {competition && (
+          <div className='flex'>
+            <div className='flex flex-col items-center justify-center'>
+              <span
+                className='cursor-pointer'
+                onClick={() =>
+                  ['notEnter', 'enter'].includes(competitionState as string)
+                    ? setopenEnterModal(true)
+                    : null
+                }>
+                {competitionState === 'notEnter' && (
+                  <MySvgIcon
+                    href='#icon-weibaoming'
+                    color={token.colorWarning}
+                    size={4}></MySvgIcon>
+                )}
+                {competitionState === 'enter' && (
+                  <MySvgIcon
+                    href='#icon-yibaoming'
+                    color={token.colorInfo}
+                    size={4}></MySvgIcon>
+                )}
+                {competitionState === 'underway' && (
+                  <MySvgIcon
+                    href='#icon-jinhangzhong'
+                    color={token.colorSuccess}
+                    size={4}></MySvgIcon>
+                )}
+                {competitionState === 'finished' && (
+                  <MySvgIcon
+                    href='#icon-yijieshu'
+                    color={token.colorError}
+                    size={4}></MySvgIcon>
+                )}
+              </span>
             </div>
-            {competitionState !== 'finished' && endTime && (
-              <div>
-                <CountDown
-                  endTime={endTime}
-                  onCountZero={() => {
-                    setcompetitionState('finished')
-                  }}></CountDown>
+            <div className='flex-grow'>
+              <div className=' flex justify-center items-center font-bold '>
+                <CompetitionTypeLabel
+                  size={2}
+                  showLabel={false}
+                  type={
+                    competition?.type as CompetitionType
+                  }></CompetitionTypeLabel>
+                <div className='ml-4' style={{fontSize: '2rem'}}>
+                  {competition?.title}
+                </div>
+              </div>
+              {competitionState !== 'finished' && endTime && (
+                <div>
+                  <CountDown
+                    endTime={endTime}
+                    onCountZero={() => {
+                      setcompetitionState('finished')
+                    }}></CountDown>
+                </div>
+              )}
+            </div>
+            {typeof enterNum === 'number' && (
+              <div className='flex flex-col items-center justify-center'>
+                <Tooltip title='查看报名列表'>
+                  <div
+                    className=' font-bold hover:cursor-pointer'
+                    onClick={() => getEnterList()}>
+                    <div className='flex justify-center '>{enterNum}名</div>
+                    <div>参赛者</div>
+                  </div>
+                </Tooltip>
               </div>
             )}
           </div>
-          {typeof enterNum === 'number' && (
-            <div className='flex flex-col items-center justify-center'>
-              <Tooltip title='查看报名列表'>
-                <div
-                  className=' font-bold hover:cursor-pointer'
-                  onClick={() => getEnterList()}>
-                  <div className='flex justify-center '>{enterNum}名</div>
-                  <div>参赛者</div>
-                </div>
-              </Tooltip>
-            </div>
-          )}
-        </div>
+        )}
+        {!competition && <Loading></Loading>}
       </Card>
-      <Menu
-        className='my-4'
-        selectedKeys={[current]}
-        onClick={(e) => navTo(e)}
-        mode='horizontal'
-        items={[
-          {
-            key: 'overview',
-            label: '总览'
-          },
-          {
-            key: 'problem',
-            label: '题目'
-          },
-          {
-            key: 'rank',
-            label: '排名'
-          },
-          {
-            key: 'record',
-            label: '提交'
-          }
-        ]}></Menu>
-      <div className='flex w-full'>
-        {/* content */}
+
+      <div className='w-full mt-4'>
         <Card
           className='flex-grow'
           style={{
             minWidth: '1000px'
           }}>
+          <Menu
+            className='mb-8'
+            selectedKeys={[selectedKey]}
+            onClick={(e) => navTo(e)}
+            mode='horizontal'
+            items={[
+              {
+                key: 'overview',
+                label: '总览'
+              },
+              {
+                key: 'problem',
+                label: '题目'
+              },
+              {
+                key: 'rank',
+                label: '排名'
+              },
+              {
+                key: 'record',
+                label: '提交'
+              }
+            ]}></Menu>
           <Outlet></Outlet>
         </Card>
-        {/* sidebar */}
-        {!answering && competition && (
-          <>
-            <div className='w-8'></div>
-            <Card size='small' className='w-96 h-min'>
-              <Sidebar
-                type={type}
-                competition={competition}
-                setopenUpdateModal={setopenUpdateModal}></Sidebar>
-            </Card>
-          </>
-        )}
       </div>
       <Modal
         title={competitionState === 'notEnter' ? '报名' : '取消报名'}
@@ -361,18 +338,18 @@ const Detail: React.FC = () => {
         onCancel={() => setopenEnterModal(false)}
         footer={[]}>
         {type === 'single' && (
-          <Fragment>
+          <>
             <div>
               {competitionState === 'notEnter' && <div>报名本个人赛？</div>}
               {competitionState === 'enter' && <div>取消报名本个人赛？</div>}
             </div>
-            <div className='flex justify-center mt-8'>
+            <Space className='flex justify-center mt-8'>
               <Button onClick={() => setopenEnterModal(false)}>取消</Button>
               <Button type='primary' onClick={enterCompetition}>
                 确定
               </Button>
-            </div>
-          </Fragment>
+            </Space>
+          </>
         )}
         {type === 'group' && competition && (
           <div>
@@ -380,7 +357,7 @@ const Detail: React.FC = () => {
               <EnterGroup competition={competition} type={type}></EnterGroup>
             )}
             {competitionState === 'enter' && groupInfo && (
-              <Fragment>
+              <>
                 <GroupInfo group={groupInfo}></GroupInfo>
                 <div className='absolute right-8 bottom-8'>
                   <Button
@@ -390,7 +367,7 @@ const Detail: React.FC = () => {
                     取消报名
                   </Button>
                 </div>
-              </Fragment>
+              </>
             )}
           </div>
         )}
@@ -404,12 +381,12 @@ const Detail: React.FC = () => {
           itemLayout='horizontal'
           dataSource={enterList}
           renderItem={(item, index) => (
-            <Fragment>
+            <>
               <List.Item>
                 <List.Item.Meta
                   title={<UserCard user={item}></UserCard>}></List.Item.Meta>
               </List.Item>
-            </Fragment>
+            </>
           )}></List>
       </Modal>
 
