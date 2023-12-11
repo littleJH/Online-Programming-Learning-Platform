@@ -1,15 +1,15 @@
-import {getCompetitionRankListApi, getMemberRankApi} from '@/api/competition'
-import {ICompetition} from '@/type'
-import {Space, Table, theme} from 'antd'
-import React, {useEffect, useMemo, useState} from 'react'
-import {useOutletContext, useParams} from 'react-router-dom'
-import {rollingRanklistWs} from '@/api/competition'
-import {getUserInfoApi} from '@/api/user'
+import { getCompetitionRankListApi, getMemberRankApi } from '@/api/competition'
+import { ICompetition } from '@/type'
+import { Space, Table, theme } from 'antd'
+import React, { useEffect, useMemo, useState } from 'react'
+import { useOutletContext, useParams } from 'react-router-dom'
+import { rollingRanklistWs } from '@/api/competition'
+import { getUserInfoApi } from '@/api/user'
 import useWsConnect from '@/tool/myHooks/useWsConnect'
 import ErrorPage from '@/components/error-page'
 import RollList from '@/components/List/RollList'
-import {useRecoilValue} from 'recoil'
-import {currentCompetitionAtom} from '@/views/Competition/competitionStore'
+import { useRecoilValue } from 'recoil'
+import { currentCompetitionAtom } from '@/views/Competition/competitionStore'
 
 interface IRank {
   id: string | number
@@ -25,7 +25,7 @@ let interval: NodeJS.Timeout
 const Rank: React.FC = () => {
   const competition = useRecoilValue(currentCompetitionAtom)
   const [rankList, setRankList] = useState<IRank[]>([])
-  const {token} = theme.useToken()
+  const { token } = theme.useToken()
   const spanClass = ''
 
   // useWsConnect({
@@ -76,18 +76,18 @@ const Rank: React.FC = () => {
 
   const initRankList = () => {
     competition &&
-      getCompetitionRankListApi(competition.id).then(async (res) => {
+      getCompetitionRankListApi(competition.id).then(async res => {
         const members = res.data.data.members
         for (let member of members) {
-          const {data} = await getUserInfoApi(member.member_id)
-          setRankList((value) => [
+          const { data } = await getUserInfoApi(member.member_id)
+          setRankList(value => [
             ...value,
             {
               ...member,
               key: member.member_id,
               name: data.data.user.name,
-              index: value.length ? value[value.length - 1].index + 1 : 1
-            }
+              index: value.length ? value[value.length - 1].index + 1 : 1,
+            },
           ])
         }
       })
@@ -110,7 +110,9 @@ const Rank: React.FC = () => {
                 padding: '0 2rem',
                 height: '3rem',
                 borderBottom: index !== rankList.length - 1 ? '1px solid' : '',
-                borderColor: token.colorBorder
+                borderColor: token.colorBorder,
+                color: token.colorTextBase,
+                backgroundColor: token.colorBgBase,
               }}>
               <span className={spanClass}>{index}</span>
               <span className={spanClass}>{item.name}</span>

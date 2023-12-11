@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { getCompetitionListApi } from '@/api/competition'
 import { Skeleton, Table, theme } from 'antd'
-import { CompetitionState, ICompetition } from '@/type'
+import { CompetitionState, CompetitionType, ICompetition } from '@/type'
 import dayjs from 'dayjs'
 import Column from 'antd/es/table/Column'
 import CompetitionTypeLabel from '@/views/Competition/CompetitionCommon/component/Label/CompetitionTypeLabel'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
 import useNavTo from '@/tool/myHooks/useNavTo'
 import { getDuration } from '@/tool/MyUtils/Utils'
+import GeneralTable from '@/components/table/GeneralTable'
 
 interface IDataSource {
   state: CompetitionState
@@ -76,74 +77,104 @@ const View: React.FC = () => {
   const handleClick = (competition: ICompetition) => {
     nav(`/competition/${competition.id}/overview`)
   }
+
+  const columns = [
+    {
+      key: 'state',
+      title: '状态',
+      dataIndex: 'state',
+      filters: [
+        { text: '未开始', value: 'notStart' },
+        { text: '进行中', value: 'underway' },
+        { text: '已结束', value: 'finished' },
+      ],
+      render: (value: CompetitionState) => {
+        switch (value) {
+          case 'notStart':
+            return (
+              <MySvgIcon
+                href="#icon-weikaishi"
+                size={stateIconSize}
+                color={token.colorInfoTextHover}></MySvgIcon>
+            )
+          case 'underway':
+            return (
+              <MySvgIcon
+                href="#icon-jinhangzhong"
+                size={stateIconSize}
+                color={token.colorSuccessTextHover}></MySvgIcon>
+            )
+          case 'finished':
+            return (
+              <MySvgIcon
+                href="#icon-yijieshu"
+                size={stateIconSize}
+                color={token.colorErrorTextHover}></MySvgIcon>
+            )
+          default:
+            return
+        }
+      },
+    },
+    {
+      key: 'title',
+      title: '比赛名称',
+      dataIndex: ['title', 'label'],
+    },
+    {
+      key: 'type',
+      title: '比赛类型',
+      dataIndex: 'type',
+      filters: [
+        { text: '个人赛', value: 'single' },
+        { text: 'OI赛', value: 'OI' },
+        { text: '组队赛', value: 'group' },
+        { text: '匹配赛', value: 'match' },
+      ],
+      // onFilter={(value: string, record: ICompetition) => record.type === value}
+      render: (value: CompetitionType) => {
+        return (
+          <CompetitionTypeLabel
+            type={value === 'OI' ? value : value.toLowerCase()}
+            size={1}></CompetitionTypeLabel>
+        )
+      },
+    },
+    {
+      key: 'start_time',
+      title: '开始时间',
+      sorter: (a: ICompetition, b: ICompetition) =>
+        dayjs(a.start_time).valueOf() - dayjs(b.start_time).valueOf(),
+      dataIndex: 'start_time',
+    },
+    {
+      key: 'duration',
+      title: '时长',
+      dataIndex: 'duration',
+    },
+    {
+      key: 'enter',
+      title: '报名状态',
+      dataIndex: 'enter',
+    },
+  ]
+
+  const tableProps = {
+    columns,
+    dataSource,
+  }
+
   return (
     <div style={{ minWidth: '800px' }}>
-      {dataSource.length === 0 ? (
+      {dataSource.length === 0 && (
         <Skeleton
           active
           paragraph={{
             rows: 10,
           }}
         />
-      ) : (
-        <Table dataSource={dataSource} size="small">
-          <Column
-            key={'state'}
-            title="状态"
-            dataIndex={'state'}
-            render={(value: CompetitionState) => {
-              switch (value) {
-                case 'notStart':
-                  return (
-                    <MySvgIcon
-                      href="#icon-weikaishi"
-                      size={stateIconSize}
-                      color={token.colorInfoTextHover}></MySvgIcon>
-                  )
-                case 'underway':
-                  return (
-                    <MySvgIcon
-                      href="#icon-jinhangzhong"
-                      size={stateIconSize}
-                      color={token.colorSuccessTextHover}></MySvgIcon>
-                  )
-                case 'finished':
-                  return (
-                    <MySvgIcon
-                      href="#icon-yijieshu"
-                      size={stateIconSize}
-                      color={token.colorErrorTextHover}></MySvgIcon>
-                  )
-                default:
-                  return
-              }
-            }}></Column>
-          <Column
-            key={'title'}
-            title="比赛名称"
-            dataIndex={['title', 'label']}></Column>
-          <Column
-            key={'type'}
-            title="比赛类型"
-            dataIndex={'type'}
-            render={value => {
-              return (
-                <CompetitionTypeLabel
-                  type={value === 'OI' ? value : value.toLowerCase()}
-                  size={1}></CompetitionTypeLabel>
-              )
-            }}></Column>
-          <Column
-            key={'start_time'}
-            title="开始时间"
-            dataIndex={'start_time'}></Column>
-          <Column
-            key={'duration'}
-            title={'时长'}
-            dataIndex={'duration'}></Column>
-          <Column key={'enter'} title={'报名状态'} dataIndex={'enter'}></Column>
-        </Table>
       )}
+      {dataSource.length > 0 && <GeneralTable {...tableProps}></GeneralTable>}
     </div>
   )
 }

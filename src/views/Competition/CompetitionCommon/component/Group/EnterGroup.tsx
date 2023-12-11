@@ -7,7 +7,6 @@ import {
   Input,
   Switch,
   Result,
-  notification,
   List,
   Modal,
 } from 'antd'
@@ -25,6 +24,8 @@ import { enterCompetitionApi } from '@/api/competitionMixture'
 import GroupInfo from './GroupInfo'
 import { getCurrentUserinfo } from '@/api/user'
 import CreateGroupForm from '@/components/Group/CreateGroupForm'
+import { useRecoilValue } from 'recoil'
+import { notificationApi } from '@/store/appStore'
 
 type Mode = 'create' | 'enter' | 'undetermined' | 'already'
 
@@ -47,6 +48,7 @@ const EnterGroup: React.FC<{
   const [searchText, setsearchText] = useState('')
   const [applyContent, setapplyContent] = useState('')
   const [groupIdText, setgroupIdText] = useState('')
+  const notification = useRecoilValue(notificationApi)
 
   useEffect(() => {
     let title: string = ''
@@ -116,15 +118,17 @@ const EnterGroup: React.FC<{
       id,
     ).then(res => {
       if (res.data.code === 200) {
-        notification.success({
-          message: res.data.msg,
-        })
+        notification &&
+          notification.success({
+            message: res.data.msg,
+          })
         setgroup(index >= 0 ? groupList[index].group : group)
         setcurrentStep(value => value + 1)
       } else {
-        notification.warning({
-          message: res.data.msg,
-        })
+        notification &&
+          notification.warning({
+            message: res.data.msg,
+          })
       }
     })
   }
@@ -164,15 +168,17 @@ const EnterGroup: React.FC<{
     applyEnterGroupApi(groupList[index].group.id, JSON.stringify(data)).then(
       res => {
         if (res.data.code === 200) {
-          notification.success({
-            message: res.data.msg,
-          })
+          notification &&
+            notification.success({
+              message: res.data.msg,
+            })
           setgroup(groupList[index].group)
           setcurrentStep(value => value + 1)
         } else {
-          notification.warning({
-            message: res.data.msg,
-          })
+          notification &&
+            notification.warning({
+              message: res.data.msg,
+            })
         }
       },
     )

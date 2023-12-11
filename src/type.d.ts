@@ -351,3 +351,4 @@ export interface ICountDown {
   min: string
   second: string
 }
+

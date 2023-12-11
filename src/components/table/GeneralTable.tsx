@@ -1,54 +1,65 @@
 import React from 'react'
 import { Table, Button, Popconfirm, Skeleton } from 'antd'
 import { getPagination } from '@/config/config'
-import { ColumnGroupType, ColumnsType } from 'antd/es/table'
+import { ColumnGroupType, ColumnsType, TableProps } from 'antd/es/table'
 
-interface Iprops {
-  loading: boolean
+export interface GeneralTableProps {
   dataSource: any
   columns: any[]
-  itemRender: Function
-  pageNum: number
-  pageSize: number
-  total: number
-  onPageChange: Function
-  onDelete?: Function
-  onDetail?: Function
-  onUpdate?: Function
+  pageProps?: {
+    pageNum: number
+    pageSize: number
+    total: number
+    onPageChange: Function
+  }
+  loading?: boolean
+  scroll?: TableProps<any>['scroll']
+  rowSelection?: TableProps<any>['rowSelection']
+  onRow?: any
+  actions?: any[]
+  size?: 'large' | 'middle' | 'small'
   bordered?: boolean
+  style?: React.CSSProperties
 }
 
-const GeneralTable: React.FC<Iprops> = props => {
+const GeneralTable: React.FC<GeneralTableProps> = props => {
   const {
-    loading,
+    loading = undefined,
     dataSource,
-    onDelete,
-    onDetail,
-    onUpdate,
-    itemRender,
-    bordered,
-    pageNum,
-    pageSize,
-    total,
-    onPageChange,
-    columns,
+    bordered = false,
+    pageProps,
+    columns = [],
+    size = 'small',
+    scroll,
+    rowSelection,
+    onRow,
+    actions,
+    style,
   } = props
 
   return (
     <div>
       <Table
-        size="small"
+        style={style}
+        scroll={scroll}
+        rowSelection={rowSelection}
+        onRow={onRow}
+        size={size}
         loading={loading}
         dataSource={dataSource}
-        columns={columns}
-        pagination={getPagination(
-          'table',
-          pageNum,
-          pageSize,
-          total,
-          onPageChange,
-        )}
-      ></Table>
+        columns={actions ? { ...columns, ...actions } : columns}
+        bordered={bordered}
+        pagination={
+          pageProps
+            ? getPagination(
+                'table',
+                pageProps.pageNum,
+                pageProps.pageSize,
+                pageProps.total,
+                pageProps.onPageChange,
+              )
+            : undefined
+        }></Table>
     </div>
   )
 }

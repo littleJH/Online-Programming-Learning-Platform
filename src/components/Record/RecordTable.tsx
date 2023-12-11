@@ -39,6 +39,7 @@ import HackDetail from './HackDetail'
 import { recordStates } from '@/assets/recordStates'
 import { getProblemTestNumApi } from '@/api/problem'
 import { getProblemNewApi } from '@/api/problemNew'
+import GeneralTable, { GeneralTableProps } from '../table/GeneralTable'
 
 interface IProps {
   mode: 'problem' | 'competition'
@@ -219,132 +220,149 @@ const RecordTable: React.FC<IProps> = props => {
     setopenRecordDetailModal(true)
   }
 
+  const problemColumn = [
+    {
+      align: 'center',
+      dataIndex: ['problem', 'title'],
+      title: '题目',
+      filters: filters,
+      onFilter: (value: string, record: any) =>
+        record.problem.title.indexOf(value) === 0,
+      filterMultiple: true,
+      render: (value: string, record: any) => {
+        return (
+          <div
+            className="hover:cursor-pointer"
+            onClick={() => {
+              setcurrentRecord(recordList[record.index])
+              setopenRecordDetailModal(true)
+            }}>
+            {value}
+          </div>
+        )
+      },
+    },
+  ]
+
+  const columns = [
+    {
+      align: 'center',
+      dataIndex: 'condition',
+      title: '提交状态',
+    },
+    {
+      align: 'center',
+      dataIndex: 'language',
+      title: '语言',
+    },
+    {
+      align: 'center',
+      dataIndex: 'pass',
+      title: '通过用例',
+    },
+    {
+      align: 'center',
+      dataIndex: 'create_at',
+      title: '提交时间',
+    },
+    {
+      align: 'center',
+      dataIndex: 'hack',
+      title: '骇客',
+      render: (value: HackState, record: any) => {
+        switch (value) {
+          case 'notHack':
+            return (
+              <div
+                className="hover:cursor-pointer"
+                onClick={e => {
+                  e.stopPropagation()
+                  setcurrentRecord(recordList[record.index])
+                  setopenHackModal(true)
+                }}>
+                <svg className="icon">
+                  <use href="#icon-hackster"></use>
+                </svg>
+              </div>
+            )
+          case 'hacked':
+            return (
+              <div
+                className="hover:cursor-pointer"
+                onClick={e => {
+                  e.stopPropagation()
+                  setcurrentRecord(recordList[record.index])
+                  setopenHackDetailModal(true)
+                }}>
+                <svg
+                  className="icon"
+                  style={{
+                    width: '1.5rem',
+                    height: '1.5rem',
+                  }}>
+                  <use href="#icon-choose"></use>
+                </svg>
+              </div>
+            )
+          default:
+            break
+        }
+      },
+    },
+  ]
+
+  const tableProps: GeneralTableProps = {
+    dataSource: recordsDatasource,
+    columns: mode === 'competition' ? [...problemColumn, ...columns] : columns,
+    style: {
+      minWidth: 'max-content',
+    },
+    onRow: (record: any) => {
+      return {
+        onClick: () => handleRowClick(record),
+      }
+    },
+  }
+
+  const caseTableProps: GeneralTableProps = {
+    dataSource: caseTableDataSource,
+    columns: [
+      {
+        align: 'center',
+        dataIndex: 'input',
+        title: '用例输入',
+      },
+      {
+        align: 'center',
+        dataIndex: 'time',
+        title: '执行时间',
+        render: (value: any) => <span>{value}（ms）</span>,
+      },
+      {
+        align: 'center',
+        dataIndex: 'memory',
+        title: '内存消耗',
+        render: (value: any) => <span>{value}（kb）</span>,
+      },
+    ],
+  }
+
   return (
     <div className="" style={{}}>
       <div></div>
-      <Table
-        size="small"
-        style={{
-          minWidth: 'max-content',
-        }}
-        dataSource={recordsDatasource}
-        onRow={record => {
-          return {
-            onClick: () => handleRowClick(record),
-          }
-        }}
-        pagination={false}
-      >
-        {mode === 'competition' && (
-          <Column
-            align="center"
-            dataIndex={['problem', 'title']}
-            title="题目"
-            filters={filters}
-            onFilter={(value, record: any) =>
-              record.problem.title.indexOf(value) === 0
-            }
-            filterMultiple
-            render={(value, record) => {
-              return (
-                <div
-                  className="hover:cursor-pointer"
-                  onClick={() => {
-                    setcurrentRecord(recordList[record.index])
-                    setopenRecordDetailModal(true)
-                  }}
-                >
-                  {value}
-                </div>
-              )
-            }}
-          ></Column>
-        )}
-        <Column
-          align="center"
-          dataIndex={'condition'}
-          title="提交状态"
-        ></Column>
-        <Column
-          align="center"
-          width={64}
-          dataIndex={'language'}
-          title="语言"
-        ></Column>
-        <Column
-          align="center"
-          width={128}
-          dataIndex={'pass'}
-          title="通过用例"
-        ></Column>
-        <Column
-          align="center"
-          dataIndex={'create_at'}
-          title="提交时间"
-        ></Column>
-        <Column
-          align="center"
-          dataIndex={'hack'}
-          width={64}
-          title="骇客"
-          render={(value: HackState, record: any) => {
-            switch (value) {
-              case 'notHack':
-                return (
-                  <div
-                    className="hover:cursor-pointer"
-                    onClick={e => {
-                      e.stopPropagation()
-                      setcurrentRecord(recordList[record.index])
-                      setopenHackModal(true)
-                    }}
-                  >
-                    <svg className="icon">
-                      <use href="#icon-hackster"></use>
-                    </svg>
-                  </div>
-                )
-              case 'hacked':
-                return (
-                  <div
-                    className="hover:cursor-pointer"
-                    onClick={e => {
-                      e.stopPropagation()
-                      setcurrentRecord(recordList[record.index])
-                      setopenHackDetailModal(true)
-                    }}
-                  >
-                    <svg
-                      className="icon"
-                      style={{
-                        width: '1.5rem',
-                        height: '1.5rem',
-                      }}
-                    >
-                      <use href="#icon-choose"></use>
-                    </svg>
-                  </div>
-                )
-              default:
-                break
-            }
-          }}
-        ></Column>
-      </Table>
+      <GeneralTable {...tableProps} />
       <Modal
         title={'骇客'}
         open={openHackModal}
         footer={[]}
-        onCancel={() => setopenHackModal(false)}
-      >
+        onCancel={() => setopenHackModal(false)}>
         {userInfo && currentRecord && (
           <Hack
             record={currentRecord}
             hackInput={hackInput}
             sethackInput={sethackInput}
             userInfo={userInfo}
-            submit={submit}
-          ></Hack>
+            submit={submit}></Hack>
         )}
       </Modal>
       <Modal
@@ -352,8 +370,7 @@ const RecordTable: React.FC<IProps> = props => {
         title={'骇客'}
         open={openHackDetailModal}
         footer={[]}
-        onCancel={() => setopenHackDetailModal(false)}
-      >
+        onCancel={() => setopenHackDetailModal(false)}>
         {hackDetail && currentRecord && (
           <HackDetail hack={hackDetail} record={currentRecord}></HackDetail>
         )}
@@ -362,8 +379,7 @@ const RecordTable: React.FC<IProps> = props => {
         centered
         open={openRecordDetailModal}
         onCancel={() => setopenRecordDetailModal(false)}
-        footer={null}
-      >
+        footer={null}>
         <pre>
           <code>{currentRecord?.code}</code>
         </pre>
@@ -379,32 +395,12 @@ const RecordTable: React.FC<IProps> = props => {
                     ? currentCaseList.length
                     : currentCaseList.length - 1
                 }
-                suffix={`/${totalTest}`}
-              ></Statistic>
+                suffix={`/${totalTest}`}></Statistic>
             )
-          }
-        ></Result>
+          }></Result>
 
         {currentState?.state === 'success' && (
-          <Table size="small" dataSource={caseTableDataSource}>
-            <Column
-              align="center"
-              title="用例输入"
-              dataIndex={'input'}
-            ></Column>
-            <Column
-              align="center"
-              title="执行时间"
-              dataIndex={'time'}
-              render={value => <span>{value}（ms）</span>}
-            ></Column>
-            <Column
-              align="center"
-              title="内存消耗"
-              dataIndex={'memory'}
-              render={value => <span>{value}（kb）</span>}
-            ></Column>
-          </Table>
+          <GeneralTable {...caseTableProps}></GeneralTable>
         )}
         {currentState?.state === 'error' && currentCaseList.length !== 0 && (
           <Descriptions
@@ -412,8 +408,7 @@ const RecordTable: React.FC<IProps> = props => {
             size="small"
             layout="vertical"
             column={2}
-            bordered
-          >
+            bordered>
             <Descriptions.Item label={'用例输入'}>
               {currentCaseList[currentCaseList.length - 1].input}
             </Descriptions.Item>
