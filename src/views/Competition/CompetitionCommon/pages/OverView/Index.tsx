@@ -1,13 +1,13 @@
-import React, {useEffect, useMemo, useState} from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import ReadOnly from '@/components/editor/Readonly'
-import {useRecoilValue} from 'recoil'
-import {currentCompetitionAtom} from '@/views/Competition/competitionStore'
+import { useRecoilValue } from 'recoil'
+import { currentCompetitionAtom } from '@/views/Competition/competitionStore'
 import CompetitionTypeLabel from '../../component/Label/CompetitionTypeLabel'
-import {getUserInfoApi} from '@/api/user'
-import {getDuration} from '@/tool/MyUtils/Utils'
-import {Button, Descriptions, Modal, Space} from 'antd'
-import {userInfoState} from '@/store/appStore'
-import {User} from '@/type'
+import { getUserInfoApi } from '@/api/user'
+import { getDuration } from '@/tool/MyUtils/Utils'
+import { Button, Descriptions, Modal, Space } from 'antd'
+import { userInfoState } from '@/store/appStore'
+import { User } from '@/type'
 import useNavTo from '@/tool/myHooks/useNavTo'
 
 const Overview: React.FC = () => {
@@ -23,19 +23,6 @@ const Overview: React.FC = () => {
     setDuration(getDuration(competition.start_time, competition.end_time))
   }, [competition])
 
-  // const content = useMemo(() => {
-  //   if (!competition) return
-  //   const content = competition.content as string
-  //   let obj: {type: 'String' | 'Descendant'; value: string} = {
-  //     type: 'String',
-  //     value: content
-  //   }
-  //   if (content.includes('[{')) {
-  //     obj.type = 'Descendant'
-  //   }
-  //   return obj
-  // }, [competition])
-
   const fetchFounder = async () => {
     if (!competition) return
     const res = await getUserInfoApi(competition.user_id)
@@ -49,13 +36,13 @@ const Overview: React.FC = () => {
   return (
     <div>
       {competition && (
-        <div className=''>
+        <div className="">
           <Descriptions
             items={[
-              {key: '1', label: '标题', children: competition.title},
-              {key: '2', label: '开始时间', children: competition.start_time},
-              {key: '3', label: '结束时间', children: competition.end_time},
-              {key: '4', label: '比赛时长', children: duration},
+              { key: '1', label: '标题', children: competition.title },
+              { key: '2', label: '开始时间', children: competition.start_time },
+              { key: '3', label: '结束时间', children: competition.end_time },
+              { key: '4', label: '比赛时长', children: duration },
               {
                 key: '5',
                 label: '类型',
@@ -63,7 +50,7 @@ const Overview: React.FC = () => {
                   <CompetitionTypeLabel
                     size={1}
                     type={competition.type}></CompetitionTypeLabel>
-                )
+                ),
               },
               {
                 key: '6',
@@ -73,21 +60,21 @@ const Overview: React.FC = () => {
                     {founder?.name || ''}
                     {founder?.name === userInfo?.name && (
                       <Button
-                        size='small'
-                        type='dashed'
+                        size="small"
+                        type="dashed"
                         danger
                         onClick={toEdit}>
                         修改比赛
                       </Button>
                     )}
                   </Space>
-                )
+                ),
               },
               {
                 key: '7',
                 label: '描述',
-                children: <ReadOnly html={competition.content}></ReadOnly>
-              }
+                children: <ReadOnly html={competition.content}></ReadOnly>,
+              },
             ]}></Descriptions>
           {/* <div className={`${style.item}`}>
             <div className={`${style.itemLabel}`}>标题</div>

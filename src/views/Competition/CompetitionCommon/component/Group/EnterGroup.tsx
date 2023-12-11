@@ -43,7 +43,7 @@ const EnterGroup: React.FC<{
   const [mode, setmode] = useState<Mode>('undetermined')
   const [title2, settitle2] = useState('')
   const [group, setgroup] = useState<IGroup>({} as IGroup)
-  const [dataSource, setdataSource] = useState<IDataSource[]>([])
+  const [groupList, setGroupList] = useState<IDataSource[]>([])
   const [searchText, setsearchText] = useState('')
   const [applyContent, setapplyContent] = useState('')
   const [groupIdText, setgroupIdText] = useState('')
@@ -69,7 +69,7 @@ const EnterGroup: React.FC<{
       setmode('undetermined')
     }
     setsearchText('')
-    setdataSource([])
+    setGroupList([])
     setgroupIdText('')
   }, [currentStep])
 
@@ -107,7 +107,7 @@ const EnterGroup: React.FC<{
         id = group.id
         break
       case 'already':
-        id = dataSource[index].group.id
+        id = groupList[index].group.id
     }
     enterCompetitionApi(
       type,
@@ -119,7 +119,7 @@ const EnterGroup: React.FC<{
         notification.success({
           message: res.data.msg,
         })
-        setgroup(index >= 0 ? dataSource[index].group : group)
+        setgroup(index >= 0 ? groupList[index].group : group)
         setcurrentStep(value => value + 1)
       } else {
         notification.warning({
@@ -142,11 +142,11 @@ const EnterGroup: React.FC<{
   }
 
   const searchGroup = () => {
-    setdataSource([])
+    setGroupList([])
     searchGroupByTextApi(searchText).then(res => {
       console.log(res)
       const groups = res.data.data.groups as IGroup[]
-      setdataSource(
+      setGroupList(
         groups.map(item => {
           return {
             key: item.id,
@@ -161,13 +161,13 @@ const EnterGroup: React.FC<{
     const data = {
       content: applyContent,
     }
-    applyEnterGroupApi(dataSource[index].group.id, JSON.stringify(data)).then(
+    applyEnterGroupApi(groupList[index].group.id, JSON.stringify(data)).then(
       res => {
         if (res.data.code === 200) {
           notification.success({
             message: res.data.msg,
           })
-          setgroup(dataSource[index].group)
+          setgroup(groupList[index].group)
           setcurrentStep(value => value + 1)
         } else {
           notification.warning({
@@ -182,7 +182,7 @@ const EnterGroup: React.FC<{
     getCurrentUserinfo().then(res => {
       getLeaderGroupListApi(res.data.data.user.id).then(res => {
         const groups = res.data.data.groups as IGroup[]
-        setdataSource(
+        setGroupList(
           groups.map(item => {
             return {
               key: item.id,
@@ -195,11 +195,11 @@ const EnterGroup: React.FC<{
   }
 
   const fetchGroupInfo = () => {
-    setdataSource([])
+    setGroupList([])
     getGroupApi(groupIdText).then(res => {
       if (res.data.code === 200) {
         const group = res.data.data.group as IGroup
-        setdataSource([
+        setGroupList([
           {
             key: group.id,
             group: group,
@@ -223,8 +223,7 @@ const EnterGroup: React.FC<{
           {
             title: '',
           },
-        ]}
-      ></Steps>
+        ]}></Steps>
       {currentStep === 0 && (
         <div className="flex justify-center">
           <Space>
@@ -232,32 +231,28 @@ const EnterGroup: React.FC<{
               onClick={() => {
                 setmode('create')
                 setcurrentStep(value => value + 1)
-              }}
-            >
+              }}>
               创建用户组
             </Button>
             <Button
               onClick={() => {
                 setmode('enter')
                 setcurrentStep(value => value + 1)
-              }}
-            >
+              }}>
               加入用户组
             </Button>
             <Button
               onClick={() => {
                 setmode('already')
                 setcurrentStep(value => value + 1)
-              }}
-            >
+              }}>
               已有用户组
             </Button>
             <Button
               onClick={() => {
                 setmode('create')
                 setcurrentStep(value => value + 1)
-              }}
-            >
+              }}>
               创建标准用户组
             </Button>
           </Space>
@@ -271,7 +266,9 @@ const EnterGroup: React.FC<{
               setgroup(group)
               setcurrentStep(value => value + 1)
             }}
-          ></CreateGroupForm>
+            preFooter={[
+              <Button onClick={() => setcurrentStep(0)}>上一步</Button>,
+            ]}></CreateGroupForm>
           {/* <div className='flex justify-center mt-8'>
             <Space>
               <Button
@@ -304,65 +301,61 @@ const EnterGroup: React.FC<{
                 }}
                 value={searchText}
                 onChange={value => setsearchText(value.target.value)}
-                className="border-0 border-b border-slate-500"
-              ></Input>
+                className="border-0 border-b border-slate-500"></Input>
               <svg
                 className="icon ml-4 hover:cursor-pointer "
-                onClick={searchGroup}
-              >
+                onClick={searchGroup}>
                 <use href="#icon-search"></use>
               </svg>
             </div>
           </div>
-          <GroupList
-            dataSource={dataSource}
-            callBack={enterGroup}
-            extra="申请加入"
-          ></GroupList>
-          <div className="flex justify-center">
+          {groupList.length > 0 && (
+            <GroupList
+              groupList={groupList}
+              callBack={enterGroup}
+              extra="申请加入"></GroupList>
+          )}
+          <Space className="flex justify-center mt-8">
             <Button
               onClick={() => {
                 setcurrentStep(0)
-              }}
-            >
+              }}>
               上一步
             </Button>
-          </div>
+          </Space>
         </div>
       )}
       {currentStep === 1 && mode === 'already' && (
-        <Fragment>
+        <>
           <div className="flex items-center">
             <Input
               placeholder="请输入用户组的id"
               value={groupIdText}
               onChange={value => setgroupIdText(value.target.value)}
-              onKeyDown={handleKeydown}
-            ></Input>
+              onKeyDown={handleKeydown}></Input>
             <span className="px-4">或</span>
             <Button
               onClick={() => {
                 fetchMyGroupList()
-              }}
-            >
+              }}>
               查看我的用户组
             </Button>
           </div>
-          <GroupList
-            dataSource={dataSource}
-            callBack={enterCompetition}
-            extra="点击报名"
-          ></GroupList>
-          <div className="flex justify-center">
+          {groupList.length > 0 && (
+            <GroupList
+              groupList={groupList}
+              callBack={enterCompetition}
+              extra="点击报名"></GroupList>
+          )}
+          <div className="flex justify-center mt-8">
             <Button
               onClick={() => {
                 setcurrentStep(0)
-              }}
-            >
+              }}>
               上一步
             </Button>
           </div>
-        </Fragment>
+        </>
       )}
       {currentStep === 2 && (
         <div>
@@ -380,14 +373,12 @@ const EnterGroup: React.FC<{
                     <Button
                       onClick={() => {
                         setcurrentStep(1)
-                      }}
-                    >
+                      }}>
                       点击修改
                     </Button>
                   </Space>
                 </Fragment>
-              }
-            ></Result>
+              }></Result>
           )}
           {mode === 'enter' && <Result></Result>}
         </div>
@@ -399,23 +390,22 @@ const EnterGroup: React.FC<{
 export default EnterGroup
 
 const GroupList: React.FC<{
-  dataSource: IDataSource[]
+  groupList: IDataSource[]
   callBack: Function
   extra: string
 }> = props => {
-  const { dataSource, callBack, extra } = props
+  const { groupList, callBack, extra } = props
   return (
     <List
       className="mx-4"
-      dataSource={dataSource}
+      dataSource={groupList}
       renderItem={(item, index) => (
         <List.Item
           extra={
             <Button size="small" onClick={() => callBack(index)}>
               {extra}
             </Button>
-          }
-        >
+          }>
           <List.Item.Meta
             title={<div>{item.group.title}</div>}
             description={
@@ -424,10 +414,8 @@ const GroupList: React.FC<{
                 <p>小组描述：{item.group.content}</p>
                 <p>自动通过用户申请：{item.group.auto ? '是' : '否'}</p>
               </div>
-            }
-          ></List.Item.Meta>
+            }></List.Item.Meta>
         </List.Item>
-      )}
-    ></List>
+      )}></List>
   )
 }

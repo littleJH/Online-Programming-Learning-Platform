@@ -1,18 +1,15 @@
-import React, {useEffect, useState, useMemo} from 'react'
-import {getProblemNewApi, getProblemNewListApi} from '@/api/problemNew'
-import {getRecordListApi} from '@/api/competitionMixture'
-import {CompetitionType, ICompetition} from '@/type'
-import {useOutletContext, useParams} from 'react-router-dom'
+import React, { useEffect, useState, useMemo } from 'react'
+import { getProblemNewApi, getProblemNewListApi } from '@/api/problemNew'
+import { getRecordListApi } from '@/api/competitionMixture'
 import ProblemStateLabel from '../../component/Label/ProblemStateLabel'
-import {CompetitionState} from '@/type'
-import {theme} from 'antd'
-import Answer, {ChangeOptions} from './component/Answer'
+import { theme } from 'antd'
+import Answer, { ChangeOptions } from './component/Answer'
 import MyCollapse from '@/components/Collapse/MyCollapse'
 import Loading from '@/components/Loading/Loading'
-import {useRecoilValue} from 'recoil'
+import { useRecoilValue } from 'recoil'
 import {
-  competitionStateAtom,
-  currentCompetitionAtom
+  currentCompetitionAtom,
+  isEnterState,
 } from '@/views/Competition/competitionStore'
 
 interface Problems {
@@ -25,23 +22,16 @@ interface Problems {
 
 const Element: React.FC = () => {
   const competition = useRecoilValue(currentCompetitionAtom)
-  const comptitionState = useRecoilValue(competitionStateAtom)
+  const isEnter = useRecoilValue(isEnterState)
   const [problems, setproblems] = useState<Problems[]>([])
-  const {token} = theme.useToken()
+  const { token } = theme.useToken()
 
   useEffect(() => {
-    if (competition && comptitionState) {
-      switch (comptitionState) {
-        case 'notEnter':
-          break
-        default:
-          fetch()
-          break
-      }
-    }
-  }, [competition, comptitionState])
+    competition && isEnter && fetch()
+  }, [competition, isEnter])
 
   const items = useMemo(() => {
+    if (!problems) return null
     return problems.map((item, index) => {
       return {
         key: item.key,
@@ -49,7 +39,7 @@ const Element: React.FC = () => {
         children: (
           <Answer
             problem_id={item.key}
-            onStateChange={(options) =>
+            onStateChange={options =>
               answerStateChange(options, index)
             }></Answer>
         ),
@@ -58,14 +48,14 @@ const Element: React.FC = () => {
           marginBottom: 24,
           background: token.colorFillAlter,
           borderRadius: token.borderRadiusLG,
-          border: 'none'
-        }
+          border: 'none',
+        },
       }
     })
   }, [problems])
 
   const answerStateChange = (options: ChangeOptions, index: number) => {
-    const {code, currentState, runResult} = options
+    const { code, currentState, runResult } = options
     console.log('options ==> ', options)
     const problem = problems[index]
   }
@@ -78,7 +68,7 @@ const Element: React.FC = () => {
     for (let id of problemIds) {
       const res = await getProblemNewApi(id)
       const res1 = await getRecordListApi(competition.type, competition.id, {
-        problem_id: id
+        problem_id: id,
       })
       const problem = res.data.data.problem
       const records = res1.data.data.records
@@ -93,8 +83,8 @@ const Element: React.FC = () => {
             <ProblemStateLabel
               problem={problem}
               records={records}></ProblemStateLabel>
-          )
-        }
+          ),
+        },
       ])
     }
   }
@@ -103,8 +93,8 @@ const Element: React.FC = () => {
 
   return (
     <>
-      {items.length <= 0 && <Loading></Loading>}
-      {items.length > 0 && (
+      {!items && <Loading></Loading>}
+      {items && items.length > 0 && (
         <MyCollapse items={items} onChange={handleCollapseChange}></MyCollapse>
       )}
     </>

@@ -61,7 +61,12 @@ const Root: React.FC = () => {
       ),
     [pathname],
   )
-  const full = React.useMemo(() => pathname === '/creation/article', [pathname])
+  const full = React.useMemo(
+    () =>
+      ['/creation/article'].includes(pathname) ||
+      pathname.includes('problemdetail'),
+    [pathname],
+  )
 
   const headerStyle: React.CSSProperties = {
     backgroundColor: `${isDark ? '#141414' : '#ffffff'}`,
@@ -82,45 +87,38 @@ const Root: React.FC = () => {
     <Layout className="w-full h-full">
       <Header
         className="sticky top-0 z-10 p-0 flex items-center"
-        style={headerStyle}
-      >
+        style={headerStyle}>
         <Navbar headerNav={headerNav}></Navbar>
 
         <Button
           type="text"
           className="flex items-center h-12 p-2"
-          onClick={() => setIsDark(value => !value)}
-        >
+          onClick={() => setIsDark(value => !value)}>
           <MySvgIcon
             href={`#icon-${isDark ? 'light' : 'dark'}`}
             size={2}
-            color={`${isDark ? '#fff' : '#000'}`}
-          ></MySvgIcon>
+            color={`${isDark ? '#fff' : '#000'}`}></MySvgIcon>
         </Button>
         {myInfo?.level && myInfo?.level >= 4 && (
           <Button
             type="text"
             className="flex items-center h-12 p-2"
-            onClick={() => nav('/file')}
-          >
+            onClick={() => nav('/file')}>
             <MySvgIcon
               href="#icon-folder"
               size={2}
-              color={token.colorWarning}
-            ></MySvgIcon>
+              color={token.colorWarning}></MySvgIcon>
           </Button>
         )}
         <Button type="text" className="flex items-center h-12 p-2 mr-4">
           <div
             className="h-full flex items-center"
-            onClick={() => nav('/profile')}
-          >
+            onClick={() => nav('/profile')}>
             {loginStatus && (
               <Avatar
                 className="hover:cursor-pointer"
                 alt="登录"
-                src={`${iconBaseUrl}/${myInfo?.icon}`}
-              ></Avatar>
+                src={`${iconBaseUrl}/${myInfo?.icon}`}></Avatar>
             )}
             {!loginStatus && <Button type="link">登录</Button>}
           </div>
@@ -135,8 +133,7 @@ const Root: React.FC = () => {
             collapsible
             trigger={null}
             // collapsed={collapsed}
-            width={sidebarWidth}
-          >
+            width={sidebarWidth}>
             {sideBarType === 'nav' && <SideBar header={headerNav}></SideBar>}
             {sideBarType === 'directory' && <Directory></Directory>}
           </Sider>
@@ -144,20 +141,17 @@ const Root: React.FC = () => {
         <Content
           style={{
             backgroundColor: token.colorBgBlur,
-          }}
-        >
+          }}>
           <div
             id="content"
             className="w-full h-full overflow-y-scroll scroll-smooth"
             style={{
               padding: `${showPaddingY ? '1rem 0' : '0'}`,
               position: 'relative',
-            }}
-          >
+            }}>
             <div
               className="h-full"
-              style={{ width: full ? '100%' : 'min-content', margin: 'auto' }}
-            >
+              style={{ width: full ? '100%' : 'min-content', margin: 'auto' }}>
               <Outlet></Outlet>
             </div>
           </div>
@@ -171,8 +165,7 @@ const Root: React.FC = () => {
           style={{
             display: 'inline-block',
             minHeight: '2rem',
-          }}
-        >
+          }}>
           {/* <Button
             type='text'
             icon={btnCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -187,8 +180,7 @@ const Root: React.FC = () => {
           className="w-1/2 flex items-center"
           style={{
             display: 'inline-block',
-          }}
-        >
+          }}>
           {footerRight}
         </div>
       </Footer>

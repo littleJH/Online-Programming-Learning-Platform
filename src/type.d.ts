@@ -196,7 +196,7 @@ export interface IRecordTableDataSource {
   hack: HackState
 }
 
-export type CompetitionType = 'Single' | 'Group' | 'Match' | 'OI' | '' | 'single' | 'group' | 'match' | 'Normal' | 'normal'
+export type CompetitionType = 'Single' | 'Group' | 'Match' | 'OI' | '' | 'single' | 'group' | 'match' | 'Normal' | 'normal' | 'oi'
 
 export interface IRank {
   create_at: string
@@ -230,7 +230,7 @@ export interface IGroup {
   entered?: boolean
 }
 
-type CompetitionState = 'notEnter' | 'underway' | 'enter' | 'finished'
+type CompetitionState = 'notStart' | 'underway' | 'finished'
 
 export interface IArticle {
   id: string

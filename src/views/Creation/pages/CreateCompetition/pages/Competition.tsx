@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import {
   Button,
   Col,
@@ -9,38 +9,38 @@ import {
   Radio,
   Row,
   Space,
-  Switch
+  Switch,
 } from 'antd'
 import TextEditor from '@/components/editor/TextEditor'
 import dayjs from 'dayjs'
 import {
   createCompetitionApi,
   showCompetitionApi,
-  updateCompetitionApi
+  updateCompetitionApi,
 } from '@/api/competition'
-import {useParams, useSearchParams} from 'react-router-dom'
-import {useRecoilValue} from 'recoil'
-import {notificationApi} from '@/store/appStore'
+import { useParams, useSearchParams } from 'react-router-dom'
+import { useRecoilValue } from 'recoil'
+import { notificationApi } from '@/store/appStore'
 import useNavTo from '@/tool/myHooks/useNavTo'
-import {ICompetition} from '@/type'
+import { ICompetition } from '@/type'
 
 const competitionType = [
   {
     label: '单人赛',
-    value: 'Single'
+    value: 'Single',
   },
   {
     label: '组队赛',
-    value: 'Group'
+    value: 'Group',
   },
   {
     label: '匹配赛',
-    value: 'Match'
+    value: 'Match',
   },
   {
     label: 'OI赛',
-    value: 'OI'
-  }
+    value: 'OI',
+  },
 ]
 
 const Competition: React.FC = () => {
@@ -51,7 +51,7 @@ const Competition: React.FC = () => {
   const [form] = Form.useForm()
   const [isHack, setisHack] = useState(false)
   const [isGroup, setisGroup] = useState(false)
-  const {RangePicker} = DatePicker
+  const { RangePicker } = DatePicker
   const notification = useRecoilValue(notificationApi)
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const Competition: React.FC = () => {
       up_num: competition.up_num,
       Hack: competition.hack_score > 0 ? true : false,
 
-      timeRange: [dayjs(competition.start_time), dayjs(competition.end_time)]
+      timeRange: [dayjs(competition.start_time), dayjs(competition.end_time)],
     }
     if (competition.hack_score > 0)
       values = {
@@ -79,8 +79,8 @@ const Competition: React.FC = () => {
         ...{
           hack_time: competition.hack_time,
           hack_score: competition.hack_score,
-          hack_num: competition.hack_num
-        }
+          hack_num: competition.hack_num,
+        },
       }
     form.setFieldsValue(values)
   }
@@ -92,18 +92,18 @@ const Competition: React.FC = () => {
   const timeRangeChange = (value: any, dateString: any) => {
     form.setFieldValue('timeRange', [
       dayjs(dateString[0]),
-      dayjs(dateString[1])
+      dayjs(dateString[1]),
     ])
   }
   const onFinish = () => {
-    form.validateFields().then(async (res) => {
+    form.validateFields().then(async res => {
       const values = form.getFieldsValue()
       Object.keys(values).forEach((key, index) => {
         switch (key) {
           case 'timeRange':
             Object.assign(values, {
               start_time: dayjs(values[key][0]).format('YYYY-MM-DD HH:mm:ss'),
-              end_time: dayjs(values[key][1]).format('YYYY-MM-DD HH:mm:ss')
+              end_time: dayjs(values[key][1]).format('YYYY-MM-DD HH:mm:ss'),
             })
             delete values.timeRange
             break
@@ -118,19 +118,20 @@ const Competition: React.FC = () => {
       })
       console.log(values)
       let id = competition_id
+      let res1
       if (competition_id) {
-        const res = await updateCompetitionApi(
+        res1 = await updateCompetitionApi(
           competition_id,
-          JSON.stringify(values)
+          JSON.stringify(values),
         )
-        showNotification(res.data)
-        navTo(`/competition/${competition_id}`)
+        showNotification(res1.data)
       } else {
-        const res = await createCompetitionApi(JSON.stringify(values))
-        id = res.data.data.competition.id
-        showNotification(res.data)
+        res1 = await createCompetitionApi(JSON.stringify(values))
+        id = res1.data.data.competition.id
+        showNotification(res1.data)
       }
-      navTo(`/creation/competition/problem${`?competition_id=${id}`}`)
+      res1.data.code === 200 &&
+        navTo(`/creation/competition/problem${`?competition_id=${id}`}`)
     })
   }
 
@@ -138,38 +139,38 @@ const Competition: React.FC = () => {
     if (data.code === 200) {
       notification &&
         notification.success({
-          message: data.msg
+          message: data.msg,
         })
     } else {
       notification &&
         notification.warning({
-          message: data.msg
+          message: data.msg,
         })
     }
   }
   return (
     <Form
       scrollToFirstError
-      name='problemForm'
+      name="problemForm"
       form={form}
       onFinish={onFinish}
-      layout='vertical'>
+      layout="vertical">
       <Form.Item
         name={'title'}
-        label='标题'
+        label="标题"
         required
-        rules={[{required: true}]}>
+        rules={[{ required: true }]}>
         <Input></Input>
       </Form.Item>
       <Form.Item
         name={'type'}
-        label='比赛类型'
+        label="比赛类型"
         required
-        rules={[{required: true}]}>
+        rules={[{ required: true }]}>
         <Radio.Group
-          optionType='button'
+          optionType="button"
           options={competitionType}
-          onChange={(e) => {
+          onChange={e => {
             if (e.target.value === 'Group') setisGroup(true)
             else setisGroup(false)
           }}></Radio.Group>
@@ -180,17 +181,17 @@ const Competition: React.FC = () => {
             <Col>
               <Form.Item
                 name={'less_num'}
-                label='人数下限'
-                rules={[{required: true}]}>
+                label="人数下限"
+                rules={[{ required: true }]}>
                 <InputNumber min={1}></InputNumber>
               </Form.Item>
             </Col>
             <Col>
               <Form.Item
                 name={'up_num'}
-                label='人数上限'
+                label="人数上限"
                 dependencies={['less_num']}
-                rules={[{required: true}]}>
+                rules={[{ required: true }]}>
                 <InputNumber></InputNumber>
               </Form.Item>
             </Col>
@@ -198,27 +199,30 @@ const Competition: React.FC = () => {
         </Form.Item>
       )}
 
-      <Form.Item name={'timeRange'} label='比赛时间' rules={[{required: true}]}>
+      <Form.Item
+        name={'timeRange'}
+        label="比赛时间"
+        rules={[{ required: true }]}>
         <RangePicker
           // defaultValue={timeRangeDefault}
-          showTime={{format: 'HH:mm'}}
-          format='YYYY-MM-DD HH:mm'
+          showTime={{ format: 'HH:mm' }}
+          format="YYYY-MM-DD HH:mm"
           onChange={timeRangeChange}></RangePicker>
       </Form.Item>
       <Form.Item
         name={'content'}
-        label='描述'
+        label="描述"
         required
-        rules={[{required: true}]}>
+        rules={[{ required: true }]}>
         <TextEditor
           // defaultHtml={competition ? competition.content : ''}
-          mode='markdown'
+          mode="markdown"
           htmlChange={(value: any) =>
             textChange(value, 'content')
           }></TextEditor>
       </Form.Item>
-      <Form.Item label='Hack'>
-        <Switch onChange={(value) => setisHack(value)}></Switch>
+      <Form.Item label="Hack">
+        <Switch onChange={value => setisHack(value)}></Switch>
       </Form.Item>
       {isHack && (
         <Form.Item noStyle>
@@ -226,42 +230,42 @@ const Competition: React.FC = () => {
             <Col span={6}>
               <Form.Item
                 name={'hack_time'}
-                label='Hack时长'
-                rules={[{required: true}]}>
+                label="Hack时长"
+                rules={[{ required: true }]}>
                 <InputNumber addonAfter={'min'}></InputNumber>
               </Form.Item>
             </Col>
             <Col>
               <Form.Item
                 name={'hack_score'}
-                label='Hack分数'
+                label="Hack分数"
                 tooltip={<span>黑客成功后的奖励分数</span>}
-                rules={[{required: true}]}>
+                rules={[{ required: true }]}>
                 <InputNumber></InputNumber>
               </Form.Item>
             </Col>
             <Col>
               <Form.Item
                 name={'hack_num'}
-                label='Hack次数'
+                label="Hack次数"
                 tooltip={<span>最多可以获得分数的黑客次数</span>}
-                rules={[{required: true}]}>
+                rules={[{ required: true }]}>
                 <InputNumber></InputNumber>
               </Form.Item>
             </Col>
           </Row>
         </Form.Item>
       )}
-      <Space className='flex justify-center'>
+      <Space className="flex justify-center">
         <Button
           onClick={() =>
             navTo(
-              `/creation/competition/declare?competition_id=${competition_id}`
+              `/creation/competition/declare?competition_id=${competition_id}`,
             )
           }>
           上一步
         </Button>
-        <Button htmlType='submit' type='primary'>
+        <Button htmlType="submit" type="primary">
           保存，下一步
         </Button>
       </Space>

@@ -1,7 +1,7 @@
-import { Button, Form, FormInstance, Input, Switch } from 'antd'
+import { Button, Form, FormInstance, Input, Space, Switch } from 'antd'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import TextArea from 'antd/es/input/TextArea'
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { createUserGroupApi } from '@/api/group'
 import { useRecoilValue } from 'recoil'
 import { notificationApi } from '@/store/appStore'
@@ -9,10 +9,11 @@ import { notificationApi } from '@/store/appStore'
 interface IProps {
   form: FormInstance
   doneCallback: Function
+  preFooter?: ReactNode[]
 }
 
 const CreateGroupForm: React.FC<IProps> = props => {
-  const { form, doneCallback } = props
+  const { form, doneCallback, preFooter = [] } = props
   const notification = useRecoilValue(notificationApi)
 
   const createGroup = () => {
@@ -41,19 +42,16 @@ const CreateGroupForm: React.FC<IProps> = props => {
         <Form.Item
           name={'content'}
           label="小组描述"
-          rules={[{ required: true }]}
-        >
+          rules={[{ required: true }]}>
           <TextArea></TextArea>
         </Form.Item>
         <Form.Item
           name={'auto'}
           label="自动通过用户申请"
           rules={[{ required: true }]}
-          initialValue={false}
-        >
+          initialValue={false}>
           <Switch
-            onChange={value => form.setFieldValue('auto', value)}
-          ></Switch>
+            onChange={value => form.setFieldValue('auto', value)}></Switch>
         </Form.Item>
         <Form.List name={'users'}>
           {(fields, { add, remove }) => (
@@ -71,8 +69,7 @@ const CreateGroupForm: React.FC<IProps> = props => {
                     </div>
                   }
                   colon={false}
-                  key={field.key}
-                >
+                  key={field.key}>
                   <Input placeholder="请填入用户 id"></Input>
                 </Form.Item>
               ))}
@@ -83,8 +80,7 @@ const CreateGroupForm: React.FC<IProps> = props => {
                   type="dashed"
                   style={{ width: '100%' }}
                   onClick={() => add()}
-                  icon={<PlusOutlined />}
-                >
+                  icon={<PlusOutlined />}>
                   添加用户
                 </Button>
               </Form.Item>
@@ -92,11 +88,15 @@ const CreateGroupForm: React.FC<IProps> = props => {
           )}
         </Form.List>
       </Form>
-      <div style={{ textAlign: 'end' }}>
+      <Space className="flex justify-center">
+        {preFooter.length > 0 &&
+          preFooter.map(item => {
+            return <>{item}</>
+          })}
         <Button type="primary" onClick={createGroup}>
           创建
         </Button>
-      </div>
+      </Space>
     </div>
   )
 }

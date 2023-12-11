@@ -10,9 +10,9 @@ function App() {
   const myTheme = useRecoilValue(themeState)
   const setNotificationApi = useSetRecoilState(notificationApi)
   const [api, contextHolder] = notification.useNotification({
-    placement: 'bottomRight',
+    placement: 'topRight',
     stack: false,
-    maxCount: 6,
+    maxCount: 3,
   })
   const isDark = useRecoilValue(isDarkState)
 
@@ -47,8 +47,7 @@ function App() {
         components: {
           Menu: {},
         },
-      }}
-    >
+      }}>
       {contextHolder}
       <BrowserRouter>
         <RouterWaiter />
