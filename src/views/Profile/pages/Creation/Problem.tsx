@@ -4,7 +4,7 @@ import {
   getProblemListApi,
   getUserProblemListApi,
 } from '@/api/problem'
-import ProblemTable from '@/components/Problem/ProblemTable'
+import ProblemTable from '@/components/Problem/table/ProblemTable'
 import { IProblem } from '@/type'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'

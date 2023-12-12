@@ -38,7 +38,7 @@ import {
 } from '@/api/topic'
 import {getUserInfoApi} from '@/api/user'
 import {iconBaseUrl} from '@/config/apiConfig'
-import ProblemTable from '../ProblemTable'
+import ProblemTable from '../table/ProblemTable'
 import useNavTo from '@/tool/myHooks/useNavTo'
 import MyTag from '@/components/Label/MyTag'
 import MyCollapse from '@/components/Collapse/MyCollapse'
