@@ -8,7 +8,7 @@ const baseUrlObj: {
   imgBaseUrl: 'http://api_img.mgaronya.com',
   imgGetBaseUrl: 'http://img.mgaronya.com',
   wsBaseUrl: 'ws://api_oj.mgaronya.com',
-  baseURL: import.meta.env.DEV ? '/api' : 'http://10.141.47.20:2000',
+  baseURL: import.meta.env.DEV ? '/api' : 'http://10.141.47.20:1000',
   testBaseUrl: import.meta.env.DEV
     ? '/test'
     : 'http://test_oj.mgaronya.com/test',
