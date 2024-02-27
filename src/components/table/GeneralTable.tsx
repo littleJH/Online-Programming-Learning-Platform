@@ -47,7 +47,7 @@ const GeneralTable: React.FC<GeneralTableProps> = props => {
         size={size}
         loading={loading}
         dataSource={dataSource}
-        columns={actions ? { ...columns, ...actions } : columns}
+        columns={actions ? [ ...columns, ...actions ] : columns}
         bordered={bordered}
         pagination={
           pageProps
