@@ -28,10 +28,10 @@ const Rank: React.FC = () => {
   const { token } = theme.useToken()
   const spanClass = ''
 
-  // useWsConnect({
-  //   wsApi: rollingRanklistWs(competition_id),
-  //   onMessage: onWsMessage,
-  // })
+  useWsConnect({
+    wsApi: competition?.id ? rollingRanklistWs(competition.id) : null,
+    onMessage: onWsMessage,
+  })
 
   useEffect(() => {
     initRankList()
@@ -45,7 +45,7 @@ const Rank: React.FC = () => {
   // }, [])
 
   useEffect(() => {
-    console.log('list change ==> ', rankList)
+    console.log('rank list change ==> ', rankList)
   }, [rankList])
 
   // const initRankList = () => {
@@ -76,11 +76,11 @@ const Rank: React.FC = () => {
 
   const initRankList = () => {
     competition &&
-      getCompetitionRankListApi(competition.id).then(async res => {
+      getCompetitionRankListApi(competition.id).then(async (res) => {
         const members = res.data.data.members
         for (let member of members) {
           const { data } = await getUserInfoApi(member.member_id)
-          setRankList(value => [
+          setRankList((value) => [
             ...value,
             {
               ...member,
@@ -93,7 +93,9 @@ const Rank: React.FC = () => {
       })
   }
 
-  function onWsMessage(message: any) {}
+  function onWsMessage(message: any) {
+    console.log('onRankWsMessage', message)
+  }
 
   return (
     <div>
@@ -102,7 +104,7 @@ const Rank: React.FC = () => {
           list={rankList}
           renderItem={(item, index) => (
             <div
-              key={item.ix}
+              key={item.id}
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -113,14 +115,16 @@ const Rank: React.FC = () => {
                 borderColor: token.colorBorder,
                 color: token.colorTextBase,
                 backgroundColor: token.colorBgBase,
-              }}>
+              }}
+            >
               <span className={spanClass}>{index}</span>
               <span className={spanClass}>{item.name}</span>
               <span className={spanClass}>{item.score}</span>
               <span className={spanClass}>{item.penalties}</span>
               <span className={spanClass}>{item.created_at}</span>
             </div>
-          )}></RollList>
+          )}
+        ></RollList>
       )}
     </div>
   )

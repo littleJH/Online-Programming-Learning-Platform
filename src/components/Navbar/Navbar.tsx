@@ -4,13 +4,8 @@ import type { MenuProps } from 'antd'
 import { redirect, useLocation, useNavigate } from 'react-router-dom'
 import { getPathArray } from '@/tool/MyUtils/utils'
 import useNavTo from '@/tool/myHooks/useNavTo'
-import {
-  CodeOutlined,
-  GlobalOutlined,
-  BulbOutlined,
-  HomeOutlined,
-  TrophyOutlined,
-} from '@ant-design/icons'
+import { CodeOutlined, GlobalOutlined, BulbOutlined, HomeOutlined, TrophyOutlined } from '@ant-design/icons'
+import MySvgIcon from '../Icon/MySvgIcon'
 
 const menuItem = [
   {
@@ -38,6 +33,19 @@ const menuItem = [
     label: '创作中心',
     key: 'creation',
     icon: <BulbOutlined />,
+  },
+  {
+    label: (
+      <span
+        style={{
+          marginLeft: '10px',
+        }}
+      >
+        学习中心
+      </span>
+    ),
+    key: 'learn',
+    icon: <MySvgIcon href="#icon-xuexizhongxin"></MySvgIcon>,
   },
 ]
 

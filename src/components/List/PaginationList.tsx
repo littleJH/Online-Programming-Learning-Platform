@@ -17,7 +17,7 @@ interface Iprops {
   split?: boolean
 }
 
-const PaginationList: React.FC<Iprops> = props => {
+const PaginationList: React.FC<Iprops> = (props) => {
   const {
     loading,
     dataSource,
@@ -35,43 +35,30 @@ const PaginationList: React.FC<Iprops> = props => {
 
   const pagination = React.useMemo(
     () => getPagination('list', pageNum, pageSize, total, onPageChange),
-    [pageNum, pageSize, total, onPageChange],
+    [pageNum, pageSize, total, onPageChange]
   )
 
   const renderActions = (item: any, index: number) => {
     const actions: React.ReactNode[] = []
     onDetail &&
       actions.push(
-        <Button
-          type="link"
-          style={{ padding: '0' }}
-          onClick={() => onDetail(item, index)}
-        >
+        <Button type="link" style={{ padding: '0' }} onClick={() => onDetail(item, index)}>
           详情
-        </Button>,
+        </Button>
       )
     onUpdate &&
       actions.push(
-        <Button
-          style={{ padding: '0' }}
-          type="link"
-          onClick={() => onUpdate(item, index)}
-        >
+        <Button style={{ padding: '0' }} type="link" onClick={() => onUpdate(item, index)}>
           更新
-        </Button>,
+        </Button>
       )
     onDelete &&
       actions.push(
-        <Popconfirm
-          title="确定删除该文章？"
-          okText="确认"
-          cancelText="取消"
-          onConfirm={() => onDelete(item, index)}
-        >
+        <Popconfirm title="确认删除？" okText="确认" cancelText="取消" onConfirm={() => onDelete(item, index)}>
           <Button style={{ padding: '0' }} type="link" danger>
             删除
           </Button>
-        </Popconfirm>,
+        </Popconfirm>
       )
     return actions
   }
@@ -96,10 +83,7 @@ const PaginationList: React.FC<Iprops> = props => {
         pagination={pagination}
         split={split}
         renderItem={(item: any, index: number) => (
-          <List.Item
-            key={item?.id || String(Math.random() * 10)}
-            actions={renderActions(item, index)}
-          >
+          <List.Item key={item?.id || String(Math.random() * 10)} actions={renderActions(item, index)}>
             {itemRender(item, index)}
           </List.Item>
         )}

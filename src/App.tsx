@@ -47,7 +47,8 @@ function App() {
         components: {
           Menu: {},
         },
-      }}>
+      }}
+    >
       {contextHolder}
       <BrowserRouter>
         <RouterWaiter />

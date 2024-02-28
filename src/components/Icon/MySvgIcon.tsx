@@ -1,4 +1,3 @@
-import { color } from 'd3'
 import React from 'react'
 
 const MySvgIcon: React.FC<{
@@ -6,7 +5,7 @@ const MySvgIcon: React.FC<{
   color?: string
   classname?: string
   size?: number
-}> = props => {
+}> = (props) => {
   const { href, size = 1, classname = '', color } = props
   return (
     <svg

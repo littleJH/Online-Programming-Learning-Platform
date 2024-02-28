@@ -1,4 +1,4 @@
-import { createRequest, jsonConfig } from '../config/apiConfig'
+import { createRequest, jsonConfig, wsBaseUrl } from '../config/apiConfig'
 
 const request = createRequest({ baseURL: 'competition' })
 
@@ -26,21 +26,14 @@ export const getMemberRankApi = (competition_id: string, member_id: string) => {
   return request.get(`/member/rank/${competition_id}/${member_id}`)
 }
 
-export const getMemberPenaltiesApi = (
-  competition_id: string,
-  member_id: string,
-) => {
+export const getMemberPenaltiesApi = (competition_id: string, member_id: string) => {
   return request.get(`/member/show/${competition_id}/${member_id}`)
 }
 
-export const getCompetitionRankListApi = (
-  id: string,
-  pageNum = 1,
-  pageSize = 20,
-) => {
+export const getCompetitionRankListApi = (id: string, pageNum = 1, pageSize = 20) => {
   return request.get(`/rank/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 
 export const rollingRanklistWs = (id: string) => {
-  return new WebSocket(`ws://10.60.37.43:2000/competition/rolling/list/${id}`)
+  return new WebSocket(`${wsBaseUrl}/competition/rolling/list/${id}`)
 }

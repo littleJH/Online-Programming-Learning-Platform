@@ -19,7 +19,7 @@ import { useRecoilValue } from 'recoil'
 import { pathNameState } from '@/store/appStore'
 import { getPathArray } from '@/tool/MyUtils/utils'
 
-const SideBar: React.FC<{ header: string }> = props => {
+const SideBar: React.FC<{ header: string }> = (props) => {
   const { header } = props
   const [current, setCurrent] = useState('')
   const [menuItem, setMenuItem] = useState([])
@@ -36,12 +36,8 @@ const SideBar: React.FC<{ header: string }> = props => {
       menuItems.forEach((item: any) => {
         if (item.children && patharr.length > 1) {
           item.children.forEach((item1: any) => {
-            patharr.length === 2 &&
-              patharr[1] === item1.key &&
-              setOpenKeys([item.key])
-            patharr.length === 3 &&
-              patharr[1] === item.key &&
-              setOpenKeys([item.key])
+            patharr.length === 2 && patharr[1] === item1.key && setOpenKeys([item.key])
+            patharr.length === 3 && patharr[1] === item.key && setOpenKeys([item.key])
           })
         }
       })
@@ -179,18 +175,8 @@ const menuItemObj: any = {
     },
     {
       key: 'group',
-      label: '聊天',
+      label: '用户组',
       icon: <TeamOutlined />,
-      // children: [
-      //   {
-      //     key: 'creation',
-      //     label: '我创建的'
-      //   },
-      //   {
-      //     key: 'participation',
-      //     label: '我加入的'
-      //   }
-      // ]
     },
     {
       key: 'divider3',

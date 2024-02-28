@@ -1,12 +1,12 @@
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 
 const useWsConnect = (options: {
-  wsApi?: WebSocket
+  wsApi?: WebSocket | null
   onMessage?: (message: any) => void
   onOpen?: () => void
   immediately?: boolean
 }) => {
-  const {wsApi, onMessage, onOpen, immediately = true} = options
+  const { wsApi, onMessage, onOpen, immediately = true } = options
   let ws: WebSocket
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const useWsConnect = (options: {
     }
   }
 
-  return {connectWs}
+  return { connectWs }
 }
 
 export default useWsConnect

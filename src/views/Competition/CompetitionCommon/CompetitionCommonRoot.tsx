@@ -1,11 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Outlet, useParams } from 'react-router-dom'
 import { showCompetitionApi } from '@/api/competition'
-import {
-  cancelEnterApi,
-  enterCompetitionApi,
-  getEnterListApi,
-} from '@/api/competitionMixture'
+import { cancelEnterApi, enterCompetitionApi, getEnterListApi } from '@/api/competitionMixture'
 import { getEnterConditionApi } from '@/api/competitionMixture'
 import dayjs from 'dayjs'
 import { CompetitionType, IGroup } from '@/type'
@@ -20,11 +16,7 @@ import GroupInfo from './component/Group/GroupInfo'
 import { getMemberGroupListApi } from '@/api/group'
 import useNavTo from '@/tool/myHooks/useNavTo'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import {
-  competitionStateAtom,
-  currentCompetitionAtom,
-  isEnterState,
-} from '../competitionStore'
+import { competitionStateAtom, currentCompetitionAtom, isEnterState } from '../competitionStore'
 import CountDown from '@/components/countDown/CountDown'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
 import Loading from '@/components/Loading/Loading'
@@ -35,10 +27,7 @@ type State = 'notStart' | 'underway' | 'finished'
 const getState = (start: string, end: string): State => {
   if (dayjs(start).valueOf() > dayjs().valueOf()) {
     return 'notStart'
-  } else if (
-    dayjs(start).valueOf() < dayjs().valueOf() &&
-    dayjs(end).valueOf() > dayjs().valueOf()
-  ) {
+  } else if (dayjs(start).valueOf() < dayjs().valueOf() && dayjs(end).valueOf() > dayjs().valueOf()) {
     return 'underway'
   } else return 'finished'
 }
@@ -48,11 +37,10 @@ const Detail: React.FC = () => {
   const pathname = useRecoilValue(pathNameState)
   const { competition_id } = useParams()
   const [type, settype] = useState<CompetitionType>('')
-  const [competitionState, setcompetitionState] =
-    useRecoilState(competitionStateAtom)
+  const [competitionState, setcompetitionState] = useRecoilState(competitionStateAtom)
   const [competition, setCompetition] = useRecoilState(currentCompetitionAtom)
   const [isEnter, setIsEnter] = useRecoilState(isEnterState)
-  const [enterNum, setenterNum] = useState()
+  const [enterNum, setenterNum] = useState<number>(0)
   const [endTime, setEndTime] = useState<string>()
   const [openEnterModal, setopenEnterModal] = useState(false)
   const [openUpdateModal, setopenUpdateModal] = useState(false)
@@ -71,10 +59,7 @@ const Detail: React.FC = () => {
     if (!competition_id) return
     const res = await showCompetitionApi(competition_id)
     const competition = res.data.data.competition
-    competition.type =
-      competition.type !== 'OI'
-        ? competition.type.toLowerCase()
-        : competition.type
+    competition.type = competition.type !== 'OI' ? competition.type.toLowerCase() : competition.type
     const type = competition.type
 
     const res1 = await getEnterConditionApi(type, competition.id)
@@ -117,14 +102,11 @@ const Detail: React.FC = () => {
       password: '666666',
     }
     if (!isEnter) {
-      const res = await enterCompetitionApi(
-        type,
-        competition?.id,
-        JSON.stringify(data),
-      )
+      const res = await enterCompetitionApi(type, competition?.id, JSON.stringify(data))
       if (res.data.code === 200) {
         setopenEnterModal(false)
         setIsEnter(true)
+        setenterNum((value) => value + 1)
         notification &&
           notification.success({
             message: '报名成功',
@@ -138,17 +120,14 @@ const Detail: React.FC = () => {
     } else if (isEnter) {
       let res
       if (groupInfo) {
-        res = await cancelEnterApi(
-          type,
-          competition?.id,
-          groupInfo.id ? groupInfo.id : '',
-        )
+        res = await cancelEnterApi(type, competition?.id, groupInfo.id ? groupInfo.id : '')
       } else {
         res = await cancelEnterApi(type, competition?.id)
       }
       if (res.data.code === 200) {
         setopenEnterModal(false)
         setIsEnter(false)
+        setenterNum((value) => value - 1)
         notification &&
           notification.success({
             message: '取消报名成功',
@@ -165,11 +144,11 @@ const Detail: React.FC = () => {
   const getEnterList = () => {
     setenterList([])
     setopenEnterListModal(true)
-    getEnterListApi(type, competition?.id as string).then(res => {
+    getEnterListApi(type, competition?.id as string).then((res) => {
       console.log('enterlist', res.data.data)
       res.data.data.competitionRanks.forEach((item: any) => {
-        getUserInfoApi(item.member_id).then(result => {
-          setenterList(value => [...value, result.data.data.user])
+        getUserInfoApi(item.member_id).then((result) => {
+          setenterList((value) => [...value, result.data.data.user])
         })
       })
     })
@@ -181,23 +160,64 @@ const Detail: React.FC = () => {
     if (key === 'overview') {
       nav(`/competition/${competition_id}/${key}`)
     } else {
-      //比赛未开始
-      if (competitionState === 'notStart') {
-        notification &&
-          notification.warning({
-            message: '比赛未开始',
-          })
-      }
-      // 比赛已开始或已结束
-      else {
-        // 已报名
-        isEnter && nav(`/competition/${competition_id}/${key}`)
-        // 未报名
-        !isEnter &&
+      switch (competitionState) {
+        //比赛未开始
+        case 'notStart':
           notification &&
-          notification.warning({
-            message: '比赛已开始，您未报名此比赛',
-          })
+            notification.warning({
+              message: '比赛未开始',
+            })
+          break
+        // 比赛已开始
+        case 'underway':
+          // 已报名
+          isEnter && nav(`/competition/${competition_id}/${key}`)
+          // 未报名
+          !isEnter &&
+            notification &&
+            notification.warning({
+              message: (
+                <div>
+                  <p>比赛进行中，您未报名此比赛</p>
+                  <p
+                    onClick={() => nav('/competitionset/all')}
+                    className="hover:cursor-pointer"
+                    style={{
+                      color: token.colorLink,
+                    }}
+                  >
+                    查看更多比赛
+                  </p>
+                </div>
+              ),
+            })
+          break
+        // 比赛已结束
+        case 'finished':
+          // 已报名
+          isEnter && nav(`/competition/${competition_id}/${key}`)
+          // 未报名
+          !isEnter &&
+            notification &&
+            notification.warning({
+              message: (
+                <div>
+                  <p>比赛已结束，您未报名此比赛</p>
+                  <p
+                    onClick={() => nav('/competitionset/all')}
+                    className="hover:cursor-pointer"
+                    style={{
+                      color: token.colorLink,
+                    }}
+                  >
+                    查看更多比赛
+                  </p>
+                </div>
+              ),
+            })
+          break
+        default:
+          break
       }
     }
   }
@@ -211,76 +231,71 @@ const Detail: React.FC = () => {
             <div className="flex flex-col items-center justify-center">
               <span
                 className="cursor-pointer"
-                onClick={() =>
-                  competitionState === 'notStart' && setopenEnterModal(true)
-                }>
+                onClick={() => competitionState === 'notStart' && setopenEnterModal(true)}
+              >
                 {competitionState === 'notStart' && (
                   <>
-                    {!isEnter && (
-                      <MySvgIcon
-                        href="#icon-weibaoming"
-                        color={token.colorWarning}
-                        size={4}></MySvgIcon>
-                    )}
-                    {isEnter && (
-                      <MySvgIcon
-                        href="#icon-yibaoming"
-                        color={token.colorInfo}
-                        size={4}></MySvgIcon>
-                    )}
+                    {!isEnter && <MySvgIcon href="#icon-weibaoming" color={token.colorWarning} size={4}></MySvgIcon>}
+                    {isEnter && <MySvgIcon href="#icon-yibaoming" color={token.colorInfo} size={4}></MySvgIcon>}
                   </>
                 )}
                 {competitionState === 'underway' && (
-                  <MySvgIcon
-                    href="#icon-jinhangzhong"
-                    color={token.colorSuccess}
-                    size={4}></MySvgIcon>
+                  <MySvgIcon href="#icon-jinhangzhong" color={token.colorSuccess} size={4}></MySvgIcon>
                 )}
                 {competitionState === 'finished' && (
-                  <MySvgIcon
-                    href="#icon-yijieshu"
-                    color={token.colorError}
-                    size={4}></MySvgIcon>
+                  <MySvgIcon href="#icon-yijieshu" color={token.colorError} size={4}></MySvgIcon>
                 )}
               </span>
             </div>
             <div className="flex-grow">
               <div className=" flex justify-center items-center font-bold ">
-                <CompetitionTypeLabel
+                {/* <CompetitionTypeLabel
                   size={2}
                   showLabel={false}
-                  type={
-                    competition?.type as CompetitionType
-                  }></CompetitionTypeLabel>
-                <div className="ml-4" style={{ fontSize: '2rem' }}>
-                  {competition?.title}
-                </div>
+                  type={competition?.type as CompetitionType}
+                ></CompetitionTypeLabel> */}
+                <div style={{ fontSize: '2rem' }}>{competition?.title}</div>
               </div>
               {competitionState !== 'finished' && endTime && (
                 <div>
-                  <div className="flex justify-center items-center">
+                  <div className="flex justify-center items-center my-4">
                     {competitionState === 'notStart' && (
-                      <span>距离比赛开始还剩</span>
+                      <span>
+                        距离比赛<span style={{ color: token.colorError }}>开始</span>还剩
+                      </span>
+                    )}
+                    {competitionState === 'underway' && (
+                      <span>
+                        距离比赛<span style={{ color: token.colorError }}>结束</span>还剩
+                      </span>
                     )}
                   </div>
                   <CountDown
                     endTime={endTime}
                     onCountZero={() => {
-                      setcompetitionState('finished')
-                    }}></CountDown>
+                      competitionState === 'notStart' && setEndTime(competition.end_time)
+                      setcompetitionState(competitionState === 'notStart' ? 'underway' : 'finished')
+                    }}
+                  ></CountDown>
                 </div>
               )}
             </div>
             {typeof enterNum === 'number' && (
               <div className="flex flex-col items-center justify-center">
-                <Tooltip title="查看报名列表">
-                  <div
-                    className=" font-bold hover:cursor-pointer"
-                    onClick={() => getEnterList()}>
-                    <div className="flex justify-center ">{enterNum}名</div>
-                    <div>参赛者</div>
-                  </div>
-                </Tooltip>
+                <div className="flex justify-center ">
+                  <div>已参赛：</div>
+                  <Tooltip title="查看报名列表">
+                    <div
+                      onClick={() => getEnterList()}
+                      className="hover:cursor-pointer"
+                      style={{
+                        color: token.colorLink,
+                      }}
+                    >
+                      {enterNum}
+                    </div>
+                  </Tooltip>
+                </div>
               </div>
             )}
           </div>
@@ -293,11 +308,12 @@ const Detail: React.FC = () => {
           className="flex-grow"
           style={{
             minWidth: '1000px',
-          }}>
+          }}
+        >
           <Menu
             className="mb-8"
             selectedKeys={[selectedKey]}
-            onClick={e => navTo(e)}
+            onClick={(e) => navTo(e)}
             mode="horizontal"
             items={[
               {
@@ -316,7 +332,8 @@ const Detail: React.FC = () => {
                 key: 'record',
                 label: '提交',
               },
-            ]}></Menu>
+            ]}
+          ></Menu>
           <Outlet></Outlet>
         </Card>
       </div>
@@ -324,7 +341,8 @@ const Detail: React.FC = () => {
         title={!isEnter ? '报名' : '取消报名'}
         open={openEnterModal}
         onCancel={() => setopenEnterModal(false)}
-        footer={[]}>
+        footer={[]}
+      >
         {(type === 'single' || type === 'OI' || type === 'match') && (
           <>
             <div className="mb-16 flex justify-center">
@@ -341,17 +359,12 @@ const Detail: React.FC = () => {
         )}
         {type === 'group' && competition && (
           <div>
-            {!isEnter && (
-              <EnterGroup competition={competition} type={type}></EnterGroup>
-            )}
+            {!isEnter && <EnterGroup competition={competition} type={type}></EnterGroup>}
             {isEnter && groupInfo && (
               <>
                 <GroupInfo group={groupInfo}></GroupInfo>
                 <div className="absolute right-8 bottom-8">
-                  <Button
-                    type="dashed"
-                    danger
-                    onClick={() => enterCompetition()}>
+                  <Button type="dashed" danger onClick={() => enterCompetition()}>
                     取消报名
                   </Button>
                 </div>
@@ -360,22 +373,18 @@ const Detail: React.FC = () => {
           </div>
         )}
       </Modal>
-      <Modal
-        title="报名列表"
-        open={openEnterListModal}
-        onCancel={() => setopenEnterListModal(false)}
-        footer={[]}>
+      <Modal title="报名列表" open={openEnterListModal} onCancel={() => setopenEnterListModal(false)} footer={[]}>
         <List
           itemLayout="horizontal"
           dataSource={enterList}
           renderItem={(item, index) => (
             <>
               <List.Item>
-                <List.Item.Meta
-                  title={<UserCard user={item}></UserCard>}></List.Item.Meta>
+                <List.Item.Meta title={<UserCard user={item}></UserCard>}></List.Item.Meta>
               </List.Item>
             </>
-          )}></List>
+          )}
+        ></List>
       </Modal>
 
       {competition && (
@@ -383,7 +392,8 @@ const Detail: React.FC = () => {
           competition={competition}
           setcompetition={setCompetition}
           openUpdateModal={openUpdateModal}
-          setopenUpdateModal={setopenUpdateModal}></Update>
+          setopenUpdateModal={setopenUpdateModal}
+        ></Update>
       )}
     </div>
   )

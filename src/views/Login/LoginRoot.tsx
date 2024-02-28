@@ -9,16 +9,16 @@ const LoginRoot: React.FC = () => {
   return (
     <div className="w-full h-full flex">
       <div
-        className="grow flex justify-center"
+        className="grow flex justify-center w-1/4"
         style={{
           fontSize: '3rem',
           fontWeight: '600',
         }}
       >
-        <img src={LoginPic} className="w-1/2"></img>
+        <img src={LoginPic} className=""></img>
       </div>
-      <Divider type="vertical" className="h-full w-16 "></Divider>
-      <div className="grow flex justify-center">
+      {/* <Divider type="vertical" className="h-full w-16 "></Divider> */}
+      <div className="grow flex justify-center ml-16">
         {mode === 'Login' && <Login setmode={setmode}></Login>}
         {mode === 'Register' && <Register setmode={setmode}></Register>}
       </div>

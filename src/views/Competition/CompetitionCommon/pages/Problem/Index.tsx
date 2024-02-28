@@ -7,10 +7,7 @@ import Answer, { ChangeOptions } from './component/Answer'
 import MyCollapse from '@/components/Collapse/MyCollapse'
 import Loading from '@/components/Loading/Loading'
 import { useRecoilValue } from 'recoil'
-import {
-  currentCompetitionAtom,
-  isEnterState,
-} from '@/views/Competition/competitionStore'
+import { currentCompetitionAtom, isEnterState } from '@/views/Competition/competitionStore'
 
 interface Problems {
   key: string
@@ -37,18 +34,14 @@ const Element: React.FC = () => {
         key: item.key,
         label: item.title,
         children: (
-          <Answer
-            problem_id={item.key}
-            onStateChange={options =>
-              answerStateChange(options, index)
-            }></Answer>
+          <Answer problem_id={item.key} onStateChange={(options) => answerStateChange(options, index)}></Answer>
         ),
         extra: item.state,
         style: {
           marginBottom: 24,
-          background: token.colorFillAlter,
-          borderRadius: token.borderRadiusLG,
-          border: 'none',
+          // background: token.colorFillAlter,
+          // borderRadius: token.borderRadiusLG,
+          // border: 'none',
         },
       }
     })
@@ -79,11 +72,7 @@ const Element: React.FC = () => {
           index: value.length ? value[value.length - 1].index + 1 : 1,
           score: '',
           title: problem.title,
-          state: (
-            <ProblemStateLabel
-              problem={problem}
-              records={records}></ProblemStateLabel>
-          ),
+          state: <ProblemStateLabel problem={problem} records={records}></ProblemStateLabel>,
         },
       ])
     }
@@ -94,9 +83,7 @@ const Element: React.FC = () => {
   return (
     <>
       {!items && <Loading></Loading>}
-      {items && items.length > 0 && (
-        <MyCollapse items={items} onChange={handleCollapseChange}></MyCollapse>
-      )}
+      {items && items.length > 0 && <MyCollapse items={items} onChange={handleCollapseChange}></MyCollapse>}
     </>
   )
 }

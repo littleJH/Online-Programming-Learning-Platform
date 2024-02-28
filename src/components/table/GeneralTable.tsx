@@ -22,20 +22,27 @@ export interface GeneralTableProps {
   style?: React.CSSProperties
 }
 
-const GeneralTable: React.FC<GeneralTableProps> = props => {
+const GeneralTable: React.FC<GeneralTableProps> = (props) => {
   const {
     loading = undefined,
     dataSource,
     bordered = false,
     pageProps,
-    columns = [],
     size = 'small',
+    columns = [],
     scroll,
     rowSelection,
     onRow,
     actions,
     style,
   } = props
+
+  const columns_copy = columns.map((column) => {
+    return {
+      ...column,
+      title: <div style={{ fontWeight: 500 }}>{column.title}</div>,
+    }
+  })
 
   return (
     <div>
@@ -47,19 +54,14 @@ const GeneralTable: React.FC<GeneralTableProps> = props => {
         size={size}
         loading={loading}
         dataSource={dataSource}
-        columns={actions ? [ ...columns, ...actions ] : columns}
+        columns={actions ? [...columns_copy, ...actions] : columns_copy}
         bordered={bordered}
         pagination={
           pageProps
-            ? getPagination(
-                'table',
-                pageProps.pageNum,
-                pageProps.pageSize,
-                pageProps.total,
-                pageProps.onPageChange,
-              )
+            ? getPagination('table', pageProps.pageNum, pageProps.pageSize, pageProps.total, pageProps.onPageChange)
             : undefined
-        }></Table>
+        }
+      ></Table>
     </div>
   )
 }

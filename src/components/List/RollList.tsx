@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import 'animate.css'
 
 const RollList: React.FC<{
   list: any[]
   renderItem: (item: any, index: number) => React.ReactNode
-}> = props => {
+}> = (props) => {
   const { list, renderItem } = props
 
   return (
@@ -25,7 +25,8 @@ const RollList: React.FC<{
               // exitDone: '',
             }}
             key={item.id}
-            timeout={500}>
+            timeout={500}
+          >
             {renderItem(item, index)}
           </CSSTransition>
         ))}
