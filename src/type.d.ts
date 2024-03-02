@@ -116,7 +116,7 @@ export interface ICompetition {
 export type ProgramMode = 'standard' | 'special_judge' | 'standardHack' | 'specialHack'
 
 export interface IRecord {
-  [key: strinig]: string | number
+  [key: string]: string | number
   code: string
   condition: string
   created_at: string

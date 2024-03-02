@@ -31,6 +31,7 @@ export interface ChangeOptions {
 interface IProps {
   problem_id: string
   onStateChange: (options: ChangeOptions) => void
+  caseSample: ICaseSample[]
 }
 
 const initTestState: IRecordState = {
@@ -44,11 +45,6 @@ const Answer: React.FC<IProps> = (props) => {
   const competition = useRecoilValue(currentCompetitionAtom)
   const { problem_id, onStateChange } = props
   const [problem, setproblem] = useState<IProblem>()
-  const [dataSource, setdataSource] = useState<{ key: string; input: string; output: string }[]>([])
-  // const [editorConfig, setEditorConfig] = useState<IEditorConfig>({
-  //   language: '',
-  //   theme: 'vs-dark'
-  // })
   const [code, setcode] = useState<string>('')
   const [openLanguageList, setopenLanguageList] = useState(false)
   const [showConsole, setshowConsole] = useState(false)
@@ -58,6 +54,10 @@ const Answer: React.FC<IProps> = (props) => {
   const [runResult, setrunResult] = useState<IRunResult>({} as IRunResult)
   const [currentState, setcurrentState] = useState<IRecordState>(initTestState)
   const notification = useRecoilValue(notificationApi)
+  // const [editorConfig, setEditorConfig] = useState<IEditorConfig>({
+  //   language: '',
+  //   theme: 'vs-dark'
+  // })
 
   // const currentLang: React.ReactNode = useMemo(() => {
   //   let element: JSX.Element = <div></div>
@@ -68,20 +68,7 @@ const Answer: React.FC<IProps> = (props) => {
   // }, [editorConfig])
 
   useEffect(() => {
-    getProblemNewApi(problem_id as string).then((res) => {
-      setproblem(res.data.data.problem)
-      settestTextareaValue(res.data.data.caseSamples[0]?.input)
-      res.data.data.caseSamples.forEach((item: ICaseSample, index: number) => {
-        setdataSource((value) => [
-          ...value,
-          {
-            key: String(item.cid),
-            input: item.input,
-            output: item.output,
-          },
-        ])
-      })
-    })
+    fetch()
     window.addEventListener('resize', () => {})
   }, [])
 
@@ -96,6 +83,20 @@ const Answer: React.FC<IProps> = (props) => {
   // useEffect(() => {
   //   localStorage.setItem('editorConfig', JSON.stringify(editorConfig))
   // }, [editorConfig])
+
+  const fetch = async () => {
+    setcode(localStorage.getItem(`code-${problem_id}`) || '')
+    const res = await getProblemNewApi(problem_id as string)
+    setproblem(res.data.data.problem)
+    settestTextareaValue(res.data.data.caseSamples[0]?.input)
+    const caseSamples = res.data.data.caseSamples.map((item: ICaseSample) => {
+      return {
+        ...item,
+        key: String(item.cid),
+      }
+    })
+    setcaseSamples(caseSamples)
+  }
 
   const runCode = () => {
     setcurrentState({
@@ -169,7 +170,7 @@ const Answer: React.FC<IProps> = (props) => {
           ></ReadOnly> */}
           {/* <div className="font-bold">示例</div> */}
           <h4>示例</h4>
-          <Table size="small" className=" px-8 py-6" bordered dataSource={dataSource} pagination={false}>
+          <Table size="small" className=" px-8 py-6" bordered dataSource={caseSamples} pagination={false}>
             <Column
               title="input"
               dataIndex={'input'}
@@ -243,8 +244,8 @@ const Answer: React.FC<IProps> = (props) => {
             </svg>
           </div>
         </div> */}
-      <h4>作答</h4>
-      <div className="px-8 py-4">
+      {/* <h4>作答</h4> */}
+      <div className="pt-4">
         <CodeEditor
           value={code}
           height={500}
@@ -264,7 +265,7 @@ const Answer: React.FC<IProps> = (props) => {
           ></Switch>
           <span>自定义测试用例</span>
         </div> */}
-        <div className="flex-grow">
+        <div className="flex-grow my-4">
           <Switch
             checkedChildren={'控制台'}
             unCheckedChildren={'控制台'}

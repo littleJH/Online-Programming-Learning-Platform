@@ -7,12 +7,13 @@ import GroupMember from './GroupMember'
 
 const GroupInfo: React.FC<{
   group: IGroup
-}> = props => {
-  const { group } = props
+  mode?: 'card' | 'info'
+}> = (props) => {
+  const { group, mode = 'info' } = props
   const [userInfo, setUserInfo] = React.useState<User>()
 
   React.useEffect(() => {
-    getUserInfoApi(group.leader_id).then(res => {
+    getUserInfoApi(group.leader_id).then((res) => {
       setUserInfo(res.data.data.user)
     })
   }, [])
@@ -42,19 +43,26 @@ const GroupInfo: React.FC<{
       {
         key: 'member',
         label: '小组成员',
-        children: (
-          <GroupMember group_id={group.id} showAdd={false}></GroupMember>
-        ),
+        children: <GroupMember group_id={group.id} showAdd={false}></GroupMember>,
       },
     ]
   }, [group, userInfo])
 
   return (
-    <Descriptions
-      column={1}
-      title={group.title}
-      items={descItems}
-    ></Descriptions>
+    <>
+      {mode === 'info' && <Descriptions column={1} title={group.title} items={descItems}></Descriptions>}
+      {mode === 'card' && (
+        <div className="rounded shadow p-2 flex">
+          {/* <div className="flex items-center mx-2">
+            <Avatar size={'large'} src={`${props.user?.icon}`}></Avatar>
+          </div> */}
+          <div className="" style={{ fontWeight: 400 }}>
+            <div>{props.group.title}</div>
+            <div>{props.group.content}</div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 

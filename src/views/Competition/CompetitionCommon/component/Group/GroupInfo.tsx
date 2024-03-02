@@ -5,10 +5,10 @@ import style from './group.module.scss'
 
 const GroupInfo: React.FC<{
   group: IGroup
-}> = props => {
+}> = (props) => {
   const { group } = props
   return (
-    <div className="flex flex-col items-start max-w-max">
+    <div className="flex flex-col items-start max-w-max" style={{ fontWeight: 400 }}>
       <p>
         <span className={style.label}>小组名：</span>
         <span className={style.value}>{group.title}</span>
@@ -40,7 +40,7 @@ const GroupInfo: React.FC<{
       {group?.members && (
         <div>
           <p>小组成员：</p>
-          {group.members?.map(item => {
+          {group.members?.map((item) => {
             return <UserCard key={item.id} user={item}></UserCard>
           })}
         </div>

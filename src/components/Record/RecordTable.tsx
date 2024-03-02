@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import {
   getRecordListApi as getProRecordListApi,
   getRecordApi,
@@ -43,8 +43,9 @@ interface Filter {
 
 const RecordTable: React.FC<IProps> = (props) => {
   const { mode, problem, competition } = props
-  const [recordList, setrecordList] = useState<IRecord[]>([])
   const [userInfo, setuserInfo] = useState<User>()
+  const recordList = useRef<IRecord[]>([])
+  const [recordsDatasource, setRecordsDatasource] = useState<IRecordTableDataSource[]>([])
   const [currentRecord, setcurrentRecord] = useState<IRecord>()
   const [hackInput, sethackInput] = useState('')
   const [openRecordDetailModal, setopenRecordDetailModal] = useState(false)
@@ -59,7 +60,7 @@ const RecordTable: React.FC<IProps> = (props) => {
   useEffect(() => {
     fetchProblem()
     fetchRecordList()
-  }, [problem])
+  }, [problem, competition, mode])
 
   useEffect(() => {
     fetchUserinfo()
@@ -72,19 +73,57 @@ const RecordTable: React.FC<IProps> = (props) => {
       })
   }
 
-  const fetchRecordList = () => {
+  const fetchRecordList = async () => {
+    let pro = problem
     if (mode === 'problem' && problem) {
-      getProRecordListApi({
+      const res = await getProRecordListApi({
         problem_id: problem.id,
-      }).then((res) => {
-        setrecordList(res.data.data.records)
       })
+      recordList.current = res.data.data.records
     }
     if (mode === 'competition' && competition) {
-      getCptRecordListApi(competition.type, competition.id, {}).then((res) => {
-        setrecordList(res.data.data.records)
+      const res = await getCptRecordListApi(competition.type, competition.id, {})
+      recordList.current = res.data.data.records
+    }
+    let hack: HackState = 'unableHack'
+    const list: IRecordTableDataSource[] = []
+    for (let record of recordList.current) {
+      if (mode === 'problem' && problem) {
+        hack = await fetchHack(problem.input_check_id, record)
+      }
+      if (mode === 'competition') {
+        const res = await getProblemNewApi(record.problem_id)
+        const problem = res.data.data.problem
+        pro = problem
+        hack = await fetchHack(problem.input_check_id, record)
+        setfilters((value: Filter[]) => {
+          let repetition = false
+          value.forEach((item) => {
+            if (item.text === problem.title) repetition = true
+          })
+          if (repetition) return [...value]
+          else
+            return [
+              ...value,
+              {
+                text: problem.title,
+                value: problem.title,
+              },
+            ]
+        })
+      }
+      list.push({
+        key: record.id,
+        condition: <RecordStateLabel value={record.condition}></RecordStateLabel>,
+        create_at: record.created_at,
+        language: <LanaugeLabel value={record.language}></LanaugeLabel>,
+        pass: record.pass,
+        problem: pro,
+        hack,
       })
     }
+    console.log('datasource ==> ', list)
+    setRecordsDatasource(list)
   }
 
   const fetchUserinfo = () => {
@@ -92,6 +131,17 @@ const RecordTable: React.FC<IProps> = (props) => {
       getUserInfoApi(currentRecord.user_id).then((res) => {
         setuserInfo(res.data.data.user)
       })
+  }
+
+  const fetchHack = async (input_check_id: string, record: IRecord) => {
+    if (input_check_id.indexOf('0000') && record.condition === 'Accepted') {
+      const res = await getHackApi(record.hack_id)
+      if (res.data.code === 400) return 'notHack'
+      else if (res.data.code === 200) {
+        sethackDetail(res.data.data.hack)
+        return 'hacked'
+      } else return 'unableHack'
+    } else return 'unableHack'
   }
 
   const caseTableDataSource = useMemo(() => {
@@ -112,58 +162,6 @@ const RecordTable: React.FC<IProps> = (props) => {
     })
     return arr
   }, [currentCaseList])
-
-  const recordsDatasource = useMemo(() => {
-    let hack: HackState = 'unableHack'
-    const list: IRecordTableDataSource[] = []
-    for (let record of recordList) {
-      if (mode === 'problem' && problem) fetchHack(problem.input_check_id)
-      if (mode === 'competition') {
-        getProblemNewApi(record.problem_id).then((res) => {
-          const pro = res.data.data.probleml
-          fetchHack(pro.input_check_id)
-          setfilters((value: Filter[]) => {
-            let repetition = false
-            value.forEach((item) => {
-              if (item.text === pro.title) repetition = true
-            })
-            if (repetition) return [...value]
-            else
-              return [
-                ...value,
-                {
-                  text: pro.title,
-                  value: pro.title,
-                },
-              ]
-          })
-        })
-      }
-      function fetchHack(input_check_id: string) {
-        if (input_check_id.indexOf('0000') && record.condition === 'Accepted') {
-          getHackApi(record.hack_id).then((res) => {
-            if (res.data.code === 400) hack = 'notHack'
-            else if (res.data.code === 200) {
-              console.log('hackDetail: ', res)
-              sethackDetail(res.data.data.hack)
-              hack = 'hacked'
-            }
-          })
-        } else hack = 'unableHack'
-        list.push({
-          key: record.id,
-          condition: <RecordStateLabel value={record.condition}></RecordStateLabel>,
-          create_at: record.created_at,
-          language: <LanaugeLabel value={record.language}></LanaugeLabel>,
-          pass: record.pass,
-          problem,
-          hack: hack,
-        })
-      }
-    }
-    console.log('datasource ==> ', list)
-    return list
-  }, [recordList, problem, competition])
 
   const submit = () => {
     const data = JSON.stringify({
@@ -191,7 +189,7 @@ const RecordTable: React.FC<IProps> = (props) => {
   }
 
   const handleRowClick = (e: IRecordTableDataSource) => {
-    const record = recordList.find((item) => item.id === e.key) as IRecord
+    const record = recordList.current.find((item) => item.id === e.key) as IRecord
     console.log(record)
     setCurrentState(() => recordStates.find((item) => item.value === record.condition))
     getRecordCaseListApi(e.key).then((res) => {
@@ -214,7 +212,7 @@ const RecordTable: React.FC<IProps> = (props) => {
           <div
             className="hover:cursor-pointer"
             onClick={() => {
-              setcurrentRecord(recordList[record.index])
+              setcurrentRecord(recordList.current[record.index])
               setopenRecordDetailModal(true)
             }}
           >
@@ -258,7 +256,7 @@ const RecordTable: React.FC<IProps> = (props) => {
                 className="hover:cursor-pointer"
                 onClick={(e) => {
                   e.stopPropagation()
-                  setcurrentRecord(recordList[record.index])
+                  setcurrentRecord(recordList.current[record.index])
                   setopenHackModal(true)
                 }}
               >
@@ -273,7 +271,7 @@ const RecordTable: React.FC<IProps> = (props) => {
                 className="hover:cursor-pointer"
                 onClick={(e) => {
                   e.stopPropagation()
-                  setcurrentRecord(recordList[record.index])
+                  setcurrentRecord(recordList.current[record.index])
                   setopenHackDetailModal(true)
                 }}
               >

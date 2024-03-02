@@ -1,11 +1,11 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import {
   getProblemLabelsApi,
   getProblemListApi,
   searchProblemByLabelApi,
   searchProblemByTextAndLabelApi,
   searchProblemByTextApi,
-  showProblemApi
+  showProblemApi,
 } from '@/api/problem'
 import {
   Avatar,
@@ -19,14 +19,14 @@ import {
   Table,
   Tag,
   Tooltip,
-  notification
+  notification,
 } from 'antd'
-import {getRecordListApi} from '@/api/record'
+import { getRecordListApi } from '@/api/record'
 import Column from 'antd/es/table/Column'
-import {NavLink, useNavigate, useSearchParams} from 'react-router-dom'
+import { NavLink, useNavigate, useSearchParams } from 'react-router-dom'
 import AcPercentLabel from '@/components/Label/ProblemLabel/AcPercentLabel'
-import {IPrblemTableDataType, IProblem, ITopic} from '@/type'
-import {getTagListApi} from '@/api/tag'
+import { IPrblemTableDataType, IProblem, ITopic } from '@/type'
+import { getTagListApi } from '@/api/tag'
 import ReadOnly from '@/components/editor/Readonly'
 import {
   getTopicApi,
@@ -34,10 +34,10 @@ import {
   getTopicProblemsApi,
   searchProblemInTopicByLabelApi,
   searchProblemInTopicByTextApi,
-  searchProblemInTopicByTextLabelApi
+  searchProblemInTopicByTextLabelApi,
 } from '@/api/topic'
-import {getUserInfoApi} from '@/api/user'
-import {iconBaseUrl} from '@/config/apiConfig'
+import { getUserInfoApi } from '@/api/user'
+import { iconBaseUrl } from '@/config/apiConfig'
 import ProblemTable from '../table/ProblemTable'
 import useNavTo from '@/tool/myHooks/useNavTo'
 import MyTag from '@/components/Label/MyTag'
@@ -68,25 +68,21 @@ const setFirst = (bool: boolean) => {
 }
 
 const ProblemList: React.FC<IProps> = (props) => {
-  const {mode, width, setSelectedProblems, selectedRowKeys} = props
+  const { mode, width, setSelectedProblems, selectedRowKeys } = props
   const nav = useNavTo()
-  const {Search} = Input
+  const { Search } = Input
   const [querys, setQuerys] = useSearchParams()
   const [topic_id, setTopic_id] = useState(querys.get('topic') || '')
   const [searchText, setSearchText] = useState<string>(querys.get('text') || '')
-  const [labelGroup, setLabelGroup] = useState<string[]>(
-    JSON.parse(querys.get('labels') || '[]')
-  )
-  const [pageNum, setPageNum] = useState<number>(
-    Number(querys.get('pageNum') || 1)
-  )
+  const [labelGroup, setLabelGroup] = useState<string[]>(JSON.parse(querys.get('labels') || '[]'))
+  const [pageNum, setPageNum] = useState<number>(Number(querys.get('pageNum') || 1))
   const [pageSize, setPageSize] = useState(Number(querys.get('pageSize') || 20))
+  const [total, setTotal] = useState(0)
   const [problemList, setproblemList] = useState<IProblem[]>([])
   const [topicList, setTopicList] = useState<ITopic[]>([])
   const [selectedTopic, setSelectedTopic] = useState<ITopic | undefined>()
   const [tagList, setTagList] = useState<ITag[]>([])
   const [fetchDone, setFetchDone] = useState(false)
-  const [total, setTotal] = useState(0)
   const leftCtn = useRef<HTMLDivElement>(null)
   const searchCtn = useRef<HTMLDivElement>(null)
   const [tableScrollHeight, setTableScrollHeight] = useState(0)
@@ -96,8 +92,7 @@ const ProblemList: React.FC<IProps> = (props) => {
     if (!topic_id && !searchText.length && !labelGroup.length) {
       initProblemList(1)
     } else {
-      if (!searchText.length && !labelGroup.length && topic_id)
-        fetchTopics(topic_id)
+      if (!searchText.length && !labelGroup.length && topic_id) fetchTopics(topic_id)
       else if (searchText.length) searchProblemByText()
       else if (labelGroup.length) searchProblemsByLabels(1)
     }
@@ -116,7 +111,7 @@ const ProblemList: React.FC<IProps> = (props) => {
       tags.forEach((item: any) =>
         list.push({
           label: item.tag,
-          checked: labelGroup.find((value) => value === item.tag) ? true : false
+          checked: labelGroup.find((value) => value === item.tag) ? true : false,
         })
       )
       setTagList(list)
@@ -127,7 +122,7 @@ const ProblemList: React.FC<IProps> = (props) => {
     fetchDone &&
       document.querySelector('#content')?.scrollTo({
         left: 0,
-        top: 0
+        top: 0,
       })
   }, [fetchDone])
 
@@ -145,7 +140,7 @@ const ProblemList: React.FC<IProps> = (props) => {
     topicList.forEach((topic) =>
       list.push({
         value: topic.id,
-        label: topic.title
+        label: topic.title,
       })
     )
     return list
@@ -182,9 +177,7 @@ const ProblemList: React.FC<IProps> = (props) => {
     if (first) return
     resetPage()
     if (labelGroup.length) {
-      searchText.length
-        ? searchProblemByTextAndLabel()
-        : searchProblemsByLabels(4)
+      searchText.length ? searchProblemByTextAndLabel() : searchProblemsByLabels(4)
     } else {
       if (!searchText.length && !topic_id) initProblemList(4)
       else if (searchText.length) searchProblemByText()
@@ -240,12 +233,7 @@ const ProblemList: React.FC<IProps> = (props) => {
   const searchProblemByText = () => {
     setFetchDone(false)
     if (topic_id) {
-      searchProblemInTopicByTextApi(
-        topic_id,
-        searchText,
-        pageNum,
-        pageSize
-      ).then((res) => {
+      searchProblemInTopicByTextApi(topic_id, searchText, pageNum, pageSize).then((res) => {
         // console.log(res.data)
         setTotal(res.data.data.total)
         setproblemList(res.data.data.problems)
@@ -263,12 +251,7 @@ const ProblemList: React.FC<IProps> = (props) => {
     // console.log('searchProblemsByLabels', index, first)
     setFetchDone(false)
     if (topic_id) {
-      searchProblemInTopicByLabelApi(
-        topic_id,
-        labelGroup,
-        pageNum,
-        pageSize
-      ).then((res) => {
+      searchProblemInTopicByLabelApi(topic_id, labelGroup, pageNum, pageSize).then((res) => {
         // console.log(res.data.data)
         setTotal(res.data.data.total)
         setproblemList(res.data.data.problems)
@@ -285,25 +268,14 @@ const ProblemList: React.FC<IProps> = (props) => {
   const searchProblemByTextAndLabel = () => {
     setFetchDone(false)
     if (topic_id) {
-      searchProblemInTopicByTextLabelApi(
-        topic_id,
-        searchText,
-        labelGroup,
-        pageNum,
-        pageSize
-      ).then((res) => {
+      searchProblemInTopicByTextLabelApi(topic_id, searchText, labelGroup, pageNum, pageSize).then((res) => {
         // console.log(res.data)
         setTotal(res.data.data.total)
         // console.log(res.data)
         setproblemList(res.data.data.problems)
       })
     } else {
-      searchProblemByTextAndLabelApi(
-        searchText,
-        labelGroup,
-        pageNum,
-        pageSize
-      ).then((res) => {
+      searchProblemByTextAndLabelApi(searchText, labelGroup, pageNum, pageSize).then((res) => {
         // console.log(res.data)
         setTotal(res.data.data.total)
       })
@@ -378,29 +350,31 @@ const ProblemList: React.FC<IProps> = (props) => {
   return (
     <>
       <div
-        className='flex h-full'
+        className="flex h-full"
         style={{
           width: `${width}px`,
-          maxWidth: '1024px'
-        }}>
-        <div ref={leftCtn} className='grow w-full' style={{width: '1px'}}>
-          <div ref={searchCtn} className='py-4 w-full flex'>
-            <div style={{flexGrow: '1', width: '1/3'}}>
+          maxWidth: '1024px',
+        }}
+      >
+        <div ref={leftCtn} className="grow w-full" style={{ width: '1px' }}>
+          <div ref={searchCtn} className="py-4 w-full flex">
+            <div style={{ flexGrow: '1', width: '1/3' }}>
               <Select
                 style={{
-                  width: '100%'
+                  width: '100%',
                 }}
                 allowClear
-                placeholder='选择题单'
+                placeholder="选择题单"
                 value={selectedTopic?.id}
                 onChange={handleTopicChange}
-                options={topicOptions}></Select>
+                options={topicOptions}
+              ></Select>
             </div>
-            <div className='w-4'></div>
-            <div style={{flexGrow: '1', width: '1/3'}}>
+            <div className="w-4"></div>
+            <div style={{ flexGrow: '1', width: '1/3' }}>
               <Popover
                 overlayStyle={{
-                  maxWidth: '800px'
+                  maxWidth: '800px',
                 }}
                 trigger={'click'}
                 content={
@@ -424,39 +398,43 @@ const ProblemList: React.FC<IProps> = (props) => {
                         key={index}
                         onClick={() => handleTagClick(index)}
                         style={{
-                          marginBottom: '0.5rem'
-                        }}>
+                          marginBottom: '0.5rem',
+                        }}
+                      >
                         <MyTag checkable checked={tagList[index].checked}>
                           {item.label}
                         </MyTag>
                       </span>
                     ))}
                   </div>
-                }>
+                }
+              >
                 <Select
-                  mode='multiple'
+                  mode="multiple"
                   showSearch={false}
-                  style={{width: '100%'}}
+                  style={{ width: '100%' }}
                   allowClear
                   maxTagCount={3}
-                  placeholder='标签筛选'
+                  placeholder="标签筛选"
                   open={false}
                   value={labelGroup}
                   onDeselect={handleDeselect}
-                  onClear={handleClear}></Select>
+                  onClear={handleClear}
+                ></Select>
               </Popover>
             </div>
-            <div className='w-4'></div>
-            <div style={{flexGrow: '1', width: '1/3'}}>
+            <div className="w-4"></div>
+            <div style={{ flexGrow: '1', width: '1/3' }}>
               <Search
                 style={{
-                  width: '100%'
+                  width: '100%',
                 }}
                 defaultValue={searchText}
-                placeholder='文本搜索'
+                placeholder="文本搜索"
                 enterButton
                 onSearch={handleSearch}
-                onChange={handleTextChange}></Search>
+                onChange={handleTextChange}
+              ></Search>
             </div>
           </div>
           {selectedTopic && (
@@ -464,7 +442,7 @@ const ProblemList: React.FC<IProps> = (props) => {
               activeKey={collapseActiveKey}
               onChange={handleCollapseChange}
               style={{
-                margin: '0 0 1rem 0'
+                margin: '0 0 1rem 0',
               }}
               items={[
                 {
@@ -472,36 +450,28 @@ const ProblemList: React.FC<IProps> = (props) => {
                   label: selectedTopic.title,
                   children: (
                     <>
-                      <Descriptions size='small' layout='vertical'>
+                      <Descriptions size="small" layout="vertical">
                         <Descriptions.Item label={'创建者'}>
                           <Space>
-                            <Avatar
-                              src={`${iconBaseUrl}/${selectedTopic.user?.icon}`}></Avatar>
-                            <NavLink
-                              to={''}
-                              className={
-                                'text-indigo-500 hover:text-indigo-500'
-                              }>
+                            <Avatar src={`${iconBaseUrl}/${selectedTopic.user?.icon}`}></Avatar>
+                            <NavLink to={''} className={'text-indigo-500 hover:text-indigo-500'}>
                               {selectedTopic.user?.name}
                             </NavLink>
                           </Space>
                         </Descriptions.Item>
-                        <Descriptions.Item label={'创建时间'}>
-                          {selectedTopic.created_at}
-                        </Descriptions.Item>
-                        <Descriptions.Item label={'题目总数'}>
-                          {total}
-                        </Descriptions.Item>
+                        <Descriptions.Item label={'创建时间'}>{selectedTopic.created_at}</Descriptions.Item>
+                        <Descriptions.Item label={'题目总数'}>{total}</Descriptions.Item>
                         {selectedTopic.content !== '' && (
-                          <Descriptions.Item label='题单描述'>
+                          <Descriptions.Item label="题单描述">
                             <ReadOnly html={selectedTopic.content}></ReadOnly>
                           </Descriptions.Item>
                         )}
                       </Descriptions>
                     </>
-                  )
-                }
-              ]}></MyCollapse>
+                  ),
+                },
+              ]}
+            ></MyCollapse>
           )}
           <ProblemTable
             mode={mode}
@@ -518,7 +488,8 @@ const ProblemList: React.FC<IProps> = (props) => {
             onLineClick={toDetail}
             tableScrollHeight={tableScrollHeight}
             setSelectedProblems={setSelectedProblems}
-            selectedRowKeys={selectedRowKeys}></ProblemTable>
+            selectedRowKeys={selectedRowKeys}
+          ></ProblemTable>
         </div>
       </div>
     </>

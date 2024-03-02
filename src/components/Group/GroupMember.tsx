@@ -9,17 +9,17 @@ import { PlusOutlined } from '@ant-design/icons'
 const GroupMember: React.FC<{
   group_id: string
   showAdd: boolean
-}> = props => {
+}> = (props) => {
   const { group_id, showAdd } = props
   const [openModal, setOpenModal] = useState(false)
   const [GroupMember, setGroupMember] = useState<User[]>([])
 
   useEffect(() => {
-    getGroupMembersApi(group_id).then(async res => {
+    getGroupMembersApi(group_id).then(async (res) => {
       const userList = res.data.data.userList
       for (let item of userList) {
         const res = await getUserInfoApi(item.user_id)
-        setGroupMember(value => [...value, res.data.data.user])
+        setGroupMember((value) => [...value, res.data.data.user])
       }
     })
   }, [])
@@ -29,20 +29,15 @@ const GroupMember: React.FC<{
     <>
       <div>
         <Avatar.Group className="select-none">
-          {GroupMember.map(member => (
+          {GroupMember.map((member) => (
             <Avatar
+              key={member.id}
               src={`${iconBaseUrl}/${member.icon}`}
               className="hover:mx-2"
               onClick={handleAvatarClick}
             ></Avatar>
           ))}
-          {showAdd && (
-            <Avatar
-              icon={<PlusOutlined />}
-              className=""
-              onClick={() => setOpenModal(true)}
-            ></Avatar>
-          )}
+          {showAdd && <Avatar icon={<PlusOutlined />} className="" onClick={() => setOpenModal(true)}></Avatar>}
         </Avatar.Group>
       </div>
       <Modal open={openModal} onCancel={() => setOpenModal(false)}></Modal>

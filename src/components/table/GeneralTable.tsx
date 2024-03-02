@@ -58,7 +58,7 @@ const GeneralTable: React.FC<GeneralTableProps> = (props) => {
         bordered={bordered}
         pagination={
           pageProps
-            ? getPagination('table', pageProps.pageNum, pageProps.pageSize, pageProps.total, pageProps.onPageChange)
+            ? getPagination('table', pageProps?.pageNum, pageProps?.pageSize, pageProps?.total, pageProps?.onPageChange)
             : undefined
         }
       ></Table>

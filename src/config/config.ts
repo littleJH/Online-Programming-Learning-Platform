@@ -33,7 +33,7 @@ export const getPagination = (
   pageNum: number,
   pageSize: number,
   total: number,
-  handlePageChange: Function,
+  handlePageChange: Function
 ) => {
   return {
     position: type === 'list' ? 'bottom' : ['bottomCenter'],
@@ -43,7 +43,6 @@ export const getPagination = (
     showQuickJumper: true,
     // hideOnSinglePage: true,
     showSizeChanger: true,
-    onChange: (page: number, pageSize: number) =>
-      handlePageChange(page, pageSize),
+    onChange: (page: number, pageSize: number) => handlePageChange(page, pageSize),
   } as any
 }

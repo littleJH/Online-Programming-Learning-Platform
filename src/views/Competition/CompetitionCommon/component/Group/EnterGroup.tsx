@@ -27,9 +27,10 @@ interface IDataSource {
 const EnterGroup: React.FC<{
   competition: ICompetition | undefined
   type: CompetitionType
+  onEnterSuccess: Function
 }> = (props) => {
   const [form] = Form.useForm()
-  const { competition, type } = props
+  const { competition, type, onEnterSuccess } = props
   const [currentStep, setcurrentStep] = useState(0)
   const [mode, setmode] = useState<Mode>('undetermined')
   const [title2, settitle2] = useState('')
@@ -107,7 +108,10 @@ const EnterGroup: React.FC<{
           notification.success({
             message: res.data.msg,
           })
-        setgroup(index >= 0 ? groupList[index].group : group)
+        if (index >= 0) {
+          setgroup(groupList[index].group)
+          onEnterSuccess(groupList[index].group)
+        }
         setcurrentStep((value) => value + 1)
       } else {
         notification &&
@@ -332,7 +336,11 @@ const EnterGroup: React.FC<{
             </Button>
           </div>
           {groupList.length > 0 && (
-            <GroupList groupList={groupList} callBack={enterCompetition} extra="点击报名"></GroupList>
+            <GroupList
+              groupList={groupList}
+              callBack={(index: number) => enterCompetition(index)}
+              extra="点击报名"
+            ></GroupList>
           )}
           <div className="flex justify-center mt-8">
             <Button
@@ -355,13 +363,15 @@ const EnterGroup: React.FC<{
                 <Fragment>
                   <GroupInfo group={group}></GroupInfo>
                   <Space>
-                    <Button onClick={() => enterCompetition(-1)}>点击报名</Button>
                     <Button
                       onClick={() => {
                         setcurrentStep(1)
                       }}
                     >
                       点击修改
+                    </Button>
+                    <Button type="primary" onClick={() => enterCompetition(-1)}>
+                      点击报名
                     </Button>
                   </Space>
                 </Fragment>

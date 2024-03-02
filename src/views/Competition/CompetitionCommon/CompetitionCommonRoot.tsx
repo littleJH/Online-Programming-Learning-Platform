@@ -12,8 +12,8 @@ import UserCard from '@/components/User/UserCard'
 import { User } from '@/type'
 import CompetitionTypeLabel from './component/Label/CompetitionTypeLabel'
 import EnterGroup from './component/Group/EnterGroup'
-import GroupInfo from './component/Group/GroupInfo'
-import { getMemberGroupListApi } from '@/api/group'
+import GroupInfo from '@/components/group/GroupInfo'
+import { getGroupApi, getMemberGroupListApi } from '@/api/group'
 import useNavTo from '@/tool/myHooks/useNavTo'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { competitionStateAtom, currentCompetitionAtom, isEnterState } from '../competitionStore'
@@ -33,6 +33,7 @@ const getState = (start: string, end: string): State => {
 }
 
 const Detail: React.FC = () => {
+  const { token } = theme.useToken()
   const nav = useNavTo()
   const pathname = useRecoilValue(pathNameState)
   const { competition_id } = useParams()
@@ -45,9 +46,9 @@ const Detail: React.FC = () => {
   const [openEnterModal, setopenEnterModal] = useState(false)
   const [openUpdateModal, setopenUpdateModal] = useState(false)
   const [openEnterListModal, setopenEnterListModal] = useState(false)
-  const [enterList, setenterList] = useState<User[]>([])
+  const [enterUsers, setEnterUsers] = useState<User[]>([])
+  const [enterGroups, setEnterGroups] = useState<IGroup[]>([])
   const [groupInfo, setgroupInfo] = useState<IGroup>()
-  const { token } = theme.useToken()
   const notification = useRecoilValue(notificationApi)
   const selectedKey = useMemo(() => getPathArray(pathname)[2], [pathname])
 
@@ -68,7 +69,7 @@ const Detail: React.FC = () => {
       state === 'notStart' && setEndTime(competition.start_time)
       state === 'underway' && setEndTime(competition.end_time)
     }
-    type === 'group' && setIsEnter(res.data.data.group ? true : false)
+    type === 'group' && setIsEnter(res1.data.data ? true : false)
     type !== 'group' && setIsEnter(res1.data.data?.enter)
     setCompetition(competition)
     settype(type)
@@ -85,15 +86,13 @@ const Detail: React.FC = () => {
       }
       setgroupInfo({
         ...group,
-        ...{
-          members: users,
-        },
+        members: users,
       })
     } else if (type === 'match') {
     } else {
-      const res2 = await getEnterListApi(type, competition.id)
-      setenterNum(res2.data.data.total)
     }
+    const res2 = await getEnterListApi(type, competition.id)
+    setenterNum(res2.data.data.total)
   }
 
   const enterCompetition = async () => {
@@ -141,17 +140,27 @@ const Detail: React.FC = () => {
     }
   }
 
-  const getEnterList = () => {
-    setenterList([])
+  const getEnterList = async () => {
+    setEnterUsers([])
+    setEnterGroups([])
     setopenEnterListModal(true)
-    getEnterListApi(type, competition?.id as string).then((res) => {
-      console.log('enterlist', res.data.data)
-      res.data.data.competitionRanks.forEach((item: any) => {
-        getUserInfoApi(item.member_id).then((result) => {
-          setenterList((value) => [...value, result.data.data.user])
-        })
-      })
-    })
+    if (competition?.id) {
+      const result = await getEnterListApi(type, competition?.id)
+      if (result.data.code === 200) {
+        const list = []
+        for (let item of result.data.data.competitionRanks) {
+          if (type === 'Group' || type === 'group') {
+            const groupInfo = await getGroupApi(item.member_id)
+            list.push(groupInfo.data.data.group)
+            setEnterGroups(list)
+          } else {
+            const userInfo = await getUserInfoApi(item.member_id)
+            list.push(userInfo.data.data.user)
+            setEnterUsers(list)
+          }
+        }
+      }
+    }
   }
 
   const navTo = (e: any) => {
@@ -359,7 +368,18 @@ const Detail: React.FC = () => {
         )}
         {type === 'group' && competition && (
           <div>
-            {!isEnter && <EnterGroup competition={competition} type={type}></EnterGroup>}
+            {!isEnter && (
+              <EnterGroup
+                competition={competition}
+                type={type}
+                onEnterSuccess={(groupInfo: IGroup) => {
+                  setopenEnterModal(false)
+                  setenterNum((value) => value + 1)
+                  setIsEnter(true)
+                  setgroupInfo(groupInfo)
+                }}
+              ></EnterGroup>
+            )}
             {isEnter && groupInfo && (
               <>
                 <GroupInfo group={groupInfo}></GroupInfo>
@@ -374,17 +394,30 @@ const Detail: React.FC = () => {
         )}
       </Modal>
       <Modal title="报名列表" open={openEnterListModal} onCancel={() => setopenEnterListModal(false)} footer={[]}>
-        <List
-          itemLayout="horizontal"
-          dataSource={enterList}
-          renderItem={(item, index) => (
-            <>
-              <List.Item>
-                <List.Item.Meta title={<UserCard user={item}></UserCard>}></List.Item.Meta>
-              </List.Item>
-            </>
+        <>
+          {enterUsers.length > 0 && (
+            <List
+              itemLayout="horizontal"
+              dataSource={enterUsers}
+              renderItem={(item, index) => (
+                <List.Item>
+                  <List.Item.Meta title={<UserCard user={item}></UserCard>}></List.Item.Meta>
+                </List.Item>
+              )}
+            ></List>
           )}
-        ></List>
+          {enterGroups.length > 0 && (
+            <List
+              itemLayout="horizontal"
+              dataSource={enterGroups}
+              renderItem={(item, index) => (
+                <List.Item>
+                  <List.Item.Meta title={<GroupInfo group={item}></GroupInfo>}></List.Item.Meta>
+                </List.Item>
+              )}
+            ></List>
+          )}
+        </>
       </Modal>
 
       {competition && (
