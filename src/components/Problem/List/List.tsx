@@ -398,7 +398,8 @@ const ProblemList: React.FC<IProps> = (props) => {
                         key={index}
                         onClick={() => handleTagClick(index)}
                         style={{
-                          marginBottom: '0.5rem',
+                          margin: '0.25rem 0',
+                          display: 'inline-block',
                         }}
                       >
                         <MyTag checkable checked={tagList[index].checked}>

@@ -6,9 +6,10 @@ import CompetitionTypeLabel from '../../component/Label/CompetitionTypeLabel'
 import { getUserInfoApi } from '@/api/user'
 import { getDuration } from '@/tool/MyUtils/Utils'
 import { Button, Descriptions, Modal, Space } from 'antd'
-import { userInfoState } from '@/store/appStore'
+import { notificationApi, userInfoState } from '@/store/appStore'
 import { User } from '@/type'
 import useNavTo from '@/tool/myHooks/useNavTo'
+import dayjs from 'dayjs'
 
 const Overview: React.FC = () => {
   const navTo = useNavTo()
@@ -16,6 +17,7 @@ const Overview: React.FC = () => {
   const userInfo = useRecoilValue(userInfoState)
   const [founder, setFounder] = useState<User>()
   const [duration, setDuration] = useState('')
+  const notification = useRecoilValue(notificationApi)
 
   useEffect(() => {
     if (!competition) return
@@ -30,6 +32,11 @@ const Overview: React.FC = () => {
   }
 
   const toEdit = () => {
+    const start = competition?.start_time
+    if (dayjs(start).valueOf() <= dayjs().valueOf()) {
+      notification && notification.error({ message: '比赛进行中或已结束，无法修改' })
+      return
+    }
     navTo(`/creation/competition/declare?competition_id=${competition?.id}`)
   }
 
@@ -46,11 +53,7 @@ const Overview: React.FC = () => {
               {
                 key: '5',
                 label: '类型',
-                children: (
-                  <CompetitionTypeLabel
-                    size={1}
-                    type={competition.type}></CompetitionTypeLabel>
-                ),
+                children: <CompetitionTypeLabel size={1} type={competition.type}></CompetitionTypeLabel>,
               },
               {
                 key: '6',
@@ -59,11 +62,7 @@ const Overview: React.FC = () => {
                   <Space>
                     {founder?.name || ''}
                     {founder?.name === userInfo?.name && (
-                      <Button
-                        size="small"
-                        type="dashed"
-                        danger
-                        onClick={toEdit}>
+                      <Button size="small" type="dashed" danger onClick={toEdit}>
                         修改比赛
                       </Button>
                     )}
@@ -75,7 +74,8 @@ const Overview: React.FC = () => {
                 label: '描述',
                 children: <ReadOnly html={competition.content}></ReadOnly>,
               },
-            ]}></Descriptions>
+            ]}
+          ></Descriptions>
           {/* <div className={`${style.item}`}>
             <div className={`${style.itemLabel}`}>标题</div>
             <div className={`${style.itemValue}`}>{competition?.title}</div>

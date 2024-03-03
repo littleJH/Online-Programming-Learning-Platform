@@ -31,7 +31,6 @@ export interface ChangeOptions {
 interface IProps {
   problem_id: string
   onStateChange: (options: ChangeOptions) => void
-  caseSample: ICaseSample[]
 }
 
 const initTestState: IRecordState = {

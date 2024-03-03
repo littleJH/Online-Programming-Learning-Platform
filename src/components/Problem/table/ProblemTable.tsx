@@ -1,14 +1,5 @@
 import { IPrblemTableDataType, IProblem } from '@/type'
-import {
-  Button,
-  Popover,
-  Skeleton,
-  Space,
-  Table,
-  Tag,
-  Tooltip,
-  Divider,
-} from 'antd'
+import { Button, Popover, Skeleton, Space, Table, Tag, Tooltip, Divider } from 'antd'
 import Column from 'antd/es/table/Column'
 import copy from 'copy-to-clipboard'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -44,7 +35,7 @@ interface IProps {
 
 let flag = false
 
-const ProblemTable: React.FC<IProps> = props => {
+const ProblemTable: React.FC<IProps> = (props) => {
   const {
     mode,
     pageNum,
@@ -108,11 +99,7 @@ const ProblemTable: React.FC<IProps> = props => {
         description: problem.description,
         totaRecords: res[0].data.data.total,
         accpet: res[1].data.data.total,
-        acPerc: (
-          <AcPercentLabel
-            total={res[0].data.data.total}
-            accept={res[1].data.data.total}></AcPercentLabel>
-        ),
+        acPerc: <AcPercentLabel total={res[0].data.data.total} accept={res[1].data.data.total}></AcPercentLabel>,
         labels: res[2].data.data.problemLabels,
       })
       index++
@@ -138,9 +125,7 @@ const ProblemTable: React.FC<IProps> = props => {
       dataIndex: 'key',
       render: (value: string) => (
         <Tooltip mouseEnterDelay={0.3} title={`点击复制 ${value}`}>
-          <div
-            className="select-none hover:cursor-pointer"
-            onClick={e => handleKyeClick(value, e)}>
+          <div className="select-none hover:cursor-pointer" onClick={(e) => handleKyeClick(value, e)}>
             <div className="w-16">{value.slice(value.length - 5)}</div>
           </div>
         </Tooltip>
@@ -160,17 +145,20 @@ const ProblemTable: React.FC<IProps> = props => {
           overlayInnerStyle={{
             maxHeight: '256px',
             overflow: 'scroll',
-          }}>
+          }}
+        >
           <div
             color={theme.colorPrimary}
-            onClick={handleTitleClick}
             style={{
               width: '196px',
               overflow: 'hidden',
               whiteSpace: 'nowrap',
               textOverflow: 'ellipsis',
-            }}>
-            {value}
+            }}
+          >
+            <span className="cursor-pointer" onClick={handleTitleClick}>
+              {value}
+            </span>
           </div>
         </Popover>
       ),
@@ -184,7 +172,8 @@ const ProblemTable: React.FC<IProps> = props => {
             width: '10rem',
             whiteSpace: 'nowrap',
             overflow: 'hidden',
-          }}>
+          }}
+        >
           {value.map((item: any, index: number) => {
             return index <= 1 ? <MyTag key={index}>{item.label}</MyTag> : null
           })}
@@ -204,11 +193,7 @@ const ProblemTable: React.FC<IProps> = props => {
       render: (_: any, __: any, index: number) => (
         <div style={{ width: '6rem' }}>
           {onUpdate && (
-            <Button
-              type="link"
-              size="small"
-              style={{ padding: '0' }}
-              onClick={() => onUpdate(index)}>
+            <Button type="link" size="small" style={{ padding: '0' }} onClick={() => onUpdate(index)}>
               更新
             </Button>
           )}
@@ -216,12 +201,7 @@ const ProblemTable: React.FC<IProps> = props => {
           {onDelete && (
             <>
               <Divider type="vertical"></Divider>
-              <Button
-                type="link"
-                style={{ padding: '0' }}
-                size="small"
-                danger
-                onClick={() => onDelete(index)}>
+              <Button type="link" style={{ padding: '0' }} size="small" danger onClick={() => onDelete(index)}>
                 删除
               </Button>
             </>
@@ -255,27 +235,17 @@ const ProblemTable: React.FC<IProps> = props => {
             onChange: (value: any, selectedRows: any, info: any) => {
               if (info.type === 'all') {
                 value.length
-                  ? setSelectedProblems((prev: any) => [
-                      ...prev,
-                      ...selectedRows,
-                    ])
+                  ? setSelectedProblems((prev: any) => [...prev, ...selectedRows])
                   : setSelectedProblems((prev: IPrblemTableDataType[]) => [
-                      ...prev.filter(
-                        value =>
-                          dataSource.findIndex(val => val.key === value.key) ===
-                          -1,
-                      ),
+                      ...prev.filter((value) => dataSource.findIndex((val) => val.key === value.key) === -1),
                     ])
               }
             },
             onSelect: (record: any, selected: any) => {
               selected
-                ? setSelectedProblems((prev: IPrblemTableDataType[]) => [
-                    ...prev,
-                    record,
-                  ])
+                ? setSelectedProblems((prev: IPrblemTableDataType[]) => [...prev, record])
                 : setSelectedProblems((prev: IPrblemTableDataType[]) => [
-                    ...prev.filter(value => value.key !== record.key),
+                    ...prev.filter((value) => value.key !== record.key),
                   ])
             },
           }

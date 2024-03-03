@@ -79,7 +79,7 @@ export const createRequest = (options: { type?: string; baseURL: string }) => {
     },
     (error) => {
       const { code = '请求错误' } = error
-      message.error(`${code}，请检查网络设置`)
+      message.error(`${code}`)
       return Promise.reject(error)
     }
   )

@@ -7,7 +7,6 @@ import {
 } from '@/api/record'
 import { getRecordListApi as getCptRecordListApi, hackRecordApi as hackCptRecordApi } from '@/api/competitionMixture'
 import { Descriptions, Modal, Result, Statistic, Table, Tooltip, notification } from 'antd'
-import Column from 'antd/es/table/Column'
 import RecordStateLabel from './RecordLabel.tsx/RecordStateLabel'
 import LanaugeLabel from './RecordLabel.tsx/LanaugeLabel'
 import {

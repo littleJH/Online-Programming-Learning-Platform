@@ -11,6 +11,7 @@ import { getDuration } from '@/tool/MyUtils/Utils'
 import GeneralTable, { GeneralTableProps } from '@/components/table/GeneralTable'
 import { useSearchParams } from 'react-router-dom'
 import { totalmem } from 'os'
+import { getEnterConditionApi } from '@/api/competitionMixture'
 
 interface IDataSource {
   state: CompetitionState
@@ -23,6 +24,7 @@ interface IDataSource {
   duration: string
   id: string
   key: string
+  enter: boolean
 }
 
 const stateIconSize = 3
@@ -54,29 +56,29 @@ const View: React.FC = () => {
   const fetch = async () => {
     const res = await getCompetitionListApi(filter.pageNum, filter.pageSize)
     setTotal(res.data?.data?.total || 0)
-    const competitions: ICompetition[] = res.data.data?.competitions
-    competitions &&
-      competitions.forEach((competition, index) => {
-        setdataSource((value) => [
-          ...value,
-          {
-            id: competition.id,
-            title: {
-              value: competition.title,
-              label: (
-                <div className="hover:cursor-pointer" onClick={() => handleClick(competition)}>
-                  {competition.title}
-                </div>
-              ),
-            },
-            type: competition.type,
-            start_time: competition.start_time,
-            duration: getDuration(competition.start_time, competition.end_time),
-            state: getState(competition.start_time, competition.end_time),
-            key: competition.id,
-          },
-        ])
+    const competitions: ICompetition[] = res.data.data?.competitions || []
+    const list: IDataSource[] = []
+    for (let competition of competitions) {
+      const res = await getEnterConditionApi(competition.type, competition.id)
+      list.push({
+        id: competition.id,
+        title: {
+          value: competition.title,
+          label: (
+            <div className="hover:cursor-pointer" onClick={() => handleClick(competition)}>
+              {competition.title}
+            </div>
+          ),
+        },
+        type: competition.type,
+        start_time: competition.start_time,
+        duration: getDuration(competition.start_time, competition.end_time),
+        state: getState(competition.start_time, competition.end_time),
+        key: competition.id,
+        enter: res.data.data?.enter || false,
       })
+    }
+    setdataSource(list)
   }
 
   const handleClick = (competition: ICompetition) => {
@@ -87,6 +89,7 @@ const View: React.FC = () => {
     {
       key: 'state',
       title: '状态',
+      align: 'center',
       dataIndex: 'state',
       filters: [
         { text: '未开始', value: 'notStart' },
@@ -111,6 +114,7 @@ const View: React.FC = () => {
     {
       key: 'title',
       title: '比赛名称',
+      align: 'center',
       dataIndex: ['title', 'label'],
     },
     {
@@ -133,18 +137,29 @@ const View: React.FC = () => {
     {
       key: 'start_time',
       title: '开始时间',
+      align: 'center',
       sorter: (a: ICompetition, b: ICompetition) => dayjs(a.start_time).valueOf() - dayjs(b.start_time).valueOf(),
       dataIndex: 'start_time',
     },
     {
       key: 'duration',
       title: '时长',
+      align: 'center',
       dataIndex: 'duration',
     },
     {
       key: 'enter',
       title: '报名状态',
       dataIndex: 'enter',
+      align: 'center',
+      render: (value: boolean) => {
+        return (
+          <>
+            {!value && <MySvgIcon href="#icon-weibaoming" color={token.colorWarning} size={stateIconSize}></MySvgIcon>}
+            {value && <MySvgIcon href="#icon-yibaoming" color={token.colorInfo} size={stateIconSize}></MySvgIcon>}
+          </>
+        )
+      },
     },
   ]
 

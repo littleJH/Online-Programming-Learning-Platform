@@ -48,7 +48,7 @@ export const enterCompetitionApi = (type: CompetitionType, competition_id: strin
 }
 
 export const getEnterConditionApi = (type: CompetitionType, id: string) => {
-  return request.get(`${type}/enter/condition/${id}`, baseConfig())
+  return request.get(`${type.toLowerCase()}/enter/condition/${id}`, baseConfig())
 }
 
 export const cancelEnterApi = (type: CompetitionType, competition_id: string, group_id?: string) => {
