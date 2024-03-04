@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Outlet, useParams } from 'react-router-dom'
-import { showCompetitionApi } from '@/api/competition'
+import { getComLabels, showCompetitionApi } from '@/api/competition'
 import { cancelEnterApi, enterCompetitionApi, getEnterListApi } from '@/api/competitionMixture'
 import { getEnterConditionApi } from '@/api/competitionMixture'
 import dayjs from 'dayjs'
@@ -59,10 +59,17 @@ const Detail: React.FC = () => {
   const fetch = async () => {
     if (!competition_id) return
     const res = await showCompetitionApi(competition_id)
+    const res3 = await getComLabels(competition_id)
     const competition = res.data.data.competition
+    competition.labels = (res3.data.data?.competitionLabels || []).map((item: any) => {
+      return {
+        id: item.id,
+        label: item.label,
+        competition_id: item.compeition_id,
+      }
+    })
     competition.type = competition.type !== 'OI' ? competition.type.toLowerCase() : competition.type
     const type = competition.type
-
     const res1 = await getEnterConditionApi(type, competition.id)
     const state = getState(competition.start_time, competition.end_time)
     if (type !== 'match') {

@@ -1,15 +1,6 @@
 import { searchProblemByTextApi, showProblemApi } from '@/api/problem'
 import ReadOnly from '@/components/editor/Readonly'
-import {
-  Button,
-  InputNumber,
-  List,
-  Popover,
-  Select,
-  Space,
-  Spin,
-  notification,
-} from 'antd'
+import { Button, InputNumber, List, Popover, Select, Space, Spin, notification } from 'antd'
 import { MinusCircleOutlined } from '@ant-design/icons'
 import React, { Fragment, useEffect, useState } from 'react'
 import ProblemNew from './ProblemNew'
@@ -41,7 +32,7 @@ const fetch = (value: string, setoptions: Function) => {
   }
   currentValue = value
   const fake = () => {
-    searchProblemByTextApi(value).then(res => {
+    searchProblemByTextApi(value).then((res) => {
       console.log(res)
       if (!res.data.data.problems) {
         setoptions([])
@@ -108,9 +99,9 @@ const Problem: React.FC = () => {
 
   const handleSelect = (option: any) => {
     console.log(option)
-    showProblemApi(option.key).then(res => {
+    showProblemApi(option.key).then((res) => {
       console.log(res)
-      setproblemList(value => [
+      setproblemList((value) => [
         ...value,
         {
           id: res.data.data.problem.id,
@@ -124,11 +115,8 @@ const Problem: React.FC = () => {
 
   const handleDelete = (index: number) => {
     console.log(index)
-    setproblemList(value => [
-      ...value.slice(0, index),
-      ...value.slice(index + 1),
-    ])
-    deleteProblemNewApi(problemList[index].id).then(res => {
+    setproblemList((value) => [...value.slice(0, index), ...value.slice(index + 1)])
+    deleteProblemNewApi(problemList[index].id).then((res) => {
       console.log(res.data)
     })
   }
@@ -163,7 +151,7 @@ const Problem: React.FC = () => {
       delete problem.id
       delete problem.updated_at
       delete problem.user_id
-      await updateProblemNewApi(id, JSON.stringify(problem)).then(res => {
+      await updateProblemNewApi(id, JSON.stringify(problem)).then((res) => {
         console.log('update', res)
         resState = {
           code: res.data.code,
@@ -171,7 +159,7 @@ const Problem: React.FC = () => {
         }
       })
     } else {
-      await quoteProblemApi(competition_id, id, score).then(res => {
+      await quoteProblemApi(competition_id, id, score).then((res) => {
         console.log('quote', res)
         console.log(res)
         resState = {
@@ -202,13 +190,14 @@ const Problem: React.FC = () => {
         defaultActiveFirstOption={false}
         filterOption={false}
         onSearch={search}
-        onChange={newValue => setselectValue(newValue)}
+        onChange={(newValue) => setselectValue(newValue)}
         onSelect={handleSelect}
         className="w-full"
         labelInValue
         notFoundContent={searching ? <Spin size="small"></Spin> : null}
         options={options}
-        autoFocus={true}></Select>
+        autoFocus={true}
+      ></Select>
       {/* <Table dataSource={dataSource}></Table> */}
       <List
         style={{ width: '100%' }}
@@ -223,8 +212,10 @@ const Problem: React.FC = () => {
                   danger
                   shape="circle"
                   onClick={() => handleDelete(index)}
-                  icon={<MinusCircleOutlined />}></Button>,
-              ]}>
+                  icon={<MinusCircleOutlined />}
+                ></Button>,
+              ]}
+            >
               <List.Item.Meta
                 description={
                   <Popover
@@ -237,28 +228,29 @@ const Problem: React.FC = () => {
                       overflow: 'scroll',
                     }}
                     title={item.title}
-                    content={
-                      <ReadOnly style={{}} html={item.description}></ReadOnly>
-                    }>
+                    content={<ReadOnly style={{}} html={item.description}></ReadOnly>}
+                  >
                     <div
                       className="hover:cursor-pointer text-indigo-500 min-w-max"
-                      onClick={() => handleItemClick(item.id)}>
+                      onClick={() => handleItemClick(item.id)}
+                    >
                       {item.title}
                     </div>
                   </Popover>
-                }></List.Item.Meta>
+                }
+              ></List.Item.Meta>
               <div className="">
                 <span>分数：</span>
                 <InputNumber
                   min={'0'}
                   defaultValue={item.score}
-                  onChange={value =>
-                    handleScoreChange(value, index)
-                  }></InputNumber>
+                  onChange={(value) => handleScoreChange(value, index)}
+                ></InputNumber>
               </div>
             </List.Item>
           </Fragment>
-        )}></List>
+        )}
+      ></List>
       <Space className="flex justify-center">
         {/* <Button
           onClick={() => {
@@ -267,30 +259,21 @@ const Problem: React.FC = () => {
         >
           创建赛内题目
         </Button> */}
-        <Button
-          onClick={() =>
-            nav(
-              `/creation/competition/competition?competition_id=${competition_id}`,
-            )
-          }>
+        <Button onClick={() => nav(`/creation/competition/competition?competition_id=${competition_id}`)}>
           上一步
+        </Button>
+        <Button
+          onClick={() => {
+            nav(`/competition/${competition_id}/overview`)
+          }}
+        >
+          跳转比赛详情
         </Button>
         <Button type="primary" onClick={handleSubmit}>
           保存
         </Button>
-        <Button
-          type="primary"
-          onClick={() => {
-            nav(`/competition/${competition_id}/overview`)
-          }}>
-          跳转比赛详情
-        </Button>
       </Space>
-      {isModelOpen && (
-        <ProblemNew
-          open={isModelOpen}
-          setisModelOpen={setisModelOpen}></ProblemNew>
-      )}
+      {isModelOpen && <ProblemNew open={isModelOpen} setisModelOpen={setisModelOpen}></ProblemNew>}
     </div>
   )
 }

@@ -83,8 +83,6 @@ const ProblemList: React.FC<IProps> = (props) => {
   const [selectedTopic, setSelectedTopic] = useState<ITopic | undefined>()
   const [tagList, setTagList] = useState<ITag[]>([])
   const [fetchDone, setFetchDone] = useState(false)
-  const leftCtn = useRef<HTMLDivElement>(null)
-  const searchCtn = useRef<HTMLDivElement>(null)
   const [tableScrollHeight, setTableScrollHeight] = useState(0)
   const [collapseActiveKey, setCollapseActiveKey] = useState([topic_id])
 
@@ -353,11 +351,10 @@ const ProblemList: React.FC<IProps> = (props) => {
         className="flex h-full"
         style={{
           width: `${width}px`,
-          maxWidth: '1024px',
         }}
       >
-        <div ref={leftCtn} className="grow w-full" style={{ width: '1px' }}>
-          <div ref={searchCtn} className="py-4 w-full flex">
+        <div className="grow w-full" style={{ width: '1px' }}>
+          <div className="py-4 w-full flex">
             <div style={{ flexGrow: '1', width: '1/3' }}>
               <Select
                 style={{
@@ -380,20 +377,6 @@ const ProblemList: React.FC<IProps> = (props) => {
                 content={
                   <div>
                     {tagList.map((item: ITag, index) => (
-                      // <Tag
-                      //   key={index}
-                      //   style={{
-                      //     margin: '0.5rem 0.25rem'
-                      //   }}
-                      //   color={`${item.checked ? '#6366f1' : '#f1f5f9'}`}
-                      // >
-                      //   <div
-                      //     className={`hover:cursor-pointer select-none ${item.checked ? 'text-white' : 'text-slate-700'}`}
-                      //     onClick={() => handleTagClick(index)}
-                      //   >
-                      //     {item.label}
-                      //   </div>
-                      // </Tag>
                       <span
                         key={index}
                         onClick={() => handleTagClick(index)}

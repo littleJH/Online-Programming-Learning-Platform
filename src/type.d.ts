@@ -111,6 +111,11 @@ export interface ICompetition {
   up_num: number
   updated_at: string
   user_id: string
+  labels?: {
+    id: string
+    label: string
+    competition_id: string
+  } []
 }
 
 export type ProgramMode = 'standard' | 'special_judge' | 'standardHack' | 'specialHack'

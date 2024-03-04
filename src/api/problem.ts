@@ -1,11 +1,5 @@
 import axios from 'axios'
-import {
-  createRequest,
-  baseConfig,
-  jsonConfig,
-  formConfig,
-  translateBaseUrl,
-} from '../config/apiConfig'
+import { createRequest, baseConfig, jsonConfig, formConfig, translateBaseUrl } from '../config/apiConfig'
 
 const request = createRequest({ baseURL: 'problem' })
 
@@ -35,15 +29,8 @@ export const getProblemLikeNumApi = (id: string, type: 'true' | 'false') => {
   return request.get(`/like/number/${id}?like=${type}`)
 }
 
-export const getProblemLikeListApi = (
-  id: string,
-  type: 'true' | 'false',
-  pageNum = 1,
-  pageSize = 20,
-) => {
-  return request.get(
-    `/like/list/${id}?like=${type}&pageNum=${pageNum}&pageSize=${pageSize}`,
-  )
+export const getProblemLikeListApi = (id: string, type: 'true' | 'false', pageNum = 1, pageSize = 20) => {
+  return request.get(`/like/list/${id}?like=${type}&pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 
 export const getProblemLikedApi = (id: string) => {
@@ -68,14 +55,8 @@ export const getProblemCollectNumApi = (id: string) => {
   return request.get(`/collect/number/${id}`)
 }
 
-export const getProblemCollectListApi = (
-  id: string,
-  pageNum = 1,
-  pageSize = 20,
-) => {
-  return request.get(
-    `/collect/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`,
-  )
+export const getProblemCollectListApi = (id: string, pageNum = 1, pageSize = 20) => {
+  return request.get(`/collect/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 
 export const collectProblemApi = (id: string) => {
@@ -97,33 +78,16 @@ export const getProblemVisibleNumApi = (id: string) => {
 
 // searth problem
 
-export const searchProblemByTextApi = (
-  text: string,
-  pageNum = 1,
-  pageSize = 20,
-) => {
+export const searchProblemByTextApi = (text: string, pageNum = 1, pageSize = 20) => {
   return request.get(`/search/${text}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 
-export const searchProblemByLabelApi = (
-  labels: string[],
-  pageNum = 1,
-  pageSize = 20,
-) => {
-  return request.get(
-    `/search/label?pageNum=${pageNum}&pageSize=${pageSize}&labels=${labels}`,
-  )
+export const searchProblemByLabelApi = (labels: string[], pageNum = 1, pageSize = 20) => {
+  return request.get(`/search/label?pageNum=${pageNum}&pageSize=${pageSize}&labels=${labels}`)
 }
 
-export const searchProblemByTextAndLabelApi = (
-  text: string,
-  labels: string[],
-  pageNum = 1,
-  pageSize = 20,
-) => {
-  return request.get(
-    `/search/with/label/${text}?pageNum=${pageNum}&pageSize=${pageSize}&labels=${labels}`,
-  )
+export const searchProblemByTextAndLabelApi = (text: string, labels: string[], pageNum = 1, pageSize = 20) => {
+  return request.get(`/search/with/label/${text}?pageNum=${pageNum}&pageSize=${pageSize}&labels=${labels}`)
 }
 
 // hot
@@ -151,11 +115,7 @@ export const translateProblemApi = (text: string) => {
 }
 
 // other
-export const getUserProblemListApi = (
-  id: string,
-  pageNum = 1,
-  pageSize = 20,
-) => {
+export const getUserProblemListApi = (id: string, pageNum = 1, pageSize = 20) => {
   return request.get(`/user/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 

@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { getCompetitionListApi } from '@/api/competition'
+import {
+  getComLabels,
+  getCompetitionListApi,
+  searchComByLabelApi,
+  searchComByTextAndLabelApi,
+  searchComByTextApi,
+} from '@/api/competition'
 import { Skeleton, Table, theme } from 'antd'
 import { CompetitionState, CompetitionType, ICompetition } from '@/type'
 import dayjs from 'dayjs'
@@ -12,6 +18,8 @@ import GeneralTable, { GeneralTableProps } from '@/components/table/GeneralTable
 import { useSearchParams } from 'react-router-dom'
 import { totalmem } from 'os'
 import { getEnterConditionApi } from '@/api/competitionMixture'
+import MyTag from '@/components/Label/MyTag'
+import Search from 'antd/es/input/Search'
 
 interface IDataSource {
   state: CompetitionState
@@ -25,6 +33,7 @@ interface IDataSource {
   id: string
   key: string
   enter: boolean
+  labels: string[]
 }
 
 const stateIconSize = 3
@@ -39,14 +48,17 @@ const getState = (start: string, end: string): CompetitionState => {
 
 const View: React.FC = () => {
   const nav = useNavTo()
+  const [loading, setLoading] = useState(false)
   const [querys, setQuerys] = useSearchParams()
   const [dataSource, setdataSource] = useState<IDataSource[]>([])
+  const [total, setTotal] = useState(0)
+  const { token } = theme.useToken()
   const [filter, setFilter] = useState({
     pageNum: Number(querys.get('pageNum')) || 1,
     pageSize: Number(querys.get('pageSize')) || 20,
+    text: querys.get('text') || '',
+    label: querys.get('label') || '',
   })
-  const [total, setTotal] = useState(0)
-  const { token } = theme.useToken()
 
   useEffect(() => {
     setdataSource([])
@@ -54,12 +66,27 @@ const View: React.FC = () => {
   }, [filter])
 
   const fetch = async () => {
-    const res = await getCompetitionListApi(filter.pageNum, filter.pageSize)
-    setTotal(res.data?.data?.total || 0)
-    const competitions: ICompetition[] = res.data.data?.competitions || []
+    setLoading(true)
+    const { text, label, pageNum, pageSize } = filter
+    let competitions: ICompetition[] = []
+    let total = 0
+    let result
     const list: IDataSource[] = []
+    if (!text && !label) {
+      result = await getCompetitionListApi(pageNum, pageSize)
+    } else if (text && !label) {
+      result = await searchComByTextApi(text, pageNum, pageSize)
+    } else if (!text && label) {
+      result = await searchComByLabelApi(label, pageNum, pageSize)
+    } else if (text && label) {
+      result = await searchComByTextAndLabelApi(text, label, pageNum, pageSize)
+    }
+    competitions = result ? result.data.data?.competitions || [] : []
+    total = result ? result.data.data?.total || 0 : 0
+
     for (let competition of competitions) {
       const res = await getEnterConditionApi(competition.type, competition.id)
+      const res1 = await getComLabels(competition.id)
       list.push({
         id: competition.id,
         title: {
@@ -76,9 +103,12 @@ const View: React.FC = () => {
         state: getState(competition.start_time, competition.end_time),
         key: competition.id,
         enter: res.data.data?.enter || false,
+        labels: (res1.data.data?.competitionLabels || []).map((item: any) => item.label),
       })
     }
+    setTotal(total)
     setdataSource(list)
+    setLoading(false)
   }
 
   const handleClick = (competition: ICompetition) => {
@@ -90,6 +120,7 @@ const View: React.FC = () => {
       key: 'state',
       title: '状态',
       align: 'center',
+      width: 100,
       dataIndex: 'state',
       filters: [
         { text: '未开始', value: 'notStart' },
@@ -114,8 +145,17 @@ const View: React.FC = () => {
     {
       key: 'title',
       title: '比赛名称',
-      align: 'center',
       dataIndex: ['title', 'label'],
+      render: (value: string, record: IDataSource) => {
+        return (
+          <div>
+            <span>{value}</span>
+            <span>
+              {record.labels?.map((item, index) => <span key={index}>{index <= 1 && <MyTag>{item}</MyTag>}</span>)}
+            </span>
+          </div>
+        )
+      },
     },
     {
       key: 'type',
@@ -127,7 +167,7 @@ const View: React.FC = () => {
         { text: '组队赛', value: 'group' },
         { text: '匹配赛', value: 'match' },
       ],
-      onFilter: (value: string, record: ICompetition) => value.toLowerCase() === record.type.toLowerCase(),
+      onFilter: (value: string, record: IDataSource) => value.toLowerCase() === record.type.toLowerCase(),
       render: (value: CompetitionType) => {
         return (
           <CompetitionTypeLabel type={value === 'OI' ? value : value.toLowerCase()} size={1}></CompetitionTypeLabel>
@@ -138,7 +178,7 @@ const View: React.FC = () => {
       key: 'start_time',
       title: '开始时间',
       align: 'center',
-      sorter: (a: ICompetition, b: ICompetition) => dayjs(a.start_time).valueOf() - dayjs(b.start_time).valueOf(),
+      sorter: (a: IDataSource, b: IDataSource) => dayjs(a.start_time).valueOf() - dayjs(b.start_time).valueOf(),
       dataIndex: 'start_time',
     },
     {
@@ -165,9 +205,8 @@ const View: React.FC = () => {
 
   const onPageChange = (pageNum: number, pageSize: number) => {
     console.log('onPageChange...', pageNum, pageSize)
-    setFilter({
-      pageNum,
-      pageSize,
+    setFilter((value) => {
+      return { ...value, pageNum, pageSize }
     })
     setQuerys((params) => {
       params.set('pageNum', String(pageNum))
@@ -186,17 +225,74 @@ const View: React.FC = () => {
     },
   }
 
+  const handleTextChange = (text: string) => {
+    setFilter((value) => {
+      return {
+        ...value,
+        text: text,
+      }
+    })
+    setQuerys((params) => {
+      params.set('text', text)
+      return params
+    })
+  }
+
+  const handleLabelChange = (label: string) => {
+    setFilter((value) => {
+      return {
+        ...value,
+        label: label,
+      }
+    })
+    setQuerys((params) => {
+      params.set('label', label)
+      return params
+    })
+  }
+
+  const handleSearch = () => {}
+
   return (
-    <div style={{ minWidth: '800px' }}>
-      {dataSource.length === 0 && (
-        <Skeleton
-          active
-          paragraph={{
-            rows: 10,
-          }}
-        />
-      )}
-      {dataSource.length > 0 && <GeneralTable {...tableProps}></GeneralTable>}
+    <div style={{ width: '800px' }}>
+      <div className="py-4 w-full flex">
+        <div style={{ flexGrow: '1' }}>
+          <Search
+            style={{
+              width: '100%',
+            }}
+            defaultValue={filter.text}
+            placeholder="名称搜索"
+            enterButton
+            onSearch={handleSearch}
+            onChange={(e) => handleTextChange(e.target.value)}
+          ></Search>
+        </div>
+        <div className="w-8"></div>
+        <div style={{ flexGrow: '1' }}>
+          <Search
+            style={{
+              width: '100%',
+            }}
+            defaultValue={filter.text}
+            placeholder="标签搜索"
+            enterButton
+            onSearch={fetch}
+            onChange={(e) => handleLabelChange(e.target.value)}
+          ></Search>
+        </div>
+      </div>
+      <div>
+        {loading && (
+          <Skeleton
+            active
+            paragraph={{
+              rows: 10,
+            }}
+          />
+        )}
+        {!loading && <GeneralTable {...tableProps}></GeneralTable>}
+      </div>
     </div>
   )
 }
