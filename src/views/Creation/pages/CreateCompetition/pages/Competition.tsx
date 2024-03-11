@@ -14,7 +14,7 @@ import {
 import { useParams, useSearchParams } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
 import { notificationApi } from '@/store/appStore'
-import useNavTo from '@/tool/myHooks/useNavTo'
+import myHooks from '@/tool/myHooks/myHooks'
 import { ICompetition } from '@/type'
 
 const competitionType = [
@@ -37,7 +37,7 @@ const competitionType = [
 ]
 
 const Competition: React.FC = () => {
-  const navTo = useNavTo()
+  const navTo = myHooks.useNavTo()
   const [querys] = useSearchParams()
   const competition_id = querys.get('competition_id')
   const [competition, setCompetition] = useState<ICompetition>()
@@ -209,7 +209,13 @@ const Competition: React.FC = () => {
         ></TextEditor>
       </Form.Item>
       <Form.Item name={'passwd'} label="密码">
-        <Input.Password style={{ width: '200px' }}></Input.Password>
+        {/* 阻止自动填充上一个输入框 */}
+        {/* <Input
+          style={{
+            display: 'none',
+          }}
+        ></Input> */}
+        <Input.Password autoComplete="new-password" style={{ width: '200px' }}></Input.Password>
       </Form.Item>
       <Form.Item name={'labels'} label="标签">
         <Select

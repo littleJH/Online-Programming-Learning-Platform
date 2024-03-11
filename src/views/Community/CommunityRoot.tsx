@@ -5,8 +5,8 @@ import HotRank from './Overview/Side/HotRank'
 import { getArticleListApi } from '@/api/article'
 import { useRecoilValue } from 'recoil'
 import { pathNameState } from '@/store/appStore'
-import { getPathArray } from '@/tool/MyUtils/utils'
-import useNavTo from '@/tool/myHooks/useNavTo'
+import utils from '@/tool/myUtils/utils'
+import myHooks from '@/tool/myHooks/myHooks'
 
 interface IStats {
   article: number
@@ -15,7 +15,7 @@ interface IStats {
 }
 
 const CommunityRoot: React.FC = () => {
-  const nav = useNavTo()
+  const nav = myHooks.useNavTo()
   const pathname = useRecoilValue(pathNameState)
   const [stats, setstats] = useState<IStats>({
     article: 0,
@@ -29,8 +29,8 @@ const CommunityRoot: React.FC = () => {
 
   useEffect(() => {
     Promise.all([
-      getArticleListApi(1, 0).then(res => {
-        setstats(value => {
+      getArticleListApi(1, 0).then((res) => {
+        setstats((value) => {
           return {
             ...value,
             article: res.data.data.total,
@@ -41,10 +41,8 @@ const CommunityRoot: React.FC = () => {
   }, [])
 
   const showHeaderSider = useMemo(
-    () =>
-      getPathArray(pathname).length > 1 &&
-      getPathArray(pathname)[1].includes('set'),
-    [pathname],
+    () => utils.getPathArray(pathname).length > 1 && utils.getPathArray(pathname)[1].includes('set'),
+    [pathname]
   )
 
   return (

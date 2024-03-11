@@ -13,22 +13,21 @@ import {
   GlobalOutlined,
   CodeOutlined,
 } from '@ant-design/icons'
-import useNavTo from '@/tool/myHooks/useNavTo'
-import MySvgIcon from '../Icon/MySvgIcon'
+import utils from '@/tool/myUtils/utils'
 import { useRecoilValue } from 'recoil'
 import { pathNameState } from '@/store/appStore'
-import { getPathArray } from '@/tool/MyUtils/utils'
+import myHooks from '@/tool/myHooks/myHooks'
 
-const SideBar: React.FC<{ header: string }> = (props) => {
+const SiderNav: React.FC<{ header: string }> = (props) => {
   const { header } = props
   const [current, setCurrent] = useState('')
   const [menuItem, setMenuItem] = useState([])
   const [openKeys, setOpenKeys] = useState<string[]>([])
   const pathname = useRecoilValue(pathNameState)
-  const navTo = useNavTo()
+  const navTo = myHooks.useNavTo()
 
   useEffect(() => {
-    const patharr = getPathArray(pathname)
+    const patharr = utils.getPathArray(pathname)
     const menuItems = menuItemObj[`${header}MenuItem`]
     setMenuItem(menuItems)
     setCurrent(patharr[1])
@@ -91,10 +90,18 @@ const menuItemObj: any = {
       key: 'form',
     },
   ],
-  competitionsetMenuItem: [
+  competitionMenuItem: [
     {
-      label: '全部',
-      key: 'all',
+      label: '普通赛',
+      key: 'common',
+    },
+    {
+      label: '及时赛',
+      key: 'random',
+    },
+    {
+      label: '标准赛',
+      key: 'standard',
     },
   ],
   communityMenuItem: [
@@ -298,4 +305,4 @@ const menuItemObj: any = {
   ],
 }
 
-export default SideBar
+export default SiderNav

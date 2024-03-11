@@ -2,13 +2,15 @@ import { BrowserRouter } from 'react-router-dom'
 import RouterWaiter from './router/router'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { ConfigProvider, notification, theme } from 'antd'
-import { isDarkState, notificationApi, themeState } from './store/appStore'
+import { isDarkState, notificationApi, sideBarTypeState, themeState } from './store/appStore'
 import { useEffect } from 'react'
+import utils from './tool/myUtils/utils'
 import './style.scss'
 
 function App() {
   const myTheme = useRecoilValue(themeState)
   const setNotificationApi = useSetRecoilState(notificationApi)
+  const setSideBarType = useSetRecoilState(sideBarTypeState)
   const [api, contextHolder] = notification.useNotification({
     placement: 'topRight',
     stack: false,
@@ -18,6 +20,7 @@ function App() {
 
   useEffect(() => {
     setNotificationApi(api)
+    setSideBarType(utils.getSideBarType(location.pathname))
   }, [])
 
   return (

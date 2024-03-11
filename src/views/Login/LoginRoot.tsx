@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import Login from '@/views/Login/log/Login'
 import Register from '@/views/Login/log/Register'
 import LoginPic from '@/assets/Login.svg'
-import { Divider } from 'antd'
 
 const LoginRoot: React.FC = () => {
   const [mode, setmode] = useState<'Login' | 'Register'>('Login')

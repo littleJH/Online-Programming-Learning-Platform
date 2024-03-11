@@ -1,19 +1,14 @@
 import Editor from '@monaco-editor/react'
-import React, {useCallback, useEffect, useState} from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Loading from '@/components/Loading/Loading'
-import {Modal, Select, Button} from 'antd'
-import {languageList, poj_languageList} from '@/components/Editor/LanguageList'
-import {getCurrentUserinfo, updateInfoApi} from '@/api/user'
+import { Modal, Select, Button, theme } from 'antd'
+import { languageList, poj_languageList } from '@/components/Editor/LanguageList'
+import { getCurrentUserinfo, updateInfoApi } from '@/api/user'
 import CodeEditorConfig from '@/components/Editor/CodeEditorConfig'
-import {useRecoilState, useRecoilValue} from 'recoil'
-import {
-  languageState,
-  monacoOptionsState,
-  monacoThemeState,
-  userInfoState
-} from '@/store/appStore'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { languageState, monacoOptionsState, monacoThemeState, userInfoState } from '@/store/appStore'
 import MySvgIcon from '../Icon/MySvgIcon'
-import {cpp} from '@/config/config'
+import { cpp } from '@/config/config'
 
 interface Iprops {
   value: string
@@ -24,13 +19,14 @@ interface Iprops {
 }
 
 const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
-  const {height, value, className, codeChange, oj} = props
+  const { height, value, className, codeChange, oj } = props
   const [languageOptions, setLanguageOptions] = useState(languageList)
   const [openConfigModal, setopenConfigModal] = useState(false)
   const [info, setInfo] = useRecoilState(userInfoState)
   const [monacoOptions, setMonacoOptions] = useRecoilState(monacoOptionsState)
   const [language, setLanguage] = useRecoilState(languageState)
   const [monacoTheme, setMonacoTheme] = useRecoilState(monacoThemeState)
+  const { token } = theme.useToken()
 
   useEffect(() => {
     setLanguageOptions(() => {
@@ -54,10 +50,10 @@ const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
   const updateConfig = () => {
     let newInfo = {
       ...info,
-      monaco_options: monacoOptions
+      monaco_options: monacoOptions,
     }
-    if (language) newInfo = {...newInfo, language}
-    if (monacoTheme) newInfo = {...newInfo, monaco_theme: monacoTheme}
+    if (language) newInfo = { ...newInfo, language }
+    if (monacoTheme) newInfo = { ...newInfo, monaco_theme: monacoTheme }
     updateInfoApi(JSON.stringify(newInfo)).then(async (res) => {
       if (res.data.code === 200) {
         const res = await getCurrentUserinfo()
@@ -70,40 +66,40 @@ const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
     <>
       <div
         style={{
-          height: `${height}px`
-        }}>
-        <div className={'bg-slate-50 h-12 p-2 flex items-center'}>
+          height: `${height}px`,
+        }}
+      >
+        <div
+          className={'h-12 p-2 flex items-center'}
+          style={{
+            backgroundColor: token.colorPrimaryBg,
+          }}
+        >
           <Select
             style={{
-              width: '160px'
+              width: '160px',
             }}
             bordered={false}
             defaultValue={language}
             options={languageOptions}
-            onChange={handleLanguageChange}></Select>
-          <div className='grow'></div>
-          <Button
-            type='text'
-            className='flex items-center'
-            onClick={handleMonacoThemeChange}>
+            onChange={handleLanguageChange}
+          ></Select>
+          <div className="grow"></div>
+          <Button type="text" className="flex items-center" onClick={handleMonacoThemeChange}>
             <MySvgIcon
               href={`#icon-${monacoTheme === 'light' ? 'light' : 'vs-dark'}`}
               size={2}
-              color={`${
-                monacoTheme === 'light' ? '#fff' : '#000'
-              }`}></MySvgIcon>
+              color={`${monacoTheme === 'light' ? '#fff' : '#000'}`}
+            ></MySvgIcon>
           </Button>
-          <Button
-            type='text'
-            className='flex items-center'
-            onClick={() => setopenConfigModal(true)}>
-            <MySvgIcon href='#icon-setting' size={2}></MySvgIcon>
+          <Button type="text" className="flex items-center" onClick={() => setopenConfigModal(true)}>
+            <MySvgIcon href="#icon-setting" size={2}></MySvgIcon>
           </Button>
         </div>
         <Editor
           defaultValue={value}
           height={`${height - 42}px`}
-          width='100%'
+          width="100%"
           className={`${className} bg-white`}
           language={cpp.includes(language) ? 'cpp' : language}
           theme={monacoTheme}
@@ -118,15 +114,15 @@ const CodeEditor: React.FC<Iprops> = (props: Iprops) => {
         onCancel={() => setopenConfigModal(false)}
         afterClose={() => updateConfig()}
         footer={[]}
-        centered>
+        centered
+      >
         <div
           style={{
             maxHeight: '50vh',
-            overflowY: 'scroll'
-          }}>
-          <CodeEditorConfig
-            monacoOptions={monacoOptions}
-            setMonacoOptions={setMonacoOptions}></CodeEditorConfig>
+            overflowY: 'scroll',
+          }}
+        >
+          <CodeEditorConfig monacoOptions={monacoOptions} setMonacoOptions={setMonacoOptions}></CodeEditorConfig>
         </div>
       </Modal>
     </>

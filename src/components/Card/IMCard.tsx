@@ -1,49 +1,24 @@
-import {
-  craeteLetterApi,
-  enterPublishLetterWS,
-  getLettersApi,
-} from '@/api/Letter'
+import { craeteLetterApi, enterPublishLetterWS, getLettersApi } from '@/api/Letter'
 import { IChat, IGroup, User } from '@/type'
-import {
-  Avatar,
-  Button,
-  Divider,
-  Drawer,
-  Input,
-  List,
-  Card,
-  Popover,
-  theme,
-} from 'antd'
+import { Avatar, Button, Divider, Drawer, Input, List, Card, Popover, theme } from 'antd'
 import { TextAreaRef } from 'antd/es/input/TextArea'
-import React, {
-  KeyboardEventHandler,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { KeyboardEventHandler, useEffect, useMemo, useRef, useState } from 'react'
 import { EllipsisOutlined } from '@ant-design/icons'
-import {
-  craeteChatApi,
-  enterGroupPublishChatWS,
-  enterPublishChatWs,
-  getGroupChatsApi,
-} from '@/api/chat'
+import { craeteChatApi, enterGroupPublishChatWS, enterPublishChatWs, getGroupChatsApi } from '@/api/chat'
 import { getUserInfoApi } from '@/api/user'
 import { iconBaseUrl } from '@/config/apiConfig'
 import { useRecoilValue } from 'recoil'
 import { userInfoState } from '@/store/appStore'
 import GroupInfo from '@/components/Group/GroupInfo'
 import UserInfo from '@/components/User/UserInfo'
-import useWsConnect from '@/tool/myHooks/useWsConnect'
+import myHooks from '@/tool/myHooks/myHooks'
 
 interface IProps {
   group?: IGroup
   friend?: User
 }
 
-const Chat: React.FC<IProps> = props => {
+const Chat: React.FC<IProps> = (props) => {
   const { group, friend } = props
   const info = useRecoilValue(userInfoState)
   const inputTextarea = useRef<TextAreaRef>(null)
@@ -54,7 +29,7 @@ const Chat: React.FC<IProps> = props => {
   const chatBox = useRef<HTMLDivElement>(null)
   const { token } = theme.useToken()
 
-  useWsConnect({ wsApi: getWs(), onMessage: onWsMessage })
+  myHooks.useWsConnect({ wsApi: getWs(), onMessage: onWsMessage })
 
   useEffect(() => {
     initChatList()
@@ -90,7 +65,7 @@ const Chat: React.FC<IProps> = props => {
   }
 
   function onWsMessage(message: any) {
-    setChatList(value => [...value, message])
+    setChatList((value) => [...value, message])
   }
 
   const sendChat = () => {
@@ -105,12 +80,9 @@ const Chat: React.FC<IProps> = props => {
         group.id,
         JSON.stringify({
           content: text,
-        }),
+        })
       ).then(resolveFn)
-    friend &&
-      craeteLetterApi(friend.id, JSON.stringify({ content: text })).then(
-        resolveFn,
-      )
+    friend && craeteLetterApi(friend.id, JSON.stringify({ content: text })).then(resolveFn)
   }
 
   // const handleChatScroll = (e: React.UIEvent) => {
@@ -121,10 +93,7 @@ const Chat: React.FC<IProps> = props => {
   const renderMessageCard = (msgItem: IChat) => {
     const bool = msgItem.chat.author_id === info?.id
     return (
-      <div
-        id={msgItem.chat.group_id}
-        className={`w-full flex justify-${bool ? 'end' : 'start'}`}
-      >
+      <div id={msgItem.chat.group_id} className={`w-full flex justify-${bool ? 'end' : 'start'}`}>
         {!bool && (
           <Avatar
             src={`${iconBaseUrl}/${msgItem.user.icon}`}
@@ -245,14 +214,14 @@ const Chat: React.FC<IProps> = props => {
           <Input.TextArea
             ref={inputTextarea}
             value={text}
-            onChange={e => setText(e.target.value)}
+            onChange={(e) => setText(e.target.value)}
             bordered={false}
             autoSize={{
               minRows: 6,
             }}
-            onKeyDown={e => {
+            onKeyDown={(e) => {
               if (e.key === 'Enter')
-                if (e.shiftKey) setText(value => `${value}\n`)
+                if (e.shiftKey) setText((value) => `${value}\n`)
                 else {
                   e.preventDefault()
                   sendChat()
@@ -260,19 +229,11 @@ const Chat: React.FC<IProps> = props => {
             }}
           ></Input.TextArea>
         </div>
-        <Button
-          className="absolute bottom-4 right-4"
-          type="primary"
-          onClick={sendChat}
-        >
+        <Button className="absolute bottom-4 right-4" type="primary" onClick={sendChat}>
           发送
         </Button>
       </div>
-      <Drawer
-        closeIcon={null}
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-      >
+      <Drawer closeIcon={null} open={openModal} onClose={() => setOpenModal(false)}>
         {group && <GroupInfo group={group}></GroupInfo>}
         {friend && <UserInfo user={friend}></UserInfo>}
       </Drawer>

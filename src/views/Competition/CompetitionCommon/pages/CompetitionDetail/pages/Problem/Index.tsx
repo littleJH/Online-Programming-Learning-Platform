@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import { getProblemNewApi, getProblemNewListApi } from '@/api/problemNew'
 import { getRecordListApi } from '@/api/competitionMixture'
-import ProblemStateLabel from '../../component/Label/ProblemStateLabel'
+import ProblemStateLabel from '../../../../component/Label/ProblemStateLabel'
 import { theme } from 'antd'
 import Answer, { ChangeOptions } from './component/Answer'
 import MyCollapse from '@/components/Collapse/MyCollapse'
@@ -39,9 +39,9 @@ const Element: React.FC = () => {
         extra: item.state,
         style: {
           marginBottom: 24,
-          // background: token.colorFillAlter,
-          // borderRadius: token.borderRadiusLG,
-          // border: 'none',
+          background: token.colorFillAlter,
+          borderRadius: token.borderRadiusLG,
+          border: 'none',
         },
       }
     })

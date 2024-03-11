@@ -12,7 +12,7 @@ const baseUrlObj: {
   testBaseUrl: import.meta.env.DEV ? '/test' : 'http://test_oj.mgaronya.com/test',
   tagBaseUrl: import.meta.env.DEV ? '/tag_api' : 'http://api_tag.mgaronya.com',
   translateBaseUrl: import.meta.env.DEV ? '/translate_api' : 'http://api_translate.mgaronya.com/translator/translate',
-  // fileBaseUrl: import.meta.env.Dev ? '' : 'api_file.mgaronya.com'
+  fileBaseUrl: import.meta.env.Dev ? '/file_api' : 'http://10.141.47.20:1000',
 }
 
 export const wsBaseUrl = baseUrlObj.wsBaseUrl
@@ -23,7 +23,7 @@ export const tagBaseUrl = baseUrlObj.tagBaseUrl
 export const baseURL = baseUrlObj.baseURL
 export const imgGetBaseUrl = baseUrlObj.imgGetBaseUrl
 export const testBaseUrl = baseUrlObj.testBaseUrl
-// export const fileBaseUrl = baseUrlObj.fileBaseUrl
+export const fileBaseUrl = baseUrlObj.fileBaseUrl
 
 export const baseConfig = () => {
   return {
@@ -69,11 +69,22 @@ export const createRequest = (options: { type?: string; baseURL: string }) => {
   //响应拦截器
   request.interceptors.response.use(
     (response) => {
-      const { data } = response
-      if (data.code == 201 && !localStorage.getItem('token') && location.pathname !== '/login') {
-        const a = document.createElement('a')
-        a.href = '/login'
-        a.click()
+      const { data, request, config, headers, status, statusText } = response
+      switch (data.code) {
+        case 200:
+          break
+        case 201:
+          if (!localStorage.getItem('token') && location.pathname !== '/login') {
+            const a = document.createElement('a')
+            a.href = '/login'
+            a.click()
+          } else {
+            message.error(data.msg)
+          }
+          break
+        default:
+          message.error(`${data.msg}`)
+          break
       }
       return response
     },

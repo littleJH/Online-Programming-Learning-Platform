@@ -15,7 +15,7 @@ export default defineConfig({
       '@config': path.resolve(__dirname, './src/config'),
       '@views': path.resolve(__dirname, './src/views'),
       '@tool': path.resolve(__dirname, './src/tool'),
-      '@store': path.resolve(__dirname, './src/store')
+      '@store': path.resolve(__dirname, './src/store'),
     },
   },
   server: {
@@ -23,27 +23,27 @@ export default defineConfig({
       '/api': {
         target: 'http://10.141.47.20:1000',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/api/, ''),
+        rewrite: (path) => path.replace(/^\/api/, ''),
       },
       '/test': {
         target: 'http://test_oj.mgaronya.com',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/test/, ''),
+        rewrite: (path) => path.replace(/^\/test/, ''),
       },
       '/tag_api': {
         target: 'http://api_tag.mgaronya.com',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/tag_api/, ''),
+        rewrite: (path) => path.replace(/^\/tag_api/, ''),
       },
       '/translate_api': {
-        target: 'http://api_translate.mgaronya.com/translator/translate',
+        target: 'http://api_translate.mgaronya.com/translator',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/translate_api/, ''),
+        rewrite: (path) => path.replace(/^\/translate_api/, ''),
       },
       '/file_api': {
-        target: 'http://api_file.mgaronya.com',
+        target: 'http://10.141.47.20:1000',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/file_api/, ''),
+        rewrite: (path) => path.replace(/^\/file_api/, ''),
       },
     },
   },

@@ -19,23 +19,16 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import Dragger from 'antd/es/upload/Dragger'
 import { createTagApi, createTagAutoApi } from '@/api/tag'
 import { RcFile, UploadChangeParam } from 'antd/es/upload'
-import { UploadProblemModal } from '@/components/Problem/uploadProblem/UploadProblemModal'
+import { UploadProblemModal } from '@/components/upload/uploadProblem/UploadProblemModal'
 import { CloudUploadOutlined } from '@ant-design/icons'
 
-const stringArrItem = [
-  'test_input',
-  'test_output',
-  'sample_input',
-  'sample_output',
-]
+const stringArrItem = ['test_input', 'test_output', 'sample_input', 'sample_output']
 
 const Create: React.FC = () => {
   const [querys, setQuerys] = useSearchParams()
   const id = useRef(querys.get('id'))
   const [problem, setProblem] = useState<IProblem>()
-  const [stepStatus, setstepStatus] = useState<
-    'wait' | 'process' | 'finish' | 'error'
-  >('process')
+  const [stepStatus, setstepStatus] = useState<'wait' | 'process' | 'finish' | 'error'>('process')
   const nav = useNavigate()
   const [form] = Form.useForm()
   const [codeLanguage, setcodeLanguage] = useState('C')
@@ -48,13 +41,12 @@ const Create: React.FC = () => {
   const [failMessage, setfailMessage] = useState()
   const [loading, setloading] = useState(false)
   const [uploadDone, setUploadDone] = useState(false)
-  const [currentProblem, setCurrentProblem] =
-    useRecoilState(currentProblemState)
+  const [currentProblem, setCurrentProblem] = useRecoilState(currentProblemState)
   const notification = useRecoilValue(notificationApi)
 
   useEffect(() => {
     if (id.current) {
-      showProblemApi(id.current).then(res => {
+      showProblemApi(id.current).then((res) => {
         const problem = res.data.data.problem
         setProblem(problem)
       })
@@ -69,11 +61,8 @@ const Create: React.FC = () => {
     form
       .validateFields()
       .then(() => {
-        localStorage.setItem(
-          'problemForm',
-          JSON.stringify(form.getFieldsValue()),
-        )
-        setcurrentStep(currentStep => currentStep + 1)
+        localStorage.setItem('problemForm', JSON.stringify(form.getFieldsValue()))
+        setcurrentStep((currentStep) => currentStep + 1)
       })
       .catch(() => {
         notification &&
@@ -105,14 +94,9 @@ const Create: React.FC = () => {
         return
       }
       const id = res.data.data.program.id
-      programMode === 'standard'
-        ? form.setFieldValue('standard', id)
-        : form.setFieldValue('special_judge', id)
+      programMode === 'standard' ? form.setFieldValue('standard', id) : form.setFieldValue('special_judge', id)
     } else {
-      const res = await Promise.all([
-        createProgramApi(data1),
-        createProgramApi(data2),
-      ])
+      const res = await Promise.all([createProgramApi(data1), createProgramApi(data2)])
       if (res[0].data.code !== 200) {
         notification &&
           notification.warning({
@@ -122,9 +106,7 @@ const Create: React.FC = () => {
       }
       const id1 = res[0].data.data.program.id
       const id2 = res[1].data.data.program.id
-      programMode === 'standardHack'
-        ? form.setFieldValue('standard', id1)
-        : form.setFieldValue('special_judge', id1)
+      programMode === 'standardHack' ? form.setFieldValue('standard', id1) : form.setFieldValue('special_judge', id1)
       form.setFieldValue('input_check', id2)
     }
     submit()
@@ -135,10 +117,7 @@ const Create: React.FC = () => {
     Object.keys(result).forEach((key: string) => {
       if (key === 'sample_case') {
         if (result.sample_case_expand) {
-          result.sample_case = [
-            result.sample_case,
-            ...(result.sample_case_expand as any),
-          ]
+          result.sample_case = [result.sample_case, ...(result.sample_case_expand as any)]
         } else {
           result.sample_case = [result.sample_case]
         }
@@ -146,20 +125,13 @@ const Create: React.FC = () => {
 
       if (key === 'test_case') {
         if (result.test_case_expand) {
-          result.test_case = [
-            result.test_case,
-            ...(result.test_case_expand as any),
-          ]
+          result.test_case = [result.test_case, ...(result.test_case_expand as any)]
         } else {
           result.test_case = [result.test_case]
         }
       }
 
-      if (
-        typeof result[key] !== 'string' &&
-        key !== 'sample_case' &&
-        key !== 'test_case'
-      ) {
+      if (typeof result[key] !== 'string' && key !== 'sample_case' && key !== 'test_case') {
         result[key] = JSON.stringify(result[key])
       }
 
@@ -175,9 +147,9 @@ const Create: React.FC = () => {
       delete result.test_case_expand
     })
     console.log(result)
-    createProblemApi(JSON.stringify(result)).then(res => {
+    createProblemApi(JSON.stringify(result)).then((res) => {
       console.log(res.data)
-      setcurrentStep(currentStep => currentStep + 1)
+      setcurrentStep((currentStep) => currentStep + 1)
       if (res.data.code === 200) {
         // localStorage.removeItem('problemForm')
         // localStorage.removeItem('code1')
@@ -210,11 +182,11 @@ const Create: React.FC = () => {
   const createTagAuto = useCallback(() => {
     let index = 0
     getProblemListApi(1, 10)
-      .then(res => {
+      .then((res) => {
         console.log(res.data.data)
         return res.data.data.total
       })
-      .then(async total => {
+      .then(async (total) => {
         while (index <= total + 1) {
           console.log(index, total + 1)
           const res = await getProblemListApi(index, 1)
@@ -239,7 +211,7 @@ const Create: React.FC = () => {
           index++
         }
       })
-      .catch(err => console.log(err))
+      .catch((err) => console.log(err))
   }, [])
 
   return (
@@ -321,16 +293,12 @@ const Create: React.FC = () => {
               <Space>
                 <Button
                   onClick={() => {
-                    setcurrentStep(currentStep => currentStep - 1)
+                    setcurrentStep((currentStep) => currentStep - 1)
                   }}
                 >
                   上一步
                 </Button>
-                <Button
-                  type="primary"
-                  onClick={() => handleNextClick()}
-                  loading={loading}
-                >
+                <Button type="primary" onClick={() => handleNextClick()} loading={loading}>
                   下一步
                 </Button>
               </Space>

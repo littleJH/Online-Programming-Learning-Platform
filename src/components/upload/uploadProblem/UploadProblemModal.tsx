@@ -11,7 +11,7 @@ import { createProblemLabelApi, uploadVjudgeProblemApi } from '@/api/problem'
 import { RcFile, UploadFile } from 'antd/es/upload'
 import { createTagAutoApi } from '@/api/tag'
 import { IProblem, ITheme } from '@/type'
-import { formatProblemJson } from '@/tool/MyUtils/utils'
+import utils from '@/tool/myUtils/utils'
 import UploadItem from './UploadItem'
 import Loading from '@/components/Loading/Loading'
 import { useRecoilValue } from 'recoil'
@@ -22,36 +22,26 @@ interface IProps {
   setOpenUploadModal: Function
 }
 
-export const UploadProblemModal: React.FC<IProps> = props => {
+export const UploadProblemModal: React.FC<IProps> = (props) => {
   const { openUploadModal, setOpenUploadModal } = props
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const [total, setTotal] = useState(0)
   const [loadCount, setLoadCount] = useState(0)
-  const percent = useMemo(
-    () => Math.ceil((loadCount / total) * 100),
-    [total, loadCount],
-  )
+  const percent = useMemo(() => Math.ceil((loadCount / total) * 100), [total, loadCount])
   const theme = useRecoilValue<ITheme>(themeState)
 
-  useEffect(
-    () => console.log('count, total, percent ==> ', loadCount, total, percent),
-    [loadCount, total, percent],
-  )
+  useEffect(() => console.log('count, total, percent ==> ', loadCount, total, percent), [loadCount, total, percent])
 
-  const handleUpload = async (
-    file: RcFile,
-    fileList?: RcFile[],
-    length?: number,
-  ) => {
+  const handleUpload = async (file: RcFile, fileList?: RcFile[], length?: number) => {
     fileList && total !== fileList.length && setTotal(fileList.length)
     length && total !== length && setTotal(length)
-    const data = await formatProblemJson(file)
+    const data = await utils.formatProblemJson(file)
     const {
       data: { code, data: resData, msg },
     } = await uploadVjudgeProblemApi(JSON.stringify(data))
     if (code === 200) createTagAuto(resData)
-    setLoadCount(value => value + 1)
-    setFileList(value => [
+    setLoadCount((value) => value + 1)
+    setFileList((value) => [
       ...value,
       {
         uid: file.uid,
@@ -88,13 +78,11 @@ export const UploadProblemModal: React.FC<IProps> = props => {
     setLoadCount(0)
     setFileList([])
     for (let file of list)
-      file.status === 'error' &&
-        file.originFileObj &&
-        handleUpload(file.originFileObj, undefined, list.length)
+      file.status === 'error' && file.originFileObj && handleUpload(file.originFileObj, undefined, list.length)
   }
 
   const handleRemove = (file: UploadFile) => {
-    const index = fileList.findIndex(value => value.uid === file.uid)
+    const index = fileList.findIndex((value) => value.uid === file.uid)
     const newFileList = fileList.slice()
     newFileList.splice(index, 1)
     setFileList(newFileList)
@@ -109,24 +97,18 @@ export const UploadProblemModal: React.FC<IProps> = props => {
       message: string
     }
     const myFile = { ...file } as MyFile
-    return (
-      <UploadItem
-        originNode={originNode}
-        message={myFile.message}
-        status={file.status}
-      ></UploadItem>
-    )
+    return <UploadItem originNode={originNode} message={myFile.message} status={file.status}></UploadItem>
   }
 
   const renderModalFooter = () => {
     let count = 0
     const footer = []
-    fileList.forEach(file => file.status === 'error' && count++)
+    fileList.forEach((file) => file.status === 'error' && count++)
     if (count)
       footer.push(
         <Button key={'btn1'} onClick={handleReUpload}>
           重新上传错误文件
-        </Button>,
+        </Button>
       )
     return footer
   }
@@ -199,7 +181,7 @@ export const UploadProblemModal: React.FC<IProps> = props => {
         setOpenUploadModal(false)
         setFileList([])
       }}
-      footer={<div>{renderModalFooter().map(item => item)}</div>}
+      footer={<div>{renderModalFooter().map((item) => item)}</div>}
       maskClosable={false}
       width={512}
       keyboard={false}

@@ -12,7 +12,7 @@ import {
   updateProblemNewApi,
 } from '@/api/problemNew'
 import { ICompetition } from '@/type'
-import useNavTo from '@/tool/myHooks/useNavTo'
+import myHooks from '@/tool/myHooks/myHooks'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 interface IProblem {
@@ -58,7 +58,7 @@ const fetch = (value: string, setoptions: Function) => {
 }
 
 const Problem: React.FC = () => {
-  const nav = useNavTo()
+  const nav = myHooks.useNavTo()
   const [querys] = useSearchParams()
   const competition_id = querys.get('competition_id')
   const [problemList, setproblemList] = useState<IProblem[]>([])

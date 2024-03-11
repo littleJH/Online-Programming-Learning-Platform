@@ -1,6 +1,6 @@
 import { baseConfig, createRequest, formConfig } from '../config/apiConfig'
 
-const request = createRequest({ baseURL: 'file' })
+const request = createRequest({ baseURL: 'file', type: 'file' })
 
 export const uploadFileApi = (path: string, data: any) => {
   return request.post(`/upload/${path}`, data, formConfig())
@@ -15,7 +15,7 @@ export const unzipFileApi = (
     path: string
     name: string
   },
-  second: string,
+  second: string
 ) => {
   const { path, name } = first
   const data = new FormData()
@@ -25,11 +25,11 @@ export const unzipFileApi = (
 }
 
 export const showFileInfoApi = (path: string, name: string) => {
-  return request.put(`/path//${path}/${name}`)
+  return request.get(`/path?id=${path}${name ? '/' + name : ''}`, baseConfig())
 }
 
 export const makeDirectoryApi = (path: string, name: string) => {
-  return request.put(`/madir//${path}/${name}`)
+  return request.put(`/madir//${path}/${name}`, {}, baseConfig())
 }
 
 export const moveCopyFileApi = (
@@ -37,7 +37,7 @@ export const moveCopyFileApi = (
     path: string
     name: string
   },
-  second: string,
+  second: string
 ) => {
   const { path, name } = first
   const data = new FormData()
@@ -55,7 +55,7 @@ export const renameFileApi = (
     path: string
     name: string
   },
-  second: string,
+  second: string
 ) => {
   const { path, name } = first
   const data = new FormData()

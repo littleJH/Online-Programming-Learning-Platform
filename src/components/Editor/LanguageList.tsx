@@ -23,3 +23,5 @@ const getList = (list: string[]) => {
 export const languageList = getList(['C++11', 'Java', 'JavaScript', 'php', 'Python', 'Rust', 'Swift'])
 
 export const poj_languageList = getList(['C++', 'C', 'Java', 'fortran', 'pascal'])
+
+export const ural_languageList = getList([])

@@ -1,35 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ProblemList from '@/components/Problem/list/List'
-import {
-  Button,
-  Input,
-  InputRef,
-  Modal,
-  Popover,
-  Result,
-  ResultProps,
-  Space,
-  Table,
-  Tooltip,
-  notification,
-} from 'antd'
-import Throttle from '@/tool/myFns/throttle'
+import { Button, Input, InputRef, Modal, Popover, Result, ResultProps, Space, Table, Tooltip, notification } from 'antd'
+import utils from '@/tool/myUtils/utils'
 import TextEditor from '@/components/editor/TextEditor'
 import NoData from '@/components/empty/NoData'
 import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
-import {
-  SortableContext,
-  arrayMove,
-  useSortable,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable'
+import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import {
-  MenuOutlined,
-  MinusCircleOutlined,
-  RedoOutlined,
-} from '@ant-design/icons'
+import { MenuOutlined, MinusCircleOutlined, RedoOutlined } from '@ant-design/icons'
 import { IPrblemTableDataType } from '@/type'
 import { createTopicApi } from '@/api/topic'
 import ReadOnly from '@/components/editor/Readonly'
@@ -41,19 +20,9 @@ interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {
 
 const creation_topic_title = localStorage.getItem('creation_topic_title')
 const creation_topic_content = localStorage.getItem('creation_topic_content')
-const creation_problem_selected = localStorage.getItem(
-  'creation_problem_selected',
-)
+const creation_problem_selected = localStorage.getItem('creation_problem_selected')
 const Row = ({ children, ...props }: RowProps) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    setActivatorNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } = useSortable({
     id: props['data-row-key'],
   })
 
@@ -66,15 +35,11 @@ const Row = ({ children, ...props }: RowProps) => {
 
   return (
     <tr {...props} ref={setNodeRef} style={style} {...attributes}>
-      {React.Children.map(children, child => {
+      {React.Children.map(children, (child) => {
         if ((child as React.ReactElement).key === 'sort') {
           return React.cloneElement(child as React.ReactElement, {
             children: (
-              <MenuOutlined
-                ref={setActivatorNodeRef}
-                style={{ touchAction: 'none', cursor: 'move' }}
-                {...listeners}
-              />
+              <MenuOutlined ref={setActivatorNodeRef} style={{ touchAction: 'none', cursor: 'move' }} {...listeners} />
             ),
           })
         }
@@ -86,32 +51,20 @@ const Row = ({ children, ...props }: RowProps) => {
 
 const CreateTopic: React.FC = () => {
   const nav = useNavigate()
-  const [title, settitle] = useState(
-    creation_topic_title ? creation_topic_title : '',
+  const [title, settitle] = useState(creation_topic_title ? creation_topic_title : '')
+  const [content, setcontent] = useState(creation_topic_content ? creation_topic_content : '')
+  const [selectedProblems, setSelectedProblems] = useState<IPrblemTableDataType[]>(
+    creation_problem_selected ? JSON.parse(creation_problem_selected) : []
   )
-  const [content, setcontent] = useState(
-    creation_topic_content ? creation_topic_content : '',
-  )
-  const [selectedProblems, setSelectedProblems] = useState<
-    IPrblemTableDataType[]
-  >(creation_problem_selected ? JSON.parse(creation_problem_selected) : [])
   const [openResultModal, setOpenResultModal] = useState(false)
   const [result, setResult] = useState<ResultProps>()
   const inputRef = useRef<InputRef>(null)
 
   useEffect(() => {
-    selectedProblems.length
-      ? localStorage.setItem(
-          'creation_problem_selected',
-          JSON.stringify(selectedProblems),
-        )
-      : null
+    selectedProblems.length ? localStorage.setItem('creation_problem_selected', JSON.stringify(selectedProblems)) : null
   }, [selectedProblems])
 
-  const selectedRowKeys = useMemo(
-    () => [...selectedProblems.map(value => value.key)],
-    [selectedProblems],
-  )
+  const selectedRowKeys = useMemo(() => [...selectedProblems.map((value) => value.key)], [selectedProblems])
 
   const createTopic = useCallback(() => {
     if (!selectedProblems.length || !title.length) {
@@ -130,9 +83,9 @@ const CreateTopic: React.FC = () => {
     const data = JSON.stringify({
       title: title,
       content: content,
-      problems: [...selectedProblems.map(item => item.key)],
+      problems: [...selectedProblems.map((item) => item.key)],
     })
-    createTopicApi(data).then(res => {
+    createTopicApi(data).then((res) => {
       setOpenResultModal(true)
       if (res.data.code === 200) {
         setResult({
@@ -155,7 +108,7 @@ const CreateTopic: React.FC = () => {
     })
   }, [])
 
-  const throttle = Throttle(createTopic, 1000)
+  const throttle = utils.throttle(createTopic, 1000)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     settitle(e.target.value)
@@ -169,19 +122,16 @@ const CreateTopic: React.FC = () => {
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (active.id !== over?.id) {
-      setSelectedProblems(previous => {
-        const activeIndex = previous.findIndex(i => i.key === active.id)
-        const overIndex = previous.findIndex(i => i.key === over?.id)
+      setSelectedProblems((previous) => {
+        const activeIndex = previous.findIndex((i) => i.key === active.id)
+        const overIndex = previous.findIndex((i) => i.key === over?.id)
         return arrayMove(previous, activeIndex, overIndex)
       })
     }
   }
 
   const handleMinusClick = useCallback((index: number) => {
-    setSelectedProblems(value => [
-      ...value.slice(0, index),
-      ...value.slice(index + 1),
-    ])
+    setSelectedProblems((value) => [...value.slice(0, index), ...value.slice(index + 1)])
   }, [])
 
   const toDetail = (index: number) => {
@@ -221,14 +171,8 @@ const CreateTopic: React.FC = () => {
               height: '128px',
             }}
           ></TextEditor>
-          <DndContext
-            modifiers={[restrictToVerticalAxis]}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext
-              items={selectedProblems.map(i => i.key)}
-              strategy={verticalListSortingStrategy}
-            >
+          <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={handleDragEnd}>
+            <SortableContext items={selectedProblems.map((i) => i.key)} strategy={verticalListSortingStrategy}>
               <Table
                 caption={
                   <h4 className="w-full text-start">
@@ -262,9 +206,7 @@ const CreateTopic: React.FC = () => {
                     title: '序号',
                     align: 'center',
                     dataIndex: 'key',
-                    render: (_, __, index) => (
-                      <div className="select-none">{index + 1}</div>
-                    ),
+                    render: (_, __, index) => <div className="select-none">{index + 1}</div>,
                   },
                   {
                     title: '标题',
@@ -274,11 +216,7 @@ const CreateTopic: React.FC = () => {
                       <Popover
                         mouseEnterDelay={0.3}
                         title={value}
-                        content={
-                          <ReadOnly
-                            html={selectedProblems[index].description}
-                          ></ReadOnly>
-                        }
+                        content={<ReadOnly html={selectedProblems[index].description}></ReadOnly>}
                         overlayStyle={{
                           maxWidth: '512px',
                         }}
@@ -287,10 +225,7 @@ const CreateTopic: React.FC = () => {
                           overflow: 'scroll',
                         }}
                       >
-                        <div
-                          className="hover:cursor-pointer"
-                          onClick={() => toDetail(index)}
-                        >
+                        <div className="hover:cursor-pointer" onClick={() => toDetail(index)}>
                           {value}
                         </div>
                       </Popover>
@@ -299,11 +234,7 @@ const CreateTopic: React.FC = () => {
                   {
                     dataIndex: 'operation',
                     align: 'center',
-                    render: (value, _, index) => (
-                      <MinusCircleOutlined
-                        onClick={() => handleMinusClick(index)}
-                      />
-                    ),
+                    render: (value, _, index) => <MinusCircleOutlined onClick={() => handleMinusClick(index)} />,
                   },
                 ]}
                 pagination={false}

@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Menu } from 'antd'
 import type { MenuProps } from 'antd'
 import { redirect, useLocation, useNavigate } from 'react-router-dom'
-import { getPathArray } from '@/tool/MyUtils/utils'
-import useNavTo from '@/tool/myHooks/useNavTo'
+import myHooks from '@/tool/myHooks/myHooks'
 import { CodeOutlined, GlobalOutlined, BulbOutlined, HomeOutlined, TrophyOutlined } from '@ant-design/icons'
 import MySvgIcon from '../Icon/MySvgIcon'
 
@@ -20,7 +19,7 @@ const menuItem = [
   },
   {
     label: '比赛',
-    key: 'competitionset',
+    key: 'competition/common/set',
     icon: <TrophyOutlined />,
   },
   {
@@ -51,10 +50,10 @@ const menuItem = [
 
 export default function Header(props: { headerNav: string }) {
   const { headerNav } = props
-  const navTo = useNavTo()
+  const navTo = myHooks.useNavTo()
 
   const handleMenuClick = (e: any) => {
-    navTo(e.key)
+    navTo(`/${e.key}`)
   }
   return (
     <Menu

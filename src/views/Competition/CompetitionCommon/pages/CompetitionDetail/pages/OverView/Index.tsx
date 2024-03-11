@@ -2,18 +2,18 @@ import React, { useEffect, useMemo, useState } from 'react'
 import ReadOnly from '@/components/editor/Readonly'
 import { useRecoilValue } from 'recoil'
 import { currentCompetitionAtom } from '@/views/Competition/competitionStore'
-import CompetitionTypeLabel from '../../component/Label/CompetitionTypeLabel'
+import CompetitionTypeLabel from '../../../../component/Label/CompetitionTypeLabel'
 import { getUserInfoApi } from '@/api/user'
-import { getDuration } from '@/tool/MyUtils/Utils'
+import utils from '@/tool/myUtils/utils'
 import { Button, Descriptions, Modal, Space } from 'antd'
 import { notificationApi, userInfoState } from '@/store/appStore'
 import { ICompetition, User } from '@/type'
-import useNavTo from '@/tool/myHooks/useNavTo'
 import dayjs from 'dayjs'
+import myHooks from '@/tool/myHooks/myHooks'
 import MyTag from '@/components/Label/MyTag'
 
 const Overview: React.FC = () => {
-  const navTo = useNavTo()
+  const navTo = myHooks.useNavTo()
   const competition = useRecoilValue(currentCompetitionAtom)
   const userInfo = useRecoilValue(userInfoState)
   const [founder, setFounder] = useState<User>()
@@ -23,7 +23,7 @@ const Overview: React.FC = () => {
   useEffect(() => {
     if (!competition) return
     fetchFounder()
-    setDuration(getDuration(competition.start_time, competition.end_time))
+    setDuration(utils.getDuration(competition.start_time, competition.end_time))
   }, [competition])
 
   const fetchFounder = async () => {

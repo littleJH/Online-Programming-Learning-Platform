@@ -48,20 +48,34 @@ const ProblemSubmitrecord = lazy(() => import('@/views/Problem/pages/Records'))
 const ProblemCreate = lazy(() => import('@/views/Creation/pages/CreateProblem/Create'))
 
 // 比赛
-const CompetitionSetRoot = lazy(() => import('@/views/CompetitionSet/CompetitionSetRoot'))
 const CompetitionRoot = lazy(() => import('@/views/Competition/CompetitionRoot'))
-const CompetitionAll = lazy(() => import('@/views/CompetitionSet/set/All'))
-const CompetitionId = lazy(() => import('@/views/Competition/CompetitionCommon/CompetitionCommonRoot'))
-const CompetitionOverview = lazy(() => import('@/views/Competition/CompetitionCommon/pages/OverView/Index'))
-const CompetitionProblem = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Problem/Index'))
-const CompetitionProblemId = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Problem/component/Answer'))
-const CompetitionRank = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Rank/Index'))
-const CompetitionRecord = lazy(() => import('@/views/Competition/CompetitionCommon/pages/Record/Index'))
+const CompetitionCommonRoot = lazy(() => import('@/views/Competition/CompetitionCommon/CompetitionCommonRoot'))
+const CompetitionSet = lazy(() => import('@/views/Competition/CompetitionCommon/pages/CompetitionSet/Index'))
+const CompetitionId = lazy(
+  () => import('@/views/Competition/CompetitionCommon/pages/CompetitionDetail/CompetitionDetailRoot')
+)
+const CompetitionOverview = lazy(
+  () => import('@/views/Competition/CompetitionCommon/pages/CompetitionDetail/pages/OverView/Index')
+)
+const CompetitionProblem = lazy(
+  () => import('@/views/Competition/CompetitionCommon/pages/CompetitionDetail/pages/Problem/Index')
+)
+const CompetitionProblemId = lazy(
+  () => import('@/views/Competition/CompetitionCommon/pages/CompetitionDetail/pages/Problem/component/Answer')
+)
+const CompetitionRank = lazy(
+  () => import('@/views/Competition/CompetitionCommon/pages/CompetitionDetail/pages/Rank/Index')
+)
+const CompetitionRecord = lazy(
+  () => import('@/views/Competition/CompetitionCommon/pages/CompetitionDetail/pages/Record/Index')
+)
 const CompetitionCreate = lazy(() => import('@/views/Creation/pages/CreateCompetition/Create'))
 const CompetitionCreateDeclare = lazy(() => import('@/views/Creation/pages/createCompetition/pages/Declare'))
 const CompetitionCreateCompetition = lazy(() => import('@/views/Creation/pages/createCompetition/pages/Competition'))
 const CompetitionCreateProblem = lazy(() => import('@/views/Creation/pages/createCompetition/pages/Problem'))
+const CompetitionRandomRoot = lazy(() => import('@/views/Competition/CompetitionRandom/CompetitionRandomRoot'))
 const CompetitionRandom = lazy(() => import('@/views/Competition/CompetitionRandom/CompetitionRandom'))
+const CompetitionStandardRoot = lazy(() => import('@/views/Competition/CompetitionStandard/CompetitionStandardRoot'))
 
 // 社区
 const CommunityRoot = lazy(() => import('@/views/Community/CommunityRoot'))
@@ -187,47 +201,56 @@ const routes: MyRoute[] = [
           },
         ],
       },
-      {
-        path: 'competitionset',
-        element: CompetitionSetRoot,
-        children: [
-          {
-            path: 'all',
-            element: CompetitionAll,
-          },
-        ],
-      },
       // competition
       {
         path: 'competition',
         element: CompetitionRoot,
         children: [
           {
-            path: ':competition_id',
-            element: CompetitionId,
+            path: 'common',
+            element: CompetitionCommonRoot,
             children: [
               {
-                path: 'overview',
-                element: CompetitionOverview,
+                path: 'set',
+                element: CompetitionSet,
               },
               {
-                path: 'problem',
-                element: CompetitionProblem,
-              },
-              {
-                path: 'rank',
-                element: CompetitionRank,
-              },
-              {
-                path: 'record',
-                element: CompetitionRecord,
+                path: ':competition_id',
+                element: CompetitionId,
+                children: [
+                  {
+                    path: 'overview',
+                    element: CompetitionOverview,
+                  },
+                  {
+                    path: 'problem',
+                    element: CompetitionProblem,
+                  },
+                  {
+                    path: 'rank',
+                    element: CompetitionRank,
+                  },
+                  {
+                    path: 'record',
+                    element: CompetitionRecord,
+                  },
+                ],
               },
             ],
           },
-
           {
-            path: 'random/:competition_type',
-            element: CompetitionRandom,
+            path: 'random',
+            element: CompetitionRandomRoot,
+            children: [
+              {
+                path: ':competition_type',
+                element: CompetitionRandom,
+              },
+            ],
+          },
+          {
+            path: 'standard',
+            element: CompetitionStandardRoot,
           },
         ],
       },

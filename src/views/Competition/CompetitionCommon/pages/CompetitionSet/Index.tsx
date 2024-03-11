@@ -12,14 +12,14 @@ import dayjs from 'dayjs'
 import Column from 'antd/es/table/Column'
 import CompetitionTypeLabel from '@/views/Competition/CompetitionCommon/component/Label/CompetitionTypeLabel'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
-import useNavTo from '@/tool/myHooks/useNavTo'
-import { getDuration } from '@/tool/MyUtils/Utils'
+import utils from '@/tool/myUtils/utils'
 import GeneralTable, { GeneralTableProps } from '@/components/table/GeneralTable'
 import { useSearchParams } from 'react-router-dom'
 import { totalmem } from 'os'
 import { getEnterConditionApi } from '@/api/competitionMixture'
 import MyTag from '@/components/Label/MyTag'
 import Search from 'antd/es/input/Search'
+import myHooks from '@/tool/myHooks/myHooks'
 
 interface IDataSource {
   state: CompetitionState
@@ -47,7 +47,7 @@ const getState = (start: string, end: string): CompetitionState => {
 }
 
 const View: React.FC = () => {
-  const nav = useNavTo()
+  const nav = myHooks.useNavTo()
   const [loading, setLoading] = useState(false)
   const [querys, setQuerys] = useSearchParams()
   const [dataSource, setdataSource] = useState<IDataSource[]>([])
@@ -99,7 +99,7 @@ const View: React.FC = () => {
         },
         type: competition.type,
         start_time: competition.start_time,
-        duration: getDuration(competition.start_time, competition.end_time),
+        duration: utils.getDuration(competition.start_time, competition.end_time),
         state: getState(competition.start_time, competition.end_time),
         key: competition.id,
         enter: res.data.data?.enter || false,
@@ -112,7 +112,7 @@ const View: React.FC = () => {
   }
 
   const handleClick = (competition: ICompetition) => {
-    nav(`/competition/${competition.id}/overview`)
+    nav(`/competition/common/${competition.id}/overview`)
   }
 
   const columns = [

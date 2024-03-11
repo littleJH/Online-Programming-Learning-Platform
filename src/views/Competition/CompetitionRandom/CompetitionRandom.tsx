@@ -12,7 +12,7 @@ import { useParams } from 'react-router-dom'
 import { CompetitionType, User } from '@/type'
 import dayjs from 'dayjs'
 import { getCurrentUserinfo, getUserInfoApi } from '@/api/user'
-import style from './style.module.scss'
+import style from '../style.module.scss'
 
 type State = 'enter' | 'notEnter' | 'undetermined'
 
@@ -37,17 +37,11 @@ const addMove = (index: number) => {
   const fn = () => {
     const top = Math.floor(Math.random() * 200 - 100)
     const left = Math.floor(Math.random() * 200 - 100)
-    const topNum = Number(
-      element.style.top.slice(0, element.style.top.indexOf('px')),
-    )
-    const leftNum = Number(
-      element.style.left.slice(0, element.style.left.indexOf('px')),
-    )
+    const topNum = Number(element.style.top.slice(0, element.style.top.indexOf('px')))
+    const leftNum = Number(element.style.left.slice(0, element.style.left.indexOf('px')))
 
     element.style.top =
-      topNum + top <= ctnHeight - element.clientHeight && topNum + top >= 0
-        ? `${topNum + top}px`
-        : `${topNum - top}px`
+      topNum + top <= ctnHeight - element.clientHeight && topNum + top >= 0 ? `${topNum + top}px` : `${topNum - top}px`
     element.style.left =
       leftNum + left <= ctnWidth - element.clientWidth && leftNum + left >= 0
         ? `${leftNum + left}px`
@@ -62,30 +56,29 @@ const removeMove = (index: number) => {
 }
 
 const CompetitionRandom: React.FC = () => {
-  const { competition_type } = useParams()
+  const { competition_type: type } = useParams()
   const [enterCondition, setenterCondition] = useState<State>('undetermined')
-  const [type, settype] = useState<CompetitionType>(
-    competition_type as CompetitionType,
-  )
   const [memberList, setmemberList] = useState<Member[]>([])
   const memberListRef = useRef<Member[]>([])
   const matchContainer = useRef(null)
 
   useEffect(() => {
-    getCurrentUserinfo().then(res => {
+    getCurrentUserinfo().then((res) => {
       console.log(res.data.data.user.name)
     })
-    getRandomEnterConditionApi(type).then(res => {
-      setenterCondition(res.data.data.enter ? 'enter' : 'notEnter')
+    if (type) {
+      getRandomEnterConditionApi(type).then((res) => {
+        setenterCondition(res.data.data.enter ? 'enter' : 'notEnter')
 
-      if (res.data.data.enter) {
-        openConnect()
-        initMemberList()
-      }
-    })
+        if (res.data.data.enter) {
+          openConnect()
+          initMemberList()
+        }
+      })
+    }
     return () => {
       if (ws) closeConnnect()
-      intervals.forEach(item => {
+      intervals.forEach((item) => {
         clearInterval(item)
       })
     }
@@ -111,50 +104,53 @@ const CompetitionRandom: React.FC = () => {
   }, [memberList])
 
   const initMemberList = () => {
-    getEnterRandomCompetitionListApi(type).then(async res => {
-      const competitionRanks = res.data.data.competitionRanks
-      const list = []
-      for (let item of competitionRanks) {
-        const user = await getUserInfoApi(item.Member)
-        list.push({
-          enter_time: dayjs.unix(item.Score).format().toString(),
-          member: user.data.data.user,
-        })
-      }
-      setmemberList([...list])
-    })
+    type &&
+      getEnterRandomCompetitionListApi(type).then(async (res) => {
+        const competitionRanks = res.data.data.competitionRanks
+        const list = []
+        for (let item of competitionRanks) {
+          const user = await getUserInfoApi(item.Member)
+          list.push({
+            enter_time: dayjs.unix(item.Score).format().toString(),
+            member: user.data.data.user,
+          })
+        }
+        setmemberList([...list])
+      })
   }
 
   const enterCompetition = () => {
-    enterRandomCompetitionApi(type).then(res => {
-      if (res.data.code === 200) {
-        setenterCondition('enter')
+    type &&
+      enterRandomCompetitionApi(type).then((res) => {
+        if (res.data.code === 200) {
+          setenterCondition('enter')
 
-        initMemberList()
-        openConnect()
-      }
-    })
+          initMemberList()
+          openConnect()
+        }
+      })
   }
 
   const cancelEnter = () => {
-    cancelEnterRandomCompetitionApi(type).then(res => {
-      if (res.data.code === 200) {
-        firstAddMove = true
-        setenterCondition('notEnter')
-        closeConnnect()
-        setmemberList([])
-        intervals.forEach(item => {
-          clearInterval(item)
-        })
-      }
-    })
+    type &&
+      cancelEnterRandomCompetitionApi(type).then((res) => {
+        if (res.data.code === 200) {
+          firstAddMove = true
+          setenterCondition('notEnter')
+          closeConnnect()
+          setmemberList([])
+          intervals.forEach((item) => {
+            clearInterval(item)
+          })
+        }
+      })
   }
 
   const openConnect = () => {
     ws = enterPublishWs()
-    ws.onopen = e => console.log('Connection open...')
-    ws.onmessage = e => receiveData(e)
-    ws.onclose = e => console.log('Connection Closed...')
+    ws.onopen = (e) => console.log('Connection open...')
+    ws.onmessage = (e) => receiveData(e)
+    ws.onclose = (e) => console.log('Connection Closed...')
   }
 
   const closeConnnect = () => {
@@ -165,10 +161,10 @@ const CompetitionRandom: React.FC = () => {
     const message = JSON.parse(e.data)
     switch (message.Score) {
       case 0:
-        const index = memberListRef.current.findIndex(item => {
+        const index = memberListRef.current.findIndex((item) => {
           return item.member.id === message.Member
         })
-        setmemberList(value => {
+        setmemberList((value) => {
           let list = [...value]
           list.splice(index, 1)
           return list
@@ -178,8 +174,8 @@ const CompetitionRandom: React.FC = () => {
       case -1:
         break
       default:
-        getUserInfoApi(message.Member).then(res => {
-          setmemberList(value => [
+        getUserInfoApi(message.Member).then((res) => {
+          setmemberList((value) => [
             ...value,
             {
               enter_time: dayjs.unix(message.Score).format().toString(),
@@ -210,15 +206,8 @@ const CompetitionRandom: React.FC = () => {
             <div className="flex-grow h-full">
               <div className="max-w-min relative">
                 {memberList.map((item, index) => (
-                  <div
-                    id={`avatar${index}`}
-                    key={item.member.id}
-                    className="rounded-full "
-                  >
-                    <Avatar
-                      size={60}
-                      src={`http://img.mgaronya.com/${item.member.icon}`}
-                    ></Avatar>
+                  <div id={`avatar${index}`} key={item.member.id} className="rounded-full ">
+                    <Avatar size={60} src={`http://img.mgaronya.com/${item.member.icon}`}></Avatar>
                   </div>
                 ))}
               </div>

@@ -4,12 +4,13 @@ import { IArticle } from '@/type'
 import { deleteArticleApi, getArticleListApi } from '@/api/article'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { currentArticleState, notificationApi } from '@/store/appStore'
-import useNavTo from '@/tool/myHooks/useNavTo'
+import utils from '@/tool/myUtils/utils'
 import PaginationList from '@/components/List/PaginationList'
 import { useSearchParams } from 'react-router-dom'
+import myHooks from '@/tool/myHooks/myHooks'
 
 const Article: React.FC = () => {
-  const nav = useNavTo()
+  const nav = myHooks.useNavTo()
   const [querys, setQuerys] = useSearchParams()
   const notification = useRecoilValue(notificationApi)
   const [articleList, setArticleList] = useState<IArticle[]>([])
@@ -19,7 +20,7 @@ const Article: React.FC = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setQuerys(search => {
+    setQuerys((search) => {
       search.set('pageNum', String(pageNum))
       search.set('pageSize', String(pageSize))
       return search
@@ -30,7 +31,7 @@ const Article: React.FC = () => {
   const fetchPorblems = () => {
     setLoading(true)
     setArticleList([])
-    getArticleListApi(pageNum, pageSize).then(res => {
+    getArticleListApi(pageNum, pageSize).then((res) => {
       setArticleList(res.data.data.articles)
       setTotal(res.data.data.total)
       setLoading(false)
@@ -50,10 +51,7 @@ const Article: React.FC = () => {
         notification.success({
           message: `文章“${item.title}”已删除`,
         })
-      setArticleList(value => [
-        ...value.slice(0, index),
-        ...value.slice(index + 1),
-      ])
+      setArticleList((value) => [...value.slice(0, index), ...value.slice(index + 1)])
     }
   }
   const handlePageChange = (num: number, size: number) => {
@@ -75,11 +73,7 @@ const Article: React.FC = () => {
         onPageChange={handlePageChange}
         itemRender={(item: IArticle) => (
           <div className="w-full">
-            <ArticleCard
-              key={item.id}
-              articleProp={item}
-              mode="action"
-            ></ArticleCard>
+            <ArticleCard key={item.id} articleProp={item} mode="action"></ArticleCard>
           </div>
         )}
       ></PaginationList>

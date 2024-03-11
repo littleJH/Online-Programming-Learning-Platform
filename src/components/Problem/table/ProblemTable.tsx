@@ -1,7 +1,6 @@
 import { IPrblemTableDataType, IProblem } from '@/type'
 import { Button, Popover, Skeleton, Space, Table, Tag, Tooltip, Divider } from 'antd'
 import Column from 'antd/es/table/Column'
-import copy from 'copy-to-clipboard'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import ReadOnly from '../../editor/Readonly'
 import { getRecordListApi } from '@/api/record'
@@ -12,6 +11,7 @@ import { notificationApi, themeState } from '@/store/appStore'
 import MyTag from '../../Label/MyTag'
 import { getPagination } from '@/config/config'
 import GeneralTable from '../../table/GeneralTable'
+import utils from '@/tool/myUtils/utils'
 
 interface IProps {
   mode: 'select' | 'default' | 'action'
@@ -59,7 +59,6 @@ const ProblemTable: React.FC<IProps> = (props) => {
   const theme = useRecoilValue(themeState)
   const notification = useRecoilValue(notificationApi)
 
-  useEffect(() => console.log('dataSource ==> ', dataSource), [dataSource])
   useEffect(() => {
     flag && fetchProblems(problemList)
     flag = true
@@ -67,7 +66,7 @@ const ProblemTable: React.FC<IProps> = (props) => {
 
   const handleKyeClick = (value: string, e: React.MouseEvent) => {
     e.stopPropagation()
-    const flag = copy(value)
+    const flag = utils.copyToClipboard(value)
     if (flag) {
       notification &&
         notification.success({

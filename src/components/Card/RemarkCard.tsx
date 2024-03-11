@@ -1,22 +1,17 @@
 import { iconBaseUrl } from '@/config/apiConfig'
 import { getUserInfoApi } from '@/api/user'
-import {
-  cancelLikeRemarkApi,
-  getRemarkLikeNumApi,
-  getRemarkLikedApi,
-  likeRemarkApi,
-} from '@/api/remark'
+import { cancelLikeRemarkApi, getRemarkLikeNumApi, getRemarkLikedApi, likeRemarkApi } from '@/api/remark'
 import { IRemark, User } from '@/type'
 import { Avatar, Divider, Card, theme } from 'antd'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import ReadOnly from '../editor/Readonly'
-import GetTimeago from '@/tool/myFns/getTimeago'
+import utils from '@/tool/myUtils/utils'
 import style from './style.module.scss'
 import MySvgIcon from '../Icon/MySvgIcon'
 
 const RemarkCard: React.FC<{
   remark: IRemark
-}> = props => {
+}> = (props) => {
   const [remark, setremark] = useState<IRemark>(props.remark)
   const { token } = theme.useToken()
 
@@ -27,7 +22,7 @@ const RemarkCard: React.FC<{
       getRemarkLikeNumApi(remark.id, 'true'),
       getRemarkLikeNumApi(remark.id, 'false'),
       getUserInfoApi(remark.user_id),
-    ]).then(res => {
+    ]).then((res) => {
       remarkObj.liked = res[0].data.data.like
       remarkObj.likeNum = res[1].data.data.total
       remarkObj.dislikeNum = res[2].data.data.total
@@ -37,17 +32,17 @@ const RemarkCard: React.FC<{
   }, [props.remark])
 
   const ago = useMemo(() => {
-    const ago = GetTimeago(remark.created_at)
+    const ago = utils.getTimeAgo(remark.created_at)
     return `${ago.num}${ago.unit}前`
   }, [remark])
 
   const like = useCallback(
     (bool: boolean) => {
-      likeRemarkApi(remark.id, bool ? 'true' : 'false').then(async res => {
+      likeRemarkApi(remark.id, bool ? 'true' : 'false').then(async (res) => {
         console.log(res.data)
         const { data } = await getRemarkLikeNumApi(remark.id)
         if (res.data.code === 200) {
-          setremark(value => {
+          setremark((value) => {
             return {
               ...value,
               liked: bool ? 1 : -1,
@@ -57,15 +52,15 @@ const RemarkCard: React.FC<{
         }
       })
     },
-    [remark],
+    [remark]
   )
 
   const calcelLike = useCallback(() => {
-    cancelLikeRemarkApi(remark.id).then(async res => {
+    cancelLikeRemarkApi(remark.id).then(async (res) => {
       console.log(res.data)
       const { data } = await getRemarkLikeNumApi(remark.id, 'false')
       if (res.data.code === 200) {
-        setremark(value => {
+        setremark((value) => {
           return {
             ...value,
             liked: 0,
@@ -86,10 +81,7 @@ const RemarkCard: React.FC<{
   return (
     <Card className="w-full my-4" size="small">
       <div className="flex items-center">
-        <Avatar
-          className="card-avatar"
-          src={<img src={`${iconBaseUrl}/${remark.user?.icon}`}></img>}
-        ></Avatar>
+        <Avatar className="card-avatar" src={<img src={`${iconBaseUrl}/${remark.user?.icon}`}></img>}></Avatar>
         <div className="card-username">{remark.user?.name}</div>
         <div className="card-time">{ago}</div>
       </div>
@@ -99,11 +91,7 @@ const RemarkCard: React.FC<{
           <MySvgIcon
             href={remark.liked === 1 ? '#icon-liked' : '#icon-like'}
             size={1}
-            color={
-              remark.liked === 1
-                ? token.colorPrimaryTextHover
-                : token.colorTextDescription
-            }
+            color={remark.liked === 1 ? token.colorPrimaryTextHover : token.colorTextDescription}
           ></MySvgIcon>
           <span>{remark.likeNum}</span>
         </div>
@@ -113,11 +101,7 @@ const RemarkCard: React.FC<{
           <MySvgIcon
             href={remark.liked === -1 ? '#icon-disliked' : '#icon-dislike'}
             size={1}
-            color={
-              remark.liked === -1
-                ? token.colorPrimaryTextHover
-                : token.colorTextDescription
-            }
+            color={remark.liked === -1 ? token.colorPrimaryTextHover : token.colorTextDescription}
           ></MySvgIcon>
           <span>{remark.dislikeNum}</span>
         </div>

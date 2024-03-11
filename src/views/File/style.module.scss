@@ -1,0 +1,49 @@
+@import '../../style.scss';
+
+@function transition-all($time) {
+  $transition: all $time ease-in-out;
+  @return $transition;
+}
+
+.listCtn {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--file-item-width), 1fr));
+  justify-items: center;
+  align-items: center;
+  column-gap: 1rem;
+  row-gap: 1rem;
+}
+
+.listItem {
+  display: inline-block;
+  transition: transition-all(0.5s);
+}
+
+.fileItem {
+  transition: transition-all(0.1s);
+  padding: 0.5rem;
+  &:hover {
+    background-color: $colorInfoBg;
+  }
+
+  .name {
+    width: var(--file-item-width);
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+
+.menuItem {
+  min-width: 100px;
+  max-width: min-content;
+  transition: transition-all(0.3s);
+  padding: 0.5rem 1rem;
+  &:hover {
+    cursor: pointer;
+    background-color: $colorInfoBg;
+  }
+}
+

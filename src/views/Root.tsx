@@ -3,26 +3,20 @@ import { Layout, Button, Avatar, theme } from 'antd'
 import { Outlet } from 'react-router-dom'
 import { iconBaseUrl } from '@/config/apiConfig'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import {
-  isDarkState,
-  loginStatusState,
-  pathNameState,
-  sideBarTypeState,
-  userInfoState,
-} from '@/store/appStore'
+import { isDarkState, loginStatusState, pathNameState, sideBarTypeState, userInfoState } from '@/store/appStore'
 import Sider from 'antd/es/layout/Sider'
-import SideBar from '@/components/Navbar/SideBar'
+import SiderNav from '@/components/navbar/SiderNav'
 import Navbar from '@/components/Navbar/Navbar'
 import { headerNavState } from '@/store/appStore'
-import useNavTo from '@/tool/myHooks/useNavTo'
+import utils from '@/tool/myUtils/utils'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
-import { footerRightNode } from '@/store/footerStore'
-import { getPathArray } from '@/tool/MyUtils/Utils'
+import { footerRightNode } from '@/store/nodeStore'
+import myHooks from '@/tool/myHooks/myHooks'
 import Directory from '@/components/directory/Directory'
+import Rank from './Competition/CompetitionCommon/pages/CompetitionDetail/pages/Rank/Index'
+import FileInfo from './File/component/FileInfo'
 
 const Root: React.FC = () => {
-  // const [collapsed, setCollapsed] = useRecoilState(sideBarCollapsed)
-  // const [btnCollapsed, setBtnCollapsed] = useState(collapsed)
   const headerNav = useRecoilValue(headerNavState)
   const { Header, Content, Footer } = Layout
   const { token } = theme.useToken()
@@ -32,7 +26,7 @@ const Root: React.FC = () => {
   const sideBarType = useRecoilValue(sideBarTypeState)
   const myInfo = useRecoilValue(userInfoState)
   const loginStatus = useRecoilValue(loginStatusState)
-  const nav = useNavTo()
+  const nav = myHooks.useNavTo()
 
   useLayoutEffect(() => {
     if (pathname === '' || pathname === '/') nav('/home')
@@ -42,31 +36,30 @@ const Root: React.FC = () => {
 
   useEffect(() => {
     const body = document.getElementsByTagName('body')[0]
-    body.style.setProperty('--colorBgBase', token.colorBgBase)
-    body.style.setProperty('--colorTextBase', token.colorTextBase)
-    body.style.setProperty('--colorBgBlur', token.colorBgBlur)
+    // body.style.setProperty('--colorBgBase', token.colorBgBase)
+    // body.style.setProperty('--colorTextBase', token.colorTextBase)
+    // body.style.setProperty('--colorBgBlur', token.colorBgBlur)
+
+    body.style.setProperty('--colorInfoBg', token.colorInfoBg)
   }, [token])
 
   const sidebarWidth = useMemo(() => {
     let width = 0
     if (sideBarType === 'directory') width = 300
     if (sideBarType === 'nav') width = 200
+    if (sideBarType === 'competitionRank') width = 300
+    if (sideBarType === 'none') width = 0
     return width
   }, [sideBarType])
 
   const showPaddingY = React.useMemo(
-    () =>
-      !['problemdetail', 'competitiondetail'].includes(
-        getPathArray(pathname)[0],
-      ),
-    [pathname],
+    () => !['problemdetail', 'competitiondetail'].includes(utils.getPathArray(pathname)[0]),
+    [pathname]
   )
-  const full = React.useMemo(
-    () =>
-      ['/creation/article'].includes(pathname) ||
-      pathname.includes('problemdetail'),
-    [pathname],
-  )
+  const full = React.useMemo(() => {
+    const fullPath = ['/creation/article', '/file']
+    return fullPath.includes(pathname) || pathname.includes('problemdetail')
+  }, [pathname])
 
   const headerStyle: React.CSSProperties = {
     backgroundColor: `${isDark ? '#141414' : '#ffffff'}`,
@@ -85,40 +78,25 @@ const Root: React.FC = () => {
 
   return (
     <Layout className="w-full h-full">
-      <Header
-        className="sticky top-0 z-10 p-0 flex items-center"
-        style={headerStyle}>
+      <Header className="sticky top-0 z-10 p-0 flex items-center" style={headerStyle}>
         <Navbar headerNav={headerNav}></Navbar>
 
-        <Button
-          type="text"
-          className="flex items-center h-12 p-2"
-          onClick={() => setIsDark(value => !value)}>
+        <Button type="text" className="flex items-center h-12 p-2" onClick={() => setIsDark((value) => !value)}>
           <MySvgIcon
             href={`#icon-${isDark ? 'light' : 'dark'}`}
             size={2}
-            color={`${isDark ? '#fff' : '#000'}`}></MySvgIcon>
+            color={`${isDark ? '#fff' : '#000'}`}
+          ></MySvgIcon>
         </Button>
         {myInfo?.level && myInfo?.level >= 4 && (
-          <Button
-            type="text"
-            className="flex items-center h-12 p-2"
-            onClick={() => nav('/file')}>
-            <MySvgIcon
-              href="#icon-folder"
-              size={2}
-              color={token.colorWarning}></MySvgIcon>
+          <Button type="text" className="flex items-center h-12 p-2" onClick={() => nav('/file')}>
+            <MySvgIcon href="#icon-folder" size={2} color={token.colorWarning}></MySvgIcon>
           </Button>
         )}
         <Button type="text" className="flex items-center h-12 p-2 mr-4">
-          <div
-            className="h-full flex items-center"
-            onClick={() => nav('/profile')}>
+          <div className="h-full flex items-center" onClick={() => nav('/profile')}>
             {loginStatus && (
-              <Avatar
-                className="hover:cursor-pointer"
-                alt="登录"
-                src={`${iconBaseUrl}/${myInfo?.icon}`}></Avatar>
+              <Avatar className="hover:cursor-pointer" alt="登录" src={`${iconBaseUrl}/${myInfo?.icon}`}></Avatar>
             )}
             {!loginStatus && <Button type="link">登录</Button>}
           </div>
@@ -126,32 +104,26 @@ const Root: React.FC = () => {
       </Header>
       <Layout hasSider>
         {!['login', 'problemdetail'].includes(headerNav) && (
-          <Sider
-            // onMouseOver={() => setCollapsed(false)}
-            // onMouseLeave={() => setCollapsed(btnCollapsed)}
-            style={siderStyle}
-            collapsible
-            trigger={null}
-            // collapsed={collapsed}
-            width={sidebarWidth}>
-            {sideBarType === 'nav' && <SideBar header={headerNav}></SideBar>}
+          <Sider style={siderStyle} collapsible trigger={null} width={sidebarWidth}>
+            {sideBarType === 'nav' && <SiderNav header={headerNav}></SiderNav>}
             {sideBarType === 'directory' && <Directory></Directory>}
+            {sideBarType === 'competitionRank' && <Rank mode="sider"></Rank>}
           </Sider>
         )}
         <Content
           style={{
             backgroundColor: token.colorBgBlur,
-          }}>
+          }}
+        >
           <div
             id="content"
             className="w-full h-full overflow-y-scroll scroll-smooth"
             style={{
               padding: `${showPaddingY ? '1rem 0' : '0'}`,
               position: 'relative',
-            }}>
-            <div
-              className="h-full"
-              style={{ width: full ? '100%' : 'min-content', margin: 'auto' }}>
+            }}
+          >
+            <div className="h-full" style={{ width: full ? '100%' : 'min-content', margin: 'auto' }}>
               <Outlet></Outlet>
             </div>
           </div>
@@ -165,22 +137,15 @@ const Root: React.FC = () => {
           style={{
             display: 'inline-block',
             minHeight: '2rem',
-          }}>
-          {/* <Button
-            type='text'
-            icon={btnCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => {
-              setCollapsed(!btnCollapsed)
-              setBtnCollapsed(!btnCollapsed)
-            }}
-          /> */}
-        </div>
+          }}
+        ></div>
         {/* right */}
         <div
           className="w-1/2 flex items-center"
           style={{
             display: 'inline-block',
-          }}>
+          }}
+        >
           {footerRight}
         </div>
       </Footer>

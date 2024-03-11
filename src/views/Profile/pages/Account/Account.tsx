@@ -1,33 +1,15 @@
 import { loginStatusState, userInfoState } from '@/store/appStore'
-import {
-  Button,
-  Col,
-  Descriptions,
-  Divider,
-  Form,
-  Input,
-  Modal,
-  Row,
-  Space,
-  Tooltip,
-  notification,
-} from 'antd'
+import { Button, Col, Descriptions, Divider, Form, Input, Modal, Row, Space, Tooltip, notification } from 'antd'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { EditOutlined } from '@ant-design/icons'
-import {
-  findPasswordApi,
-  getVerifyApi,
-  updateInfoApi,
-  updatePasswordApi,
-} from '@/api/user'
-import useCountdown from '@/tool/myHooks/useCountDown'
+import { findPasswordApi, getVerifyApi, updateInfoApi, updatePasswordApi } from '@/api/user'
+import myHooks from '@/tool/myHooks/myHooks'
 import { redirect, useNavigate } from 'react-router-dom'
 import FindPass from '@/views/Login/log/FindPass'
-import useNavTo from '@/tool/myHooks/useNavTo'
 
 const Account: React.FC = () => {
-  const nav = useNavTo()
+  const nav = myHooks.useNavTo()
   const [info, setInfo] = useRecoilState(userInfoState)
   const [form1] = Form.useForm()
   const [form3] = Form.useForm()
@@ -35,12 +17,12 @@ const Account: React.FC = () => {
   const [openUpdatePwModal, setOpenUpdatePwModal] = useState(false)
   const [openFindPwModal, setOpenFindPwModal] = useState(false)
   const [verifyBtnDisable, setVerifyBtnDisable] = useState(false)
-  const { count, start } = useCountdown(60, () => {
+  const { count, start } = myHooks.useCountdown(60, () => {
     setVerifyBtnDisable(false)
   })
 
   const updateEmail = () => {
-    form3.validateFields().then(res => {
+    form3.validateFields().then((res) => {
       const data = {
         name: info?.name,
         email: res.email,
@@ -52,7 +34,7 @@ const Account: React.FC = () => {
         res_short: info?.res_short,
         verify: res.verify,
       }
-      updateInfoApi(JSON.stringify(data)).then(res => {
+      updateInfoApi(JSON.stringify(data)).then((res) => {
         console.log(res.data)
         if (res.data.code === 200) {
           const newInfo = res.data.data.user
@@ -72,12 +54,12 @@ const Account: React.FC = () => {
   }
 
   const updatePassword = () => {
-    form1.validateFields().then(res => {
+    form1.validateFields().then((res) => {
       const formData = new FormData()
       formData.append('first', res.first)
       formData.append('second', res.second)
       console.log(formData.get('first'))
-      updatePasswordApi(formData).then(res => {
+      updatePasswordApi(formData).then((res) => {
         if (res.data.code === 200) {
           notification.success({
             message: '密码更改成功',
@@ -93,7 +75,7 @@ const Account: React.FC = () => {
   }
 
   const getVerify = (email: string) => {
-    getVerifyApi(email).then(res => {
+    getVerifyApi(email).then((res) => {
       if (res.data.code === 200) {
         start()
         setVerifyBtnDisable(true)
@@ -147,18 +129,10 @@ const Account: React.FC = () => {
         </Descriptions.Item>
         <Descriptions.Item label="密码">
           <Space>
-            <Button
-              type="dashed"
-              size="small"
-              onClick={() => setOpenUpdatePwModal(true)}
-            >
+            <Button type="dashed" size="small" onClick={() => setOpenUpdatePwModal(true)}>
               更改密码
             </Button>
-            <Button
-              type="dashed"
-              size="small"
-              onClick={() => setOpenFindPwModal(true)}
-            >
+            <Button type="dashed" size="small" onClick={() => setOpenFindPwModal(true)}>
               找回密码
             </Button>
           </Space>
@@ -217,10 +191,7 @@ const Account: React.FC = () => {
             </Col>
             <Col span={4}>
               <Form.Item label=" ">
-                <Button
-                  disabled={verifyBtnDisable}
-                  onClick={handleVerifyBtnClick}
-                >
+                <Button disabled={verifyBtnDisable} onClick={handleVerifyBtnClick}>
                   {verifyBtnDisable && `${count} 秒后重新获取`}
                   {!verifyBtnDisable && '获取验证码'}
                 </Button>
@@ -238,11 +209,7 @@ const Account: React.FC = () => {
           translate: '0 50%',
         }}
         footer={[
-          <Button
-            key={'updatePassword'}
-            type="primary"
-            onClick={() => updatePassword()}
-          >
+          <Button key={'updatePassword'} type="primary" onClick={() => updatePassword()}>
             确定
           </Button>,
         ]}
@@ -292,8 +259,7 @@ const Account: React.FC = () => {
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (!value || getFieldValue('second') === value)
-                    return Promise.resolve()
+                  if (!value || getFieldValue('second') === value) return Promise.resolve()
                   return Promise.reject(new Error('密码不一致'))
                 },
               }),
@@ -303,10 +269,7 @@ const Account: React.FC = () => {
           </Form.Item>
         </Form>
       </Modal>
-      <FindPass
-        openFindPwModal={openFindPwModal}
-        setOpenFindPwModal={setOpenFindPwModal}
-      ></FindPass>
+      <FindPass openFindPwModal={openFindPwModal} setOpenFindPwModal={setOpenFindPwModal}></FindPass>
     </div>
   )
 }

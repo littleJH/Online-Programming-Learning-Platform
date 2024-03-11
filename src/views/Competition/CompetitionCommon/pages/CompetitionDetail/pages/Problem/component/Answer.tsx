@@ -21,6 +21,8 @@ import { createRecordApi } from '@/api/competitionMixture'
 import { useRecoilValue } from 'recoil'
 import { notificationApi } from '@/store/appStore'
 import { currentCompetitionAtom } from '@/views/Competition/competitionStore'
+import Description from '@/views/Problem/pages/Description'
+import ProblemDetail from '@/components/Problem/Detail/ProblemDetail'
 
 export interface ChangeOptions {
   code: string
@@ -44,12 +46,12 @@ const Answer: React.FC<IProps> = (props) => {
   const competition = useRecoilValue(currentCompetitionAtom)
   const { problem_id, onStateChange } = props
   const [problem, setproblem] = useState<IProblem>()
+  const [caseSamples, setcaseSamples] = useState<ICaseSample[]>([])
   const [code, setcode] = useState<string>('')
   const [openLanguageList, setopenLanguageList] = useState(false)
   const [showConsole, setshowConsole] = useState(false)
   const [consoleMode, setconsoleMode] = useState('test')
   const [testTextareaValue, settestTextareaValue] = useState<string>('')
-  const [caseSamples, setcaseSamples] = useState<ICaseSample[]>([])
   const [runResult, setrunResult] = useState<IRunResult>({} as IRunResult)
   const [currentState, setcurrentState] = useState<IRecordState>(initTestState)
   const notification = useRecoilValue(notificationApi)
@@ -144,51 +146,7 @@ const Answer: React.FC<IProps> = (props) => {
   return (
     <div className="p-8">
       {/* description */}
-      {problem && (
-        <>
-          <ReadOnly
-            className="text-base rounded px-8 py-2"
-            title={<h4>描述</h4>}
-            html={problem?.description}
-          ></ReadOnly>
-          {/* <ReadOnly
-            title="时间限制"
-            html={`${problem?.time_limit} ms`}
-          ></ReadOnly> */}
-          {/* <ReadOnly
-            title="空间限制"
-            text={[`${problem?.memory_limit} kb`]}
-          ></ReadOnly>
-          <ReadOnly
-            title={'输入格式'}
-            value={JSON.parse(problem?.input as string)}
-          ></ReadOnly>
-          <ReadOnly
-            title={'输出格式'}
-            value={JSON.parse(problem?.output as string)}
-          ></ReadOnly> */}
-          {/* <div className="font-bold">示例</div> */}
-          <h4>示例</h4>
-          <Table size="small" className=" px-8 py-6" bordered dataSource={caseSamples} pagination={false}>
-            <Column
-              title="input"
-              dataIndex={'input'}
-              render={(value, record) => {
-                return <ReadOnly html={value}></ReadOnly>
-              }}
-            ></Column>
-            <Column title="output" dataIndex={'output'}></Column>
-          </Table>
-          {/* <ReadOnly
-            title="提示"
-            value={JSON.parse(problem?.hint as string)}
-          ></ReadOnly>
-          <ReadOnly
-            title="来源"
-            value={JSON.parse(problem?.source as string)}
-          ></ReadOnly> */}
-        </>
-      )}
+      {problem && <ProblemDetail mode={'competition'} problem={problem} caseSamples={caseSamples}></ProblemDetail>}
 
       {/* editor */}
       {/* <div className='shadow'> */}

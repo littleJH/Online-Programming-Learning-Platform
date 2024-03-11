@@ -1,23 +1,13 @@
 import React, { useCallback, useState } from 'react'
-import {
-  Form,
-  Select,
-  Button,
-  Input,
-  Row,
-  Col,
-  message,
-  Upload,
-  Space,
-} from 'antd'
+import { Form, Select, Button, Input, Row, Col, message, Upload, Space } from 'antd'
 import { LoadingOutlined, PlusOutlined, LeftOutlined } from '@ant-design/icons'
-import useCountdown from '@/tool/myHooks/useCountDown'
+import myHooks from '@/tool/myHooks/myHooks'
 import { registerApi, getVerifyApi } from '@/api/user'
 import { useNavigate } from 'react-router-dom'
 
 const Register: React.FC<{
   setmode: Function
-}> = props => {
+}> = (props) => {
   const [verifyed, setverifyed] = useState(false)
   const [verifyText, setverifyText] = useState('获取验证码')
   const [loading, setLoading] = useState(false)
@@ -25,7 +15,7 @@ const Register: React.FC<{
   const [form] = Form.useForm()
   const { Option } = Select
 
-  const { count, start } = useCountdown(10, () => {
+  const { count, start } = myHooks.useCountdown(10, () => {
     setverifyed(false)
     setverifyText('重新获取验证码')
   })
@@ -39,10 +29,10 @@ const Register: React.FC<{
 
   const getVerify = () => {
     getVerifyApi(form.getFieldsValue().Email)
-      .then(res => {
+      .then((res) => {
         console.log(res)
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err)
       })
   }
@@ -55,7 +45,7 @@ const Register: React.FC<{
     data.append('Name', form.Name)
     data.append('Verify', form.Verify)
 
-    registerApi(data).then(res => {
+    registerApi(data).then((res) => {
       console.log(res)
       if (res.data.code === 200) {
         const data = new FormData()
@@ -70,12 +60,7 @@ const Register: React.FC<{
   }, [])
   return (
     <div className="h-full overflow-scroll ">
-      <Button
-        type="link"
-        icon={<LeftOutlined />}
-        onClick={() => props.setmode('Login')}
-        className="my-4"
-      >
+      <Button type="link" icon={<LeftOutlined />} onClick={() => props.setmode('Login')} className="my-4">
         登录
       </Button>
       <div className="flex h-full px-8">
@@ -98,11 +83,7 @@ const Register: React.FC<{
           >
             <Input></Input>
           </Form.Item>
-          <Form.Item
-            name={'Password'}
-            label="密码："
-            rules={[{ required: true, message: '请输入密码' }]}
-          >
+          <Form.Item name={'Password'} label="密码：" rules={[{ required: true, message: '请输入密码' }]}>
             <Input.Password></Input.Password>
           </Form.Item>
           <Form.Item
@@ -150,21 +131,13 @@ const Register: React.FC<{
           </Form.Item>
           <Form.Item name={'icon'} label="头像：">
             <Upload name="icon" listType="picture-card" showUploadList={false}>
-              {imageUrl ? (
-                <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
-              ) : (
-                uploadButton
-              )}
+              {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
             </Upload>
           </Form.Item>
           <Form.Item name={'Verify'} label="验证码：">
             <Row gutter={8}>
               <Col span={14}>
-                <Form.Item
-                  name={'Verify'}
-                  noStyle
-                  rules={[{ required: true, message: '您还没有输入验证码' }]}
-                >
+                <Form.Item name={'Verify'} noStyle rules={[{ required: true, message: '您还没有输入验证码' }]}>
                   <Input></Input>
                 </Form.Item>
               </Col>

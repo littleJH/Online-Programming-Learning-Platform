@@ -2,7 +2,6 @@ import React from 'react'
 import { Table, Button, Popconfirm, Skeleton } from 'antd'
 import { getPagination } from '@/config/config'
 import { ColumnGroupType, ColumnsType, TableProps } from 'antd/es/table'
-
 export interface GeneralTableProps {
   dataSource: any
   columns: any[]
@@ -20,6 +19,7 @@ export interface GeneralTableProps {
   size?: 'large' | 'middle' | 'small'
   bordered?: boolean
   style?: React.CSSProperties
+  emptyText?: React.ReactNode
 }
 
 const GeneralTable: React.FC<GeneralTableProps> = (props) => {
@@ -35,6 +35,7 @@ const GeneralTable: React.FC<GeneralTableProps> = (props) => {
     onRow,
     actions,
     style,
+    emptyText,
   } = props
 
   const columns_copy = columns.map((column) => {
@@ -56,10 +57,13 @@ const GeneralTable: React.FC<GeneralTableProps> = (props) => {
         dataSource={dataSource}
         columns={actions ? [...columns_copy, ...actions] : columns_copy}
         bordered={bordered}
+        locale={{
+          emptyText: emptyText,
+        }}
         pagination={
           pageProps
             ? getPagination('table', pageProps?.pageNum, pageProps?.pageSize, pageProps?.total, pageProps?.onPageChange)
-            : undefined
+            : false
         }
       ></Table>
     </div>

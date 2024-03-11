@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { List, Button, Popconfirm, Skeleton, theme } from 'antd'
-import useListenContentScroll from '@/tool/myHooks/useListenScroll'
+import myHooks from '@/tool/myHooks/myHooks'
 
 interface Iprops {
   dataSource: any
@@ -14,18 +14,8 @@ interface Iprops {
   split?: boolean
 }
 
-const LoadMoreList: React.FC<Iprops> = props => {
-  const {
-    dataSource,
-    total,
-    onDelete,
-    onDetail,
-    onUpdate,
-    itemRender,
-    bordered,
-    split = true,
-    fetchFn,
-  } = props
+const LoadMoreList: React.FC<Iprops> = (props) => {
+  const { dataSource, total, onDelete, onDetail, onUpdate, itemRender, bordered, split = true, fetchFn } = props
   const pageNum = useRef<number>(1)
   const pageSize = useRef<number>(10)
   const { token } = theme.useToken()
@@ -35,45 +25,31 @@ const LoadMoreList: React.FC<Iprops> = props => {
   }, [])
 
   // 监听content滚动触底，因此该LoadMoreList需要在content的底部
-  useListenContentScroll({
-    loadMoreFn: () =>
-      fetchFn(pageNum.current, pageSize.current, () => pageNum.current++),
+  myHooks.useListenContentScroll({
+    loadMoreFn: () => fetchFn(pageNum.current, pageSize.current, () => pageNum.current++),
   })
 
   const renderActions = (item: any, index: number) => {
     const actions: React.ReactNode[] = []
     onDetail &&
       actions.push(
-        <Button
-          type="link"
-          style={{ padding: '0' }}
-          onClick={() => onDetail(item, index)}
-        >
+        <Button type="link" style={{ padding: '0' }} onClick={() => onDetail(item, index)}>
           详情
-        </Button>,
+        </Button>
       )
     onUpdate &&
       actions.push(
-        <Button
-          style={{ padding: '0' }}
-          type="link"
-          onClick={() => onUpdate(item, index)}
-        >
+        <Button style={{ padding: '0' }} type="link" onClick={() => onUpdate(item, index)}>
           更新
-        </Button>,
+        </Button>
       )
     onDelete &&
       actions.push(
-        <Popconfirm
-          title="确定删除该文章？"
-          okText="确认"
-          cancelText="取消"
-          onConfirm={() => onDelete(item, index)}
-        >
+        <Popconfirm title="确定删除该文章？" okText="确认" cancelText="取消" onConfirm={() => onDelete(item, index)}>
           <Button style={{ padding: '0' }} type="link" danger>
             删除
           </Button>
-        </Popconfirm>,
+        </Popconfirm>
       )
     return actions
   }

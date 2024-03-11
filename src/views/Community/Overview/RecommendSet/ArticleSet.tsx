@@ -4,26 +4,20 @@ import { IArticle } from '@/type'
 import React, { useState } from 'react'
 import { currentArticleState } from '@/store/appStore'
 import { useSetRecoilState } from 'recoil'
-import useNavTo from '@/tool/myHooks/useNavTo'
 import LoadMoreList from '@/components/List/LoadMoreList'
+import myHooks from '@/tool/myHooks/myHooks'
 
 const ArticleSet: React.FC = () => {
   const [articleList, setarticleList] = useState<IArticle[]>()
   const [total, setTotal] = useState(0)
   const setcurrentArticle = useSetRecoilState(currentArticleState)
-  const nav = useNavTo()
+  const nav = myHooks.useNavTo()
 
-  const fetch = async (
-    pageNum: number,
-    pageSize: number,
-    callback: Function,
-  ) => {
+  const fetch = async (pageNum: number, pageSize: number, callback: Function) => {
     const res = await getArticleListApi(pageNum, pageSize)
     if (res.data.code === 200) {
       console.log('fetchArticles...')
-      setarticleList(value =>
-        value ? [...value, ...res.data.data.articles] : res.data.data.articles,
-      )
+      setarticleList((value) => (value ? [...value, ...res.data.data.articles] : res.data.data.articles))
       setTotal(res.data.data.total)
       callback()
     }
@@ -42,11 +36,7 @@ const ArticleSet: React.FC = () => {
         fetchFn={fetch}
         split={false}
         itemRender={(item: IArticle) => (
-          <ArticleCard
-            articleProp={item}
-            key={item.id}
-            onclick={handleCardClick}
-          ></ArticleCard>
+          <ArticleCard articleProp={item} key={item.id} onclick={handleCardClick}></ArticleCard>
         )}
       ></LoadMoreList>
     </div>

@@ -3,6 +3,8 @@
 import { Descendant, string } from 'slate'
 import { ResultStatusType } from 'antd/es/result'
 
+export type TypeSideBar = 'nav' | 'directory' | 'competitionRank' | 'fileInfo' | 'none'
+
 export interface IPrblemTableDataType {
   key: string
   index: number
@@ -355,5 +357,13 @@ export interface ICountDown {
   hour: string
   min: string
   second: string
+}
+
+export interface IFile {
+  name: string
+  path: string
+  type: string
+  lastWriteTime: string
+  size?: string | number
 }
 

@@ -1,12 +1,9 @@
 import { getCompetitionRankListApi, getMemberRankApi } from '@/api/competition'
-import { ICompetition } from '@/type'
-import { Space, Table, theme } from 'antd'
+import { theme } from 'antd'
 import React, { useEffect, useMemo, useState } from 'react'
-import { useOutletContext, useParams } from 'react-router-dom'
 import { rollingRanklistWs } from '@/api/competition'
 import { getUserInfoApi } from '@/api/user'
-import useWsConnect from '@/tool/myHooks/useWsConnect'
-import ErrorPage from '@/components/error-page'
+import myHooks from '@/tool/myHooks/myHooks'
 import RollList from '@/components/List/RollList'
 import { useRecoilValue } from 'recoil'
 import { currentCompetitionAtom } from '@/views/Competition/competitionStore'
@@ -22,13 +19,14 @@ interface IRank {
 
 let interval: NodeJS.Timeout
 
-const Rank: React.FC = () => {
+const Rank: React.FC<{ mode?: 'default' | 'sider' }> = (props) => {
+  const { mode = 'default' } = props
   const competition = useRecoilValue(currentCompetitionAtom)
   const [rankList, setRankList] = useState<IRank[]>([])
   const { token } = theme.useToken()
-  const spanClass = ''
+  const spanClass = `${mode === 'default' ? 'w-1/5' : 'w-1/3'} text-center`
 
-  useWsConnect({
+  myHooks.useWsConnect({
     wsApi: competition?.id ? rollingRanklistWs(competition.id) : null,
     onMessage: onWsMessage,
   })
@@ -98,7 +96,18 @@ const Rank: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="w-full">
+      {mode === 'sider' && (
+        <>
+          <p className="flex justify-center items-center">实时排名</p>
+          <p className="flex">
+            <span className={spanClass}>排名</span>
+            <span className={spanClass}>名称</span>
+            <span className={spanClass}>分数</span>
+          </p>
+        </>
+      )}
+
       {rankList && (
         <RollList
           list={rankList}
@@ -107,9 +116,7 @@ const Rank: React.FC = () => {
               key={item.id}
               style={{
                 display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '0 2rem',
+                width: '100%',
                 height: '3rem',
                 borderBottom: index !== rankList.length - 1 ? '1px solid' : '',
                 borderColor: token.colorBorder,
@@ -117,11 +124,11 @@ const Rank: React.FC = () => {
                 backgroundColor: token.colorBgBase,
               }}
             >
-              <span className={spanClass}>{index}</span>
+              <span className={spanClass}>{index + 1}</span>
               <span className={spanClass}>{item.name}</span>
               <span className={spanClass}>{item.score}</span>
-              <span className={spanClass}>{item.penalties}</span>
-              <span className={spanClass}>{item.created_at}</span>
+              {mode === 'default' && <span className={spanClass}>{item.penalties}</span>}
+              {mode === 'default' && <span className={spanClass}>{item.created_at}</span>}
             </div>
           )}
         ></RollList>

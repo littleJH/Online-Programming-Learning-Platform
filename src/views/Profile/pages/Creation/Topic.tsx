@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import useNavTo from '@/tool/myHooks/useNavTo'
 import { useRecoilValue } from 'recoil'
 import { notificationApi } from '@/store/appStore'
 import { ITopic } from '@/type'
 import { deleteTopicApi, getTopicListApi } from '@/api/topic'
 import PaginationList from '@/components/List/PaginationList'
 import TopicCollapse from '@/components/topic/TopicCollapse'
+import myHooks from '@/tool/myHooks/myHooks'
 
 const Topic: React.FC = () => {
-  const nav = useNavTo()
+  const nav = myHooks.useNavTo()
   const [querys, setQuerys] = useSearchParams()
   const notification = useRecoilValue(notificationApi)
   const [topicList, setTopicList] = useState<ITopic[]>([])
@@ -19,7 +19,7 @@ const Topic: React.FC = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setQuerys(search => {
+    setQuerys((search) => {
       search.set('pageNum', String(pageNum))
       search.set('pageSize', String(pageSize))
       return search
@@ -30,7 +30,7 @@ const Topic: React.FC = () => {
   const fetch = () => {
     setLoading(true)
     setTopicList([])
-    getTopicListApi(pageNum, pageSize).then(res => {
+    getTopicListApi(pageNum, pageSize).then((res) => {
       setTopicList(res.data.data.topics)
       setTotal(res.data.data.total)
       setLoading(false)
@@ -50,10 +50,7 @@ const Topic: React.FC = () => {
         notification.success({
           message: `文章“${item.title}”已删除`,
         })
-      setTopicList(value => [
-        ...value.slice(0, index),
-        ...value.slice(index + 1),
-      ])
+      setTopicList((value) => [...value.slice(0, index), ...value.slice(index + 1)])
     }
   }
   const handlePageChange = (num: number, size: number) => {

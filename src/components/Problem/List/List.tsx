@@ -39,9 +39,10 @@ import {
 import { getUserInfoApi } from '@/api/user'
 import { iconBaseUrl } from '@/config/apiConfig'
 import ProblemTable from '../table/ProblemTable'
-import useNavTo from '@/tool/myHooks/useNavTo'
+import utils from '@/tool/myUtils/utils'
 import MyTag from '@/components/Label/MyTag'
 import MyCollapse from '@/components/Collapse/MyCollapse'
+import myHooks from '@/tool/myHooks/myHooks'
 
 interface ITag {
   label: string
@@ -69,7 +70,7 @@ const setFirst = (bool: boolean) => {
 
 const ProblemList: React.FC<IProps> = (props) => {
   const { mode, width, setSelectedProblems, selectedRowKeys } = props
-  const nav = useNavTo()
+  const nav = myHooks.useNavTo()
   const { Search } = Input
   const [querys, setQuerys] = useSearchParams()
   const [topic_id, setTopic_id] = useState(querys.get('topic') || '')
