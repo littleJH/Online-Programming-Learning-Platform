@@ -37,7 +37,7 @@ const fileStoreAtom = atom<IFileStore>({
     ({ onSet }) => {
       onSet((newValue, oldValue) => {
         document.documentElement.style.setProperty('--file-item-width', newValue.fileIconSize + 'px')
-        console.log('on fileStore set ==> ', { ...newValue })
+        // console.log('on fileStore set ==> ', { ...newValue })
         // console.log('backStack,forwardStack, currentPath ==> ', backStack, forwardStack, currentPath)
         // console.log('openMenuItem ==> ', newValue.openMenuItem)
         // console.log('filelist ==> ', fileList)

@@ -18,7 +18,7 @@ import Upload, { RcFile } from 'antd/es/upload'
 import myHooks from '@/tool/myHooks/myHooks'
 import GeneralTable from '@/components/table/GeneralTable'
 import dayjs from 'dayjs'
-import { downloadFileApi, showFileInfoApi } from '@/api/file'
+import { downloadFileApi, showFileInfoApi, uploadFileApi } from '@/api/file'
 import style from './style.module.scss'
 import utils from '@/tool/myUtils/utils'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
@@ -36,6 +36,7 @@ const FileRoot: React.FC = () => {
   const [tableHeight, setTableHeight] = useState(0)
   const ctnRef = useRef<HTMLDivElement>(null)
   const bodyCtnRef = useRef<HTMLDivElement>(null)
+  const { token } = theme.useToken()
 
   const tableDS = useMemo(
     () =>
@@ -170,10 +171,27 @@ const FileRoot: React.FC = () => {
   }
 
   const handleCtnClick = (e: React.MouseEvent) => {
-    console.log('handle ctn click ...')
     updateState((state) => ({
       selectedFile: [],
     }))
+  }
+
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault()
+    const bodyCtnEl = document.getElementById('bodyCtn')
+    const fileItems = []
+    if (e.type === 'drop') {
+      for (let file of e.dataTransfer.items) {
+        fileItems.push(file)
+      }
+      console.log('onDrag fileItems ==> ', fileItems)
+    }
+    if (e.type === 'dragleave' || e.type === 'drop') {
+      bodyCtnEl && bodyCtnEl.style.setProperty('border', `1px solid ${token.colorBorder}`)
+    }
+    if (e.type === 'dragenter' || e.type === 'dragover') {
+      bodyCtnEl && bodyCtnEl.style.setProperty('border', `2px dashed ${token.colorErrorBorderHover}`)
+    }
   }
 
   const mkdir = () => {
@@ -196,12 +214,10 @@ const FileRoot: React.FC = () => {
 
   const beforeUpload = async (file: RcFile, fileList: RcFile[]) => {
     console.log('handle upload file', file, fileList)
-    const fileName = await Serv.upload({
-      path: currentPath,
-      data: file,
-    })
-    if (fileName) {
-    }
+    try {
+      const res = await uploadFileApi(currentPath, file)
+    } catch {}
+    fetchFileList()
   }
 
   const handleNewDir = () => {
@@ -241,7 +257,7 @@ const FileRoot: React.FC = () => {
             flexDirection: 'column',
           }}
         >
-          <div className="flex justify-between items-center">
+          <div draggable className="flex justify-between items-center">
             <Space
               style={{
                 minWidth: 'max-content',
@@ -271,34 +287,28 @@ const FileRoot: React.FC = () => {
               <Button type="text" onClick={refresh}>
                 <RedoOutlined />
               </Button>
-              <Popover
-                overlayInnerStyle={{
-                  padding: '4px 8px',
-                }}
+              <Dropdown
                 placement="bottom"
-                content={
-                  <List
-                    size="small"
-                    dataSource={[
-                      {
-                        label: '文件夹',
-                        onclick: handleNewDir,
-                      },
-                    ]}
-                    renderItem={(item, index) => (
-                      <List.Item style={{ padding: '0' }} key={index}>
-                        <div className={style.menuItem} onClick={item.onclick}>
-                          {item.label}
-                        </div>
-                      </List.Item>
-                    )}
-                  ></List>
-                }
+                menu={{
+                  items: [
+                    {
+                      key: 'new',
+                      label: '新建文件夹',
+                      onClick: handleNewDir,
+                    },
+                    {
+                      key: 'upload',
+                      label: '上传文件',
+                      onClick: () =>
+                        updateState({
+                          openUploadModal: true,
+                        }),
+                    },
+                  ],
+                }}
               >
-                <Button type="dashed" icon={<PlusOutlined />}>
-                  新建
-                </Button>
-              </Popover>
+                <Button type="dashed" icon={<PlusOutlined />}></Button>
+              </Dropdown>
             </Space>
             <div className="ml-8 mr-12 w-full">
               <Input
@@ -310,14 +320,23 @@ const FileRoot: React.FC = () => {
             </div>
             <Segmented
               options={[
-                { label: '列表视图', value: 'list' },
-                { label: '表格视图', value: 'table' },
+                { label: '平铺', value: 'list' },
+                { label: '表格', value: 'table' },
               ]}
               value={viewType}
               onChange={(value: any) => updateState({ viewType: value })}
             ></Segmented>
           </div>
-          <div ref={bodyCtnRef} onClick={handleCtnClick} className={`${style.bodyCtn}`}>
+          <div
+            ref={bodyCtnRef}
+            id="bodyCtn"
+            className={`${style.bodyCtn}`}
+            onClick={handleCtnClick}
+            onDrop={handleDrag}
+            onDragOver={handleDrag}
+            onDragLeave={handleDrag}
+            onDragEnter={handleDrag}
+          >
             {viewType === 'list' && (
               <div className={style.listCtn}>
                 <div className={style.listGridCtn}>
@@ -410,12 +429,15 @@ const FileRoot: React.FC = () => {
         </Card>
       </div>
       <Modal
-        title={'上传文件'}
+        title={'上传文件/压缩包'}
         open={openUploadModal}
         onCancel={() => updateState({ openUploadModal: false })}
         footer={[]}
+        style={{
+          translate: '0 50%',
+        }}
       >
-        <div className="p-4">
+        <div className="pt-8">
           <Dragger
             showUploadList={{
               showDownloadIcon: false,
