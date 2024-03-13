@@ -11,6 +11,7 @@ $colorBgBase: var(--colorBgBase);
 $colorTextBase: var(--colorTextBase);
 $colorBgBlur: var(--colorBgBlur);
 $colorInfoBg: var(--colorInfoBg);
+$colorBorder: var(--colorBorder);
 
 @font-face {
   font-family: 'Canger';
@@ -225,6 +226,3 @@ body,
   color: $colorPrimary;
   border-radius: 0.1rem;
 }
-
-
-

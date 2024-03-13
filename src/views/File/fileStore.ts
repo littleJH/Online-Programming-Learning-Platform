@@ -11,15 +11,14 @@ interface IPath {
 export interface IFileStore {
   viewType: 'list' | 'table'
   fileList: IFile[]
-  history: IPath[]
-  previousPath: IPath
-  currentPath: IPath
+  backStack: string[]
+  forwardStack: string[]
+  currentPath: string
   inputText: string
   showInput: boolean
   openUploadModal: boolean
   fileIconSize: number
   selectedFile: IFile[]
-  openMenuItem: string | null
 }
 
 const fileStoreAtom = atom<IFileStore>({
@@ -27,21 +26,23 @@ const fileStoreAtom = atom<IFileStore>({
   default: {
     viewType: 'list',
     fileList: [],
-    history: [],
-    previousPath: { path: '', name: '' },
-    currentPath: { path: '/', name: '' },
+    backStack: [],
+    forwardStack: ['/'],
+    currentPath: '/',
     inputText: '',
     showInput: false,
     openUploadModal: false,
-    fileIconSize: 50,
+    fileIconSize: 75,
     selectedFile: [],
-    openMenuItem: null,
   },
   effects_UNSTABLE: [
     ({ onSet }) => {
       onSet((newValue, oldValue) => {
-        // console.log('on fileStore set ==> ', { ...newValue })
         document.documentElement.style.setProperty('--file-item-width', newValue.fileIconSize + 'px')
+        console.log('on fileStore set ==> ', { ...newValue })
+        // console.log('backStack,forwardStack, currentPath ==> ', backStack, forwardStack, currentPath)
+        // console.log('openMenuItem ==> ', newValue.openMenuItem)
+        // console.log('filelist ==> ', fileList)
       })
     },
   ],
@@ -56,10 +57,7 @@ export const fileStoreSelector = selector<IFileStore>({
     const value = { ...newValue } as IFileStore
     set(fileStoreAtom, {
       ...value,
-      currentPath: {
-        path: value.currentPath.path.replace(/\.\/file/g, ''),
-        name: value.currentPath.name,
-      },
+      currentPath: value.currentPath.replace(/\.\/file/g, ''),
     })
   },
 })
@@ -82,7 +80,7 @@ export const Serv = {
   fetchFileList: async (params: { path: string; name: string }) => {
     try {
       const { path, name } = params
-      const res = await showFileInfoApi(path, name)
+      const res = await showFileInfoApi(path)
       return res.data.code === 200 ? res.data.data : []
     } catch {}
   },

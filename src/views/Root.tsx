@@ -39,8 +39,8 @@ const Root: React.FC = () => {
     // body.style.setProperty('--colorBgBase', token.colorBgBase)
     // body.style.setProperty('--colorTextBase', token.colorTextBase)
     // body.style.setProperty('--colorBgBlur', token.colorBgBlur)
-
-    body.style.setProperty('--colorInfoBg', token.colorInfoBg)
+    // body.style.setProperty('--colorBgBlur', token.colorBgBlur)
+    body.style.setProperty('--colorBorder', token.colorBorder)
   }, [token])
 
   const sidebarWidth = useMemo(() => {

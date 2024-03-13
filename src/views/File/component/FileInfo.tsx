@@ -14,16 +14,20 @@ const FileInfo: React.FC<{ file: IFile }> = ({ file }) => {
           children: file.name,
         },
         {
+          label: '文件路径',
+          children: file.path,
+        },
+        {
+          label: '文件类型',
+          children: file.type,
+        },
+        {
           label: '文件大小',
           children: file.size,
         },
         {
           label: '修改时间',
           children: file.lastWriteTime,
-        },
-        {
-          label: '文件类型',
-          children: file.type,
         },
       ].map((item) => (
         <p
