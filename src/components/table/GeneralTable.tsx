@@ -46,27 +46,26 @@ const GeneralTable: React.FC<GeneralTableProps> = (props) => {
   })
 
   return (
-    <div>
-      <Table
-        style={style}
-        scroll={scroll}
-        rowSelection={rowSelection}
-        onRow={onRow}
-        size={size}
-        loading={loading}
-        dataSource={dataSource}
-        columns={actions ? [...columns_copy, ...actions] : columns_copy}
-        bordered={bordered}
-        locale={{
-          emptyText: emptyText,
-        }}
-        pagination={
-          pageProps
-            ? getPagination('table', pageProps?.pageNum, pageProps?.pageSize, pageProps?.total, pageProps?.onPageChange)
-            : false
-        }
-      ></Table>
-    </div>
+    <Table
+      {...props}
+      style={style}
+      scroll={scroll}
+      rowSelection={rowSelection}
+      onRow={onRow}
+      size={size}
+      loading={loading}
+      dataSource={dataSource}
+      columns={actions ? [...columns_copy, ...actions] : columns_copy}
+      bordered={bordered}
+      locale={{
+        emptyText: emptyText,
+      }}
+      pagination={
+        pageProps
+          ? getPagination('table', pageProps?.pageNum, pageProps?.pageSize, pageProps?.total, pageProps?.onPageChange)
+          : false
+      }
+    ></Table>
   )
 }
 

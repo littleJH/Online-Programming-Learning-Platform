@@ -1,6 +1,6 @@
 import { IFile } from '@/type'
 import { Button, Card, Dropdown, Input, List, Modal, Popover, Segmented, Skeleton, Space, Table, theme } from 'antd'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import {
   ArrowLeftOutlined,
   ArrowRightOutlined,
@@ -18,17 +18,24 @@ import Upload, { RcFile } from 'antd/es/upload'
 import myHooks from '@/tool/myHooks/myHooks'
 import GeneralTable from '@/components/table/GeneralTable'
 import dayjs from 'dayjs'
-import { showFileInfoApi } from '@/api/file'
+import { downloadFileApi, showFileInfoApi } from '@/api/file'
 import style from './style.module.scss'
 import utils from '@/tool/myUtils/utils'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
 
+const getFileHref = (file: IFile) => {
+  if (file.type === 'NEW_DIR') return 'DIR'
+  else if (file.type.includes('RENAME')) return file.type.replace('RENAME_', '')
+  else return file.type
+}
+
 const FileRoot: React.FC = () => {
-  const { viewType, fileList, currentPath, showInput, openUploadModal, fileIconSize, backStack, forwardStack } =
+  const { viewType, fileList, currentPath, openUploadModal, fileIconSize, backStack, forwardStack } =
     useRecoilValue(fileStoreSelector)
   const updateState = myHooks.useUpdateState<IFileStore>(fileStoreSelector)
+  const [tableHeight, setTableHeight] = useState(0)
   const ctnRef = useRef<HTMLDivElement>(null)
-  const { token } = theme.useToken()
+  const bodyCtnRef = useRef<HTMLDivElement>(null)
 
   const tableDS = useMemo(
     () =>
@@ -41,12 +48,19 @@ const FileRoot: React.FC = () => {
   )
 
   useEffect(() => {
+    const height = bodyCtnRef.current?.clientHeight ?? 0
+    setTableHeight(height - 56)
+  }, [viewType, fileList, currentPath])
+
+  useEffect(() => {
     fetchFileList()
     document.documentElement.style.setProperty('--file-item-width', fileIconSize + 'px')
     ctnRef.current && ctnRef.current.addEventListener('wheel', handleWheel, { passive: false })
     document.addEventListener('contextmenu', handleContentMenu)
+    document.addEventListener('resize', handleResize)
     return () => {
       document.removeEventListener('contextmenu', handleContentMenu)
+      document.removeEventListener('resize', handleResize)
     }
   }, [])
 
@@ -115,6 +129,11 @@ const FileRoot: React.FC = () => {
     e.preventDefault()
   }
 
+  const handleResize = () => {
+    const height = bodyCtnRef.current?.clientHeight ?? 0
+    setTableHeight(height - 56)
+  }
+
   const handleWheel = (e: WheelEvent) => {
     if (e.ctrlKey) {
       e.preventDefault()
@@ -125,12 +144,24 @@ const FileRoot: React.FC = () => {
     }
   }
 
-  const henldeRowClick = (e: Event) => {
+  const henldeRowClick = async (e: Event, file: IFile) => {
     const { type } = e
     switch (type) {
       case 'contextmenu':
         break
       case 'dblclick':
+        if (file.type.toLowerCase() === 'dir' && fetchFileList) {
+          const done = await fetchFileList(file.path.replace(/\.\/file/g, ''))
+          if (done) {
+            updateState((state) => ({
+              backStack: [],
+              forwardStack: [...state.forwardStack, file.path],
+              currentPath: file.path,
+            }))
+          }
+        } else {
+          const res = await downloadFileApi('./file' + file.path)
+        }
         break
       default:
         break
@@ -286,7 +317,7 @@ const FileRoot: React.FC = () => {
               onChange={(value: any) => updateState({ viewType: value })}
             ></Segmented>
           </div>
-          <div onClick={handleCtnClick} className={`${style.bodyCtn}`}>
+          <div ref={bodyCtnRef} onClick={handleCtnClick} className={`${style.bodyCtn}`}>
             {viewType === 'list' && (
               <div className={style.listCtn}>
                 <div className={style.listGridCtn}>
@@ -308,14 +339,17 @@ const FileRoot: React.FC = () => {
               </div>
             )}
             {viewType === 'table' && (
-              <div>
+              <div className={style.tableCtn}>
                 <GeneralTable
+                  scroll={{
+                    y: tableHeight,
+                  }}
                   dataSource={tableDS}
                   onRow={(record: IFile) => {
                     return {
-                      onClick: henldeRowClick,
-                      onDoubleClick: henldeRowClick,
-                      onContextMenu: henldeRowClick,
+                      onClick: (e: Event) => henldeRowClick(e, record),
+                      onDoubleClick: (e: Event) => henldeRowClick(e, record),
+                      onContextMenu: (e: Event) => henldeRowClick(e, record),
                     }
                   }}
                   columns={[
@@ -324,33 +358,46 @@ const FileRoot: React.FC = () => {
                       dataIndex: 'name',
                       key: 'name',
                       render: (value: string, item: IFile) => (
-                        <>
-                          {item.type === 'NEW_DIR' ? <FileItem file={item}></FileItem> : value.replace(/\.[^.]+$/, '')}
-                        </>
+                        <div className="flex items-center">
+                          <MySvgIcon href={getFileHref(item)} size={2}></MySvgIcon>
+                          <span className="ml-4">
+                            {item.type === 'NEW_DIR' ? (
+                              <FileItem file={item} onlyNew={true}></FileItem>
+                            ) : (
+                              value.replace(/\.[^.]+$/, '')
+                            )}
+                          </span>
+                        </div>
                       ),
                     },
                     {
                       title: '修改日期',
                       dataIndex: 'lastWriteTime',
                       key: 'lastWriteTime',
+                      width: 200,
                       render: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'),
                     },
                     {
                       title: '类型',
                       dataIndex: 'type',
                       key: 'type',
+                      width: 100,
                     },
                     {
                       title: '大小',
                       dataIndex: 'size',
                       key: 'size',
+                      width: 100,
                       render: (value: number) => utils.formatFileSize(Number(value)),
                     },
                     {
                       title: '',
                       dataIndex: 'action',
                       key: 'action',
-                      render: (value: React.ReactNode, record: any) => <FileItem file={record}></FileItem>,
+                      width: 80,
+                      render: (value: React.ReactNode, record: any) => (
+                        <>{record.type !== 'NEW_DIR' && <FileItem file={record} onlyMenu={true}></FileItem>}</>
+                      ),
                     },
                   ]}
                   emptyText={

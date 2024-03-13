@@ -183,6 +183,7 @@ const throttle = (callback: Function, delay: number = 500) => {
 }
 
 const formatFileSize = (bytes: number) => {
+  if (!bytes) return ''
   if (bytes === 0) return '0 B'
 
   const k = 1024

@@ -15,7 +15,6 @@ export interface IFileStore {
   forwardStack: string[]
   currentPath: string
   inputText: string
-  showInput: boolean
   openUploadModal: boolean
   fileIconSize: number
   selectedFile: IFile[]
@@ -30,7 +29,6 @@ const fileStoreAtom = atom<IFileStore>({
     forwardStack: ['/'],
     currentPath: '/',
     inputText: '',
-    showInput: false,
     openUploadModal: false,
     fileIconSize: 75,
     selectedFile: [],

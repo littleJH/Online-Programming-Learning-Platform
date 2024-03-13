@@ -1,5 +1,5 @@
 import { IFile } from '@/type'
-import { Descriptions, Dropdown, Input, InputRef, List, Modal, Popover, Space, theme } from 'antd'
+import { Dropdown, Input, InputRef, List, Modal, Popover, Space, theme } from 'antd'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { IFileStore, fileStoreSelector } from '../fileStore'
@@ -13,11 +13,13 @@ import { DownOutlined } from '@ant-design/icons'
 
 interface IProps {
   file: IFile
+  onlyNew?: boolean
+  onlyMenu?: boolean
   fetchFileList?: (path?: string) => Promise<boolean>
 }
 
 const FileItem: React.FC<IProps> = (props) => {
-  const { file, fetchFileList } = props
+  const { file, fetchFileList, onlyMenu, onlyNew } = props
   const { viewType, inputText, currentPath, fileList, fileIconSize, selectedFile } = useRecoilValue(fileStoreSelector)
   const updateState = myHooks.useUpdateState<IFileStore>(fileStoreSelector)
   const [openModal, setOpenModal] = useState(false)
@@ -48,12 +50,10 @@ const FileItem: React.FC<IProps> = (props) => {
         try {
           const res = await makeDirectoryApi(currentPath, text)
           updateState((state) => ({
-            showInput: false,
             fileList: res.data.data === 200 ? state.fileList : state.fileList.slice(0, state.fileList.length - 1),
           }))
         } catch {
           updateState((state) => ({
-            showInput: false,
             fileList: state.fileList.slice(0, state.fileList.length - 1),
           }))
         }
@@ -275,8 +275,8 @@ const FileItem: React.FC<IProps> = (props) => {
           </Dropdown>
         </Popover>
       )}
-      {viewType === 'table' && file.type === 'NEW_DIR' && <div>{render.inputEl('NEW_DIR')}</div>}
-      {viewType === 'table' && (
+      {onlyNew && <div>{render.inputEl('NEW_DIR')}</div>}
+      {onlyMenu && (
         <Dropdown arrow={false} placement="bottom" menu={{ items: render.menuList() }}>
           <a
             onClick={(e) => e.preventDefault()}
