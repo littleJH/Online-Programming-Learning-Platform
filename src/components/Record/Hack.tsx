@@ -14,24 +14,19 @@ interface Iprops {
   submit: Function
 }
 
-const Hack: React.FC<Iprops> = props => {
+const Hack: React.FC<Iprops> = (props) => {
   const { record, hackInput, sethackInput, userInfo, submit } = props
 
   return (
     <div>
       <div>
         <div className="flex justify-between">
-          <div className="hover:text-blue-500 hover:cursor-pointer hover:underline">
-            {userInfo?.name}
-          </div>
+          <div className="hover:text-blue-500 hover:cursor-pointer hover:underline">{userInfo?.name}</div>
           <div>{record.created_at}</div>
         </div>
         <Highlight code={record.code}></Highlight>
       </div>
-      <TextArea
-        value={hackInput}
-        onChange={e => sethackInput(e.target.value)}
-      ></TextArea>
+      <TextArea value={hackInput} onChange={(e) => sethackInput(e.target.value)}></TextArea>
       <div className="flex justify-center mt-8">
         <Button type="primary" onClick={() => submit()}>
           Hack

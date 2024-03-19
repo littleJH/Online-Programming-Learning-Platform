@@ -1,12 +1,7 @@
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import React, { useState, useEffect } from 'react'
 import { Editor, Toolbar } from '@wangeditor/editor-for-react'
-import {
-  Boot,
-  IDomEditor,
-  IEditorConfig,
-  IToolbarConfig,
-} from '@wangeditor/editor'
+import { Boot, IDomEditor, IEditorConfig, IToolbarConfig } from '@wangeditor/editor'
 import markdownModule from '@wangeditor/plugin-md'
 import { theme } from 'antd'
 
@@ -20,16 +15,8 @@ const TextEditor: React.FC<{
   placeholder?: string
   style?: React.CSSProperties
   className?: string
-}> = props => {
-  const {
-    mode,
-    value,
-    htmlChange,
-    placeholder,
-    style,
-    className,
-    defaultHtml,
-  } = props
+}> = (props) => {
+  const { mode, value, htmlChange, placeholder, style, className, defaultHtml } = props
   const { token } = theme.useToken()
 
   const editorStyle: React.CSSProperties = React.useMemo(
@@ -38,7 +25,7 @@ const TextEditor: React.FC<{
         border: `1px solid ${token.colorBorder}`,
         borderRadius: token.borderRadius,
       },
-    [style],
+    [style]
   )
 
   if (!flag) {

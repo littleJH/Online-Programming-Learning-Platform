@@ -1,5 +1,5 @@
 import React from 'react'
-import {Tag, TagProps, theme} from 'antd'
+import { Tag, TagProps, theme } from 'antd'
 import CheckableTag from 'antd/es/tag/CheckableTag'
 
 const MyTag: React.FC<{
@@ -9,27 +9,17 @@ const MyTag: React.FC<{
   checkable?: boolean
   checked?: boolean
 }> = (props) => {
-  const {
-    children,
-    size = 0.75,
-    checkable,
-    checked = false,
-    type = 'Primary'
-  } = props
-  const {token} = theme.useToken()
+  const { children, size = 0.75, checkable, checked = false, type = 'Primary' } = props
+  const { token } = theme.useToken()
 
   const render = () => {
     const tagProps = {
       bordered: false,
       style: {
         fontSize: `${size}rem`,
-        backgroundColor: checked
-          ? `${token.colorSuccessBg}`
-          : `${token[`color${type}Bg`]}`,
-        color: checked
-          ? `${token[`color${type}TextHover`]}`
-          : `${token[`color${type}Text`]}`
-      }
+        backgroundColor: checked ? `${token.colorSuccessBg}` : `${token[`color${type}Bg`]}`,
+        color: checked ? `${token[`color${type}TextHover`]}` : `${token[`color${type}Text`]}`,
+      },
     }
 
     return checkable ? (

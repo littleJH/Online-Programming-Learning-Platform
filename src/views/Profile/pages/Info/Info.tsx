@@ -96,11 +96,7 @@ const Info: React.FC = () => {
       <div className="flex justify-center">
         <div>
           {/* <ImgCrop rotationSlider> */}
-          <Upload
-            beforeUpload={beforeUpload}
-            fileList={fileList}
-            onRemove={handleRemove}
-          >
+          <Upload beforeUpload={beforeUpload} fileList={fileList} onRemove={handleRemove}>
             <Avatar src={`${imgGetBaseUrl}/${iconUrl}`} size={128}></Avatar>
           </Upload>
           {/* </ImgCrop> */}
@@ -148,30 +144,18 @@ const Info: React.FC = () => {
           <Statistic title="竞赛分数" value={String(info?.score)}></Statistic>
         </Col>
         <Col style={{ textAlign: 'center' }} span={8}>
-          <Statistic
-            title="被游览数"
-            value={String(info?.visit_num)}
-          ></Statistic>
+          <Statistic title="被游览数" value={String(info?.visit_num)}></Statistic>
         </Col>
       </Row>
       <Row>
         <Col style={{ textAlign: 'center' }} span={8}>
-          <Statistic
-            title="收到点赞"
-            value={String(info?.like_num)}
-          ></Statistic>
+          <Statistic title="收到点赞" value={String(info?.like_num)}></Statistic>
         </Col>
         <Col style={{ textAlign: 'center' }} span={8}>
-          <Statistic
-            title="收到收藏"
-            value={String(info?.collect_num)}
-          ></Statistic>
+          <Statistic title="收到收藏" value={String(info?.collect_num)}></Statistic>
         </Col>
         <Col style={{ textAlign: 'center' }} span={8}>
-          <Statistic
-            title="收到点踩"
-            value={String(info?.unlike_num)}
-          ></Statistic>
+          <Statistic title="收到点踩" value={String(info?.unlike_num)}></Statistic>
         </Col>
       </Row>
 
@@ -221,10 +205,7 @@ const Info: React.FC = () => {
           <Input defaultValue={info?.blog}></Input>
         </Form.Item>
         <Form.Item name={'res_long'} label="个人介绍">
-          <Input.TextArea
-            defaultValue={info?.res_long}
-            placeholder="关于你的个性、兴趣或经验"
-          ></Input.TextArea>
+          <Input.TextArea defaultValue={info?.res_long} placeholder="关于你的个性、兴趣或经验"></Input.TextArea>
         </Form.Item>
         <div className="text-end">
           <Button type="primary" onClick={handleClick}>

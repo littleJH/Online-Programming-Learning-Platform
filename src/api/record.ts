@@ -1,9 +1,4 @@
-import {
-  createRequest,
-  baseConfig,
-  jsonConfig,
-  wsBaseUrl,
-} from '../config/apiConfig'
+import { createRequest, baseConfig, jsonConfig, wsBaseUrl } from '../config/apiConfig'
 
 const request = createRequest({ baseURL: 'record' })
 

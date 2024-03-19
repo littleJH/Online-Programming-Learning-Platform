@@ -1,10 +1,5 @@
 import axios from 'axios'
-import {
-  baseConfig,
-  jsonConfig,
-  wsBaseUrl,
-  createRequest,
-} from '../config/apiConfig'
+import { baseConfig, jsonConfig, wsBaseUrl, createRequest } from '../config/apiConfig'
 
 const request = createRequest({ baseURL: 'chat' })
 
@@ -17,13 +12,9 @@ export const getGroupChatsApi = (id: string) => {
 }
 
 export const enterGroupPublishChatWS = (id: string) => {
-  return new WebSocket(
-    `${wsBaseUrl}/chat/receive/${id}?token=${localStorage.getItem('token')}`,
-  )
+  return new WebSocket(`${wsBaseUrl}/chat/receive/${id}?token=${localStorage.getItem('token')}`)
 }
 
 export const enterPublishChatWs = () => {
-  return new WebSocket(
-    `${wsBaseUrl}/chat/receivelink?token=${localStorage.getItem('token')}`,
-  )
+  return new WebSocket(`${wsBaseUrl}/chat/receivelink?token=${localStorage.getItem('token')}`)
 }

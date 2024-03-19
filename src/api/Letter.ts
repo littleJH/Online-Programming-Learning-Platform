@@ -1,9 +1,4 @@
-import {
-  createRequest,
-  baseConfig,
-  formConfig,
-  wsBaseUrl,
-} from '../config/apiConfig'
+import { createRequest, baseConfig, formConfig, wsBaseUrl } from '../config/apiConfig'
 
 const request = createRequest({ baseURL: 'letter' })
 
@@ -16,7 +11,5 @@ export const getLettersApi = (id: string) => {
 }
 
 export const enterPublishLetterWS = (id: string) => {
-  return new WebSocket(
-    `${wsBaseUrl}/letter/receive/${id}?token=${localStorage.getItem('token')}`,
-  )
+  return new WebSocket(`${wsBaseUrl}/letter/receive/${id}?token=${localStorage.getItem('token')}`)
 }

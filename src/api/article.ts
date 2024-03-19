@@ -27,15 +27,8 @@ export const getArticleLikeNumApi = (id: string, type: 'true' | 'false') => {
   return request.get(`/like/number/${id}?like=${type}`)
 }
 
-export const getArticleLikeListApi = (
-  id: string,
-  type: 'true' | 'false',
-  pageNum = 1,
-  pageSize = 20,
-) => {
-  return request.get(
-    `/like/list/${id}?like=${type}&pageNum=${pageNum}&pageSize=${pageSize}`,
-  )
+export const getArticleLikeListApi = (id: string, type: 'true' | 'false', pageNum = 1, pageSize = 20) => {
+  return request.get(`/like/list/${id}?like=${type}&pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 
 export const getArticleLikedApi = (id: string) => {
@@ -59,14 +52,8 @@ export const getArticleCollectNumApi = (id: string) => {
   return request.get(`/collect/number/${id}`)
 }
 
-export const getArticleCollectListApi = (
-  id: string,
-  pageNum = 1,
-  pageSize = 20,
-) => {
-  return request.get(
-    `/collect/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`,
-  )
+export const getArticleCollectListApi = (id: string, pageNum = 1, pageSize = 20) => {
+  return request.get(`/collect/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 
 export const collectArticleApi = (id: string) => {

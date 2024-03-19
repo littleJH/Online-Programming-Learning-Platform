@@ -13,7 +13,7 @@ const oj: any = {
 
 const ojmap = new Map()
 
-Object.keys(oj).forEach(key => {
+Object.keys(oj).forEach((key) => {
   ojmap.set(oj[key], key)
 })
 

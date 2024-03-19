@@ -13,10 +13,10 @@ const CreationRoot: React.FC = () => {
 
   useEffect(() => {
     if (!info) return
-    getArticleListApi(1, 0).then(res => {
+    getArticleListApi(1, 0).then((res) => {
       setArticleTotal(res.data.data.total)
     })
-    getUserProblemListApi(info.id, 1, 0).then(res => {
+    getUserProblemListApi(info.id, 1, 0).then((res) => {
       setProblemTotal(res.data.data.total)
     })
   }, [])

@@ -10,11 +10,7 @@ export const getCommentApi = (id: string) => {
   return request.get(`/show/${id}`)
 }
 
-export const getCommentListApi = (
-  id: string,
-  pageNum: number = 1,
-  pageSize: number = 20,
-) => {
+export const getCommentListApi = (id: string, pageNum: number = 1, pageSize: number = 20) => {
   return request.get(`/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 
@@ -35,10 +31,6 @@ export const getCommentLikedApi = (id: string) => {
   return request.get(`/like/show/${id}`, baseConfig())
 }
 
-export const getCommentHotRankApi = (
-  id: string,
-  pageNum: number = 1,
-  pageSize: number = 20,
-) => {
+export const getCommentHotRankApi = (id: string, pageNum: number = 1, pageSize: number = 20) => {
   return request.get(`/hot/rank/${id}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }

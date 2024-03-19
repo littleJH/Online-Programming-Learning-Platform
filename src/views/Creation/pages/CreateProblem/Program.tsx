@@ -1,7 +1,7 @@
-import React, {Fragment, useEffect} from 'react'
+import React, { Fragment, useEffect } from 'react'
 import CodeEditor from '@/components/editor/CodeEditor'
-import {Radio, Space} from 'antd'
-import {ProgramMode} from '@/type'
+import { Radio, Space } from 'antd'
+import { ProgramMode } from '@/type'
 interface Iprops {
   programMode: ProgramMode
   setprogramMode: Function
@@ -13,8 +13,7 @@ interface Iprops {
 import style from './style.module.scss'
 
 const Program: React.FC<Iprops> = (props) => {
-  const {setcode1, setcode2, programMode, setprogramMode, setcodeLanguage} =
-    props
+  const { setcode1, setcode2, programMode, setprogramMode, setcodeLanguage } = props
 
   useEffect(() => {
     const code1 = localStorage.getItem('code1')
@@ -24,33 +23,34 @@ const Program: React.FC<Iprops> = (props) => {
   }, [])
 
   return (
-    <Space direction='vertical' className='w-full'>
+    <Space direction="vertical" className="w-full">
       <div>
         <p className={style.label}>类型</p>
         <Radio.Group
           defaultValue={'standard'}
-          optionType='button'
+          optionType="button"
           onChange={(e) => {
             setprogramMode(e.target.value)
           }}
           options={[
             {
               label: <div>标准程序</div>,
-              value: 'standard'
+              value: 'standard',
             },
             {
               label: <div>特判程序</div>,
-              value: 'special_judge'
+              value: 'special_judge',
             },
             {
               label: <div>标准Hack程序</div>,
-              value: 'standardHack'
+              value: 'standardHack',
             },
             {
               label: <div>特判Hack程序</div>,
-              value: 'specialHack'
-            }
-          ]}></Radio.Group>
+              value: 'specialHack',
+            },
+          ]}
+        ></Radio.Group>
       </div>
 
       {/* <div>
@@ -65,46 +65,40 @@ const Program: React.FC<Iprops> = (props) => {
 
       <Fragment>
         {(programMode === 'specialHack' || programMode === 'standardHack') && (
-          <div className='flex items-center my-2'>
-            <div className='serial'>1</div>
+          <div className="flex items-center my-2">
+            <div className="serial">1</div>
             <div>&nbsp;创建标准程序</div>
           </div>
         )}
         <CodeEditor
-          oj=''
-          value={
-            localStorage.getItem('code1')
-              ? (localStorage.getItem('code1') as string)
-              : ''
-          }
+          oj=""
+          value={localStorage.getItem('code1') ? (localStorage.getItem('code1') as string) : ''}
           codeChange={(value: any) => {
             setcode1(value)
             localStorage.setItem('code1', value)
           }}
-          height={512}></CodeEditor>
+          height={512}
+        ></CodeEditor>
       </Fragment>
 
       {(programMode === 'specialHack' || programMode === 'standardHack') && (
         <Fragment>
-          <div className='flex items-center my-2'>
-            <div className='serial'>2</div>
+          <div className="flex items-center my-2">
+            <div className="serial">2</div>
             <div>&nbsp;创建输入检测程序</div>
           </div>
           <CodeEditor
-            oj=''
-            value={
-              localStorage.getItem('code2')
-                ? (localStorage.getItem('code2') as string)
-                : ''
-            }
+            oj=""
+            value={localStorage.getItem('code2') ? (localStorage.getItem('code2') as string) : ''}
             codeChange={(value: any) => {
               setcode2(value)
               localStorage.setItem('code2', value)
             }}
-            height={512}></CodeEditor>
+            height={512}
+          ></CodeEditor>
         </Fragment>
       )}
-      <div className='h-8'></div>
+      <div className="h-8"></div>
     </Space>
   )
 }

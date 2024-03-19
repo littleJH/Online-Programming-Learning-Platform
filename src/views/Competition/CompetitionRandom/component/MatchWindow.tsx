@@ -5,7 +5,7 @@ export interface IProps {
   // competition: ICompetition | undefined
 }
 
-const MatchWindow: React.FC<IProps> = props => {
+const MatchWindow: React.FC<IProps> = (props) => {
   return <div></div>
 }
 

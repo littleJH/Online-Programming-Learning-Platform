@@ -11,21 +11,12 @@ interface Iprops {
   setopenUpdateModal: Function
 }
 
-const Update: React.FC<Iprops> = props => {
-  const { competition, setcompetition, openUpdateModal, setopenUpdateModal } =
-    props
-  const [current, setcurrent] = useState<'competition' | 'problem'>(
-    'competition',
-  )
+const Update: React.FC<Iprops> = (props) => {
+  const { competition, setcompetition, openUpdateModal, setopenUpdateModal } = props
+  const [current, setcurrent] = useState<'competition' | 'problem'>('competition')
   return (
     <div>
-      <Modal
-        width={800}
-        title="修改比赛"
-        open={openUpdateModal}
-        onCancel={() => setopenUpdateModal(false)}
-        footer={[]}
-      >
+      <Modal width={800} title="修改比赛" open={openUpdateModal} onCancel={() => setopenUpdateModal(false)} footer={[]}>
         <Menu
           selectedKeys={[current]}
           mode="horizontal"
@@ -57,10 +48,7 @@ const Update: React.FC<Iprops> = props => {
           ]}
         ></Menu>
         {current === 'competition' && (
-          <Competition
-            competition={competition}
-            setcompetition={setcompetition}
-          ></Competition>
+          <Competition competition={competition} setcompetition={setcompetition}></Competition>
         )}
         {current === 'problem' && <Problem competition={competition}></Problem>}
       </Modal>

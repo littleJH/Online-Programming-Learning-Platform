@@ -17,13 +17,13 @@ interface IProps {
   state: IState
 }
 
-const RecordModal: React.FC<IProps> = props => {
+const RecordModal: React.FC<IProps> = (props) => {
   const { problem_id, openModal, setopenModal, state, record } = props
   const [totalTest, setTotalTest] = useState(0)
 
   useEffect(() => {
     if (problem_id) {
-      getProblemTestNumApi(problem_id).then(res => {
+      getProblemTestNumApi(problem_id).then((res) => {
         setTotalTest(res.data.data.total)
       })
     }

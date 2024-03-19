@@ -1,12 +1,7 @@
 import { Button, Form, Input, Menu, Modal, Space, theme } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import React, { useEffect, useMemo, useState } from 'react'
-import {
-  applyEnterGroupApi,
-  getGroupApi,
-  getMemberGroupListApi,
-  searchGroupByTextApi,
-} from '@/api/group'
+import { applyEnterGroupApi, getGroupApi, getMemberGroupListApi, searchGroupByTextApi } from '@/api/group'
 import { useRecoilValue } from 'recoil'
 import { notificationApi, userInfoState } from '@/store/appStore'
 import { IGroup } from '@/type'
@@ -33,20 +28,17 @@ const GroupRoot: React.FC = () => {
   const [form] = Form.useForm()
   const { token } = theme.useToken()
 
-  const currentGroup = useMemo(
-    () => groupList.find(item => item.id === group_id),
-    [group_id, groupList],
-  )
+  const currentGroup = useMemo(() => groupList.find((item) => item.id === group_id), [group_id, groupList])
 
   const menuItems = useMemo(
     () =>
-      groupList.map(group => {
+      groupList.map((group) => {
         return {
           key: group.id,
           label: <div>{group.title}</div>,
         }
       }),
-    [groupList],
+    [groupList]
   )
 
   useEffect(() => {
@@ -57,7 +49,7 @@ const GroupRoot: React.FC = () => {
   const initGroupList = () => {
     if (!info) return
     setMode('default')
-    getMemberGroupListApi(info?.id).then(async res => {
+    getMemberGroupListApi(info?.id).then(async (res) => {
       setTotal(res.data.data.total)
       const groups = res.data.data.userList
       const list: IGroup[] = []
@@ -111,8 +103,7 @@ const GroupRoot: React.FC = () => {
     }
     const form = new FormData()
     form.append('content', applyContent)
-    currentGroup?.id &&
-      applyEnterGroupApi(currentGroup?.id, form).then(res => {})
+    currentGroup?.id && applyEnterGroupApi(currentGroup?.id, form).then((res) => {})
   }
 
   const handleGroupCreated = (group: IGroup) => {
@@ -122,7 +113,7 @@ const GroupRoot: React.FC = () => {
       })
     setMode('default')
     setGroup_id(group.id)
-    setGroupList(value => [group, ...value])
+    setGroupList((value) => [group, ...value])
     setQuerys({
       group_id: group.id,
     })
@@ -145,23 +136,14 @@ const GroupRoot: React.FC = () => {
             enterButton
             allowClear
             onSearch={handleGroupSearth}
-            onChange={e => {
+            onChange={(e) => {
               if (e.target.value === '') initGroupList()
             }}
           ></Search>
-          <Button
-            size="small"
-            icon={<PlusOutlined />}
-            onClick={() => setOpenCreateModal(true)}
-          ></Button>
+          <Button size="small" icon={<PlusOutlined />} onClick={() => setOpenCreateModal(true)}></Button>
         </Space>
         <div className="overflow-auto h-96 grow">
-          <Menu
-            className="p-4"
-            items={menuItems}
-            selectedKeys={[group_id || '']}
-            onSelect={handleMenuSelected}
-          ></Menu>
+          <Menu className="p-4" items={menuItems} selectedKeys={[group_id || '']} onSelect={handleMenuSelected}></Menu>
         </div>
       </div>
       {/* <Divider type="vertical" className="h-full"></Divider> */}
@@ -186,11 +168,7 @@ const GroupRoot: React.FC = () => {
                     <div className="w-full text-end">
                       <Button
                         type="primary"
-                        onClick={() =>
-                          currentGroup.auto
-                            ? enterGroup()
-                            : setOpenEnterModal(true)
-                        }
+                        onClick={() => (currentGroup.auto ? enterGroup() : setOpenEnterModal(true))}
                       >
                         加入小组
                       </Button>
@@ -212,21 +190,10 @@ const GroupRoot: React.FC = () => {
           </Button>,
         ]}
       >
-        <TextArea
-          value={applyContent}
-          onChange={e => setApplyContent(e.target.value)}
-        ></TextArea>
+        <TextArea value={applyContent} onChange={(e) => setApplyContent(e.target.value)}></TextArea>
       </Modal>
-      <Modal
-        open={openCreateModal}
-        title="创建用户组"
-        onCancel={() => setOpenCreateModal(false)}
-        footer={[]}
-      >
-        <CreateGroupForm
-          form={form}
-          doneCallback={handleGroupCreated}
-        ></CreateGroupForm>
+      <Modal open={openCreateModal} title="创建用户组" onCancel={() => setOpenCreateModal(false)} footer={[]}>
+        <CreateGroupForm form={form} doneCallback={handleGroupCreated}></CreateGroupForm>
       </Modal>
     </div>
   )

@@ -1,17 +1,8 @@
-import {
-  baseConfig,
-  jsonConfig,
-  formConfig,
-  createRequest,
-} from '../config/apiConfig'
+import { baseConfig, jsonConfig, formConfig, createRequest } from '../config/apiConfig'
 
 const request = createRequest({ baseURL: 'user' })
 
-export const searchUserByTextApi = (
-  text: string,
-  pageNum = 1,
-  pageSize = 20,
-) => {
+export const searchUserByTextApi = (text: string, pageNum = 1, pageSize = 20) => {
   return request.get(`/search/${text}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 

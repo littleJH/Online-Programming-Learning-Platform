@@ -1,7 +1,7 @@
-import React, {Fragment, useLayoutEffect, useState} from 'react'
-import {IRecord} from '@/type'
-import {recordStates} from '@/assets/recordStates'
-import {theme} from 'antd'
+import React, { Fragment, useLayoutEffect, useState } from 'react'
+import { IRecord } from '@/type'
+import { recordStates } from '@/assets/recordStates'
+import { theme } from 'antd'
 import MyTag from '@/components/Label/MyTag'
 
 type ProblemState = 'unsubmited' | 'unAccepted' | 'accepted'
@@ -11,7 +11,7 @@ const ProblemStateLabel: React.FC<{
   records: IRecord[]
 }> = (props) => {
   const [element, setelement] = useState<JSX.Element>()
-  const {token} = theme.useToken()
+  const { token } = theme.useToken()
 
   useLayoutEffect(() => {
     if (props.records.length === 0) {
@@ -41,7 +41,7 @@ const ProblemStateLabel: React.FC<{
     }
   }, [props])
 
-  return <div className='w-full flex justify-center'>{element}</div>
+  return <div className="w-full flex justify-center">{element}</div>
 }
 
 export default ProblemStateLabel

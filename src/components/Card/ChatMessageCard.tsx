@@ -5,7 +5,7 @@ import { theme, Card } from 'antd'
 const ChatMessageCard: React.FC<{
   mode: 'left' | 'right'
   children: string
-}> = props => {
+}> = (props) => {
   const { mode, children } = props
   const { token } = theme.useToken()
 

@@ -1,8 +1,4 @@
-import {
-  deleteGroupApi,
-  getGroupListApi,
-  getLeaderGroupListApi,
-} from '@/api/group'
+import { deleteGroupApi, getGroupListApi, getLeaderGroupListApi } from '@/api/group'
 import { notificationApi, userInfoState } from '@/store/appStore'
 import { IGroup } from '@/type'
 import React, { useState } from 'react'
@@ -25,7 +21,7 @@ const Group: React.FC = () => {
   const [total, setTotal] = useState(0)
 
   React.useEffect(() => {
-    setQuerys(search => {
+    setQuerys((search) => {
       search.set('pageNum', String(pageNum))
       search.set('pageSize', String(pageSize))
       return search
@@ -35,7 +31,7 @@ const Group: React.FC = () => {
 
   const fetchGroups = () => {
     info?.id &&
-      getLeaderGroupListApi(info?.id).then(res => {
+      getLeaderGroupListApi(info?.id).then((res) => {
         setGroupList(res.data.data.groups)
         setTotal(res.data.data.total)
         setLoading(false)
@@ -46,10 +42,7 @@ const Group: React.FC = () => {
     console.log(index)
     const { data } = await deleteGroupApi(group.id)
     if (data.code === 200) {
-      setGroupList(value => [
-        ...value.slice(0, index),
-        ...value.slice(index + 1),
-      ])
+      setGroupList((value) => [...value.slice(0, index), ...value.slice(index + 1)])
       notification &&
         notification.success({
           message: `用户组“${group.title}”已删除`,
@@ -81,18 +74,9 @@ const Group: React.FC = () => {
         pageSize={pageSize}
         total={total}
         onPageChange={handlePageChange}
-        itemRender={(item: IGroup) => (
-          <List.Item.Meta
-            title={item.title}
-            description={item.content}
-          ></List.Item.Meta>
-        )}
+        itemRender={(item: IGroup) => <List.Item.Meta title={item.title} description={item.content}></List.Item.Meta>}
       ></PaginationList>
-      <Modal
-        open={openDetailModal}
-        onCancel={() => setOpenDetailModal(false)}
-        footer={[]}
-      >
+      <Modal open={openDetailModal} onCancel={() => setOpenDetailModal(false)} footer={[]}>
         {currentGroup && <GroupInfo group={currentGroup}></GroupInfo>}
       </Modal>
     </div>

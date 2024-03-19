@@ -1,37 +1,17 @@
 import { getTopicListApi, getTopicProblemsApi } from '@/api/topic'
 import TextEditor from '@/components/editor/TextEditor'
 import { IGroup, ITopic } from '@/type'
-import {
-  Button,
-  Form,
-  Input,
-  InputNumber,
-  InputRef,
-  Modal,
-  Result,
-  ResultProps,
-  Switch,
-  Table,
-} from 'antd'
+import { Button, Form, Input, InputNumber, InputRef, Modal, Result, ResultProps, Switch, Table } from 'antd'
 import Search from 'antd/es/input/Search'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import {
-  PlusOutlined,
-  MinusCircleOutlined,
-  MenuOutlined,
-} from '@ant-design/icons'
+import { PlusOutlined, MinusCircleOutlined, MenuOutlined } from '@ant-design/icons'
 import { RowSelectMethod } from 'antd/es/table/interface'
 import { getGroupListApi } from '@/api/group'
 import NoData from '@/components/empty/NoData'
 import { createFormApi } from '@/api/form'
 import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
-import {
-  SortableContext,
-  arrayMove,
-  useSortable,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable'
+import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useNavigate } from 'react-router-dom'
 
@@ -51,15 +31,7 @@ interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {
 }
 
 const Row = ({ children, ...props }: RowProps) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    setActivatorNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } = useSortable({
     id: props['data-row-key'],
   })
 
@@ -72,15 +44,11 @@ const Row = ({ children, ...props }: RowProps) => {
 
   return (
     <tr {...props} ref={setNodeRef} style={style} {...attributes}>
-      {React.Children.map(children, child => {
+      {React.Children.map(children, (child) => {
         if ((child as React.ReactElement).key === 'sort') {
           return React.cloneElement(child as React.ReactElement, {
             children: (
-              <MenuOutlined
-                ref={setActivatorNodeRef}
-                style={{ touchAction: 'none', cursor: 'move' }}
-                {...listeners}
-              />
+              <MenuOutlined ref={setActivatorNodeRef} style={{ touchAction: 'none', cursor: 'move' }} {...listeners} />
             ),
           })
         }
@@ -98,12 +66,8 @@ const CreateForm: React.FC = () => {
   const [groupList, setGroupList] = useState<IGroupTableDataType[]>([])
   const [searchText, setSearchText] = useState('')
   const [content, setcontent] = useState<string | undefined>('')
-  const [selectedTopics, setSelectedTopics] = useState<ITopicTableDataType[]>(
-    [],
-  )
-  const [selectedGroups, setSelectedGroups] = useState<IGroupTableDataType[]>(
-    [],
-  )
+  const [selectedTopics, setSelectedTopics] = useState<ITopicTableDataType[]>([])
+  const [selectedGroups, setSelectedGroups] = useState<IGroupTableDataType[]>([])
   const titleInputRef = useRef<InputRef>(null)
   const [openResultModal, setOpenResultModal] = useState(false)
   const [result, setResult] = useState<ResultProps>()
@@ -114,15 +78,9 @@ const CreateForm: React.FC = () => {
     fetchGroups()
   }, [])
 
-  const selectedTopicRowKeys = useMemo(
-    () => selectedTopics.map(value => value.id),
-    [selectedTopics],
-  )
+  const selectedTopicRowKeys = useMemo(() => selectedTopics.map((value) => value.id), [selectedTopics])
 
-  const selectedGroupRowKeys = useMemo(
-    () => selectedGroups.map(value => value.id),
-    [selectedGroups],
-  )
+  const selectedGroupRowKeys = useMemo(() => selectedGroups.map((value) => value.id), [selectedGroups])
 
   useEffect(() => {
     form.setFieldValue('topics', selectedTopicRowKeys)
@@ -130,7 +88,7 @@ const CreateForm: React.FC = () => {
   }, [selectedTopicRowKeys, selectedGroupRowKeys])
 
   const fetchTopics = useCallback(() => {
-    getTopicListApi(1, 99999).then(res => {
+    getTopicListApi(1, 99999).then((res) => {
       const list: ITopicTableDataType[] = []
       res.data.data.topics.forEach(async (topic: ITopic) => {
         const res = await getTopicProblemsApi(topic.id, 1, 0)
@@ -145,7 +103,7 @@ const CreateForm: React.FC = () => {
   }, [])
 
   const fetchGroups = useCallback(() => {
-    getGroupListApi(1, 99999).then(res => {
+    getGroupListApi(1, 99999).then((res) => {
       console.log(res.data)
       const list: IGroupTableDataType[] = []
       res.data.data.groups.forEach((group: IGroup) => {
@@ -164,30 +122,20 @@ const CreateForm: React.FC = () => {
 
   const handleContentChange = (value: string) => {
     setcontent(value)
-    form.setFieldValue(
-      'content',
-      value === '<p><br></p>' || value === '' ? undefined : value,
-    )
+    form.setFieldValue('content', value === '<p><br></p>' || value === '' ? undefined : value)
   }
 
   const handleSearch = (value: string) => {}
 
   const handleSelectedChange = useCallback(
-    (
-      value: React.Key[],
-      selectedRows: ITopic[] | IGroup[],
-      info: { type: RowSelectMethod },
-    ) => {
+    (value: React.Key[], selectedRows: ITopic[] | IGroup[], info: { type: RowSelectMethod }) => {
       switch (leftMode) {
         case 'topics':
           if (info.type === 'all') {
             value.length
               ? setSelectedTopics((prev: any) => [...prev, ...selectedRows])
               : setSelectedTopics((prev: ITopicTableDataType[]) => [
-                  ...prev.filter(
-                    value =>
-                      topicList.findIndex(val => val.key === value.key) === -1,
-                  ),
+                  ...prev.filter((value) => topicList.findIndex((val) => val.key === value.key) === -1),
                 ])
           }
           break
@@ -196,10 +144,7 @@ const CreateForm: React.FC = () => {
             value.length
               ? setSelectedGroups((prev: any) => [...prev, ...selectedRows])
               : setSelectedGroups((prev: IGroupTableDataType[]) => [
-                  ...prev.filter(
-                    value =>
-                      groupList.findIndex(val => val.key === value.key) === -1,
-                  ),
+                  ...prev.filter((value) => groupList.findIndex((val) => val.key === value.key) === -1),
                 ])
           }
           break
@@ -207,7 +152,7 @@ const CreateForm: React.FC = () => {
           break
       }
     },
-    [topicList, groupList, leftMode],
+    [topicList, groupList, leftMode]
   )
 
   const handleRowSelect = useCallback(
@@ -215,47 +160,37 @@ const CreateForm: React.FC = () => {
       switch (leftMode) {
         case 'topics':
           selected
-            ? setSelectedTopics((prev: ITopicTableDataType[]) => [
-                ...prev,
-                record as ITopicTableDataType,
-              ])
-            : setSelectedTopics((prev: ITopicTableDataType[]) => [
-                ...prev.filter(value => value.key !== record.key),
-              ])
+            ? setSelectedTopics((prev: ITopicTableDataType[]) => [...prev, record as ITopicTableDataType])
+            : setSelectedTopics((prev: ITopicTableDataType[]) => [...prev.filter((value) => value.key !== record.key)])
           break
         case 'groups':
           selected
-            ? setSelectedGroups((prev: IGroupTableDataType[]) => [
-                ...prev,
-                record as IGroupTableDataType,
-              ])
-            : setSelectedGroups((prev: IGroupTableDataType[]) => [
-                ...prev.filter(value => value.key !== record.key),
-              ])
+            ? setSelectedGroups((prev: IGroupTableDataType[]) => [...prev, record as IGroupTableDataType])
+            : setSelectedGroups((prev: IGroupTableDataType[]) => [...prev.filter((value) => value.key !== record.key)])
           break
         default:
           break
       }
     },
-    [leftMode],
+    [leftMode]
   )
 
   const handleDragEnd = ({ active, over }: DragEndEvent, mode: LeftMode) => {
     switch (mode) {
       case 'topics':
         if (active.id !== over?.id) {
-          setSelectedTopics(previous => {
-            const activeIndex = previous.findIndex(i => i.key === active.id)
-            const overIndex = previous.findIndex(i => i.key === over?.id)
+          setSelectedTopics((previous) => {
+            const activeIndex = previous.findIndex((i) => i.key === active.id)
+            const overIndex = previous.findIndex((i) => i.key === over?.id)
             return arrayMove(previous, activeIndex, overIndex)
           })
         }
         break
       case 'groups':
         if (active.id !== over?.id) {
-          setSelectedGroups(previous => {
-            const activeIndex = previous.findIndex(i => i.key === active.id)
-            const overIndex = previous.findIndex(i => i.key === over?.id)
+          setSelectedGroups((previous) => {
+            const activeIndex = previous.findIndex((i) => i.key === active.id)
+            const overIndex = previous.findIndex((i) => i.key === over?.id)
             return arrayMove(previous, activeIndex, overIndex)
           })
         }
@@ -268,16 +203,10 @@ const CreateForm: React.FC = () => {
   const handleMinusClick = useCallback((index: number, mode: LeftMode) => {
     switch (mode) {
       case 'topics':
-        setSelectedTopics(value => [
-          ...value.slice(0, index),
-          ...value.slice(index + 1),
-        ])
+        setSelectedTopics((value) => [...value.slice(0, index), ...value.slice(index + 1)])
         break
       case 'groups':
-        setSelectedGroups(value => [
-          ...value.slice(0, index),
-          ...value.slice(index + 1),
-        ])
+        setSelectedGroups((value) => [...value.slice(0, index), ...value.slice(index + 1)])
         break
       default:
         break
@@ -287,9 +216,9 @@ const CreateForm: React.FC = () => {
   const handleButtonClick = useCallback(() => {
     form
       .validateFields()
-      .then(data => {
+      .then((data) => {
         console.log(data)
-        createFormApi(JSON.stringify(data)).then(res => {
+        createFormApi(JSON.stringify(data)).then((res) => {
           console.log(res.data)
           if (res.data.code === 200) {
             setResult({
@@ -331,7 +260,7 @@ const CreateForm: React.FC = () => {
           setOpenResultModal(true)
         })
       })
-      .catch(err => console.log(err))
+      .catch((err) => console.log(err))
   }, [form])
 
   const handleDetailClick = useCallback((record: ITopicTableDataType) => {
@@ -356,7 +285,7 @@ const CreateForm: React.FC = () => {
               defaultValue={searchText}
               enterButton
               onSearch={handleSearch}
-              onChange={event => {
+              onChange={(event) => {
                 setSearchText(event.target.value)
               }}
             ></Search>
@@ -365,10 +294,8 @@ const CreateForm: React.FC = () => {
                 rowSelection={{
                   columnWidth: 64,
                   selectedRowKeys: selectedTopicRowKeys,
-                  onChange: (value, selectedRows, info) =>
-                    handleSelectedChange(value, selectedRows, info),
-                  onSelect: (record, selected) =>
-                    handleRowSelect(record, selected),
+                  onChange: (value, selectedRows, info) => handleSelectedChange(value, selectedRows, info),
+                  onSelect: (record, selected) => handleRowSelect(record, selected),
                 }}
                 size="small"
                 dataSource={topicList}
@@ -383,9 +310,7 @@ const CreateForm: React.FC = () => {
                     dataIndex: 'content',
                     key: 'content',
                     title: '描述',
-                    render: value => (
-                      <div style={{}}>{value.replace(/<[^<>]+>/g, '')}</div>
-                    ),
+                    render: (value) => <div style={{}}>{value.replace(/<[^<>]+>/g, '')}</div>,
                   },
                   {
                     dataIndex: 'total',
@@ -396,10 +321,7 @@ const CreateForm: React.FC = () => {
                     key: 'action',
                     title: '操作',
                     render: (_, record, index) => (
-                      <Button
-                        type="link"
-                        onClick={() => handleDetailClick(record)}
-                      >
+                      <Button type="link" onClick={() => handleDetailClick(record)}>
                         详情
                       </Button>
                     ),
@@ -412,10 +334,8 @@ const CreateForm: React.FC = () => {
                 rowSelection={{
                   columnWidth: 64,
                   selectedRowKeys: selectedGroupRowKeys,
-                  onChange: (value, selectedRows, info) =>
-                    handleSelectedChange(value, selectedRows, info),
-                  onSelect: (record, selected) =>
-                    handleRowSelect(record, selected),
+                  onChange: (value, selectedRows, info) => handleSelectedChange(value, selectedRows, info),
+                  onSelect: (record, selected) => handleRowSelect(record, selected),
                 }}
                 size="small"
                 dataSource={groupList}
@@ -430,9 +350,7 @@ const CreateForm: React.FC = () => {
                     dataIndex: 'content',
                     key: 'content',
                     title: '描述',
-                    render: value => (
-                      <div style={{}}>{value.replace(/<[^<>]+>/g, '')}</div>
-                    ),
+                    render: (value) => <div style={{}}>{value.replace(/<[^<>]+>/g, '')}</div>,
                   },
 
                   {
@@ -463,37 +381,15 @@ const CreateForm: React.FC = () => {
               pass_re: false,
             }}
           >
-            <Form.Item
-              name={'title'}
-              label="标题："
-              rules={[{ required: true }]}
-            >
+            <Form.Item name={'title'} label="标题：" rules={[{ required: true }]}>
               <Input ref={titleInputRef}></Input>
             </Form.Item>
-            <Form.Item
-              name={'content'}
-              label="描述"
-              rules={[{ required: true }]}
-            >
-              <TextEditor
-                value={content}
-                mode="markdown"
-                htmlChange={handleContentChange}
-              ></TextEditor>
+            <Form.Item name={'content'} label="描述" rules={[{ required: true }]}>
+              <TextEditor value={content} mode="markdown" htmlChange={handleContentChange}></TextEditor>
             </Form.Item>
-            <Form.Item
-              name={'topics'}
-              label="题单："
-              rules={[{ required: true }]}
-            >
-              <DndContext
-                modifiers={[restrictToVerticalAxis]}
-                onDragEnd={event => handleDragEnd(event, 'topics')}
-              >
-                <SortableContext
-                  items={selectedGroups.map(i => i.key)}
-                  strategy={verticalListSortingStrategy}
-                >
+            <Form.Item name={'topics'} label="题单：" rules={[{ required: true }]}>
+              <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={(event) => handleDragEnd(event, 'topics')}>
+                <SortableContext items={selectedGroups.map((i) => i.key)} strategy={verticalListSortingStrategy}>
                   <Table
                     pagination={false}
                     showHeader={false}
@@ -513,9 +409,7 @@ const CreateForm: React.FC = () => {
                       {
                         width: 64,
                         dataIndex: 'key',
-                        render: (_, __, index) => (
-                          <div className="select-none">{index + 1}</div>
-                        ),
+                        render: (_, __, index) => <div className="select-none">{index + 1}</div>,
                       },
                       {
                         dataIndex: 'title',
@@ -525,9 +419,7 @@ const CreateForm: React.FC = () => {
                         dataIndex: 'operation',
                         align: 'right',
                         render: (value, _, index) => (
-                          <MinusCircleOutlined
-                            onClick={() => handleMinusClick(index, 'topics')}
-                          />
+                          <MinusCircleOutlined onClick={() => handleMinusClick(index, 'topics')} />
                         ),
                       },
                     ]}
@@ -538,24 +430,14 @@ const CreateForm: React.FC = () => {
                 </SortableContext>
               </DndContext>
               <div className="flex justify-center w-full">
-                <Button
-                  type="dashed"
-                  style={{ margin: '1rem' }}
-                  onClick={() => setLeftMode('topics')}
-                >
+                <Button type="dashed" style={{ margin: '1rem' }} onClick={() => setLeftMode('topics')}>
                   <PlusOutlined style={{ width: '4rem' }} />
                 </Button>
               </div>
             </Form.Item>
             <Form.Item name={'groups'} label="用户组：">
-              <DndContext
-                modifiers={[restrictToVerticalAxis]}
-                onDragEnd={event => handleDragEnd(event, 'groups')}
-              >
-                <SortableContext
-                  items={selectedTopics.map(i => i.key)}
-                  strategy={verticalListSortingStrategy}
-                >
+              <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={(event) => handleDragEnd(event, 'groups')}>
+                <SortableContext items={selectedTopics.map((i) => i.key)} strategy={verticalListSortingStrategy}>
                   <Table
                     pagination={false}
                     showHeader={false}
@@ -575,9 +457,7 @@ const CreateForm: React.FC = () => {
                       {
                         width: 64,
                         dataIndex: 'key',
-                        render: (_, __, index) => (
-                          <div className="select-none">{index + 1}</div>
-                        ),
+                        render: (_, __, index) => <div className="select-none">{index + 1}</div>,
                       },
                       {
                         dataIndex: 'title',
@@ -587,9 +467,7 @@ const CreateForm: React.FC = () => {
                         dataIndex: 'operation',
                         align: 'right',
                         render: (value, _, index) => (
-                          <MinusCircleOutlined
-                            onClick={() => handleMinusClick(index, 'groups')}
-                          />
+                          <MinusCircleOutlined onClick={() => handleMinusClick(index, 'groups')} />
                         ),
                       },
                     ]}
@@ -600,41 +478,21 @@ const CreateForm: React.FC = () => {
                 </SortableContext>
               </DndContext>
               <div className="flex justify-center w-full">
-                <Button
-                  type="dashed"
-                  style={{ margin: '1rem' }}
-                  onClick={() => setLeftMode('groups')}
-                >
+                <Button type="dashed" style={{ margin: '1rem' }} onClick={() => setLeftMode('groups')}>
                   <PlusOutlined style={{ width: '4rem' }} />
                 </Button>
               </div>
             </Form.Item>
-            <Form.Item
-              name={'auto_update'}
-              label="每小时更新排名："
-              valuePropName="checked"
-            >
+            <Form.Item name={'auto_update'} label="每小时更新排名：" valuePropName="checked">
               <Switch defaultChecked></Switch>
             </Form.Item>
-            <Form.Item
-              name={'auto_pass'}
-              label="自动通过用户组申请："
-              valuePropName="checked"
-            >
+            <Form.Item name={'auto_pass'} label="自动通过用户组申请：" valuePropName="checked">
               <Switch></Switch>
             </Form.Item>
-            <Form.Item
-              name={'pass_num'}
-              label="用户组成员数量限制："
-              rules={[{ required: true }]}
-            >
+            <Form.Item name={'pass_num'} label="用户组成员数量限制：" rules={[{ required: true }]}>
               <InputNumber min={1}></InputNumber>
             </Form.Item>
-            <Form.Item
-              name={'pass_re'}
-              label="用户组成员可重复："
-              valuePropName="checked"
-            >
+            <Form.Item name={'pass_re'} label="用户组成员可重复：" valuePropName="checked">
               <Switch></Switch>
             </Form.Item>
           </Form>

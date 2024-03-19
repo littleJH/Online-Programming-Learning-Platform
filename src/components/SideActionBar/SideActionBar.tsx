@@ -15,7 +15,7 @@ interface Iprops {
   collected: boolean
 }
 
-const SideActionBar: React.FC<Iprops> = props => {
+const SideActionBar: React.FC<Iprops> = (props) => {
   const {
     onLikeClick,
     onCollectClick,
@@ -35,57 +35,26 @@ const SideActionBar: React.FC<Iprops> = props => {
   return (
     <div>
       <Space direction="vertical" size={'large'}>
-        <Badge
-          size="small"
-          count={likeNum}
-          offset={[-5, 5]}
-          color={token.colorPrimary}
-        >
+        <Badge size="small" count={likeNum} offset={[-5, 5]} color={token.colorPrimary}>
           <div className={style.item} onClick={onLikeClick} style={colorStyle}>
             <MySvgIcon
               href={liked === 1 ? '#icon-liked' : '#icon-like'}
               size={1.5}
-              color={
-                liked === 1
-                  ? token.colorPrimaryTextHover
-                  : token.colorTextDescription
-              }
+              color={liked === 1 ? token.colorPrimaryTextHover : token.colorTextDescription}
             ></MySvgIcon>
           </div>
         </Badge>
-        <Badge
-          size="small"
-          count={collectNum}
-          offset={[-5, 5]}
-          color={token.colorPrimary}
-        >
-          <div
-            className={style.item}
-            onClick={onCollectClick}
-            style={colorStyle}
-          >
+        <Badge size="small" count={collectNum} offset={[-5, 5]} color={token.colorPrimary}>
+          <div className={style.item} onClick={onCollectClick} style={colorStyle}>
             <MySvgIcon
               href={collected ? '#icon-collected' : '#icon-collect'}
               size={1.5}
-              color={
-                collected
-                  ? token.colorPrimaryTextHover
-                  : token.colorTextDescription
-              }
+              color={collected ? token.colorPrimaryTextHover : token.colorTextDescription}
             ></MySvgIcon>
           </div>
         </Badge>
-        <Badge
-          size="small"
-          count={remarkNum}
-          offset={[-5, 5]}
-          color={token.colorPrimary}
-        >
-          <div
-            className={style.item}
-            onClick={onCommentClick}
-            style={colorStyle}
-          >
+        <Badge size="small" count={remarkNum} offset={[-5, 5]} color={token.colorPrimary}>
+          <div className={style.item} onClick={onCommentClick} style={colorStyle}>
             <MySvgIcon href="#icon-comment" size={1.5}></MySvgIcon>
           </div>
         </Badge>

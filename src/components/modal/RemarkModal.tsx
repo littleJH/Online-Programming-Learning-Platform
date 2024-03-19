@@ -6,7 +6,7 @@ const RemarkModal: React.FC<{
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
   content: React.ReactNode
   title?: string
-}> = props => {
+}> = (props) => {
   const { open, setOpen, content, title } = props
   return (
     <Modal

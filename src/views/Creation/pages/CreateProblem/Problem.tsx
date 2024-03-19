@@ -26,7 +26,7 @@ const initLocalProblemForm = {
 
 let problemForm = initLocalProblemForm
 
-const Problem: React.FC<Iprops> = props => {
+const Problem: React.FC<Iprops> = (props) => {
   const { form } = props
   const { Option } = Select
 
@@ -46,13 +46,7 @@ const Problem: React.FC<Iprops> = props => {
   }
 
   return (
-    <Form
-      form={form}
-      name="problemForm"
-      layout="vertical"
-      onValuesChange={handleFormChange}
-      scrollToFirstError
-    >
+    <Form form={form} name="problemForm" layout="vertical" onValuesChange={handleFormChange} scrollToFirstError>
       <Form.Item name={'title'} label="标题" rules={[{ required: true }]}>
         <Input></Input>
       </Form.Item>
@@ -71,11 +65,7 @@ const Problem: React.FC<Iprops> = props => {
                 min={1}
                 placeholder="时间限制"
                 addonAfter={
-                  <Form.Item
-                    name={'time_unit'}
-                    rules={[{ required: true }]}
-                    noStyle
-                  >
+                  <Form.Item name={'time_unit'} rules={[{ required: true }]} noStyle>
                     <Select placeholder="请选择" style={{ width: 80 }}>
                       <Option value="s">s</Option>
                       <Option value="ms">ms</Option>
@@ -86,20 +76,12 @@ const Problem: React.FC<Iprops> = props => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item
-              name={'memory_limit'}
-              noStyle
-              rules={[{ required: true }]}
-            >
+            <Form.Item name={'memory_limit'} noStyle rules={[{ required: true }]}>
               <InputNumber
                 min={1}
                 placeholder="空间限制"
                 addonAfter={
-                  <Form.Item
-                    name={'memory_unit'}
-                    rules={[{ required: true }]}
-                    noStyle
-                  >
+                  <Form.Item name={'memory_unit'} rules={[{ required: true }]} noStyle>
                     <Select placeholder="请选择" style={{ width: 80 }}>
                       <Option value="kb">kb</Option>
                       <Option value="mb">mb</Option>
@@ -129,20 +111,12 @@ const Problem: React.FC<Iprops> = props => {
       <Form.Item label={`示例`} required>
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item
-              name={['sample_case', 'input']}
-              noStyle
-              rules={[{ required: true }]}
-            >
+            <Form.Item name={['sample_case', 'input']} noStyle rules={[{ required: true }]}>
               <TextArea placeholder="input" autoSize></TextArea>
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item
-              name={['sample_case', 'output']}
-              noStyle
-              rules={[{ required: true }]}
-            >
+            <Form.Item name={['sample_case', 'output']} noStyle rules={[{ required: true }]}>
               <TextArea placeholder="output" autoSize></TextArea>
             </Form.Item>
           </Col>
@@ -154,12 +128,7 @@ const Problem: React.FC<Iprops> = props => {
             {fields.map((field, name, index) => (
               <Form.Item
                 colon={false}
-                label={
-                  <MinusCircleOutlined
-                    className="dynamic-delete-button"
-                    onClick={() => remove(field.name)}
-                  />
-                }
+                label={<MinusCircleOutlined className="dynamic-delete-button" onClick={() => remove(field.name)} />}
                 key={field.key}
               >
                 <Form.Item noStyle>
@@ -195,20 +164,12 @@ const Problem: React.FC<Iprops> = props => {
       <Form.Item label={`用例`} required>
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item
-              noStyle
-              name={['test_case', 'input']}
-              rules={[{ required: true }]}
-            >
+            <Form.Item noStyle name={['test_case', 'input']} rules={[{ required: true }]}>
               <TextArea placeholder="input" autoSize></TextArea>
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item
-              noStyle
-              name={['test_case', 'output']}
-              rules={[{ required: true }]}
-            >
+            <Form.Item noStyle name={['test_case', 'output']} rules={[{ required: true }]}>
               <TextArea placeholder="output" autoSize></TextArea>
             </Form.Item>
           </Col>
@@ -220,31 +181,18 @@ const Problem: React.FC<Iprops> = props => {
             {fields.map((field, name, index) => (
               <Form.Item
                 colon={false}
-                label={
-                  <MinusCircleOutlined
-                    className="dynamic-delete-button"
-                    onClick={() => remove(field.name)}
-                  />
-                }
+                label={<MinusCircleOutlined className="dynamic-delete-button" onClick={() => remove(field.name)} />}
                 key={field.key}
               >
                 <Form.Item noStyle>
                   <Row gutter={16}>
                     <Col span={12}>
-                      <Form.Item
-                        noStyle
-                        name={[name, 'input']}
-                        rules={[{ required: true }]}
-                      >
+                      <Form.Item noStyle name={[name, 'input']} rules={[{ required: true }]}>
                         <TextArea placeholder="input" autoSize></TextArea>
                       </Form.Item>
                     </Col>
                     <Col span={12}>
-                      <Form.Item
-                        noStyle
-                        name={[name, 'output']}
-                        rules={[{ required: true }]}
-                      >
+                      <Form.Item noStyle name={[name, 'output']} rules={[{ required: true }]}>
                         <TextArea placeholder="output" autoSize></TextArea>
                       </Form.Item>
                     </Col>

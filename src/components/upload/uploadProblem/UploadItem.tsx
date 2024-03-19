@@ -17,24 +17,17 @@ const UploadItem: React.FC<{
   status?: string
   originNode?: React.ReactNode
   message?: string
-}> = props => {
+}> = (props) => {
   const { originNode, name, status, message } = props
   const theme = useRecoilValue(themeState)
-  const messageColor =
-    status === 'error'
-      ? theme.colorError
-      : status === 'done'
-        ? theme.colorSuccess
-        : ''
+  const messageColor = status === 'error' ? theme.colorError : status === 'done' ? theme.colorSuccess : ''
 
   return (
     <div>
       {originNode ? (
         <div className="flex justify-between items-end">
           <span>{originNode}</span>
-          <span style={{ color: messageColor, fontSize: '0.75rem' }}>
-            {message || ''}
-          </span>
+          <span style={{ color: messageColor, fontSize: '0.75rem' }}>{message || ''}</span>
         </div>
       ) : (
         <>

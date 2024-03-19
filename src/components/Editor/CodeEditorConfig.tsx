@@ -8,7 +8,7 @@ interface IProps {
   setMonacoOptions: Function
 }
 
-const CodeEditorConfig: React.FC<IProps> = props => {
+const CodeEditorConfig: React.FC<IProps> = (props) => {
   const { monacoOptions, setMonacoOptions } = props
   const [form] = Form.useForm<IMonacoOptions>()
 
@@ -22,13 +22,7 @@ const CodeEditorConfig: React.FC<IProps> = props => {
   }
 
   return (
-    <Form
-      form={form}
-      name="monacoOptions"
-      onValuesChange={handleFormChange}
-      scrollToFirstError
-      layout="vertical"
-    >
+    <Form form={form} name="monacoOptions" onValuesChange={handleFormChange} scrollToFirstError layout="vertical">
       <h6 className="label"></h6>
       <Form.Item label={'编辑器主题'}>
         <MySvgIcon href={``}></MySvgIcon>
@@ -37,18 +31,12 @@ const CodeEditorConfig: React.FC<IProps> = props => {
       <Row gutter={32}>
         <Col span={12}>
           <Form.Item name={'fontSize'} label="字体大小">
-            <Select
-              defaultValue={monacoOptions.fontSize}
-              options={fontSizeOptions}
-            ></Select>
+            <Select defaultValue={monacoOptions.fontSize} options={fontSizeOptions}></Select>
           </Form.Item>
         </Col>
         <Col span={12}>
           <Form.Item name={'fontWeight'} label="字体粗细">
-            <Select
-              defaultValue={monacoOptions.fontWeight}
-              options={fontWeightOptions}
-            ></Select>
+            <Select defaultValue={monacoOptions.fontWeight} options={fontWeightOptions}></Select>
           </Form.Item>
         </Col>
       </Row>
@@ -56,20 +44,12 @@ const CodeEditorConfig: React.FC<IProps> = props => {
       <Row gutter={32}>
         <Col span={8}>
           <Form.Item name={'lineHeight'} label="行高">
-            <InputNumber
-              defaultValue={monacoOptions.fontSize}
-              min={0}
-              step={2}
-            ></InputNumber>
+            <InputNumber defaultValue={monacoOptions.fontSize} min={0} step={2}></InputNumber>
           </Form.Item>
         </Col>
         <Col span={8}>
           <Form.Item name={'letterSpacing'} label="字母间距">
-            <InputNumber
-              defaultValue={monacoOptions.letterSpacing}
-              min={0}
-              step={1}
-            ></InputNumber>
+            <InputNumber defaultValue={monacoOptions.letterSpacing} min={0} step={1}></InputNumber>
           </Form.Item>
         </Col>
       </Row>
@@ -77,18 +57,12 @@ const CodeEditorConfig: React.FC<IProps> = props => {
         <Row gutter={32}>
           <Col span={8}>
             <Form.Item name={'top'} label="上边距">
-              <InputNumber
-                defaultValue={monacoOptions.padding.top}
-                min={0}
-              ></InputNumber>
+              <InputNumber defaultValue={monacoOptions.padding.top} min={0}></InputNumber>
             </Form.Item>
           </Col>
           <Col span={8}>
             <Form.Item name={'bottom'} label="下边距">
-              <InputNumber
-                defaultValue={monacoOptions.padding.bottom}
-                min={0}
-              ></InputNumber>
+              <InputNumber defaultValue={monacoOptions.padding.bottom} min={0}></InputNumber>
             </Form.Item>
           </Col>
         </Row>
@@ -97,64 +71,33 @@ const CodeEditorConfig: React.FC<IProps> = props => {
       <h6 className="label">滚轮/滚动</h6>
       <Row gutter={32}>
         <Col>
-          <Form.Item
-            name={'mouseWheelScrollSensitivity'}
-            label="鼠标滚轮灵敏度"
-          >
-            <InputNumber
-              defaultValue={monacoOptions.mouseWheelScrollSensitivity}
-              min={1}
-              step={1}
-            ></InputNumber>
+          <Form.Item name={'mouseWheelScrollSensitivity'} label="鼠标滚轮灵敏度">
+            <InputNumber defaultValue={monacoOptions.mouseWheelScrollSensitivity} min={1} step={1}></InputNumber>
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item
-            name={'mouseWheelZoom'}
-            label="鼠标滚轮缩放"
-            valuePropName="checked"
-          >
+          <Form.Item name={'mouseWheelZoom'} label="鼠标滚轮缩放" valuePropName="checked">
             <Switch defaultChecked={monacoOptions.mouseWheelZoom}></Switch>
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item
-            name={'smoothScrolling'}
-            label="平滑滚动"
-            valuePropName="checked"
-          >
+          <Form.Item name={'smoothScrolling'} label="平滑滚动" valuePropName="checked">
             <Switch defaultChecked={monacoOptions.smoothScrolling}></Switch>
           </Form.Item>
         </Col>
       </Row>
 
       <h6 className="label">其它</h6>
-      <Form.Item
-        name={'emptySelectionClipboard'}
-        label="无选择复制时复制当前行"
-        valuePropName="checked"
-      >
+      <Form.Item name={'emptySelectionClipboard'} label="无选择复制时复制当前行" valuePropName="checked">
         <Switch defaultChecked={monacoOptions.emptySelectionClipboard}></Switch>
       </Form.Item>
-      <Form.Item
-        name={'scrollBeyondLastLine'}
-        label="最后一行之后滚动一个屏幕尺寸"
-        valuePropName="checked"
-      >
+      <Form.Item name={'scrollBeyondLastLine'} label="最后一行之后滚动一个屏幕尺寸" valuePropName="checked">
         <Switch defaultChecked={monacoOptions.scrollBeyondLastLine}></Switch>
       </Form.Item>
-      <Form.Item
-        name={'showUnused'}
-        label="淡出未使用变量"
-        valuePropName="checked"
-      >
+      <Form.Item name={'showUnused'} label="淡出未使用变量" valuePropName="checked">
         <Switch defaultChecked={monacoOptions.showUnused}></Switch>
       </Form.Item>
-      <Form.Item
-        name={'cursorSmoothCaretAnimation'}
-        label="光标平滑动画"
-        valuePropName="checked"
-      >
+      <Form.Item name={'cursorSmoothCaretAnimation'} label="光标平滑动画" valuePropName="checked">
         <Select
           style={{
             width: '128px',

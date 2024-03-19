@@ -5,7 +5,7 @@ interface IProps {
   code: string
 }
 
-const Highlight: React.FC<IProps> = props => {
+const Highlight: React.FC<IProps> = (props) => {
   const { code } = props
   const preRef = useRef(null)
 

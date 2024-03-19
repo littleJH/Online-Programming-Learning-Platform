@@ -22,38 +22,23 @@ export const getTopicListApi = (pageNum: number = 1, pageSize: number = 20) => {
   return request.get(`/list?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 
-export const getTopicProblemsApi = (
-  id: string,
-  pageNum: number = 1,
-  pageSize: number = 20,
-) => {
-  return request.get(
-    `/problem/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`,
-  )
+export const getTopicProblemsApi = (id: string, pageNum: number = 1, pageSize: number = 20) => {
+  return request.get(`/problem/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 
 // search
 
-export const searchProblemInTopicByTextApi = (
-  id: string,
-  text: string,
-  pageNum: number = 1,
-  pageSize: number = 20,
-) => {
-  return request.get(
-    `/search/in/topic/${text}/${id}?pageNum=${pageNum}&pageSize=${pageSize}`,
-  )
+export const searchProblemInTopicByTextApi = (id: string, text: string, pageNum: number = 1, pageSize: number = 20) => {
+  return request.get(`/search/in/topic/${text}/${id}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 
 export const searchProblemInTopicByLabelApi = (
   id: string,
   labels: string[],
   pageNum: number = 1,
-  pageSize: number = 20,
+  pageSize: number = 20
 ) => {
-  return request.get(
-    `/search/label/in/topic/${id}?labels=${labels}&pageNum=${pageNum}&pageSize=${pageSize}`,
-  )
+  return request.get(`/search/label/in/topic/${id}?labels=${labels}&pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 
 export const searchProblemInTopicByTextLabelApi = (
@@ -61,9 +46,9 @@ export const searchProblemInTopicByTextLabelApi = (
   text: string,
   labels: string[],
   pageNum: number = 1,
-  pageSize: number = 20,
+  pageSize: number = 20
 ) => {
   return request.get(
-    `/search/with/label/in/topic/${text}/${id}?labels=${labels}&pageNum=${pageNum}&pageSize=${pageSize}`,
+    `/search/with/label/in/topic/${text}/${id}?labels=${labels}&pageNum=${pageNum}&pageSize=${pageSize}`
   )
 }

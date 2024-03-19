@@ -2,12 +2,7 @@ import { Button, ColorPicker, Divider, Form, notification, theme } from 'antd'
 import React, { useCallback, useState } from 'react'
 import CodeEditorConfig from '@/components/Editor/CodeEditorConfig'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import {
-  monacoOptionsState,
-  notificationApi,
-  themeState,
-  userInfoState,
-} from '@/store/appStore'
+import { monacoOptionsState, notificationApi, themeState, userInfoState } from '@/store/appStore'
 import { getCurrentUserinfo, updateInfoApi } from '@/api/user'
 import { Color } from 'antd/es/color-picker'
 import { themeDefault } from '@/config/config'
@@ -31,7 +26,7 @@ const Setting: React.FC = () => {
       theme: JSON.stringify(newTheme),
       manaco: JSON.stringify(monacoOptions),
     }
-    updateInfoApi(JSON.stringify(newInfo)).then(async res => {
+    updateInfoApi(JSON.stringify(newInfo)).then(async (res) => {
       if (res.data.code === 200) {
         const res = await getCurrentUserinfo()
         setInfo(res.data.data.user)
@@ -73,7 +68,7 @@ const Setting: React.FC = () => {
             defaultValue={theme['colorPrimary']}
             showText={true}
             format="hex"
-            onChangeComplete={value => handleColorChange(value, 'colorPrimary')}
+            onChangeComplete={(value) => handleColorChange(value, 'colorPrimary')}
           ></ColorPicker>
         </Form.Item>
         <Form.Item name={'colorSuccess'} label="成功色">
@@ -81,7 +76,7 @@ const Setting: React.FC = () => {
             defaultValue={theme['colorSuccess']}
             showText={true}
             format="hex"
-            onChangeComplete={value => handleColorChange(value, 'colorSuccess')}
+            onChangeComplete={(value) => handleColorChange(value, 'colorSuccess')}
           ></ColorPicker>
         </Form.Item>
         <Form.Item name={'colorWarning'} label="警告色">
@@ -89,7 +84,7 @@ const Setting: React.FC = () => {
             defaultValue={theme['colorWarning']}
             showText={true}
             format="hex"
-            onChangeComplete={value => handleColorChange(value, 'colorWarning')}
+            onChangeComplete={(value) => handleColorChange(value, 'colorWarning')}
           ></ColorPicker>
         </Form.Item>
         <Form.Item name={'colorError'} label="错误色">
@@ -97,7 +92,7 @@ const Setting: React.FC = () => {
             defaultValue={theme['colorError']}
             showText={true}
             format="hex"
-            onChangeComplete={value => handleColorChange(value, 'colorError')}
+            onChangeComplete={(value) => handleColorChange(value, 'colorError')}
           ></ColorPicker>
         </Form.Item>
         <Form.Item name={'colorInfo'} label="信息色">
@@ -105,7 +100,7 @@ const Setting: React.FC = () => {
             defaultValue={theme['colorInfo']}
             showText={true}
             format="hex"
-            onChangeComplete={value => handleColorChange(value, 'colorInfo')}
+            onChangeComplete={(value) => handleColorChange(value, 'colorInfo')}
           ></ColorPicker>
         </Form.Item>
         {/* <Form.Item
@@ -121,10 +116,7 @@ const Setting: React.FC = () => {
       </Form>
       <h3 className="label">代码编辑器设置</h3>
       <Divider></Divider>
-      <CodeEditorConfig
-        monacoOptions={monacoOptions}
-        setMonacoOptions={setMonacoOptions}
-      ></CodeEditorConfig>
+      <CodeEditorConfig monacoOptions={monacoOptions} setMonacoOptions={setMonacoOptions}></CodeEditorConfig>
       <div className="text-end">
         <Button type="primary" onClick={handleClick}>
           保存
