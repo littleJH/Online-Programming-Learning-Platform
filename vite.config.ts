@@ -48,6 +48,7 @@ export default defineConfig({
     },
   },
   build: {
+    outDir: 'oj',
     minify: 'terser',
     terserOptions: {
       compress: {

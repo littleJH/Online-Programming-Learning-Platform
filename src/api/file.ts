@@ -1,4 +1,4 @@
-import { baseConfig, createRequest, formConfig } from '../config/apiConfig'
+import { baseConfig, createRequest, formConfig, jsonConfig } from '../config/apiConfig'
 
 const request = createRequest({ baseURL: 'file', type: 'file' })
 
@@ -10,18 +10,8 @@ export const downloadFileApi = (path: string) => {
   return request.get(`/download?path=${path}`, baseConfig())
 }
 
-export const unzipFileApi = (
-  first: {
-    path: string
-    name: string
-  },
-  second: string
-) => {
-  const { path, name } = first
-  const data = new FormData()
-  data.append('first', `/${path}/${name}`)
-  data.append('second', second)
-  return request.put('/unzip', data, formConfig())
+export const unzipFileApi = (first: string, second: string) => {
+  return request.put('/unzip', { first, second }, jsonConfig())
 }
 
 export const showFileInfoApi = (path: string) => {
@@ -29,41 +19,25 @@ export const showFileInfoApi = (path: string) => {
 }
 
 export const makeDirectoryApi = (path: string, name: string) => {
-  return request.put(`/madir?path=${path}/${name}`, {}, baseConfig())
+  return request.put(`/mkdir?id=${path}${name}`, {}, baseConfig())
 }
 
-export const moveCopyFileApi = (
-  first: {
-    path: string
-    name: string
-  },
-  second: string
-) => {
-  const { path, name } = first
-  const data = new FormData()
-  data.append('first', `/${path}/${name}`)
-  data.append('second', second)
-  return request.put('/cp', data, formConfig())
+export const moveCopyFileApi = (first: string, second: string) => {
+  return request.put('/cp', { first, second }, jsonConfig())
 }
 
 export const deleteFileApi = (path: string) => {
-  return request.delete(`/rm?path=${path}`, baseConfig())
+  return request.delete(`/rm?id=${path}`, baseConfig())
 }
 
 export const renameFileApi = (first: string, second: string) => {
-  const data = new FormData()
-  data.append('first', first)
-  data.append('second', second)
-  return request.put('/rename', data, formConfig())
+  return request.put('/rename', { first, second }, jsonConfig())
 }
 
 export const moveCopyDirApi = (first: string, second: string) => {
-  const data = new FormData()
-  data.append('first', first)
-  data.append('second', second)
-  return request.put('/all/cp', data, formConfig())
+  return request.put('/all/cp', { first, second }, jsonConfig())
 }
 
 export const deleteDirApi = (path: string) => {
-  return request.delete(`/all/rm?path=${path}`, baseConfig())
+  return request.delete(`/all/rm?id=${path}`, baseConfig())
 }

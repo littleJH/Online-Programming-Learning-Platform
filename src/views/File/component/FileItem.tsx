@@ -1,12 +1,20 @@
 import { IFile } from '@/type'
 import { Dropdown, Input, InputRef, List, Modal, Popover, Space, theme } from 'antd'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { useRecoilValue } from 'recoil'
-import { IFileStore, fileStoreSelector } from '../fileStore'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { IFileStore, atoms, fileStoreSelector } from '../fileStore'
 import myHooks from '@/tool/myHooks/myHooks'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
 import style from '../style.module.scss'
-import { deleteDirApi, deleteFileApi, downloadFileApi, makeDirectoryApi, renameFileApi } from '@/api/file'
+import {
+  deleteDirApi,
+  deleteFileApi,
+  downloadFileApi,
+  makeDirectoryApi,
+  moveCopyFileApi,
+  renameFileApi,
+  unzipFileApi,
+} from '@/api/file'
 import { notificationApi } from '@/store/appStore'
 import dayjs from 'dayjs'
 import { DownOutlined } from '@ant-design/icons'
@@ -20,8 +28,17 @@ interface IProps {
 
 const FileItem: React.FC<IProps> = (props) => {
   const { file, fetchFileList, onlyMenu, onlyNew } = props
-  const { viewType, inputText, currentPath, fileList, fileIconSize, selectedFile } = useRecoilValue(fileStoreSelector)
-  const updateState = myHooks.useUpdateState<IFileStore>(fileStoreSelector)
+  const { viewType, copyFile, currentPath, fileList, fileIconSize, selectedFile, cutFile } =
+    useRecoilValue(fileStoreSelector)
+  const setFileList = useSetRecoilState(atoms.fileListState)
+  const setBackStack = useSetRecoilState(atoms.backStackState)
+  const setForwardStack = useSetRecoilState(atoms.forwardStackState)
+  const setCurrentPath = useSetRecoilState(atoms.currentPathState)
+  const setInputText = useSetRecoilState(atoms.inputTextState)
+  const setSelectedFile = useSetRecoilState(atoms.selectedFileState)
+  const setCopyFile = useSetRecoilState(atoms.copyFileState)
+  const setCutFile = useSetRecoilState(atoms.cutFileState)
+  // const updateState = myHooks.useUpdateState<IFileStore>(fileStoreSelector)
   const [openModal, setOpenModal] = useState(false)
   const itemRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<InputRef>(null)
@@ -33,9 +50,11 @@ const FileItem: React.FC<IProps> = (props) => {
       inputRef.current.focus()
       inputRef.current.setSelectionRange(0, file.name.length)
     }
-    // itemRef.current &&
-    //   itemRef.current.addEventListener('contextmenu', eventHandler.handleContextMenu, { passive: false })
-  }, [])
+    itemRef.current && itemRef.current.addEventListener('contextmenu', eventHandler.handleContextMenu)
+    return () => {
+      itemRef.current && itemRef.current.removeEventListener('contextmenu', eventHandler.handleContextMenu)
+    }
+  }, [selectedFile])
 
   const iconHref = useMemo(() => {
     if (file.type === 'NEW_DIR') return 'DIR'
@@ -48,78 +67,46 @@ const FileItem: React.FC<IProps> = (props) => {
       if (type === 'NEW_DIR') {
         const text = fileList.findIndex((item) => item.name === inputText) < 0 ? inputText : `${inputText}(1)`
         try {
-          const res = await makeDirectoryApi(currentPath, text)
-          updateState((state) => ({
-            fileList: res.data.data === 200 ? state.fileList : state.fileList.slice(0, state.fileList.length - 1),
-          }))
-        } catch {
-          updateState((state) => ({
-            fileList: state.fileList.slice(0, state.fileList.length - 1),
-          }))
-        }
+          await makeDirectoryApi(currentPath, text)
+        } catch {}
       } else if (type.includes('RENAME')) {
         try {
-          const res = await renameFileApi(file.path, inputText)
-          updateState((state) => {
-            return {
-              fileList:
-                res.data.code === 200
-                  ? [...state.fileList].map((item) => (item.name === inputText ? { ...item, name: inputText } : item))
-                  : [...state.fileList].map((item) =>
-                      item.name === file.name ? { ...item, type: item.type.replace('RENAME_', '') } : item
-                    ),
-              currentPath: state.currentPath,
-            }
-          })
-        } catch {
-          updateState((state) => {
-            return {
-              fileList: [...state.fileList].map((item) =>
-                item.name === file.name ? { ...item, type: item.type.replace('RENAME_', '') } : item
-              ),
-            }
-          })
-        }
+          await renameFileApi(file.path, inputText)
+        } catch {}
       }
+      fetchFileList && fetchFileList()
     },
     handleClick: (e: React.MouseEvent) => {
       e.stopPropagation()
       if (e.ctrlKey) {
-        updateState((state) => {
-          const files = [...state.selectedFile]
+        setSelectedFile((value) => {
+          const files = [...value]
           const index = files.findIndex((item) => item.name === file.name)
-          return {
-            selectedFile:
-              index < 0
-                ? [...state.selectedFile, file]
-                : [...files.slice(0, index), ...files.slice(index + 1, files.length - 1)],
-          }
+          return index < 0 ? [...value, file] : [...files.slice(0, index), ...files.slice(index + 1, files.length - 1)]
         })
       } else {
-        updateState({
-          selectedFile: [file],
-        })
+        setSelectedFile([file])
       }
     },
     handleDoubleClick: async (e: React.MouseEvent) => {
       if (file.type.toLowerCase() === 'dir' && fetchFileList) {
         const done = await fetchFileList(file.path.replace(/\.\/file/g, ''))
         if (done) {
-          updateState((state) => ({
-            backStack: [],
-            forwardStack: [...state.forwardStack, file.path],
-            currentPath: file.path,
-          }))
+          setBackStack([])
+          setForwardStack((value) => [...value, file.path])
+          setCurrentPath(file.path)
         }
       } else {
-        const res = await downloadFileApi('./file' + file.path)
+        await downloadFileApi('./file' + file.path)
       }
     },
-    // handleContextMenu: (e: Event) => {
-    //   updateState({
-    //     openMenuItem: file.name,
-    //   })
-    // },
+    handleContextMenu: (e: Event) => {
+      e.preventDefault()
+      selectedFile.findIndex((item) => item.name === file.name) < 0 && setSelectedFile([file])
+      // setFileList((value) =>
+      //   value.map((item) => (item.name === file.name ? { ...item, openMenu: true } : { ...item, openMenu: false }))
+      // )
+    },
   }
 
   const render = {
@@ -181,12 +168,40 @@ const FileItem: React.FC<IProps> = (props) => {
         {
           key: 'copy',
           label: '复制',
-          onclick: () => {},
+          onclick: () => {
+            setCopyFile([...selectedFile])
+            setCutFile([])
+          },
         },
         {
           key: 'cut',
           label: '剪切',
-          onclick: () => {},
+          onclick: () => {
+            setCutFile([...selectedFile])
+            setCopyFile([])
+          },
+        },
+        {
+          key: 'sticky',
+          label: '粘贴',
+          disabled: copyFile.length === 0 && cutFile.length === 0,
+          onclick: async () => {
+            // const res = await moveCopyFileApi({path: , name: }, )
+          },
+        },
+        {
+          key: 'unzip',
+          label: '解压',
+          disabled: file.type.toLowerCase() !== 'zip',
+          onclick: async () => {
+            try {
+              const res = await unzipFileApi(file.path, currentPath)
+              if (res.data.code === 200) {
+                await deleteFileApi(file.path)
+              }
+            } catch {}
+            fetchFileList && fetchFileList()
+          },
         },
         {
           key: 'rename',
@@ -197,10 +212,12 @@ const FileItem: React.FC<IProps> = (props) => {
             const list = filelistClone.map((item) =>
               item.name === file.name ? { ...item, type: `RENAME_${file.type}` } : item
             )
-            updateState({
-              inputText: file.name,
-              fileList: list,
-            })
+            // updateState({
+            //   inputText: file.name,
+            //   fileList: list,
+            // })
+            setInputText(file.name)
+            setFileList(list)
             setTimeout(() => {
               inputRef.current?.focus()
               inputRef.current?.setSelectionRange(0, file.name.length)
@@ -220,17 +237,23 @@ const FileItem: React.FC<IProps> = (props) => {
           label: '删除',
           danger: true,
           onclick: async () => {
-            let res = null
-            if (file.type.toLowerCase() === 'dir') {
-              res = (await deleteDirApi(file.path)).data.code
-            } else {
-              res = (await deleteFileApi(file.path)).data.code
+            for (let file of selectedFile) {
+              let res = null
+              try {
+                if (file.type.toLowerCase() === 'dir') {
+                  res = (await deleteDirApi(file.path)).data.code
+                } else {
+                  res = (await deleteFileApi(file.path)).data.code
+                }
+                if (res === 200 && notification) {
+                  notification.success({
+                    message: `${file.name} 删除成功`,
+                  })
+                }
+              } catch {}
             }
-            if (res === 200 && notification) {
-              notification.success({
-                message: `${file.name} 删除成功`,
-              })
-            }
+
+            fetchFileList && fetchFileList()
           },
         },
       ]
@@ -238,6 +261,7 @@ const FileItem: React.FC<IProps> = (props) => {
         key: item.key,
         label: <span>{item.label}</span>,
         danger: item?.danger || false,
+        disabled: item?.disabled || false,
         onClick: (info: any) => item.onclick(info),
       }))
     },
@@ -259,17 +283,18 @@ const FileItem: React.FC<IProps> = (props) => {
           <Dropdown trigger={['contextMenu']} arrow={false} placement="bottom" menu={{ items: render.menuList() }}>
             <div
               id="fileItem"
-              className={`${style.fileItem} flex-col justify-center items-center cursor-pointer rounded`}
+              className={style.fileItem}
               style={{
-                maxWidth: 'min-content',
                 backgroundColor: selectedFile.find((item) => item.name === file.name) ? token.colorInfoBg : '',
               }}
               onDoubleClick={eventHandler.handleDoubleClick}
               onClick={eventHandler.handleClick}
             >
               <MySvgIcon href={iconHref} size={`${fileIconSize}px`}></MySvgIcon>
-              <div className={style.name}>
-                {file.type.includes('RENAME') || file.type === 'NEW_DIR' ? render.inputEl(file.type) : file.name}
+              <div className={selectedFile.find((item) => item.name === file.name) ? style.name : style.ellipsisName}>
+                <span>
+                  {file.type.includes('RENAME') || file.type === 'NEW_DIR' ? render.inputEl(file.type) : file.name}
+                </span>
               </div>
             </div>
           </Dropdown>

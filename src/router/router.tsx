@@ -1,8 +1,9 @@
 import { Navigate, RouteObject, useLocation, useRoutes } from 'react-router-dom'
-import React, { ReactNode, Suspense, lazy } from 'react'
+import React, { ComponentType, ReactNode, Suspense, lazy } from 'react'
 import Loading from '@/components/Loading/Loading'
 import { useSetRecoilState } from 'recoil'
 import { pathNameState } from '@/store/appStore'
+import Root from '@/views/Root'
 // import Article from '@/views/Profile/Creation/Article/Article'
 
 interface MyRoute {
@@ -18,9 +19,12 @@ interface MyRoute {
   }
 }
 
-const Root = lazy(() => import('@/views/Root'))
+const homepageModule = import.meta.glob<{ default: ComponentType }>('../views/Home/HomeRoot.tsx')
+// const Root = lazy(() => import('@/views/Root'))
+// const Root = await import('@/views/Root')
+// const Root = import.meta.glob('@/views/Root')
 const ErrorPage = lazy(() => import('@/components/error-page'))
-const Homepage = lazy(() => import('@/views/Home/HomeRoot'))
+const Homepage = lazy(homepageModule['../views/Home/HomeRoot.tsx'])
 const LoginRoot = lazy(() => import('@/views/Login/LoginRoot'))
 
 // 个人中心

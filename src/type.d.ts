@@ -365,5 +365,6 @@ export interface IFile {
   type: string
   lastWriteTime: string
   size?: string | number
+  openMenu?: boolean
 }
 

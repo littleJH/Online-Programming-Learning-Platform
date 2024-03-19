@@ -174,6 +174,12 @@ const useUpdateState = function <K extends object>(store: RecoilState<K>) {
   }
 }
 
+// const useUpdateAtomState = function <K>() {
+//   return function <T extends K[keyof K]>(state: RecoilState<T>, value: T) {
+
+//   }
+// }
+
 const useWsConnect = (options: {
   wsApi?: WebSocket | null
   onMessage?: (message: any) => void

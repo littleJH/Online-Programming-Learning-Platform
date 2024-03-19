@@ -11,17 +11,25 @@ import {
 } from '@ant-design/icons'
 import MyEmpty from './component/MyEmpty'
 import FileItem from './component/FileItem'
-import { useRecoilValue } from 'recoil'
-import { IFileStore, Serv, fileStoreSelector } from './fileStore'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { IFileStore, fileStoreSelector, atoms } from './fileStore'
 import Dragger from 'antd/es/upload/Dragger'
 import Upload, { RcFile } from 'antd/es/upload'
 import myHooks from '@/tool/myHooks/myHooks'
 import GeneralTable from '@/components/table/GeneralTable'
 import dayjs from 'dayjs'
-import { downloadFileApi, showFileInfoApi, uploadFileApi } from '@/api/file'
+import {
+  deleteFileApi,
+  downloadFileApi,
+  moveCopyDirApi,
+  moveCopyFileApi,
+  showFileInfoApi,
+  uploadFileApi,
+} from '@/api/file'
 import style from './style.module.scss'
 import utils from '@/tool/myUtils/utils'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
+import { notificationApi } from '@/store/appStore'
 
 const getFileHref = (file: IFile) => {
   if (file.type === 'NEW_DIR') return 'DIR'
@@ -30,13 +38,25 @@ const getFileHref = (file: IFile) => {
 }
 
 const FileRoot: React.FC = () => {
-  const { viewType, fileList, currentPath, openUploadModal, fileIconSize, backStack, forwardStack } =
+  const { viewType, fileList, currentPath, openUploadModal, fileIconSize, backStack, forwardStack, copyFile, cutFile } =
     useRecoilValue(fileStoreSelector)
-  const updateState = myHooks.useUpdateState<IFileStore>(fileStoreSelector)
+  const setViewType = useSetRecoilState(atoms.viewTypeState)
+  const setFileList = useSetRecoilState(atoms.fileListState)
+  const setBackStack = useSetRecoilState(atoms.backStackState)
+  const setForwardStack = useSetRecoilState(atoms.forwardStackState)
+  const setCurrentPath = useSetRecoilState(atoms.currentPathState)
+  const setInputText = useSetRecoilState(atoms.inputTextState)
+  const setOpenUploadModal = useSetRecoilState(atoms.openUploadModalState)
+  const setFileIconSize = useSetRecoilState(atoms.fileIconSizeState)
+  const setSelectedFile = useSetRecoilState(atoms.selectedFileState)
+  const setCopyFile = useSetRecoilState(atoms.copyFileState)
+  const setCutFile = useSetRecoilState(atoms.cutFileState)
+  // const updateState = myHooks.useUpdateState<IFileStore>(fileStoreSelector)
   const [tableHeight, setTableHeight] = useState(0)
   const ctnRef = useRef<HTMLDivElement>(null)
   const bodyCtnRef = useRef<HTMLDivElement>(null)
   const { token } = theme.useToken()
+  const notification = useRecoilValue(notificationApi)
 
   const tableDS = useMemo(
     () =>
@@ -54,8 +74,11 @@ const FileRoot: React.FC = () => {
   }, [viewType, fileList, currentPath])
 
   useEffect(() => {
-    fetchFileList()
     document.documentElement.style.setProperty('--file-item-width', fileIconSize + 'px')
+  }, [fileIconSize])
+
+  useEffect(() => {
+    fetchFileList()
     ctnRef.current && ctnRef.current.addEventListener('wheel', handleWheel, { passive: false })
     document.addEventListener('contextmenu', handleContentMenu)
     document.addEventListener('resize', handleResize)
@@ -69,16 +92,17 @@ const FileRoot: React.FC = () => {
     try {
       const emptyFile = {}
       const res = await showFileInfoApi(path || currentPath)
-      updateState({
-        fileList:
-          res.data.code === 200
-            ? res.data.data?.files?.map((file: IFile) => ({
-                ...file,
-                path: file.path.replace(/\.\/file/g, ''),
-                type: file.type.replace(/\./g, '').toUpperCase(),
-              }))
-            : [],
-      })
+      setFileList(
+        res.data.code === 200
+          ? res.data.data?.files?.map((file: IFile) => ({
+              ...file,
+              path: file.path.replace(/\.\/file/g, ''),
+              type: file.type.replace(/\./g, '').toUpperCase(),
+              openMenu: false,
+            }))
+          : []
+      )
+      setSelectedFile([])
       return res.data.code === 200
     } catch {
       return false
@@ -89,34 +113,37 @@ const FileRoot: React.FC = () => {
     const forwardStackClone = [...forwardStack]
     const popPath = forwardStackClone.pop()
     const done = await fetchFileList(forwardStackClone[forwardStackClone.length - 1])
-    done &&
-      updateState((state) => ({
-        forwardStack: forwardStackClone,
-        backStack: popPath ? [...state.backStack, popPath] : [...state.backStack],
-        currentPath: forwardStackClone[forwardStackClone.length - 1] || state.currentPath,
-      }))
+    if (done) {
+      setForwardStack(forwardStackClone)
+      setBackStack((value) => (popPath ? [...value, popPath] : [...value]))
+      setCurrentPath((value) => forwardStackClone[forwardStackClone.length - 1] || value)
+      setSelectedFile([])
+    }
   }
   const forward = async () => {
     const backStackClone = [...backStack]
     const popPath = backStackClone.pop()
     const done = await fetchFileList(popPath)
     if (done) {
-      updateState((state) => ({
-        forwardStack: popPath ? [...state.forwardStack, popPath] : [...state.forwardStack],
-        backStack: backStackClone,
-        currentPath: popPath || state.currentPath,
-      }))
+      // updateState((state) => ({
+      //   forwardStack: popPath ? [...state.forwardStack, popPath] : [...state.forwardStack],
+      //   backStack: backStackClone,
+      //   currentPath: popPath || state.currentPath,
+      // }))
+      setForwardStack((value) => (popPath ? [...value, popPath] : [...value]))
+      setBackStack(backStackClone)
+      setCurrentPath((value) => popPath || value)
+      setSelectedFile([])
     }
   }
   const goUp = async () => {
     const pathArr = utils.getPathArray(currentPath)
-    console.log(pathArr)
     const path = pathArr.slice(0, pathArr.length - 1).join('/')
     const done = await fetchFileList(`/${path}`)
-    done &&
-      updateState((state) => ({
-        currentPath: `/${path}`,
-      }))
+    if (done) {
+      setCurrentPath(`/${path}`)
+      setSelectedFile([])
+    }
   }
   const refresh = () => {
     fetchFileList()
@@ -127,6 +154,7 @@ const FileRoot: React.FC = () => {
   }
 
   const handleContentMenu = (e: Event) => {
+    console.log('handleContentMenu --> ', e)
     e.preventDefault()
   }
 
@@ -139,9 +167,7 @@ const FileRoot: React.FC = () => {
     if (e.ctrlKey) {
       e.preventDefault()
       const quota = 10
-      updateState((state) => ({
-        fileIconSize: e.deltaY >= 0 ? state.fileIconSize - quota : state.fileIconSize + quota,
-      }))
+      setFileIconSize((value) => (e.deltaY >= 0 ? value - quota : value + quota))
     }
   }
 
@@ -154,11 +180,14 @@ const FileRoot: React.FC = () => {
         if (file.type.toLowerCase() === 'dir' && fetchFileList) {
           const done = await fetchFileList(file.path.replace(/\.\/file/g, ''))
           if (done) {
-            updateState((state) => ({
-              backStack: [],
-              forwardStack: [...state.forwardStack, file.path],
-              currentPath: file.path,
-            }))
+            // updateState((state) => ({
+            //   backStack: [],
+            //   forwardStack: [...state.forwardStack, file.path],
+            //   currentPath: file.path,
+            // }))
+            setBackStack([])
+            setForwardStack((value) => [...value, file.path])
+            setCurrentPath(file.path)
           }
         } else {
           const res = await downloadFileApi('./file' + file.path)
@@ -171,9 +200,12 @@ const FileRoot: React.FC = () => {
   }
 
   const handleCtnClick = (e: React.MouseEvent) => {
-    updateState((state) => ({
-      selectedFile: [],
-    }))
+    // updateState((state) => ({
+    //   selectedFile: [],
+    //   fileList: state.fileList.map((item) => ({ ...item, openMenu: false })),
+    // }))
+    setSelectedFile([])
+    setFileList((value) => value.map((item) => ({ ...item, openMenu: false })))
   }
 
   const handleDrag = (e: React.DragEvent) => {
@@ -197,42 +229,72 @@ const FileRoot: React.FC = () => {
   const mkdir = () => {
     console.log('handle mkdir')
     if (viewType === 'table') {
-      updateState({
-        fileList: [
-          ...fileList,
-          {
-            name: '新建文件夹',
-            path: currentPath,
-            type: 'dir',
-            lastWriteTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-          },
-        ],
-        showInput: true,
-      })
+      // updateState({
+      //   fileList: [
+      //     ...fileList,
+      //     {
+      //       name: '新建文件夹',
+      //       path: currentPath,
+      //       type: 'dir',
+      //       lastWriteTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      //     },
+      //   ],
+      //   showInput: true,
+      // })
+      setFileList((value) => [
+        ...value,
+        {
+          name: '新建文件夹',
+          path: currentPath,
+          type: 'dir',
+          lastWriteTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        },
+      ])
     }
   }
 
   const beforeUpload = async (file: RcFile, fileList: RcFile[]) => {
-    console.log('handle upload file', file, fileList)
+    const data = new FormData()
+    data.append('file', file)
+    let resCode = 0
     try {
-      const res = await uploadFileApi(currentPath, file)
+      resCode = (await uploadFileApi(currentPath + '/', data)).data.code
     } catch {}
     fetchFileList()
+    return false
   }
 
   const handleNewDir = () => {
-    updateState((state) => ({
-      inputText: '新建文件夹',
-      fileList: [
-        ...state.fileList,
-        {
-          name: '新建文件夹',
-          path: currentPath,
-          type: 'NEW_DIR',
-          lastWriteTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-        },
-      ],
-    }))
+    setInputText('新建文件夹')
+    setFileList((value) => [
+      ...value,
+      {
+        name: '新建文件夹',
+        path: currentPath,
+        type: 'NEW_DIR',
+        lastWriteTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      },
+    ])
+  }
+
+  const handleSticky = async () => {
+    const files = [...(copyFile.length > 0 ? copyFile : cutFile)]
+    for (let file of files) {
+      try {
+        let resultCode = 0
+        if (file.type.toLowerCase() === 'dir') {
+          resultCode = (await moveCopyDirApi(file.path, `${currentPath}`)).data.code
+        } else {
+          resultCode = (await moveCopyFileApi(file.path, currentPath)).data.code
+        }
+        if (resultCode === 200) {
+          cutFile.length > 0 && (await deleteFileApi(file.path))
+          fetchFileList()
+        }
+      } catch {}
+    }
+    setCopyFile([])
+    setCutFile([])
   }
 
   return (
@@ -251,13 +313,15 @@ const FileRoot: React.FC = () => {
             flexDirection: 'column',
           }}
           className="w-full h-full"
-          bodyStyle={{
-            flexGrow: 1,
-            display: 'flex',
-            flexDirection: 'column',
+          styles={{
+            body: {
+              flexGrow: 1,
+              display: 'flex',
+              flexDirection: 'column',
+            },
           }}
         >
-          <div draggable className="flex justify-between items-center">
+          <div className="flex justify-between items-center">
             <Space
               style={{
                 minWidth: 'max-content',
@@ -299,10 +363,7 @@ const FileRoot: React.FC = () => {
                     {
                       key: 'upload',
                       label: '上传文件',
-                      onClick: () =>
-                        updateState({
-                          openUploadModal: true,
-                        }),
+                      onClick: () => setOpenUploadModal(true),
                     },
                   ],
                 }}
@@ -314,7 +375,7 @@ const FileRoot: React.FC = () => {
               <Input
                 prefix={'当前路径：'}
                 value={`${currentPath}`}
-                onChange={(e) => updateState((state) => ({ currentPath: e.target.value }))}
+                onChange={(e) => setCurrentPath(e.target.value)}
                 onPressEnter={handlePressEnter}
               ></Input>
             </div>
@@ -324,28 +385,46 @@ const FileRoot: React.FC = () => {
                 { label: '表格', value: 'table' },
               ]}
               value={viewType}
-              onChange={(value: any) => updateState({ viewType: value })}
+              onChange={(value: any) => setViewType(value)}
             ></Segmented>
           </div>
-          <div
-            ref={bodyCtnRef}
-            id="bodyCtn"
-            className={`${style.bodyCtn}`}
-            onClick={handleCtnClick}
-            onDrop={handleDrag}
-            onDragOver={handleDrag}
-            onDragLeave={handleDrag}
-            onDragEnter={handleDrag}
+          <Dropdown
+            overlayStyle={{
+              minWidth: '200px',
+            }}
+            trigger={['contextMenu']}
+            arrow={false}
+            placement="bottom"
+            menu={{
+              items: [
+                {
+                  key: 'sticky',
+                  label: '粘贴',
+                  onClick: handleSticky,
+                  disabled: copyFile.length === 0 && cutFile.length === 0,
+                },
+              ],
+            }}
           >
-            {viewType === 'list' && (
-              <div className={style.listCtn}>
-                <div className={style.listGridCtn}>
-                  {fileList.map((file: IFile, index: number) => (
-                    <div id={`fileitem${index}`} className={style.listItem} key={file.path + file.name}>
-                      <FileItem file={file} fetchFileList={fetchFileList}></FileItem>
-                    </div>
-                  ))}
-                  {/* <Skeleton.Node active>
+            <div
+              ref={bodyCtnRef}
+              id="bodyCtn"
+              className={`${style.bodyCtn}`}
+              onClick={handleCtnClick}
+              onDrop={handleDrag}
+              onDragOver={handleDrag}
+              onDragLeave={handleDrag}
+              onDragEnter={handleDrag}
+            >
+              {viewType === 'list' && (
+                <div className={style.listCtn}>
+                  <div className={style.listGridCtn}>
+                    {fileList.map((file: IFile, index: number) => (
+                      <div id={`fileitem${index}`} className={style.listItem} key={file.path + file.name}>
+                        <FileItem file={file} fetchFileList={fetchFileList}></FileItem>
+                      </div>
+                    ))}
+                    {/* <Skeleton.Node active>
                     <FolderOpenOutlined
                       style={{
                         fontSize: fileIconSize,
@@ -354,84 +433,83 @@ const FileRoot: React.FC = () => {
                     />
                   </Skeleton.Node>
                   <Skeleton.Input active></Skeleton.Input> */}
+                  </div>
                 </div>
-              </div>
-            )}
-            {viewType === 'table' && (
-              <div className={style.tableCtn}>
-                <GeneralTable
-                  scroll={{
-                    y: tableHeight,
-                  }}
-                  dataSource={tableDS}
-                  onRow={(record: IFile) => {
-                    return {
-                      onClick: (e: Event) => henldeRowClick(e, record),
-                      onDoubleClick: (e: Event) => henldeRowClick(e, record),
-                      onContextMenu: (e: Event) => henldeRowClick(e, record),
-                    }
-                  }}
-                  columns={[
-                    {
-                      title: '名称',
-                      dataIndex: 'name',
-                      key: 'name',
-                      render: (value: string, item: IFile) => (
-                        <div className="flex items-center">
-                          <MySvgIcon href={getFileHref(item)} size={2}></MySvgIcon>
-                          <span className="ml-4">
-                            {item.type === 'NEW_DIR' ? (
-                              <FileItem file={item} onlyNew={true}></FileItem>
-                            ) : (
-                              value.replace(/\.[^.]+$/, '')
-                            )}
-                          </span>
-                        </div>
-                      ),
-                    },
-                    {
-                      title: '修改日期',
-                      dataIndex: 'lastWriteTime',
-                      key: 'lastWriteTime',
-                      width: 200,
-                      render: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'),
-                    },
-                    {
-                      title: '类型',
-                      dataIndex: 'type',
-                      key: 'type',
-                      width: 100,
-                    },
-                    {
-                      title: '大小',
-                      dataIndex: 'size',
-                      key: 'size',
-                      width: 100,
-                      render: (value: number) => utils.formatFileSize(Number(value)),
-                    },
-                    {
-                      title: '',
-                      dataIndex: 'action',
-                      key: 'action',
-                      width: 80,
-                      render: (value: React.ReactNode, record: any) => (
-                        <>{record.type !== 'NEW_DIR' && <FileItem file={record} onlyMenu={true}></FileItem>}</>
-                      ),
-                    },
-                  ]}
-                  emptyText={
-                    <MyEmpty onUpload={() => updateState({ openUploadModal: true })} onMkdir={mkdir}></MyEmpty>
-                  }
-                ></GeneralTable>
-              </div>
-            )}
-          </div>
+              )}
+              {viewType === 'table' && (
+                <div className={style.tableCtn}>
+                  <GeneralTable
+                    scroll={{
+                      y: tableHeight,
+                    }}
+                    dataSource={tableDS}
+                    onRow={(record: IFile) => {
+                      return {
+                        onClick: (e: Event) => henldeRowClick(e, record),
+                        onDoubleClick: (e: Event) => henldeRowClick(e, record),
+                        onContextMenu: (e: Event) => henldeRowClick(e, record),
+                      }
+                    }}
+                    columns={[
+                      {
+                        title: '名称',
+                        dataIndex: 'name',
+                        key: 'name',
+                        render: (value: string, item: IFile) => (
+                          <div className="flex items-center">
+                            <MySvgIcon href={getFileHref(item)} size={2}></MySvgIcon>
+                            <span className="ml-4">
+                              {item.type === 'NEW_DIR' ? (
+                                <FileItem file={item} onlyNew={true}></FileItem>
+                              ) : (
+                                value.replace(/\.[^.]+$/, '')
+                              )}
+                            </span>
+                          </div>
+                        ),
+                      },
+                      {
+                        title: '修改日期',
+                        dataIndex: 'lastWriteTime',
+                        key: 'lastWriteTime',
+                        width: 200,
+                        render: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'),
+                      },
+                      {
+                        title: '类型',
+                        dataIndex: 'type',
+                        key: 'type',
+                        width: 100,
+                      },
+                      {
+                        title: '大小',
+                        dataIndex: 'size',
+                        key: 'size',
+                        width: 100,
+                        render: (value: number) => utils.formatFileSize(Number(value)),
+                      },
+                      {
+                        title: '',
+                        dataIndex: 'action',
+                        key: 'action',
+                        width: 80,
+                        render: (value: React.ReactNode, record: any) => (
+                          <>{record.type !== 'NEW_DIR' && <FileItem file={record} onlyMenu={true}></FileItem>}</>
+                        ),
+                      },
+                    ]}
+                    emptyText={<MyEmpty onUpload={() => setOpenUploadModal(true)} onMkdir={mkdir}></MyEmpty>}
+                  ></GeneralTable>
+                </div>
+              )}
+            </div>
+          </Dropdown>
         </Card>
       </div>
       <Modal
         title={'上传文件/压缩包'}
         open={openUploadModal}
-        onCancel={() => updateState({ openUploadModal: false })}
+        onCancel={() => setOpenUploadModal(false)}
         footer={[]}
         style={{
           translate: '0 50%',
