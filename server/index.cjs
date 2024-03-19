@@ -10,5 +10,5 @@ app.get('*', function (request, response) {
 })
 
 app.listen(port, function () {
-  console.log('server started on port ' + port)
+  console.log('server started on http://localhost:' + port)
 })
