@@ -1,4 +1,4 @@
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter, HashRouter } from 'react-router-dom'
 import RouterWaiter from './router/router'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { ConfigProvider, notification, theme } from 'antd'
@@ -53,7 +53,7 @@ function App() {
       }}
     >
       {contextHolder}
-      <BrowserRouter>
+      <BrowserRouter basename="/">
         <RouterWaiter />
       </BrowserRouter>
     </ConfigProvider>

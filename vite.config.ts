@@ -52,7 +52,7 @@ export default defineConfig({
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: false, // 生产环境是否移除console.log
+        drop_console: true, // 生产环境是否移除console.log
       },
     },
   },

@@ -1,0 +1,9 @@
+{
+  "type": "commonjs",
+  "scripts": {
+    "server": "node index.cjs"
+  },
+  "dependencies": {
+    "express": "^4.18.3"
+  }
+}

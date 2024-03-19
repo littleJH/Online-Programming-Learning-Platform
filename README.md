@@ -1,17 +1,3 @@
-- 装包
-
-```
-npm install
-或
-yarn install
-```
-
-- 运行
-
-```
-  npm run dev
-```
-
 ## 项目介绍
 
 ### 功能实现
