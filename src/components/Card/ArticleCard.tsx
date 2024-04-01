@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { iconBaseUrl, imgGetBaseUrl } from '@/config/apiConfig'
 import { IArticle } from '@/type'
 import { Avatar, Space, theme, Card } from 'antd'
@@ -22,6 +22,8 @@ interface IProps {
   onclick?: Function
   mode?: 'default' | 'action'
 }
+
+const isMobile = utils.getIsMobile()
 
 const ArticleCard: React.FC<IProps> = (props) => {
   const { articleProp, onclick, mode = 'default' } = props
@@ -66,14 +68,14 @@ const ArticleCard: React.FC<IProps> = (props) => {
   )
 
   const renderBody = () => (
-    <div className="flex">
+    <div className={style.articleCard}>
       {/* left */}
       <div className="grow" style={{ width: '100px' }}>
         <div className="flex items-center">
           <Avatar className="card-avatar" src={`${iconBaseUrl}/${article.user?.icon}`}></Avatar>
           <div className="card-username">{article.user?.name}</div>
           <div className="card-time">{ago}</div>
-          {article.labels && article.labels.length > 0 && (
+          {article.labels && article.labels.length > 0 && !isMobile && (
             <Space className="mx-8">
               {article.labels.map((label) => (
                 <MyTag key={label.id}>{label.label}</MyTag>
@@ -128,7 +130,7 @@ const ArticleCard: React.FC<IProps> = (props) => {
 
       {/* right image */}
       {imgUrl && (
-        <div className="card-img" style={{}}>
+        <div className={style.imgctn}>
           <img src={`${imgGetBaseUrl}/${imgUrl}`} alt="" />
         </div>
       )}

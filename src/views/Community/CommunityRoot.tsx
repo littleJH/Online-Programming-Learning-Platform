@@ -7,6 +7,7 @@ import { useRecoilValue } from 'recoil'
 import { pathNameState } from '@/store/appStore'
 import utils from '@/tool/myUtils/utils'
 import myHooks from '@/tool/myHooks/myHooks'
+import style from './style.module.scss'
 
 interface IStats {
   article: number
@@ -41,14 +42,17 @@ const CommunityRoot: React.FC = () => {
   }, [])
 
   const showHeaderSider = useMemo(
-    () => utils.getPathArray(pathname).length > 1 && utils.getPathArray(pathname)[1].includes('set'),
+    () =>
+      utils.getPathArray(pathname).length > 1 &&
+      utils.getPathArray(pathname)[1].includes('set') &&
+      !utils.getIsMobile(),
     [pathname]
   )
 
   return (
-    <div className="flex" style={{ width: 'min-content' }}>
+    <div className={style.communityRoot}>
       {/* left */}
-      <div className="grow h-full">
+      <div className={style.left}>
         {/* 公告 */}
         {showHeaderSider && (
           <div className="w-full my-4">
@@ -94,7 +98,7 @@ const CommunityRoot: React.FC = () => {
             <Divider></Divider>
           </div>
         )}
-        <div style={{ minWidth: '820px' }}>
+        <div className={style.content}>
           <Outlet></Outlet>
         </div>
       </div>

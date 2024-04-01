@@ -4,6 +4,7 @@ import { atom, selector } from 'recoil'
 import utils from '@/tool/myUtils/utils'
 import { themeDefault, monacoOptionsDefault } from '@/config/config'
 import { NotificationInstance } from 'antd/es/notification/interface'
+import { MessageInstance } from 'antd/es/message/interface'
 
 // 用户信息初始化
 export const userInfoAtomState = atom<User | null>({
@@ -162,16 +163,10 @@ export const headerNavState = selector<string>({
   },
 })
 
-// sidebar是否隐藏
-// export const sideBarCollapsed = atom<boolean>({
-//   key: 'sideBarCollapsed',
-//   default: false
-// })
-
 // sidebar 类型
 export const sideBarTypeState = atom<TypeSideBar>({
   key: 'sideBarTypeState',
-  default: 'nav',
+  default: 'none',
 })
 
 // nogification 全局api

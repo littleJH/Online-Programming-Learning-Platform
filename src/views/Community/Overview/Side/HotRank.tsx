@@ -110,7 +110,9 @@ const HotRank: React.FC = () => {
               handleClick(index)
             }}
             bordered={false}
-            bodyStyle={{ padding: '0px' }}
+            styles={{
+              body: { padding: '0px' },
+            }}
           >
             <div className="flex items-center w-full p-1">
               <span className="w-8 text-center">

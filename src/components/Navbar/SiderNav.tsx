@@ -12,14 +12,15 @@ import {
   TrophyOutlined,
   GlobalOutlined,
   CodeOutlined,
+  MailOutlined,
 } from '@ant-design/icons'
 import utils from '@/tool/myUtils/utils'
 import { useRecoilValue } from 'recoil'
 import { pathNameState } from '@/store/appStore'
 import myHooks from '@/tool/myHooks/myHooks'
 
-const SiderNav: React.FC<{ header: string }> = (props) => {
-  const { header } = props
+const SiderNav: React.FC<{ header: string; mode: 'horizontal' | 'inline' }> = (props) => {
+  const { header, mode } = props
   const [current, setCurrent] = useState('')
   const [menuItem, setMenuItem] = useState([])
   const [openKeys, setOpenKeys] = useState<string[]>([])
@@ -62,12 +63,12 @@ const SiderNav: React.FC<{ header: string }> = (props) => {
   return (
     <Menu
       style={{
-        height: '100%',
+        height: mode === 'horizontal' ? '40px' : '100%',
         userSelect: 'none',
         padding: '0 1rem',
       }}
       selectedKeys={[current]}
-      mode="inline"
+      mode={mode}
       onClick={handleMenuClick}
       items={menuItem}
       openKeys={openKeys}
@@ -176,15 +177,21 @@ const menuItemObj: any = {
       icon: <UserOutlined />,
     },
     {
-      key: 'message',
-      label: '留言板',
-      icon: <MessageOutlined />,
-    },
-    {
       key: 'group',
-      label: '用户组',
+      label: '群组',
       icon: <TeamOutlined />,
     },
+    // {
+    //   key: 'message',
+    //   label: '留言板',
+    //   icon: <MessageOutlined />,
+    // },
+    {
+      key: 'email',
+      label: '邮箱',
+      icon: <MailOutlined />,
+    },
+
     {
       key: 'divider3',
       type: 'divider',

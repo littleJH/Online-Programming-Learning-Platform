@@ -1,0 +1,53 @@
+.communityRoot {
+  display: flex;
+  width: 100%;
+  @media screen and (max-width: 768px) {
+    width: 100vw;
+  }
+
+  .left {
+    flex-grow: 1;
+    height: 100%;
+    width: 100%;
+    @media screen and (max-width: 768px) {
+    }
+  }
+
+  .content {
+    width: 820px;
+    margin: auto;
+    @media screen and (max-width: 768px) {
+      width: 100%;
+    }
+  }
+
+  .articleSet {
+    width: 100%;
+    padding: 0 10px;
+  }
+}
+
+.articleDetail {
+  width: 100%;
+
+  .title {
+    margin: 0 0 1rem 0;
+    @media screen and (max-width: 768px) {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+  }
+
+  .authorLine {
+    line-height: 2rem;
+    font-size: 0.75rem;
+  }
+
+  .labelLine {
+    line-height: 2rem;
+    margin-left: 1rem;
+    @media screen and (max-width: 768px) {
+      margin-left: 0;
+    }
+  }
+}

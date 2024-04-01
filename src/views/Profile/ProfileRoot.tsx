@@ -3,6 +3,7 @@ import { Outlet, redirect } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
 import { loginStatusState } from '@/store/appStore'
 import { Card } from 'antd'
+import style from './style.module.scss'
 
 const ProfileRoot: React.FC = () => {
   const info = useRecoilValue(loginStatusState)
@@ -18,12 +19,7 @@ const ProfileRoot: React.FC = () => {
   // }
 
   return (
-    <Card
-      style={{
-        minWidth: '820px',
-        height: 'max-content',
-      }}
-    >
+    <Card className={style.root}>
       <Outlet></Outlet>
     </Card>
   )

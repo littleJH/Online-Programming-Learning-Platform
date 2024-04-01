@@ -1,26 +1,28 @@
 import { BrowserRouter, HashRouter } from 'react-router-dom'
 import RouterWaiter from './router/router'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { ConfigProvider, notification, theme } from 'antd'
+import { ConfigProvider, message, notification, theme } from 'antd'
 import { isDarkState, notificationApi, sideBarTypeState, themeState } from './store/appStore'
 import { useEffect } from 'react'
 import utils from './tool/myUtils/utils'
 import './style.scss'
 
 function App() {
+  const isMobile = utils.getIsMobile()
   const myTheme = useRecoilValue(themeState)
   const setNotificationApi = useSetRecoilState(notificationApi)
   const setSideBarType = useSetRecoilState(sideBarTypeState)
   const [api, contextHolder] = notification.useNotification({
-    placement: 'topRight',
+    placement: isMobile ? 'bottom' : 'topRight',
     stack: false,
-    maxCount: 3,
+    maxCount: isMobile ? 1 : 3,
+    duration: isMobile ? 1 : 3,
   })
   const isDark = useRecoilValue(isDarkState)
 
   useEffect(() => {
     setNotificationApi(api)
-    setSideBarType(utils.getSideBarType(location.pathname))
+    setSideBarType(utils.getIsMobile() ? 'none' : utils.getSideBarType(location.pathname))
   }, [])
 
   return (

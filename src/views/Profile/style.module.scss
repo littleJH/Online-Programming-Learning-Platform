@@ -1,0 +1,24 @@
+.root {
+  min-width: 820px;
+  height: max-content;
+  @media screen and (max-width: 768px) {
+    min-width: 0;
+    width: 100vw;
+  }
+}
+
+.account {
+  width: 768px;
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.info {
+  width: 768px;
+  padding: 1 10rem;
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    padding: 0;
+  }
+}

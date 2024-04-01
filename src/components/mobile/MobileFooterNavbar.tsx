@@ -1,8 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import { Menu } from 'antd'
-import type { MenuProps } from 'antd'
-import { redirect, useLocation, useNavigate } from 'react-router-dom'
-import myHooks from '@/tool/myHooks/myHooks'
+import React from 'react'
 import {
   CodeOutlined,
   GlobalOutlined,
@@ -11,8 +7,12 @@ import {
   TrophyOutlined,
   UserOutlined,
 } from '@ant-design/icons'
+import myHooks from '@/tool/myHooks/myHooks'
+import { Menu } from 'antd'
+import { headerNavState } from '@/store/appStore'
+import { useRecoilValue } from 'recoil'
 
-const menuItem = [
+const menuItems = [
   {
     label: '首页',
     key: 'home',
@@ -33,41 +33,38 @@ const menuItem = [
     key: 'community',
     icon: <GlobalOutlined />,
   },
-
   {
-    label: '创作',
-    key: 'creation',
-    icon: <BulbOutlined />,
-  },
-  {
-    label: '个人',
+    label: '我的',
     key: 'profile',
     icon: <UserOutlined />,
   },
 ]
 
-export default function Header(props: { headerNav: string }) {
-  const { headerNav } = props
+const MobileFooterNavbar: React.FC = () => {
+  const headerNav = useRecoilValue(headerNavState)
   const navTo = myHooks.useNavTo()
 
   const handleMenuClick = (e: any) => {
     navTo(`/${e.key}`)
   }
+
   return (
     <Menu
+      onClick={handleMenuClick}
       style={{
         width: '100%',
-        height: '100%',
+        height: '50px',
         userSelect: 'none',
         padding: '0 1rem',
         display: 'flex',
         justifyContent: 'center',
-        alignContent: 'center',
+        alignItems: 'center',
       }}
       selectedKeys={[headerNav]}
       mode="horizontal"
-      onClick={handleMenuClick}
-      items={menuItem}
+      items={menuItems}
     ></Menu>
   )
 }
+
+export default MobileFooterNavbar

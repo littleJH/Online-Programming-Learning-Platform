@@ -6,6 +6,7 @@ import { currentArticleState } from '@/store/appStore'
 import { useSetRecoilState } from 'recoil'
 import LoadMoreList from '@/components/List/LoadMoreList'
 import myHooks from '@/tool/myHooks/myHooks'
+import style from '../../style.module.scss'
 
 const ArticleSet: React.FC = () => {
   const [articleList, setarticleList] = useState<IArticle[]>()
@@ -29,7 +30,7 @@ const ArticleSet: React.FC = () => {
   }
 
   return (
-    <div style={{ width: '820px' }}>
+    <div className={style.articleSet}>
       <LoadMoreList
         dataSource={articleList}
         total={total}

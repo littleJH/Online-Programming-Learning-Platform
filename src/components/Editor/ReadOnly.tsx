@@ -8,10 +8,11 @@ interface Iprops {
   style?: React.CSSProperties
   className?: string
   ctnClassName?: string
+  borderd?: boolean
 }
 
 const ReadOnly: React.FC<Iprops> = (props) => {
-  const { html, title, style, className, ctnClassName } = props
+  const { html, title, style, className, ctnClassName, borderd = false } = props
 
   return (
     <div className={ctnClassName}>
@@ -22,7 +23,7 @@ const ReadOnly: React.FC<Iprops> = (props) => {
         }}
         defaultHtml={html}
         mode="default"
-        className={`border-1 border-solid border-gray-200 rounded-md p-2 my-4 ${className}`}
+        className={` rounded-md ${className} ${borderd ? 'border-1 border-solid border-gray-200' : ''}`}
         style={style}
       ></Editor>
     </div>

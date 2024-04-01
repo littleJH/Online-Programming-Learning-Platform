@@ -110,8 +110,7 @@ const useListenContentScroll = (options: { followScroll?: boolean; loadMoreFn?: 
   }, 0)
 }
 
-const useNavTo = (options?: { back?: number }) => {
-  const { back = 1 } = options || {}
+const useNavTo = (options?: { back: number }) => {
   const nav = useNavigate()
   const setPathNameState = useSetRecoilState(pathNameState)
   const loginStatus = useRecoilValue(loginStatusState)
@@ -121,13 +120,17 @@ const useNavTo = (options?: { back?: number }) => {
     const pathArr = utils.getPathArray(path)
     const shouldAuth = authPath.includes(pathArr[0])
 
-    if (shouldAuth && !loginStatus) {
-      nav('/login')
+    if (options) {
+      window.history.go(-options.back)
     } else {
-      setSideBarType(utils.getSideBarType(path))
-      nav(path)
+      if (shouldAuth && !loginStatus) {
+        nav('/login')
+      } else {
+        setSideBarType(utils.getIsMobile() ? 'none' : utils.getSideBarType(path))
+        nav(path)
+      }
+      setPathNameState(location.pathname)
     }
-    setPathNameState(location.pathname)
   }
 
   return navTo

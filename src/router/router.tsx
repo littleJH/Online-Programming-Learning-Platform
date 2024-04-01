@@ -2,8 +2,9 @@ import { Navigate, RouteObject, useLocation, useRoutes } from 'react-router-dom'
 import React, { ComponentType, ReactNode, Suspense, lazy } from 'react'
 import Loading from '@/components/Loading/Loading'
 import { useSetRecoilState } from 'recoil'
-import { pathNameState } from '@/store/appStore'
+import { pathNameState, sideBarTypeState } from '@/store/appStore'
 import Root from '@/views/Root'
+import utils from '@/tool/myUtils/utils'
 // import Article from '@/views/Profile/Creation/Article/Article'
 
 interface MyRoute {
@@ -31,6 +32,7 @@ const LoginRoot = lazy(() => import('@/views/Login/LoginRoot'))
 const ProfileRoot = lazy(() => import('@/views/Profile/ProfileRoot'))
 const ProfileFriend = lazy(() => import('@/views/Profile/pages/Friend/Friend'))
 const ProfileMessage = lazy(() => import('@/views/Profile/pages/Message/Message'))
+const ProfileEmail = lazy(() => import('@/views/Profile/pages/Email/Email'))
 const ProfileGroup = lazy(() => import('@/views/Profile/pages/Group/Group'))
 const ProfileInfo = lazy(() => import('@/views/Profile/pages/Info/Info'))
 const ProfileSetting = lazy(() => import('@/views/Profile/pages/Setting/Setting'))
@@ -127,9 +129,13 @@ const routes: MyRoute[] = [
             path: 'friend',
             element: ProfileFriend,
           },
+          // {
+          //   path: 'message',
+          //   element: ProfileMessage,
+          // },
           {
-            path: 'message',
-            element: ProfileMessage,
+            path: 'email',
+            element: ProfileEmail,
           },
           {
             path: 'group',
@@ -380,8 +386,16 @@ const transformRoutes = (routes: MyRoute[]) => {
 
 const RouterWaiter = () => {
   const setPathName = useSetRecoilState(pathNameState)
+  const setSideBarType = useSetRecoilState(sideBarTypeState)
 
-  onpopstate = () => setPathName(location.pathname)
+  window.onpopstate = (e: any) => {
+    const path = e.target?.location?.pathname
+    console.log('onpopstate...', path)
+    if (path) {
+      setSideBarType(utils.getIsMobile() ? 'none' : utils.getSideBarType(path))
+      setPathName(location.pathname)
+    }
+  }
   return useRoutes(transformRoutes(routes))
 }
 

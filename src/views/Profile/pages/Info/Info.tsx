@@ -27,6 +27,7 @@ import copper from '@/assets/copper.svg'
 import { uploadImgApi } from '@/api/img'
 import copy from 'copy-to-clipboard'
 import { getCurrentUserinfo, updateInfoApi } from '@/api/user'
+import style from '../../style.module.scss'
 // import ImgCrop from 'antd-img-crop'
 
 const Info: React.FC = () => {
@@ -86,13 +87,7 @@ const Info: React.FC = () => {
   }
 
   return (
-    <div
-      className=""
-      style={{
-        width: '768px',
-        padding: '0 10rem',
-      }}
-    >
+    <div className={style.info}>
       <div className="flex justify-center">
         <div>
           {/* <ImgCrop rotationSlider> */}

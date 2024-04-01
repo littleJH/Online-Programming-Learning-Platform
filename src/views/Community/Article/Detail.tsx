@@ -28,6 +28,8 @@ import SideActionBar from '@/components/SideActionBar/SideActionBar'
 import utils from '@/tool/myUtils/utils'
 import { directoryDataState } from '@/components/directory/store'
 import myHooks from '@/tool/myHooks/myHooks'
+import style from '../style.module.scss'
+import MySvgIcon from '@/components/Icon/MySvgIcon'
 
 const Detail: React.FC = () => {
   const { article_id } = useParams() as { article_id: string }
@@ -194,28 +196,30 @@ const Detail: React.FC = () => {
   }
 
   return (
-    <div style={{ width: '1000px' }}>
+    <div className={style.articleDetail}>
       {currentArticle && (
-        <div>
+        <div className={style.content}>
           <div id="top"></div>
-          <Card>
+          <Card size="small">
             {/* header */}
             <div style={{ letterSpacing: '0.2rem' }}>
-              <h1 className="mt-0">{currentArticle.title}</h1>
+              <h1 className={style.title}>{currentArticle.title}</h1>
               <Space
                 size={'large'}
-                className="text-sm"
+                className={style.authorLine}
                 style={{
                   color: token.colorTextDescription,
                 }}
               >
-                <span>作者：{currentArticle.user?.name}</span>
-                <span>发布于：{currentArticle.created_at}</span>
-                <span>阅读：{currentArticle.visibleNum}</span>
-                <span></span>
+                <span>{currentArticle.user?.name}</span>
+                <span>{currentArticle.created_at}</span>
+                <span className="flex items-center">
+                  <MySvgIcon href={'#icon-visible'} color={token.colorTextDescription}></MySvgIcon>
+                  <span className="ml-2">{currentArticle.visibleNum}</span>
+                </span>
               </Space>
 
-              <Space>
+              <Space className={style.labelLine}>
                 {currentArticle.labels &&
                   currentArticle.labels.map((label, index) => <MyTag key={index}>{label.label}</MyTag>)}
               </Space>
@@ -223,7 +227,7 @@ const Detail: React.FC = () => {
             <Divider></Divider>
             {/* body */}
             <div id="article">
-              <ReadOnly html={currentArticle.content}></ReadOnly>
+              <ReadOnly html={currentArticle.content} borderd={false}></ReadOnly>
             </div>
           </Card>
           {/* remark */}

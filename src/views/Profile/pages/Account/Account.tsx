@@ -7,6 +7,8 @@ import { findPasswordApi, getVerifyApi, updateInfoApi, updatePasswordApi } from 
 import myHooks from '@/tool/myHooks/myHooks'
 import { redirect, useNavigate } from 'react-router-dom'
 import FindPass from '@/views/Login/log/FindPass'
+import style from '../../style.module.scss'
+import utils from '@/tool/myUtils/utils'
 
 const Account: React.FC = () => {
   const nav = myHooks.useNavTo()
@@ -20,6 +22,7 @@ const Account: React.FC = () => {
   const { count, start } = myHooks.useCountdown(60, () => {
     setVerifyBtnDisable(false)
   })
+  const isMobile = utils.getIsMobile()
 
   const updateEmail = () => {
     form3.validateFields().then((res) => {
@@ -99,11 +102,7 @@ const Account: React.FC = () => {
     nav('/login')
   }
   return (
-    <div
-      style={{
-        width: '768px',
-      }}
-    >
+    <div className={style.account}>
       <div className="flex items-center">
         <h3 className="label grow">账号信息</h3>
         <Button type="dashed" onClick={handleLogoutClick}>
@@ -111,7 +110,7 @@ const Account: React.FC = () => {
         </Button>
       </div>
       <Divider></Divider>
-      <Descriptions column={1}>
+      <Descriptions column={1} layout={isMobile ? 'vertical' : 'horizontal'}>
         <Descriptions.Item label="UID">{info?.id}</Descriptions.Item>
         <Descriptions.Item label="邮箱">
           <div>

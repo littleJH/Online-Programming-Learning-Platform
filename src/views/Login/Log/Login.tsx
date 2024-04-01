@@ -6,10 +6,13 @@ import { getCurrentUserinfo, loginApi } from '@/api/user'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { notificationApi, userInfoState } from '@/store/appStore'
 import FindPass from './FindPass'
+import style from '../style.module.scss'
+import myHooks from '@/tool/myHooks/myHooks'
 
 const App: React.FC<{
   setmode: Function
 }> = (props) => {
+  const goBack = myHooks.useNavTo({ back: 1 })
   const setUserInfo = useSetRecoilState(userInfoState)
   const [openFindpassModal, setOpenFindpassModal] = useState(false)
   const notification = useRecoilValue(notificationApi)
@@ -48,13 +51,13 @@ const App: React.FC<{
 
   return (
     <div className="w-full h-full flex justify-center items-center">
-      <div className="">
+      <div className={style.login}>
         <div className="text-end my-4">
           <Button type="link" icon={<RightOutlined />} onClick={() => props.setmode('Register')}>
             注册
           </Button>
         </div>
-        <Form size="large" style={{ width: '28rem' }} name="normal_login" onFinish={onFinish}>
+        <Form size="large" className={style.form} name="normal_login" onFinish={onFinish}>
           <Form.Item
             name="Email"
             rules={[

@@ -80,16 +80,15 @@ const getSideBarType = (path: string): TypeSideBar => {
   console.log('path ==> ', path)
   const pathArr = utils.getPathArray(path)
   const siderNavPath = [
-    '/home',
     '/problemset/all',
     '/competition/common/set',
     '/competition/random',
     '/competition/standard',
     '/community/articleset',
     '/creation',
-    '/learn',
   ]
   const directoryPath = ['/community/article/']
+
   if (siderNavPath.includes(path) || path.includes('/profile')) {
     return 'nav'
   } else if (directoryPath.find((item) => path.includes(item))) {
@@ -193,6 +192,10 @@ const formatFileSize = (bytes: number) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }
 
+const getIsMobile = () => {
+  return window.matchMedia('(any-pointer:coarse)').matches || window.matchMedia('max-width: 760px').matches
+}
+
 const utils = {
   formatProblemJson,
   getPathArray,
@@ -204,6 +207,7 @@ const utils = {
   debounce,
   throttle,
   formatFileSize,
+  getIsMobile,
 }
 
 export default utils
