@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import { ICaseSample, IProblem } from '@/type'
 import ProblemDetail from '@/components/Problem/Detail/ProblemDetail'

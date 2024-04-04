@@ -2,7 +2,6 @@
   display: flex;
   width: 100%;
   @media screen and (max-width: 768px) {
-    width: 100vw;
   }
 
   .left {
@@ -11,6 +10,15 @@
     width: 100%;
     @media screen and (max-width: 768px) {
     }
+
+    .gonggao {
+      width: 100%;
+      margin: 1rem 0;
+      display: block;
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
+    }
   }
 
   .content {
@@ -18,6 +26,15 @@
     margin: auto;
     @media screen and (max-width: 768px) {
       width: 100%;
+    }
+  }
+
+  .right {
+    display: block;
+    margin: 0 2rem;
+    width: 16rem;
+    @media screen and (max-width: 768px) {
+      display: none;
     }
   }
 
@@ -30,11 +47,20 @@
 .articleDetail {
   width: 100%;
 
-  .title {
-    margin: 0 0 1rem 0;
+  .header {
+    letter-spacing: 0.2rem;
+    padding: 1rem 0;
     @media screen and (max-width: 768px) {
-      font-size: 1.5rem;
-      margin: 0;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    .title {
+      margin: 0 0 1rem 0;
+      @media screen and (max-width: 768px) {
+        font-size: 1.5rem;
+        margin: 0;
+      }
     }
   }
 

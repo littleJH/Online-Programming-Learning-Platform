@@ -2,16 +2,16 @@ import { BrowserRouter, HashRouter } from 'react-router-dom'
 import RouterWaiter from './router/router'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { ConfigProvider, message, notification, theme } from 'antd'
-import { isDarkState, notificationApi, sideBarTypeState, themeState } from './store/appStore'
+import { isDarkState, isMobileAtom, notificationApi, sideBarTypeState, themeState } from './store/appStore'
 import { useEffect } from 'react'
 import utils from './tool/myUtils/utils'
 import './style.scss'
 
 function App() {
-  const isMobile = utils.getIsMobile()
+  const isMobile = useRecoilValue(isMobileAtom)
   const myTheme = useRecoilValue(themeState)
   const setNotificationApi = useSetRecoilState(notificationApi)
-  const setSideBarType = useSetRecoilState(sideBarTypeState)
+  const setIsMobile = useSetRecoilState(isMobileAtom)
   const [api, contextHolder] = notification.useNotification({
     placement: isMobile ? 'bottom' : 'topRight',
     stack: false,
@@ -22,8 +22,17 @@ function App() {
 
   useEffect(() => {
     setNotificationApi(api)
-    setSideBarType(utils.getIsMobile() ? 'none' : utils.getSideBarType(location.pathname))
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
   }, [])
+
+  const handleResize = (e: any) => {
+    // console.log('handle window resize ==> ', e)
+    const isSmallScreen = e?.target?.innerWidth <= 768
+    setIsMobile(isSmallScreen)
+  }
 
   return (
     <ConfigProvider

@@ -28,6 +28,7 @@ import { recordStates } from '@/assets/recordStates'
 import { getProblemTestNumApi } from '@/api/problem'
 import { getProblemNewApi } from '@/api/problemNew'
 import GeneralTable, { GeneralTableProps } from '../table/GeneralTable'
+import style from './style.module.scss'
 
 interface IProps {
   mode: 'problem' | 'competition'
@@ -329,7 +330,7 @@ const RecordTable: React.FC<IProps> = (props) => {
   }
 
   return (
-    <div className="" style={{}}>
+    <div className={style.recordTable}>
       <div></div>
       <GeneralTable {...tableProps} />
       <Modal title={'骇客'} open={openHackModal} footer={[]} onCancel={() => setopenHackModal(false)}>

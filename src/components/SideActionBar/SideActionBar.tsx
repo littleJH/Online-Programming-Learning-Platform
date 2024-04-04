@@ -2,12 +2,15 @@ import { Space, theme, Badge } from 'antd'
 import React, { CSSProperties, MouseEventHandler } from 'react'
 import style from './style.module.scss'
 import MySvgIcon from '../Icon/MySvgIcon'
+import { UnorderedListOutlined } from '@ant-design/icons'
+import utils from '@/tool/myUtils/utils'
 
 interface Iprops {
   onLikeClick: MouseEventHandler<HTMLDivElement>
   onCollectClick: MouseEventHandler<HTMLDivElement>
   onCommentClick: MouseEventHandler<HTMLDivElement>
   onArrowupClick: MouseEventHandler<HTMLDivElement>
+  onMenubtnClick?: MouseEventHandler<HTMLDivElement> | null
   likeNum: number
   collectNum: number
   remarkNum: number
@@ -21,6 +24,7 @@ const SideActionBar: React.FC<Iprops> = (props) => {
     onCollectClick,
     onCommentClick,
     onArrowupClick,
+    onMenubtnClick,
     likeNum,
     collectNum,
     remarkNum,
@@ -61,6 +65,11 @@ const SideActionBar: React.FC<Iprops> = (props) => {
         <div className={style.item} onClick={onArrowupClick} style={colorStyle}>
           <MySvgIcon href="#icon-arrowup" size={1.5}></MySvgIcon>
         </div>
+        {onMenubtnClick && (
+          <div className={style.item} style={colorStyle} onClick={onMenubtnClick}>
+            <UnorderedListOutlined />
+          </div>
+        )}
       </Space>
     </div>
   )

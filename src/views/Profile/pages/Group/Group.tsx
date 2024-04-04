@@ -1,9 +1,15 @@
-import { Button, Form, Input, Menu, Modal, Space, theme } from 'antd'
+import { Button, Drawer, Form, Input, Menu, Modal, Space, theme } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import React, { useEffect, useMemo, useState } from 'react'
-import { applyEnterGroupApi, getGroupApi, getMemberGroupListApi, searchGroupByTextApi } from '@/api/group'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  applyEnterGroupApi,
+  getGroupApi,
+  getIsEnterGroupApi,
+  getMemberGroupListApi,
+  searchGroupByTextApi,
+} from '@/api/group'
 import { useRecoilValue } from 'recoil'
-import { notificationApi, userInfoState } from '@/store/appStore'
+import { isMobileAtom, notificationApi, userInfoState } from '@/store/appStore'
 import { IGroup } from '@/type'
 import { useSearchParams } from 'react-router-dom'
 import Chat from '../../../../components/Card/IMCard'
@@ -11,31 +17,39 @@ import { enterPublishChatWs } from '@/api/chat'
 import GroupInfo from '@/components/Group/GroupInfo'
 import TextArea from 'antd/es/input/TextArea'
 import CreateGroupForm from '@/components/Group/CreateGroupForm'
+import style from '../../style.module.scss'
+import utils from '@/tool/myUtils/utils'
 
 let ws: WebSocket
 const GroupRoot: React.FC = () => {
+  const isMobile = useRecoilValue(isMobileAtom)
   const { Search } = Input
   const [querys, setQuerys] = useSearchParams()
   const [group_id, setGroup_id] = useState(querys.get('group_id'))
   const info = useRecoilValue(userInfoState)
   const [total, setTotal] = useState(0)
-  const [mode, setMode] = useState<'default' | 'search'>('default')
+  const [searchText, setSearchText] = useState('')
+  // const [mode, setMode] = useState<'default' | 'search'>('default')
   const [groupList, setGroupList] = useState<IGroup[]>([])
   const [openEnterModal, setOpenEnterModal] = useState(false)
   const [openCreateModal, setOpenCreateModal] = useState(false)
+  const [openGroupDrawer, setOpenGroupDrawer] = useState(!isMobile)
+  const [openGroupinfoDrawer, setOpenGroupinfoDrawer] = useState(false)
   const [applyContent, setApplyContent] = useState(`我是${info?.name}`)
   const notification = useRecoilValue(notificationApi)
   const [form] = Form.useForm()
   const { token } = theme.useToken()
+  const groupRef = useRef<HTMLDivElement>(null)
 
   const currentGroup = useMemo(() => groupList.find((item) => item.id === group_id), [group_id, groupList])
+  const mode = useMemo<'default' | 'search'>(() => (searchText ? 'search' : 'default'), [searchText])
 
   const menuItems = useMemo(
     () =>
       groupList.map((group) => {
         return {
           key: group.id,
-          label: <div>{group.title}</div>,
+          label: <div onClick={() => handleMenuSelected({ key: group.id })}>{group.title}</div>,
         }
       }),
     [groupList]
@@ -46,9 +60,18 @@ const GroupRoot: React.FC = () => {
     initGroupList()
   }, [])
 
+  useEffect(() => {
+    !isMobile && !group_id && groupList.length > 0 && setGroup_id(groupList[0]?.id)
+  }, [groupList])
+
+  useEffect(() => {
+    group_id && setQuerys([['group_id', group_id]])
+  }, [group_id])
+
   const initGroupList = () => {
     if (!info) return
-    setMode('default')
+    setSearchText('')
+    // setMode('default')
     getMemberGroupListApi(info?.id).then(async (res) => {
       setTotal(res.data.data.total)
       const groups = res.data.data.userList
@@ -82,16 +105,24 @@ const GroupRoot: React.FC = () => {
   }
 
   const handleMenuSelected = (info: any) => {
+    if (isMobile && mode === 'search') {
+      setOpenGroupDrawer(false)
+      setOpenGroupinfoDrawer(true)
+    }
     setGroup_id(info.key)
-    setQuerys([['group_id', info.key]])
   }
 
   const handleGroupSearth = async (value: string) => {
-    setMode('search')
-    const { data } = await searchGroupByTextApi(value)
-
-    setGroupList(data.data.groups)
-    console.log(data)
+    if (!value) return
+    // setMode('search')
+    try {
+      const groups = (await searchGroupByTextApi(value)).data.data.groups
+      for (let group of groups) {
+        group.entered = (await getIsEnterGroupApi(group.id)).data.data.member
+      }
+      setGroupList(groups)
+      console.log('handle group search ==> ', groups)
+    } catch {}
   }
 
   const enterGroup = async () => {
@@ -111,74 +142,135 @@ const GroupRoot: React.FC = () => {
       notification.success({
         message: '用户组创建成功',
       })
-    setMode('default')
+    // setMode('default')
+    setSearchText('')
     setGroup_id(group.id)
     setGroupList((value) => [group, ...value])
-    setQuerys({
-      group_id: group.id,
-    })
     setOpenCreateModal(false)
   }
 
-  return (
-    <div
-      className="flex"
-      style={{
-        width: '70vw',
-        height: '70vh',
-      }}
-    >
-      {/* left */}
-      <div className="w-64 h-full flex flex-col">
-        <Space className="sticky top-0 px-4">
+  const renderGroupList = () => {
+    return (
+      <div className={style.groupList}>
+        <div className={style.space}>
           <Search
-            size="small"
+            size={isMobile ? 'middle' : 'small'}
+            value={searchText}
             enterButton
             allowClear
             onSearch={handleGroupSearth}
             onChange={(e) => {
-              if (e.target.value === '') initGroupList()
+              setSearchText(e.target.value)
+              if (!e.target.value) initGroupList()
+              else handleGroupSearth(e.target.value)
             }}
           ></Search>
-          <Button size="small" icon={<PlusOutlined />} onClick={() => setOpenCreateModal(true)}></Button>
-        </Space>
+          <Button size={isMobile ? 'middle' : 'small'} className="ml-4" onClick={() => setOpenCreateModal(true)}>
+            <PlusOutlined />
+          </Button>
+        </div>
         <div className="overflow-auto h-96 grow">
           <Menu className="p-4" items={menuItems} selectedKeys={[group_id || '']} onSelect={handleMenuSelected}></Menu>
         </div>
       </div>
+    )
+  }
+
+  const renderGroupInfo = () => {
+    return (
+      <>
+        {currentGroup && (
+          <div className="p-8">
+            <GroupInfo group={currentGroup}></GroupInfo>
+            <div className="w-full text-end">
+              <Button
+                type="primary"
+                onClick={() => {
+                  setOpenGroupinfoDrawer(false)
+                  setOpenGroupDrawer(true)
+                }}
+              >
+                返回
+              </Button>
+              {currentGroup.entered ? (
+                <Button
+                  type="primary"
+                  className="ml-4"
+                  onClick={() => {
+                    setOpenGroupDrawer(false)
+                    setOpenGroupinfoDrawer(false)
+                    // setMode('default')
+                    setSearchText('')
+                  }}
+                >
+                  进入聊天
+                </Button>
+              ) : (
+                <Button
+                  type="primary"
+                  className="ml-4"
+                  onClick={() => (currentGroup.auto ? enterGroup() : setOpenEnterModal(true))}
+                >
+                  加入小组
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
+      </>
+    )
+  }
+
+  return (
+    <div ref={groupRef} className={style.group}>
+      {/* left */}
+      {isMobile ? (
+        <>
+          <Drawer
+            // getContainer={false}
+            placement="bottom"
+            open={openGroupDrawer}
+            closeIcon={null}
+            onClose={() => {
+              setSearchText('')
+              setOpenGroupDrawer(false)
+            }}
+          >
+            {renderGroupList()}
+          </Drawer>
+          <Drawer
+            open={openGroupinfoDrawer}
+            closeIcon={null}
+            onClose={() => setOpenGroupinfoDrawer(false)}
+            placement="bottom"
+          >
+            {renderGroupInfo()}
+          </Drawer>
+        </>
+      ) : (
+        renderGroupList()
+      )}
       {/* <Divider type="vertical" className="h-full"></Divider> */}
+      {/* right */}
       <div
-        className="grow w-96 h-full rounded"
+        className={style.right}
         style={{
           borderColor: token.colorBorder,
-          borderWidth: '1px',
           borderRadius: token.borderRadius,
-          borderStyle: 'solid',
         }}
       >
         {currentGroup && (
           <>
-            {mode === 'default' && <Chat group={currentGroup}></Chat>}
-            {mode === 'search' && (
+            {mode === 'default' && <Chat group={currentGroup} setOpenGroupDrawer={setOpenGroupDrawer}></Chat>}
+            {mode === 'search' && !isMobile && (
               <>
-                {currentGroup.entered && <Chat group={currentGroup}></Chat>}
-                {!currentGroup.entered && (
-                  <div className="p-8">
-                    <GroupInfo group={currentGroup}></GroupInfo>
-                    <div className="w-full text-end">
-                      <Button
-                        type="primary"
-                        onClick={() => (currentGroup.auto ? enterGroup() : setOpenEnterModal(true))}
-                      >
-                        加入小组
-                      </Button>
-                    </div>
-                  </div>
-                )}
+                {currentGroup.entered && <Chat group={currentGroup} setOpenGroupDrawer={setOpenGroupDrawer}></Chat>}
+                {!currentGroup.entered && renderGroupInfo()}
               </>
             )}
           </>
         )}
+        {!currentGroup && isMobile && <div className="p-4 w-full h-full">{renderGroupList()}</div>}
       </div>
       <Modal
         open={openEnterModal}

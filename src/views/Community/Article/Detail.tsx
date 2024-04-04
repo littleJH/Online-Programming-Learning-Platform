@@ -1,7 +1,7 @@
 import { IArticle } from '@/type'
 import React, { useEffect, useState } from 'react'
-import { currentArticleState, sideBarTypeState } from '@/store/appStore'
-import { useRecoilState, useSetRecoilState } from 'recoil'
+import { currentArticleState, isMobileAtom, sideBarTypeState } from '@/store/appStore'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { useParams } from 'react-router-dom'
 import {
   collectArticleApi,
@@ -20,7 +20,7 @@ import {
 import { createArticleRemarkApi, getArticleRemarkListApi } from '@/api/remark'
 import { getUserInfoApi } from '@/api/user'
 import ReadOnly from '@/components/editor/Readonly'
-import { Button, Divider, Modal, Space, Card, theme } from 'antd'
+import { Button, Divider, Modal, Space, Card, theme, Drawer } from 'antd'
 import MyTag from '@/components/Label/MyTag'
 import TextEditor from '@/components/editor/TextEditor'
 import RemarkCard from '@/components/Card/RemarkCard'
@@ -30,12 +30,15 @@ import { directoryDataState } from '@/components/directory/store'
 import myHooks from '@/tool/myHooks/myHooks'
 import style from '../style.module.scss'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
+import Directory from '@/components/directory/Directory'
 
 const Detail: React.FC = () => {
+  const isMobile = useRecoilValue(isMobileAtom)
   const { article_id } = useParams() as { article_id: string }
   const [currentArticle, setcurrentArticle] = useRecoilState(currentArticleState)
   const [openRemarkModal, setopenRemarkModal] = useState(false)
   const [remarkContent, setremarkContent] = useState('')
+  const [openDirectoryDrawer, setOpenDirectoryDrawer] = useState(false)
   const setDirectoryTree = useSetRecoilState(directoryDataState)
   const { token } = theme.useToken()
 
@@ -125,6 +128,10 @@ const Detail: React.FC = () => {
     currentArticle?.liked === 1 ? cancelLike() : like()
   }
 
+  const handleMenubtnClick = () => {
+    setOpenDirectoryDrawer(true)
+  }
+
   const handleCollectClick = () => {
     const collect = () => {
       collectArticleApi(article_id).then(async (res) => {
@@ -202,7 +209,12 @@ const Detail: React.FC = () => {
           <div id="top"></div>
           <Card size="small">
             {/* header */}
-            <div style={{ letterSpacing: '0.2rem' }}>
+            <div
+              className={style.header}
+              style={{
+                backgroundColor: token.colorBgBase,
+              }}
+            >
               <h1 className={style.title}>{currentArticle.title}</h1>
               <Space
                 size={'large'}
@@ -224,7 +236,7 @@ const Detail: React.FC = () => {
                   currentArticle.labels.map((label, index) => <MyTag key={index}>{label.label}</MyTag>)}
               </Space>
             </div>
-            <Divider></Divider>
+            <Divider style={{ margin: '1rem' }}></Divider>
             {/* body */}
             <div id="article">
               <ReadOnly html={currentArticle.content} borderd={false}></ReadOnly>
@@ -258,6 +270,7 @@ const Detail: React.FC = () => {
               onCollectClick={handleCollectClick}
               onCommentClick={handleCommentClick}
               onLikeClick={handleLikeClick}
+              onMenubtnClick={isMobile ? handleMenubtnClick : null}
               likeNum={currentArticle?.likeNum || 0}
               collectNum={currentArticle?.collectNum || 0}
               remarkNum={currentArticle?.remark.total || 0}
@@ -282,6 +295,18 @@ const Detail: React.FC = () => {
               placeholder="发表我的看法~~~"
             ></TextEditor>
           </Modal>
+          <Drawer
+            open={openDirectoryDrawer}
+            placement="bottom"
+            onClose={() => setOpenDirectoryDrawer(false)}
+            closeIcon={false}
+            zIndex={9999999}
+            style={{
+              opacity: '0.9',
+            }}
+          >
+            <Directory></Directory>
+          </Drawer>
         </div>
       )}
     </div>

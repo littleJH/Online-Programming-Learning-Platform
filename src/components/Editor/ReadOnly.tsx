@@ -23,8 +23,11 @@ const ReadOnly: React.FC<Iprops> = (props) => {
         }}
         defaultHtml={html}
         mode="default"
-        className={` rounded-md ${className} ${borderd ? 'border-1 border-solid border-gray-200' : ''}`}
-        style={style}
+        className={`rounded-md ${className} ${borderd ? 'border-1 border-solid border-gray-200' : ''}`}
+        style={{
+          ...style,
+          fontSize: '1rem',
+        }}
       ></Editor>
     </div>
   )

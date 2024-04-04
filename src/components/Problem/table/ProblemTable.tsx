@@ -1,5 +1,5 @@
 import { IPrblemTableDataType, IProblem } from '@/type'
-import { Button, Popover, Skeleton, Space, Table, Tag, Tooltip, Divider } from 'antd'
+import { Button, Popover, Skeleton, Space, Table, Tag, Tooltip, Divider, Popconfirm } from 'antd'
 import Column from 'antd/es/table/Column'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import ReadOnly from '../../editor/Readonly'
@@ -7,25 +7,26 @@ import { getRecordListApi } from '@/api/record'
 import { getProblemLabelsApi } from '@/api/problem'
 import AcPercentLabel from '../../Label/ProblemLabel/AcPercentLabel'
 import { useRecoilValue } from 'recoil'
-import { notificationApi, themeState } from '@/store/appStore'
+import { isMobileAtom, notificationApi, themeState } from '@/store/appStore'
 import MyTag from '../../Label/MyTag'
 import { getPagination } from '@/config/config'
 import GeneralTable from '../../table/GeneralTable'
 import utils from '@/tool/myUtils/utils'
+import style from '../style.module.scss'
 
 interface IProps {
   mode: 'select' | 'default' | 'action'
   problemList: IProblem[]
   pageNum: number
   pageSize: number
-  setPageNum: Function
-  setPageSize: Function
+  // setPageNum: Function
+  // setPageSize: Function
   total: number
   fetchDone: boolean
   setFetchDone: Function
-  setFirst: Function
-  onPageChange: Function
+  onPageChange: (pageNum: number, pageSize: number) => void
   onLineClick: Function
+  setFirst?: Function
   onDelete?: Function
   onUpdate?: Function
   tableScrollHeight?: number
@@ -51,18 +52,20 @@ const ProblemTable: React.FC<IProps> = (props) => {
     onUpdate,
     fetchDone,
     setFetchDone,
-    setPageNum,
-    setPageSize,
+    // setPageNum,
+    // setPageSize,
     setFirst,
   } = props
   const [dataSource, setDataSource] = useState<IPrblemTableDataType[]>([])
-  const theme = useRecoilValue(themeState)
   const notification = useRecoilValue(notificationApi)
+  const isMobile = useRecoilValue(isMobileAtom)
 
   useEffect(() => {
-    flag && fetchProblems(problemList)
+    flag && problemList.length > 0 && fetchProblems(problemList)
     flag = true
   }, [problemList])
+
+  useEffect(() => console.log('fetch done ==> ', fetchDone), [fetchDone])
 
   const handleKyeClick = (value: string, e: React.MouseEvent) => {
     e.stopPropagation()
@@ -77,7 +80,7 @@ const ProblemTable: React.FC<IProps> = (props) => {
   }
 
   const fetchProblems = async (problems: IProblem[]) => {
-    console.log('fetchProblems')
+    // if (problems.length === 0) return
     let index = 0
     const list: IPrblemTableDataType[] = []
     for (let problem of problems) {
@@ -92,7 +95,7 @@ const ProblemTable: React.FC<IProps> = (props) => {
         getProblemLabelsApi(problem.id),
       ])
       list.push({
-        key: problem.id as string,
+        key: problem?.key || problem.id,
         index: (pageNum - 1) * pageSize + index + 1,
         title: problem.title,
         description: problem.description,
@@ -103,23 +106,24 @@ const ProblemTable: React.FC<IProps> = (props) => {
       })
       index++
     }
-    setFetchDone(true)
-    setFirst(false)
-    flag = true
+    setFirst && setFirst(false)
     setDataSource(list)
+    console.log('before fetch done ...')
+    setFetchDone(true)
+    flag = true
   }
 
   const handleTitleClick = (e: React.MouseEvent) => {
-    e.stopPropagation()
+    // e.stopPropagation()
   }
 
-  const handleShowSizeChange = (current: number, size: number) => {
-    setPageNum(current)
-    setPageSize(size)
-  }
+  // const handleShowSizeChange = (current: number, size: number) => {
+  //   setPageNum(current)
+  //   setPageSize(size)
+  // }
 
-  const columns = [
-    {
+  const getColumns = () => {
+    const keyColumn = {
       title: 'KEY',
       dataIndex: 'key',
       render: (value: string) => (
@@ -129,70 +133,89 @@ const ProblemTable: React.FC<IProps> = (props) => {
           </div>
         </Tooltip>
       ),
-    },
-    {
-      title: '标题',
-      dataIndex: 'title',
-      render: (value: string, _: any, index: number) => (
-        <Popover
-          mouseEnterDelay={0.3}
-          title={value}
-          content={<ReadOnly html={dataSource[index].description}></ReadOnly>}
-          overlayStyle={{
-            maxWidth: '512px',
-          }}
-          overlayInnerStyle={{
-            maxHeight: '256px',
-            overflow: 'scroll',
-          }}
-        >
-          <div
-            color={theme.colorPrimary}
-            style={{
-              width: '196px',
-              overflow: 'hidden',
-              whiteSpace: 'nowrap',
-              textOverflow: 'ellipsis',
-            }}
-          >
+    }
+    const columns = [
+      {
+        title: '标题',
+        dataIndex: 'title',
+        render: (value: string, record: any) => (
+          // <div onClick={() => onLineClick()}>
+          //   <Popover
+          //     mouseEnterDelay={0.3}
+          //     title={value}
+          //     content={<ReadOnly html={dataSource[index].description}></ReadOnly>}
+          //     overlayStyle={{
+          //       maxWidth: '512px',
+          //     }}
+          //     overlayInnerStyle={{
+          //       maxHeight: '256px',
+          //       overflow: 'scroll',
+          //     }}
+          //   >
+          //   <div
+          //     color={theme.colorPrimary}
+          //     style={{
+          //       maxWidth: isMobile ? '10rem' : '14rem',
+          //       overflow: 'hidden',
+          //       whiteSpace: 'nowrap',
+          //       textOverflow: 'ellipsis',
+          //     }}
+          //   >
+          //     <span className="cursor-pointer" onClick={handleTitleClick}>
+          //       {value}
+          //     </span>
+          //   </div>
+          //   </Popover>
+          // </div>
+          <div className={style.title} onClick={() => onLineClick(record)}>
             <span className="cursor-pointer" onClick={handleTitleClick}>
               {value}
             </span>
           </div>
-        </Popover>
-      ),
-    },
-    {
-      title: '标签',
-      dataIndex: 'labels',
-      render: (value: string[]) => (
-        <div
-          style={{
-            width: '10rem',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-          }}
-        >
-          {value.map((item: any, index: number) => {
-            return index <= 1 ? <MyTag key={index}>{item.label}</MyTag> : null
-          })}
-        </div>
-      ),
-    },
-    {
-      title: 'AC率',
-      dataIndex: 'acPerc',
-      render: (value: any) => <div className="">{value}</div>,
-    },
-  ]
+        ),
+      },
+      {
+        title: '标签',
+        dataIndex: 'labels',
+        render: (value: string[]) => (
+          <div
+            style={{
+              width: '10rem',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+            }}
+          >
+            {value.map((item: any, index: number) => {
+              return index <= 1 ? <MyTag key={index}>{item.label}</MyTag> : null
+            })}
+          </div>
+        ),
+      },
+      {
+        title: 'AC率',
+        dataIndex: 'acPerc',
+        render: (value: any) => <div className="">{value}</div>,
+      },
+    ]
+
+    return isMobile ? columns : [keyColumn, ...columns]
+  }
 
   const actions = [
     {
       title: '操作',
       render: (_: any, __: any, index: number) => (
-        <div style={{ width: '6rem' }}>
+        <div style={{ minWidth: '8rem' }}>
           {onUpdate && (
-            <Button type="link" size="small" style={{ padding: '0' }} onClick={() => onUpdate(index)}>
+            <Button
+              type="link"
+              size="small"
+              style={{ padding: '0' }}
+              onClick={(e) => {
+                e.stopPropagation()
+                onUpdate(index)
+              }}
+            >
               更新
             </Button>
           )}
@@ -200,9 +223,18 @@ const ProblemTable: React.FC<IProps> = (props) => {
           {onDelete && (
             <>
               <Divider type="vertical"></Divider>
-              <Button type="link" style={{ padding: '0' }} size="small" danger onClick={() => onDelete(index)}>
-                删除
-              </Button>
+              <Popconfirm
+                title="确认删除？"
+                okText="确认"
+                cancelText="取消"
+                onConfirm={(e) => {
+                  onDelete(index)
+                }}
+              >
+                <Button type="link" style={{ padding: '0' }} size="small" danger>
+                  删除
+                </Button>
+              </Popconfirm>
             </>
           )}
         </div>
@@ -212,8 +244,7 @@ const ProblemTable: React.FC<IProps> = (props) => {
 
   const tableProps = {
     dataSource,
-    columns,
-    actions,
+    columns: getColumns(),
     pageProps: {
       pageNum,
       pageSize,
@@ -251,13 +282,17 @@ const ProblemTable: React.FC<IProps> = (props) => {
         : undefined,
     onRow: (record: any) => {
       return {
-        onClick: () => onLineClick(record),
+        // onClick: () => onLineClick(record),
       }
     },
   }
 
+  const getTableProps = () => {
+    return mode === 'action' ? { ...tableProps, actions } : tableProps
+  }
+
   return (
-    <div>
+    <div className={style.problemTable}>
       {!fetchDone && (
         <Skeleton
           style={{
@@ -269,7 +304,7 @@ const ProblemTable: React.FC<IProps> = (props) => {
           }}
         />
       )}
-      {fetchDone && <GeneralTable {...tableProps}></GeneralTable>}
+      {fetchDone && <GeneralTable {...getTableProps()}></GeneralTable>}
     </div>
   )
 }

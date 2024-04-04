@@ -7,6 +7,7 @@ import myHooks from '@/tool/myHooks/myHooks'
 import RollList from '@/components/List/RollList'
 import { useRecoilValue } from 'recoil'
 import { currentCompetitionAtom } from '@/views/Competition/competitionStore'
+import style from '@/views/Competition/style.module.scss'
 
 interface IRank {
   id: string | number
@@ -24,7 +25,8 @@ const Rank: React.FC<{ mode?: 'default' | 'sider' }> = (props) => {
   const competition = useRecoilValue(currentCompetitionAtom)
   const [rankList, setRankList] = useState<IRank[]>([])
   const { token } = theme.useToken()
-  const spanClass = `${mode === 'default' ? 'w-1/5' : 'w-1/3'} text-center`
+  const spanClass = ``
+  // const spanClass = `${mode === 'default' ? 'w-1/5' : 'w-1/3'} text-center`
 
   myHooks.useWsConnect({
     wsApi: competition?.id ? rollingRanklistWs(competition.id) : null,
@@ -96,7 +98,7 @@ const Rank: React.FC<{ mode?: 'default' | 'sider' }> = (props) => {
   }
 
   return (
-    <div className="w-full">
+    <div className={style.rank}>
       {mode === 'sider' && (
         <>
           <p className="flex justify-center items-center">实时排名</p>
@@ -113,11 +115,9 @@ const Rank: React.FC<{ mode?: 'default' | 'sider' }> = (props) => {
           list={rankList}
           renderItem={(item, index) => (
             <div
+              className={style.rankItem}
               key={item.id}
               style={{
-                display: 'flex',
-                width: '100%',
-                height: '3rem',
                 borderBottom: index !== rankList.length - 1 ? '1px solid' : '',
                 borderColor: token.colorBorder,
                 color: token.colorTextBase,

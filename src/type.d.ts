@@ -59,6 +59,7 @@ export interface IProblem {
   collected?: boolean
   collectNum?: number
   labels?: IArticleLabel[]
+  key?:string
 }
 
 export interface ICaseSample {

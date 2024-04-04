@@ -1,10 +1,26 @@
 import { Navigate, RouteObject, useLocation, useRoutes } from 'react-router-dom'
 import React, { ComponentType, ReactNode, Suspense, lazy } from 'react'
 import Loading from '@/components/Loading/Loading'
-import { useSetRecoilState } from 'recoil'
-import { pathNameState, sideBarTypeState } from '@/store/appStore'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { isMobileAtom, pathNameState, sideBarTypeState } from '@/store/appStore'
 import Root from '@/views/Root'
 import utils from '@/tool/myUtils/utils'
+import {
+  UserOutlined,
+  MenuOutlined,
+  StarOutlined,
+  SafetyCertificateOutlined,
+  SettingOutlined,
+  MessageOutlined,
+  TeamOutlined,
+  InfoCircleOutlined,
+  TrophyOutlined,
+  GlobalOutlined,
+  CodeOutlined,
+  MailOutlined,
+  HomeOutlined,
+  BulbOutlined,
+} from '@ant-design/icons'
 // import Article from '@/views/Profile/Creation/Article/Article'
 
 interface MyRoute {
@@ -25,6 +41,7 @@ const homepageModule = import.meta.glob<{ default: ComponentType }>('../views/Ho
 // const Root = await import('@/views/Root')
 // const Root = import.meta.glob('@/views/Root')
 const ErrorPage = lazy(() => import('@/components/error-page'))
+const StayTuned = lazy(() => import('@/components/Empty/StayTuned'))
 const Homepage = lazy(homepageModule['../views/Home/HomeRoot.tsx'])
 const LoginRoot = lazy(() => import('@/views/Login/LoginRoot'))
 
@@ -127,7 +144,8 @@ const routes: MyRoute[] = [
         children: [
           {
             path: 'friend',
-            element: ProfileFriend,
+            // element: ProfileFriend,
+            element: StayTuned,
           },
           // {
           //   path: 'message',
@@ -135,7 +153,8 @@ const routes: MyRoute[] = [
           // },
           {
             path: 'email',
-            element: ProfileEmail,
+            // element: ProfileEmail,
+            element: StayTuned,
           },
           {
             path: 'group',
@@ -387,12 +406,13 @@ const transformRoutes = (routes: MyRoute[]) => {
 const RouterWaiter = () => {
   const setPathName = useSetRecoilState(pathNameState)
   const setSideBarType = useSetRecoilState(sideBarTypeState)
+  const isMobile = useRecoilValue(isMobileAtom)
 
   window.onpopstate = (e: any) => {
     const path = e.target?.location?.pathname
     console.log('onpopstate...', path)
     if (path) {
-      setSideBarType(utils.getIsMobile() ? 'none' : utils.getSideBarType(path))
+      setSideBarType(isMobile ? 'none' : utils.getSideBarType(path))
       setPathName(location.pathname)
     }
   }
@@ -400,3 +420,317 @@ const RouterWaiter = () => {
 }
 
 export default RouterWaiter
+
+export const headerMenuItems = [
+  {
+    label: '首页',
+    key: 'home',
+    icon: <HomeOutlined />,
+  },
+  {
+    label: '题库',
+    key: 'problemset/all',
+    icon: <CodeOutlined />,
+  },
+  {
+    label: '比赛',
+    key: 'competition/common/set',
+    icon: <TrophyOutlined />,
+  },
+  {
+    label: '社区',
+    key: 'community/articleset',
+    icon: <GlobalOutlined />,
+  },
+
+  {
+    label: '创作',
+    key: 'creation',
+    icon: <BulbOutlined />,
+  },
+  {
+    label: '个人',
+    key: 'profile/info',
+    icon: <UserOutlined />,
+  },
+]
+
+export const footerMenuItems = [
+  {
+    label: '首页',
+    key: 'home',
+    // icon: <HomeOutlined />,
+  },
+  {
+    label: '题库',
+    key: 'problemset/all',
+    // icon: <CodeOutlined />,
+  },
+  {
+    label: '比赛',
+    key: 'competition/common/set',
+    // icon: <TrophyOutlined />,
+  },
+  {
+    label: '社区',
+    key: 'community/articleset',
+    // icon: <GlobalOutlined />,
+  },
+  {
+    label: '创作',
+    key: 'creation',
+    // icon: <BulbOutlined />,
+  },
+  {
+    label: '我的',
+    key: 'profile/info',
+    // icon: <UserOutlined />,
+  },
+]
+
+export const siderMenuItemsObj: any = {
+  problemsetMenuItem: [
+    {
+      label: '全部',
+      key: 'all',
+    },
+    {
+      label: '题单',
+      key: 'topic',
+    },
+    {
+      label: '表单',
+      key: 'form',
+    },
+  ],
+  problemdetailMenuItem: [
+    {
+      label: '题目描述',
+      key: 'description',
+    },
+    {
+      label: '提交记录',
+      key: 'records',
+    },
+  ],
+  competitionMenuItem: [
+    {
+      label: '普通赛',
+      key: 'common',
+    },
+    {
+      label: '及时赛',
+      key: 'random',
+    },
+    {
+      label: '标准赛',
+      key: 'standard',
+    },
+  ],
+  communityMenuItem: [
+    {
+      label: '文章',
+      key: 'articleset',
+    },
+    {
+      label: '讨论',
+      key: 'commentset',
+    },
+    {
+      label: '题解',
+      key: 'solvingset',
+    },
+  ],
+  creationMenuItem: [
+    {
+      key: 'sub1',
+      label: '题目相关',
+      icon: <CodeOutlined />,
+      children: [
+        {
+          label: '题目',
+          key: 'problem',
+        },
+        {
+          label: '题单',
+          key: 'topic',
+        },
+        {
+          label: '表单',
+          key: 'form',
+        },
+        {
+          label: '题解',
+          key: 'post',
+        },
+      ],
+    },
+    {
+      key: 'sub2',
+      label: '社区相关',
+      icon: <GlobalOutlined />,
+      children: [
+        {
+          label: '文章',
+          key: 'article',
+        },
+        {
+          label: '讨论',
+          key: 'comment',
+        },
+      ],
+    },
+    {
+      key: 'sub3',
+      label: '比赛相关',
+      icon: <TrophyOutlined />,
+      children: [
+        {
+          label: '比赛',
+          key: 'competition',
+        },
+      ],
+    },
+  ],
+  profileMenuItem: [
+    {
+      key: 'group',
+      label: '群组',
+      icon: <TeamOutlined />,
+    },
+    // {
+    //   key: 'friend',
+    //   label: '好友',
+    //   icon: <UserOutlined />,
+    // },
+
+    // {
+    //   key: 'message',
+    //   label: '留言板',
+    //   icon: <MessageOutlined />,
+    // },
+    // {
+    //   key: 'email',
+    //   label: '邮箱',
+    //   icon: <MailOutlined />,
+    // },
+
+    {
+      key: 'divider3',
+      type: 'divider',
+    },
+    {
+      key: 'info',
+      label: '个人信息',
+      icon: <InfoCircleOutlined />,
+    },
+    {
+      key: 'setting',
+      label: '偏好设置',
+      icon: <SettingOutlined />,
+    },
+    {
+      key: 'account',
+      label: '账号安全',
+      icon: <SafetyCertificateOutlined />,
+    },
+    {
+      type: 'divider',
+      key: 'divider1',
+    },
+    {
+      key: 'creation',
+      label: '我创建的',
+      icon: <MenuOutlined />,
+      children: [
+        {
+          key: 'creation/problem',
+          label: '题目',
+          // icon: (
+          //   <svg className='icon-small'>
+          //     <use href='#icon-problem'></use>
+          //   </svg>
+          // )
+        },
+        {
+          key: 'creation/topic',
+          label: '题单',
+          // icon: (
+          //   <svg className='icon-small'>
+          //     <use href='#icon-topic'></use>
+          //   </svg>
+          // )
+        },
+        {
+          key: 'creation/form',
+          label: '表单',
+          // icon: (
+          //   <svg className='icon-small'>
+          //     <use href='#icon-liebiaoqingdan'></use>
+          //   </svg>
+          // )
+        },
+        {
+          key: 'creation/article',
+          label: '文章',
+          // icon: (
+          //   <svg className='icon-small'>
+          //     <use href='#icon-article'></use>
+          //   </svg>
+          // )
+        },
+        {
+          key: 'creation/group',
+          label: '用户组',
+        },
+      ],
+    },
+    {
+      key: 'star',
+      label: '收藏夹',
+      icon: <StarOutlined />,
+      children: [
+        {
+          key: 'star/problem',
+          label: '题目',
+          // icon: (
+          //   <svg className='icon-small'>
+          //     <use href='#icon-problem'></use>
+          //   </svg>
+          // )
+        },
+        {
+          key: 'star/topic',
+          label: '题单',
+          // icon: (
+          //   <svg className='icon-small'>
+          //     <use href='#icon-topic'></use>
+          //   </svg>
+          // )
+        },
+        {
+          key: 'star/form',
+          label: '表单',
+          // icon: (
+          //   <svg className='icon-small'>
+          //     <use href='#icon-liebiaoqingdan'></use>
+          //   </svg>
+          // )
+        },
+        {
+          key: 'star/article',
+          label: '文章',
+          // icon: (
+          //   <svg className='icon-small'>
+          //     <use href='#icon-article'></use>
+          //   </svg>
+          // )
+        },
+      ],
+    },
+    // {
+    //   type: 'divider',
+    //   key: 'divider2',
+    // },
+  ],
+}

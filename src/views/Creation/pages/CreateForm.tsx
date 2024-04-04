@@ -1,7 +1,7 @@
 import { getTopicListApi, getTopicProblemsApi } from '@/api/topic'
 import TextEditor from '@/components/editor/TextEditor'
 import { IGroup, ITopic } from '@/type'
-import { Button, Form, Input, InputNumber, InputRef, Modal, Result, ResultProps, Switch, Table } from 'antd'
+import { Button, Drawer, Form, Input, InputNumber, InputRef, Modal, Result, ResultProps, Switch, Table } from 'antd'
 import Search from 'antd/es/input/Search'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { PlusOutlined, MinusCircleOutlined, MenuOutlined } from '@ant-design/icons'
@@ -13,7 +13,10 @@ import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useNavigate } from 'react-router-dom'
+import myHooks from '@/tool/myHooks/myHooks'
+import style from '../style.module.scss'
+import { useRecoilValue } from 'recoil'
+import { isMobileAtom } from '@/store/appStore'
 
 type LeftMode = 'topics' | 'groups' | 'close'
 
@@ -59,7 +62,8 @@ const Row = ({ children, ...props }: RowProps) => {
 }
 
 const CreateForm: React.FC = () => {
-  const nav = useNavigate()
+  const isMobile = useRecoilValue(isMobileAtom)
+  const nav = myHooks.useNavTo()
   const [form] = Form.useForm()
   const [leftMode, setLeftMode] = useState<LeftMode>('close')
   const [topicList, setTopicList] = useState<ITopicTableDataType[]>([])
@@ -71,6 +75,7 @@ const CreateForm: React.FC = () => {
   const titleInputRef = useRef<InputRef>(null)
   const [openResultModal, setOpenResultModal] = useState(false)
   const [result, setResult] = useState<ResultProps>()
+  const [openDrawer, setOpenDrawer] = useState(false)
 
   useEffect(() => {
     titleInputRef.current?.focus()
@@ -268,15 +273,11 @@ const CreateForm: React.FC = () => {
     nav(`/problem/set/all?topic=${record.id}&text=&labels=`)
   }, [])
 
-  return (
-    <>
-      <div className="flex h-full py-4 px-8">
+  const renderLeft = () => {
+    return (
+      <>
         {leftMode !== 'close' && (
-          <div
-            style={{
-              width: '384px',
-            }}
-          >
+          <div className={style.leftBox}>
             <Search
               style={{
                 padding: '1rem 0',
@@ -363,12 +364,16 @@ const CreateForm: React.FC = () => {
             )}
           </div>
         )}
+      </>
+    )
+  }
+
+  return (
+    <div className={style.formCreation}>
+      <div className={style.body}>
+        <div className={style.left}>{!isMobile && renderLeft()}</div>
         <div className="w-8"></div>
-        <div
-          style={{
-            width: '640px',
-          }}
-        >
+        <div className={style.right}>
           <Form
             form={form}
             name="formForm"
@@ -430,7 +435,14 @@ const CreateForm: React.FC = () => {
                 </SortableContext>
               </DndContext>
               <div className="flex justify-center w-full">
-                <Button type="dashed" style={{ margin: '1rem' }} onClick={() => setLeftMode('topics')}>
+                <Button
+                  type="dashed"
+                  style={{ margin: '1rem' }}
+                  onClick={() => {
+                    setOpenDrawer(true)
+                    setLeftMode('topics')
+                  }}
+                >
                   <PlusOutlined style={{ width: '4rem' }} />
                 </Button>
               </div>
@@ -478,7 +490,14 @@ const CreateForm: React.FC = () => {
                 </SortableContext>
               </DndContext>
               <div className="flex justify-center w-full">
-                <Button type="dashed" style={{ margin: '1rem' }} onClick={() => setLeftMode('groups')}>
+                <Button
+                  type="dashed"
+                  style={{ margin: '1rem' }}
+                  onClick={() => {
+                    setOpenDrawer(true)
+                    setLeftMode('groups')
+                  }}
+                >
                   <PlusOutlined style={{ width: '4rem' }} />
                 </Button>
               </div>
@@ -519,7 +538,12 @@ const CreateForm: React.FC = () => {
       >
         <Result {...result}></Result>
       </Modal>
-    </>
+      {isMobile && (
+        <Drawer open={openDrawer} placement="right" onClose={() => setOpenDrawer(false)}>
+          {renderLeft()}
+        </Drawer>
+      )}
+    </div>
   )
 }
 

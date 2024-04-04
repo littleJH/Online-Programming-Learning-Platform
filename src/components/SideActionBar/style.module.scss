@@ -18,6 +18,10 @@
   transition: all;
   transition-duration: 150ms;
   user-select: none;
+  opacity: 1;
+  @media screen and (max-width: 768px) {
+    opacity: 0.7;
+  }
 }
 
 .item:hover {

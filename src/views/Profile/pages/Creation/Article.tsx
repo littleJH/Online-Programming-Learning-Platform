@@ -8,6 +8,7 @@ import utils from '@/tool/myUtils/utils'
 import PaginationList from '@/components/List/PaginationList'
 import { useSearchParams } from 'react-router-dom'
 import myHooks from '@/tool/myHooks/myHooks'
+import style from '../../style.module.scss'
 
 const Article: React.FC = () => {
   const nav = myHooks.useNavTo()
@@ -60,7 +61,7 @@ const Article: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className={style.creationArticle}>
       <PaginationList
         dataSource={articleList}
         loading={loading}

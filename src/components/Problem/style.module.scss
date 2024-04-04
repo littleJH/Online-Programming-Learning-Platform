@@ -1,0 +1,98 @@
+.problemList {
+  display: flex;
+  height: 100%;
+  width: 100%;
+
+  .header {
+    margin-bottom: 1rem;
+    width: 100%;
+    display: flex;
+
+    @media screen and (max-width: 768px) {
+      display: block;
+    }
+
+    .headerItem {
+      flex-grow: 1;
+      width: 33.3%;
+      @media screen and (max-width: 768px) {
+        width: 100%;
+        margin: 1rem 0;
+      }
+    }
+
+    .labelPopover {
+      max-width: 500px;
+      max-height: 500px;
+      @media screen and (max-width: 768px) {
+        max-width: 80vw;
+        max-height: 100px;
+        overflow-y: scroll;
+      }
+    }
+  }
+
+  .setCtn {
+    width: 100%;
+    overflow-x: auto;
+  }
+}
+
+.problemTable {
+  .title {
+    max-width: 14rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    @media screen and (max-width: 768px) {
+      max-width: 10rem;
+    }
+    &:hover {
+      color: var(--colorPrimary);
+    }
+  }
+}
+
+.problemDetail {
+  .header {
+    position: relative;
+
+    .collapse {
+      position: absolute;
+      right: 0;
+      top: 0;
+      span {
+        font-size: 0.8rem;
+      }
+    }
+    .subTitle {
+      display: flex;
+      font-size: 0.8rem;
+      @media screen and (max-width: 768px) {
+        display: block;
+      }
+
+      .number {
+        .item {
+          width: max-content;
+          // display: flex;
+          // flex-direction: column;
+          // align-items: center;
+          // justify-content: center;
+          span {
+            white-space: nowrap;
+          }
+        }
+      }
+
+      .createTime {
+        text-align: end;
+        flex-grow: 1;
+        @media screen and (max-width: 768px) {
+          text-align: start;
+          margin-top: 0.5rem;
+        }
+      }
+    }
+  }
+}

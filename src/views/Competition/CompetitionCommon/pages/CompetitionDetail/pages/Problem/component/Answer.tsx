@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment, useMemo } from 'react'
+import React, { useEffect, useState, Fragment, useMemo, useRef } from 'react'
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom'
 import { getProblemNewApi } from '@/api/problemNew'
 import {
@@ -19,11 +19,12 @@ import TextArea from 'antd/es/input/TextArea'
 import { createTestApi } from '@/api/test'
 import { createRecordApi } from '@/api/competitionMixture'
 import { useRecoilValue } from 'recoil'
-import { notificationApi } from '@/store/appStore'
+import { isMobileAtom, notificationApi } from '@/store/appStore'
 import { currentCompetitionAtom } from '@/views/Competition/competitionStore'
 import Description from '@/views/Problem/pages/Description'
 import ProblemDetail from '@/components/Problem/Detail/ProblemDetail'
-
+import style from '../../../../../../style.module.scss'
+import utils from '@/tool/myUtils/utils'
 export interface ChangeOptions {
   code: string
   runResult: IRunResult
@@ -42,6 +43,7 @@ const initTestState: IRecordState = {
 }
 
 const Answer: React.FC<IProps> = (props) => {
+  const isMobile = useRecoilValue(isMobileAtom)
   const nav = useNavigate()
   const competition = useRecoilValue(currentCompetitionAtom)
   const { problem_id, onStateChange } = props
@@ -55,6 +57,7 @@ const Answer: React.FC<IProps> = (props) => {
   const [runResult, setrunResult] = useState<IRunResult>({} as IRunResult)
   const [currentState, setcurrentState] = useState<IRecordState>(initTestState)
   const notification = useRecoilValue(notificationApi)
+  const footerRef = useRef<HTMLDivElement>(null)
   // const [editorConfig, setEditorConfig] = useState<IEditorConfig>({
   //   language: '',
   //   theme: 'vs-dark'
@@ -143,8 +146,14 @@ const Answer: React.FC<IProps> = (props) => {
     })
   }
 
+  const scrollToEnd = () => {
+    setTimeout(() => {
+      footerRef.current && footerRef.current.scrollIntoView({ behavior: 'smooth' })
+    }, 0)
+  }
+
   return (
-    <div className="p-8">
+    <div className={style.answer}>
       {/* description */}
       {problem && <ProblemDetail mode={'competition'} problem={problem} caseSamples={caseSamples}></ProblemDetail>}
 
@@ -205,7 +214,7 @@ const Answer: React.FC<IProps> = (props) => {
       <div className="pt-4">
         <CodeEditor
           value={code}
-          height={500}
+          height={isMobile ? 300 : 500}
           codeChange={(value: string) => {
             localStorage.setItem(`code-${problem_id}`, value)
             setcode(value)
@@ -214,7 +223,7 @@ const Answer: React.FC<IProps> = (props) => {
       </div>
       {/* </div> */}
       {/* footer */}
-      <div className="flex items-center py-1">
+      <div className="flex items-center py-1" onClick={scrollToEnd}>
         {/* <div className="flex-grow flex items-center">
           <Switch
             checked={switchChecked}
@@ -259,7 +268,10 @@ const Answer: React.FC<IProps> = (props) => {
                 key: 'result',
               },
             ]}
-            onClick={(e) => setconsoleMode(e.key)}
+            onClick={(e) => {
+              setconsoleMode(e.key)
+              scrollToEnd()
+            }}
           ></Menu>
           <div className="w-full">
             <div className="p-4">
@@ -287,6 +299,7 @@ const Answer: React.FC<IProps> = (props) => {
           </div>
         </div>
       )}
+      <div ref={footerRef}></div>
     </div>
   )
 }

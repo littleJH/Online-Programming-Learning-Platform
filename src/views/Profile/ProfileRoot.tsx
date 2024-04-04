@@ -19,7 +19,14 @@ const ProfileRoot: React.FC = () => {
   // }
 
   return (
-    <Card className={style.root}>
+    <Card
+      className={style.root}
+      styles={{
+        body: {
+          height: '100%',
+        },
+      }}
+    >
       <Outlet></Outlet>
     </Card>
   )

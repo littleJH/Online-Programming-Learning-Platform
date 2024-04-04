@@ -1,11 +1,18 @@
 import React, { useEffect, useState, useLayoutEffect, useMemo } from 'react'
-import { Layout, Button, Avatar, theme } from 'antd'
+import { Layout, Button, Avatar, theme, Divider } from 'antd'
 import { Outlet } from 'react-router-dom'
 import { iconBaseUrl } from '@/config/apiConfig'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { isDarkState, loginStatusState, pathNameState, sideBarTypeState, userInfoState } from '@/store/appStore'
+import {
+  isDarkState,
+  isMobileAtom,
+  loginStatusState,
+  pathNameState,
+  sideBarTypeState,
+  userInfoState,
+} from '@/store/appStore'
 import Sider from 'antd/es/layout/Sider'
-import SiderNav from '@/components/navbar/SiderNav'
+import SubNavbar from '@/components/Navbar/SubNavbar'
 import Navbar from '@/components/Navbar/Navbar'
 import { headerNavState } from '@/store/appStore'
 import utils from '@/tool/myUtils/utils'
@@ -17,11 +24,13 @@ import Rank from './Competition/CompetitionCommon/pages/CompetitionDetail/pages/
 import FileInfo from './File/component/FileInfo'
 import MobileFooterNavbar from '@/components/mobile/MobileFooterNavbar'
 import MobileHeaderNavbar from '@/components/mobile/MobileHeaderNavbar'
+import style from './style.module.scss'
 
-const isMobile = utils.getIsMobile()
+const fullPath = ['/creation/article', '/creation', '/file']
 
 const Root: React.FC = () => {
   const headerNav = useRecoilValue(headerNavState)
+  const isMobile = useRecoilValue(isMobileAtom)
   const { Header, Content, Footer } = Layout
   const { token } = theme.useToken()
   const [isDark, setIsDark] = useRecoilState(isDarkState)
@@ -58,13 +67,12 @@ const Root: React.FC = () => {
   }, [sideBarType])
 
   const showPaddingY = React.useMemo(
-    () => !['problemdetail', 'competitiondetail'].includes(utils.getPathArray(pathname)[0]) && !utils.getIsMobile(),
-    [pathname]
+    () => !['problemdetail', 'competitiondetail'].includes(utils.getPathArray(pathname)[0]) && !isMobile,
+    [pathname, isMobile]
   )
   const full = React.useMemo(() => {
-    const fullPath = ['/creation/article', '/file']
-    return fullPath.includes(pathname) || pathname.includes('problemdetail')
-  }, [pathname])
+    return fullPath.includes(pathname) || pathname.includes('problemdetail') || isMobile
+  }, [pathname, isMobile])
 
   const headerStyle: React.CSSProperties = {
     backgroundColor: `${isDark ? '#141414' : '#ffffff'}`,
@@ -84,11 +92,11 @@ const Root: React.FC = () => {
   }
 
   return (
-    <Layout className="w-full h-full">
-      {!isMobile && (
-        <Header className="sticky top-0 z-10 p-0 flex items-center" style={headerStyle}>
+    <Layout className={style.layout}>
+      {/* {!isMobile && ( */}
+      <Header className={style.header} style={headerStyle}>
+        <div className={style.pc}>
           <Navbar headerNav={headerNav}></Navbar>
-
           <Button type="text" className="flex items-center h-12 p-2" onClick={() => setIsDark((value) => !value)}>
             <MySvgIcon
               href={`#icon-${isDark ? 'light' : 'dark'}`}
@@ -109,63 +117,74 @@ const Root: React.FC = () => {
               {!loginStatus && <Button type="link">登录</Button>}
             </div>
           </Button>
-        </Header>
-      )}
-      {isMobile && <MobileHeaderNavbar></MobileHeaderNavbar>}
+        </div>
+        <div className={style.mobile}>
+          <MobileHeaderNavbar></MobileHeaderNavbar>
+        </div>
+      </Header>
+      {/* )} */}
+      {/* {isMobile && <MobileHeaderNavbar></MobileHeaderNavbar>} */}
       <Content
-        className="w-full h-full"
+        className={style.content}
         style={{
           backgroundColor: token.colorBgBlur,
         }}
       >
         <Layout className="h-full" hasSider>
           {!['login', 'problemdetail'].includes(headerNav) && (
-            <Sider style={siderStyle} collapsible trigger={null} width={sidebarWidth}>
-              {sideBarType === 'nav' && <SiderNav header={headerNav} mode="inline"></SiderNav>}
+            <Sider className={style.sider} style={siderStyle} collapsible trigger={null} width={sidebarWidth}>
+              {sideBarType === 'nav' && <SubNavbar header={headerNav} mode="inline"></SubNavbar>}
               {sideBarType === 'directory' && <Directory></Directory>}
               {sideBarType === 'competitionRank' && <Rank mode="sider"></Rank>}
             </Sider>
           )}
           <Content
             id="content"
+            className={style.subContent}
             style={{
               padding: `${showPaddingY ? '1rem 0' : '0'}`,
-              position: 'relative',
-              overflowY: 'auto',
-              scrollBehavior: 'smooth',
-              height: '100%',
             }}
           >
-            <div className="h-full" style={{ width: full ? '100%' : 'min-content', margin: 'auto' }}>
+            <div className={style.outletCtn} style={{ width: full ? '100%' : 'min-content' }}>
+              {!isMobile && !['creation'].includes(headerNav) && (
+                <>
+                  <SubNavbar header={headerNav} mode={'horizontal'}></SubNavbar>
+                  <Divider
+                    style={{
+                      margin: '1rem 0',
+                    }}
+                  ></Divider>
+                </>
+              )}
               <Outlet></Outlet>
             </div>
           </Content>
         </Layout>
       </Content>
 
-      <Footer style={footerStyle}>
-        {!isMobile && (
-          <>
-            {/* left */}
-            <div
-              className="w-1/2"
-              style={{
-                display: 'inline-block',
-                minHeight: '2rem',
-              }}
-            ></div>
-            {/* right */}
-            <div
-              className="w-1/2 flex items-center"
-              style={{
-                display: 'inline-block',
-              }}
-            >
-              {footerRight}
-            </div>
-          </>
-        )}
-        {isMobile && <MobileFooterNavbar></MobileFooterNavbar>}
+      <Footer className={style.footer} style={footerStyle}>
+        <div className={style.pc}>
+          {/* left */}
+          <div
+            className="w-1/2"
+            style={{
+              display: 'inline-block',
+              minHeight: '2rem',
+            }}
+          ></div>
+          {/* right */}
+          <div
+            className="w-1/2 flex items-center"
+            style={{
+              display: 'inline-block',
+            }}
+          >
+            {footerRight}
+          </div>
+        </div>
+        <div className={style.mobile}>
+          <MobileFooterNavbar></MobileFooterNavbar>
+        </div>
       </Footer>
     </Layout>
   )

@@ -1,5 +1,5 @@
-import { ITopic } from '@/type'
-import React from 'react'
+import { IProblem, ITopic } from '@/type'
+import React, { useEffect, useState } from 'react'
 import { Descriptions, Button, Popconfirm, Space, Avatar, Collapse } from 'antd'
 import PaginationList from '../List/PaginationList'
 import ProblemTable from '../Problem/table/ProblemTable'
@@ -7,6 +7,10 @@ import { NavLink } from 'react-router-dom'
 import ReadOnly from '../editor/Readonly'
 import { iconBaseUrl } from '@/config/apiConfig'
 import MyCollapse from '../Collapse/MyCollapse'
+import { getTopicProblemsApi } from '@/api/topic'
+import { showProblemApi } from '@/api/problem'
+import style from './style.module.scss'
+import Loading from '../Loading/Loading'
 
 interface IProps {
   topic: ITopic
@@ -19,6 +23,38 @@ interface IProps {
 
 const TopicCollapse: React.FC<IProps> = (props) => {
   const { topic, index, total, onDelete, onDetail, onUpdate } = props
+  const [problemList, setProblemList] = useState<IProblem[]>([])
+  const [fetchDone, setFetchDone] = useState(false)
+  const [pageProps, setPageProps] = useState({
+    pageSize: 20,
+    pageNum: 1,
+    total: 0,
+  })
+
+  const fetchProblems = async (id: string) => {
+    try {
+      const problems = (await getTopicProblemsApi(id)).data.data.problemLists
+      if (problems && problems.length === 0) {
+        setFetchDone(true)
+      } else {
+        const list = []
+        for (let problem of problems) {
+          list.push({ ...problem, ...(await showProblemApi(problem.problem_id)).data.data.problem })
+        }
+        setProblemList(list.map((item, index) => ({ ...item, key: `${topic.id}-${item.id}-${index}` })))
+      }
+    } catch {}
+  }
+
+  const handleChange = (topic: ITopic | null) => {
+    if (!topic || problemList.length > 0) return
+    fetchProblems(topic.id)
+  }
+
+  const onPageChange = (pageNum: number, pageSize: number) => {
+    setPageProps({ ...pageProps, pageNum, pageSize })
+  }
+
   const renderActions = () => {
     const actions: React.ReactNode[] = []
     onDetail &&
@@ -35,7 +71,14 @@ const TopicCollapse: React.FC<IProps> = (props) => {
       )
     onDelete &&
       actions.push(
-        <Popconfirm title="确定删除该文章？" okText="确认" cancelText="取消" onConfirm={() => onDelete(topic, index)}>
+        <Popconfirm
+          title="确定删除？"
+          okText="确认"
+          cancelText="取消"
+          onConfirm={(e) => {
+            onDelete(topic, index)
+          }}
+        >
           <Button style={{ padding: '0' }} type="link" danger>
             删除
           </Button>
@@ -47,14 +90,14 @@ const TopicCollapse: React.FC<IProps> = (props) => {
   return (
     <div>
       <MyCollapse
-        onChange={() => {}}
+        onChange={(e) => handleChange(e?.length ? topic : null)}
         items={[
           {
             key: topic.id,
             label: topic.title,
-            extra: <Space>{renderActions().map((item) => item)}</Space>,
+            extra: <Space onClick={(e) => e.stopPropagation()}>{renderActions().map((item) => item)}</Space>,
             children: (
-              <>
+              <div>
                 <Descriptions size="small" layout="vertical">
                   <Descriptions.Item label={'创建者'}>
                     <Space>
@@ -72,7 +115,20 @@ const TopicCollapse: React.FC<IProps> = (props) => {
                     </Descriptions.Item>
                   )}
                 </Descriptions>
-              </>
+                <div className={style.problemTable}>
+                  <ProblemTable
+                    mode="default"
+                    problemList={problemList}
+                    pageNum={pageProps.pageNum}
+                    pageSize={pageProps.pageSize}
+                    total={pageProps.total}
+                    fetchDone={fetchDone}
+                    setFetchDone={setFetchDone}
+                    onLineClick={() => {}}
+                    onPageChange={onPageChange}
+                  ></ProblemTable>
+                </div>
+              </div>
             ),
           },
         ]}

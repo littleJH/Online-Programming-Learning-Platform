@@ -12,7 +12,8 @@ import { MenuOutlined, MinusCircleOutlined, RedoOutlined } from '@ant-design/ico
 import { IPrblemTableDataType } from '@/type'
 import { createTopicApi } from '@/api/topic'
 import ReadOnly from '@/components/editor/Readonly'
-import { useNavigate } from 'react-router-dom'
+import style from '../style.module.scss'
+import myHooks from '@/tool/myHooks/myHooks'
 
 interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   'data-row-key': string
@@ -50,7 +51,7 @@ const Row = ({ children, ...props }: RowProps) => {
 }
 
 const CreateTopic: React.FC = () => {
-  const nav = useNavigate()
+  const nav = myHooks.useNavTo()
   const [title, settitle] = useState(creation_topic_title ? creation_topic_title : '')
   const [content, setcontent] = useState(creation_topic_content ? creation_topic_content : '')
   const [selectedProblems, setSelectedProblems] = useState<IPrblemTableDataType[]>(
@@ -140,19 +141,18 @@ const CreateTopic: React.FC = () => {
   }
 
   return (
-    <>
-      <div className="h-full flex p-4">
-        <div className="h-full">
+    <div className={style.topicCreation}>
+      <div className={style.body}>
+        <div className={style.problemList}>
           <ProblemList
             mode="select"
-            width={768}
             selectedProblems={selectedProblems}
             setSelectedProblems={setSelectedProblems}
             selectedRowKeys={selectedRowKeys}
           ></ProblemList>
         </div>
         <div className="w-16"></div>
-        <Space className="w-96 px-4 h-full" direction="vertical" size={'large'}>
+        <Space className={style.form} direction="vertical" size={'large'}>
           <Input
             ref={inputRef}
             autoFocus
@@ -162,15 +162,7 @@ const CreateTopic: React.FC = () => {
             value={title}
             onChange={handleInputChange}
           ></Input>
-          <TextEditor
-            mode="markdown"
-            value={content}
-            htmlChange={handleHtmlChange}
-            placeholder="内容..."
-            style={{
-              height: '128px',
-            }}
-          ></TextEditor>
+          <TextEditor mode="markdown" value={content} htmlChange={handleHtmlChange} placeholder="内容..."></TextEditor>
           <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={handleDragEnd}>
             <SortableContext items={selectedProblems.map((i) => i.key)} strategy={verticalListSortingStrategy}>
               <Table
@@ -259,7 +251,7 @@ const CreateTopic: React.FC = () => {
       >
         <Result {...result}></Result>
       </Modal>
-    </>
+    </div>
   )
 }
 

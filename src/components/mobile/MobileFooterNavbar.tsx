@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import {
   CodeOutlined,
   GlobalOutlined,
@@ -11,38 +11,16 @@ import myHooks from '@/tool/myHooks/myHooks'
 import { Menu } from 'antd'
 import { headerNavState } from '@/store/appStore'
 import { useRecoilValue } from 'recoil'
-
-const menuItems = [
-  {
-    label: '首页',
-    key: 'home',
-    icon: <HomeOutlined />,
-  },
-  {
-    label: '题库',
-    key: 'problemset',
-    icon: <CodeOutlined />,
-  },
-  {
-    label: '比赛',
-    key: 'competition/common/set',
-    icon: <TrophyOutlined />,
-  },
-  {
-    label: '社区',
-    key: 'community',
-    icon: <GlobalOutlined />,
-  },
-  {
-    label: '我的',
-    key: 'profile',
-    icon: <UserOutlined />,
-  },
-]
+import { footerMenuItems } from '@/router/router'
 
 const MobileFooterNavbar: React.FC = () => {
   const headerNav = useRecoilValue(headerNavState)
   const navTo = myHooks.useNavTo()
+
+  const selectedKey = useMemo(
+    () => footerMenuItems.find((item) => item.key.includes(headerNav))?.key || '',
+    [headerNav]
+  )
 
   const handleMenuClick = (e: any) => {
     navTo(`/${e.key}`)
@@ -60,9 +38,9 @@ const MobileFooterNavbar: React.FC = () => {
         justifyContent: 'center',
         alignItems: 'center',
       }}
-      selectedKeys={[headerNav]}
+      selectedKeys={[selectedKey]}
       mode="horizontal"
-      items={menuItems}
+      items={footerMenuItems}
     ></Menu>
   )
 }

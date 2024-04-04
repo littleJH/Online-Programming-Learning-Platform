@@ -1,0 +1,67 @@
+.layout {
+  width: 100%;
+  height: 100%;
+  @media screen and (max-width: 768px) {
+    width: 100vw;
+  }
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    padding: 0;
+    height: max-content;
+    @media screen and (max-width: 768px) {
+      // height: 4rem;
+    }
+    .pc {
+      display: flex;
+      align-items: center;
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
+    }
+    .mobile {
+      display: none;
+      @media screen and (max-width: 768px) {
+        display: block;
+      }
+    }
+  }
+
+  .content {
+    width: 100%;
+    height: 100%;
+    .sider {
+      display: block;
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
+    }
+
+    .subContent {
+      position: relative;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      height: 100%;
+      .outletCtn {
+        height: 100%;
+        margin: auto;
+      }
+    }
+  }
+  .footer {
+    .pc {
+      display: block;
+      width: 100%;
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
+    }
+    .mobile {
+      display: none;
+      @media screen and (max-width: 768px) {
+        display: block;
+      }
+    }
+  }
+}

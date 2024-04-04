@@ -191,6 +191,14 @@ export const isDarkState = atom<boolean>({
   ],
 })
 
+// 是否为移动端
+export const isMobileAtom = atom<boolean>({
+  key: 'isMobileAtom',
+  default: (async () => {
+    return utils.getIsMobile()
+  })(),
+})
+
 // 是否开启监听content滚动，加载更多
 // export const openLoadmoreState = atom<boolean>({
 //   key: 'openLoadmoreState',

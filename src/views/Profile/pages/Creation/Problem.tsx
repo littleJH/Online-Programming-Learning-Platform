@@ -1,4 +1,4 @@
-import { userInfoState } from '@/store/appStore'
+import { notificationApi, userInfoState } from '@/store/appStore'
 import { deleteProblemApi, getProblemListApi, getUserProblemListApi } from '@/api/problem'
 import ProblemTable from '@/components/Problem/table/ProblemTable'
 import { IProblem } from '@/type'
@@ -9,11 +9,12 @@ import myHooks from '@/tool/myHooks/myHooks'
 
 const ProfileCretion: React.FC = () => {
   const nav = myHooks.useNavTo()
+  const notification = useRecoilValue(notificationApi)
   const info = useRecoilValue(userInfoState)
   const [problemList, setProblemList] = useState<IProblem[]>([])
   const [total, setTotal] = useState(0)
   const [fetchDone, setFetchDone] = useState(false)
-  const [first, setFirst] = useState(true)
+  // const [first, setFirst] = useState(true)
   const [pageNum, setPageNum] = useState(1)
   const [pageSize, setPageSize] = useState(20)
 
@@ -40,8 +41,13 @@ const ProfileCretion: React.FC = () => {
     nav(`/problemdetail/${id}/description`)
   }
   const handleDelete = (index: number) => {
-    deleteProblemApi(problemList[index].id).then((res) => {
+    const problem = problemList[index]
+    deleteProblemApi(problem.id).then((res) => {
       if (res.data.code === 200) {
+        notification &&
+          notification.success({
+            message: `题目“${problem.title}”已删除`,
+          })
         setTotal((value) => value - 1)
         setProblemList((value) => [...value.slice(0, index), ...value.slice(index + 1)])
       }
@@ -59,12 +65,12 @@ const ProfileCretion: React.FC = () => {
         problemList={problemList}
         pageNum={pageNum}
         pageSize={pageSize}
-        setPageNum={setPageNum}
-        setPageSize={setPageSize}
+        // setPageNum={setPageNum}
+        // setPageSize={setPageSize}
         total={total}
         fetchDone={fetchDone}
         setFetchDone={setFetchDone}
-        setFirst={setFirst}
+        // setFirst={setFirst}
         onPageChange={handlePageChange}
         onLineClick={handleColumnClick}
         onDelete={handleDelete}

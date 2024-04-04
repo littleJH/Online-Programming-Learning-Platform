@@ -7,14 +7,15 @@ const MyCollapse: React.FC<{
   items: any[]
   activeKey?: string[]
   style?: React.CSSProperties
+  borderd?: boolean
 }> = (props) => {
-  const { onChange: handleCollapseChange, items, activeKey, style = {} } = props
+  const { onChange: handleCollapseChange, items, activeKey, style = {}, borderd = true } = props
   const { token } = theme.useToken()
 
   return (
     <Collapse
       activeKey={activeKey || undefined}
-      bordered={false}
+      bordered={borderd}
       expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
       style={{ background: token.colorBgContainer, ...style }}
       items={items}

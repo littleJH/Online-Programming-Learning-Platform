@@ -3,23 +3,27 @@ import { IChat, IGroup, User } from '@/type'
 import { Avatar, Button, Divider, Drawer, Input, List, Card, Popover, theme } from 'antd'
 import { TextAreaRef } from 'antd/es/input/TextArea'
 import React, { KeyboardEventHandler, useEffect, useMemo, useRef, useState } from 'react'
-import { EllipsisOutlined } from '@ant-design/icons'
+import { EllipsisOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import { craeteChatApi, enterGroupPublishChatWS, enterPublishChatWs, getGroupChatsApi } from '@/api/chat'
 import { getUserInfoApi } from '@/api/user'
 import { iconBaseUrl } from '@/config/apiConfig'
 import { useRecoilValue } from 'recoil'
-import { userInfoState } from '@/store/appStore'
+import { isMobileAtom, userInfoState } from '@/store/appStore'
 import GroupInfo from '@/components/Group/GroupInfo'
 import UserInfo from '@/components/User/UserInfo'
 import myHooks from '@/tool/myHooks/myHooks'
+import utils from '@/tool/myUtils/utils'
+import style from './style.module.scss'
 
 interface IProps {
   group?: IGroup
   friend?: User
+  setOpenGroupDrawer?: (open: boolean) => void
 }
 
 const Chat: React.FC<IProps> = (props) => {
-  const { group, friend } = props
+  const { group, friend, setOpenGroupDrawer } = props
+  const isMobile = useRecoilValue(isMobileAtom)
   const info = useRecoilValue(userInfoState)
   const inputTextarea = useRef<TextAreaRef>(null)
   const [openModal, setOpenModal] = useState(false)
@@ -128,8 +132,8 @@ const Chat: React.FC<IProps> = (props) => {
   }
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="h-3/4 flex flex-col">
+    <div className={style.IMCard}>
+      <div className={style.header}>
         <div
           className="sticky top-0 z-10 flex justify-between items-center"
           style={{
@@ -137,6 +141,14 @@ const Chat: React.FC<IProps> = (props) => {
           }}
         >
           <span className="mx-4 my-2 text-lg">
+            {isMobile && (
+              <MenuUnfoldOutlined
+                onClick={() => setOpenGroupDrawer && setOpenGroupDrawer(true)}
+                style={{
+                  marginRight: '1rem',
+                }}
+              />
+            )}
             {group && group.title}
             {friend && friend.name}
           </span>
@@ -202,22 +214,21 @@ const Chat: React.FC<IProps> = (props) => {
         </div>
       </div>
       <div
-        className="h-1/4 relative"
+        className={style.footer}
         style={{
-          borderTopWidth: '1px',
-          borderTopStyle: 'solid',
           borderColor: token.colorBorder,
         }}
         onClick={() => inputTextarea.current?.focus()}
       >
-        <div className="overflow-auto h-full py-4">
+        <div className={style.inputBox}>
           <Input.TextArea
             ref={inputTextarea}
             value={text}
             onChange={(e) => setText(e.target.value)}
-            bordered={false}
+            variant="borderless"
             autoSize={{
-              minRows: 6,
+              minRows: 1,
+              maxRows: 3,
             }}
             onKeyDown={(e) => {
               if (e.key === 'Enter')
@@ -229,11 +240,16 @@ const Chat: React.FC<IProps> = (props) => {
             }}
           ></Input.TextArea>
         </div>
-        <Button className="absolute bottom-4 right-4" type="primary" onClick={sendChat}>
+        <Button size="small" className="mr-4" type="primary" onClick={sendChat}>
           发送
         </Button>
       </div>
-      <Drawer closeIcon={null} open={openModal} onClose={() => setOpenModal(false)}>
+      <Drawer
+        placement={isMobile ? 'bottom' : 'right'}
+        closeIcon={null}
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+      >
         {group && <GroupInfo group={group}></GroupInfo>}
         {friend && <UserInfo user={friend}></UserInfo>}
       </Drawer>

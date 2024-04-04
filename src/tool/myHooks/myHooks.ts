@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { directorySelectKeysState } from '@/components/directory/store'
 import { useNavigate } from 'react-router-dom'
-import { headerNavState, loginStatusState, pathNameState, sideBarTypeState } from '@/store/appStore'
+import { headerNavState, isMobileAtom, loginStatusState, pathNameState, sideBarTypeState } from '@/store/appStore'
 import { useSetRecoilState, useRecoilValue } from 'recoil'
 import utils from '../myUtils/utils'
 import { RecoilState, useRecoilState } from 'recoil'
@@ -112,6 +112,7 @@ const useListenContentScroll = (options: { followScroll?: boolean; loadMoreFn?: 
 
 const useNavTo = (options?: { back: number }) => {
   const nav = useNavigate()
+  const isMobile = useRecoilValue(isMobileAtom)
   const setPathNameState = useSetRecoilState(pathNameState)
   const loginStatus = useRecoilValue(loginStatusState)
   const setSideBarType = useSetRecoilState(sideBarTypeState)
@@ -126,7 +127,7 @@ const useNavTo = (options?: { back: number }) => {
       if (shouldAuth && !loginStatus) {
         nav('/login')
       } else {
-        setSideBarType(utils.getIsMobile() ? 'none' : utils.getSideBarType(path))
+        setSideBarType(isMobile ? 'none' : utils.getSideBarType(path))
         nav(path)
       }
       setPathNameState(location.pathname)

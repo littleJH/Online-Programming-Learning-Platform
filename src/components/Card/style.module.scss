@@ -49,6 +49,14 @@
 
 .articleCard {
   display: flex;
+  .tags {
+    display: flex;
+    margin: 0 2rem;
+    @media screen and (max-width: 768px) {
+      display: none;
+    }
+  }
+
   .footer {
     user-select: none;
     div {
@@ -70,6 +78,41 @@
         height: 6rem;
         margin-left: 0.5rem;
       }
+    }
+  }
+}
+
+.IMCard {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  @media screen and (max-width: 768px) {
+  }
+
+  .header {
+    height: 75%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .footer {
+    height: 25%;
+    position: relative;
+    border-top: 1px solid;
+    display: flex;
+    align-items: center;
+
+    @media screen and (max-width: 768px) {
+      height: fit-content;
+    }
+
+    .inputBox {
+      overflow: auto;
+      height: fit-content;
+      padding: 1rem 0;
+      width: 1px;
+      flex-grow: 1;
     }
   }
 }

@@ -42,10 +42,7 @@ const CommunityRoot: React.FC = () => {
   }, [])
 
   const showHeaderSider = useMemo(
-    () =>
-      utils.getPathArray(pathname).length > 1 &&
-      utils.getPathArray(pathname)[1].includes('set') &&
-      !utils.getIsMobile(),
+    () => utils.getPathArray(pathname).length > 1 && utils.getPathArray(pathname)[1].includes('set'),
     [pathname]
   )
 
@@ -55,7 +52,7 @@ const CommunityRoot: React.FC = () => {
       <div className={style.left}>
         {/* 公告 */}
         {showHeaderSider && (
-          <div className="w-full my-4">
+          <div className={style.gonggao}>
             <Row gutter={16}>
               <Col span={8}>
                 <Card title="公告1" size="small" hoverable>
@@ -104,12 +101,7 @@ const CommunityRoot: React.FC = () => {
       </div>
       {/* right */}
       {showHeaderSider && (
-        <div
-          className="mx-8"
-          style={{
-            width: '16rem',
-          }}
-        >
+        <div className={style.right}>
           <Card hoverable className="my-4 flex flex-col justify-center text-xs">
             <div className="font-medium text-base mb-2">全站统计</div>
             <Statistic></Statistic>

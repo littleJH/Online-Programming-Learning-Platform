@@ -74,7 +74,7 @@ const CountDown: React.FC<IProps> = (props) => {
   }
 
   return (
-    <div className="flex justify-center h-12">
+    <div className="flex justify-center">
       {countDown?.day !== '00' && (
         <div className="countdown-section">
           <span className="countdown-amount">{countDown?.day}</span>

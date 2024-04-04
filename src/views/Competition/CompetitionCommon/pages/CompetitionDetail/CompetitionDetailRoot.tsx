@@ -20,8 +20,9 @@ import { competitionStateAtom, currentCompetitionAtom, isEnterState } from '../.
 import CountDown from '@/components/countDown/CountDown'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
 import Loading from '@/components/Loading/Loading'
-import { notificationApi, pathNameState } from '@/store/appStore'
+import { isMobileAtom, notificationApi, pathNameState } from '@/store/appStore'
 import myHooks from '@/tool/myHooks/myHooks'
+import style from '../../../style.module.scss'
 
 type State = 'notStart' | 'underway' | 'finished'
 const getState = (start: string, end: string): State => {
@@ -33,6 +34,7 @@ const getState = (start: string, end: string): State => {
 }
 
 const Detail: React.FC = () => {
+  const isMobile = useRecoilValue(isMobileAtom)
   const { token } = theme.useToken()
   const nav = myHooks.useNavTo()
   const pathname = useRecoilValue(pathNameState)
@@ -239,13 +241,13 @@ const Detail: React.FC = () => {
   }
 
   return (
-    <div className="max-w-screen-xl">
+    <div className={style.commondetail}>
       {/* header */}
       <Card>
         {competition && (
-          <div className="flex">
-            <div className="flex flex-col items-center justify-center">
-              <span
+          <div className={style.header}>
+            <div className={style.info}>
+              <div
                 className="cursor-pointer"
                 onClick={() => competitionState === 'notStart' && setopenEnterModal(true)}
               >
@@ -261,31 +263,55 @@ const Detail: React.FC = () => {
                 {competitionState === 'finished' && (
                   <MySvgIcon href="#icon-yijieshu" color={token.colorError} size={4}></MySvgIcon>
                 )}
-              </span>
-            </div>
-            <div className="flex-grow">
-              <div className=" flex justify-center items-center font-bold ">
-                {/* <CompetitionTypeLabel
+              </div>
+              <div className="flex-grow">
+                <div className=" flex justify-center items-center font-bold ">
+                  {/* <CompetitionTypeLabel
                   size={2}
                   showLabel={false}
                   type={competition?.type as CompetitionType}
                 ></CompetitionTypeLabel> */}
-                <div style={{ fontSize: '2rem' }}>{competition?.title}</div>
+                  <div style={{ fontSize: '2rem' }}>{competition?.title}</div>
+                </div>
               </div>
-              {competitionState !== 'finished' && endTime && (
-                <div>
-                  <div className="flex justify-center items-center my-4">
-                    {competitionState === 'notStart' && (
-                      <span>
-                        距离比赛<span style={{ color: token.colorError }}>开始</span>还剩
-                      </span>
-                    )}
-                    {competitionState === 'underway' && (
-                      <span>
-                        距离比赛<span style={{ color: token.colorError }}>结束</span>还剩
-                      </span>
-                    )}
+              {typeof enterNum === 'number' && (
+                <div className="flex flex-col items-center justify-center">
+                  <div className="flex justify-center ">
+                    <div>已参赛：</div>
+                    <Tooltip title="查看报名列表">
+                      <div
+                        onClick={() => getEnterList()}
+                        className="hover:cursor-pointer"
+                        style={{
+                          color: token.colorLink,
+                        }}
+                      >
+                        {enterNum}
+                      </div>
+                    </Tooltip>
                   </div>
+                </div>
+              )}
+            </div>
+            <div className={style.countdown}>
+              {endTime && (
+                <>
+                  {competitionState !== 'finished' && (
+                    <div>
+                      <div className="flex justify-center items-center mb-4">
+                        {competitionState === 'notStart' && (
+                          <span>
+                            距离比赛<span style={{ color: token.colorError }}>开始</span>还剩
+                          </span>
+                        )}
+                        {competitionState === 'underway' && (
+                          <span>
+                            距离比赛<span style={{ color: token.colorError }}>结束</span>还剩
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
                   <CountDown
                     endTime={endTime}
                     onCountZero={() => {
@@ -293,39 +319,16 @@ const Detail: React.FC = () => {
                       setcompetitionState(competitionState === 'notStart' ? 'underway' : 'finished')
                     }}
                   ></CountDown>
-                </div>
+                </>
               )}
             </div>
-            {typeof enterNum === 'number' && (
-              <div className="flex flex-col items-center justify-center">
-                <div className="flex justify-center ">
-                  <div>已参赛：</div>
-                  <Tooltip title="查看报名列表">
-                    <div
-                      onClick={() => getEnterList()}
-                      className="hover:cursor-pointer"
-                      style={{
-                        color: token.colorLink,
-                      }}
-                    >
-                      {enterNum}
-                    </div>
-                  </Tooltip>
-                </div>
-              </div>
-            )}
           </div>
         )}
         {!competition && <Loading></Loading>}
       </Card>
 
-      <div className="w-full mt-4">
-        <Card
-          className="flex-grow"
-          style={{
-            minWidth: '1000px',
-          }}
-        >
+      <div className={style.content}>
+        <Card size={isMobile ? 'small' : 'default'} className={style.contentCard}>
           <Menu
             className="mb-8"
             selectedKeys={[selectedKey]}

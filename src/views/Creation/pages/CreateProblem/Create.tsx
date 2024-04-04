@@ -14,17 +14,19 @@ import {
 } from '@/api/problem'
 import { IProblem, ProgramMode } from '@/type'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { currentProblemState, notificationApi } from '@/store/appStore'
+import { currentProblemState, isMobileAtom, notificationApi } from '@/store/appStore'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import Dragger from 'antd/es/upload/Dragger'
 import { createTagApi, createTagAutoApi } from '@/api/tag'
 import { RcFile, UploadChangeParam } from 'antd/es/upload'
 import { UploadProblemModal } from '@/components/upload/uploadProblem/UploadProblemModal'
 import { CloudUploadOutlined } from '@ant-design/icons'
+import style from './style.module.scss'
 
 const stringArrItem = ['test_input', 'test_output', 'sample_input', 'sample_output']
 
 const Create: React.FC = () => {
+  const isMobile = useRecoilValue(isMobileAtom)
   const [querys, setQuerys] = useSearchParams()
   const id = useRef(querys.get('id'))
   const [problem, setProblem] = useState<IProblem>()
@@ -214,9 +216,46 @@ const Create: React.FC = () => {
       .catch((err) => console.log(err))
   }, [])
 
+  const renderSteps = () => {
+    return (
+      <div className={style.stepsBox}>
+        <Steps
+          className={style.steps}
+          direction={isMobile ? 'horizontal' : 'vertical'}
+          progressDot
+          status={stepStatus}
+          current={currentStep}
+          items={[
+            { title: '题目', description: '' },
+            { title: '程序', description: '' },
+            { title: '结果', description: '' },
+          ]}
+        ></Steps>
+        {/* <Button type="dashed" onClick={() => setOpenUploadModal(true)}>
+      上传题目
+    </Button> */}
+        <div className={style.uploadBtnPar}>
+          <div className={style.uploadbtnBox}>
+            <Button
+              type="dashed"
+              style={{
+                height: '4rem',
+                width: '4rem',
+              }}
+              onClick={() => setOpenUploadModal(true)}
+            >
+              <CloudUploadOutlined style={{ fontSize: '1.5rem' }} />
+            </Button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="flex">
-      <div className="px-8 my-4" style={{ width: '768px' }}>
+    <div className={style.craeteProblem}>
+      {isMobile && renderSteps()}
+      <div className={style.main}>
         {currentStep === 0 && <Problem form={form}></Problem>}
         {currentStep === 1 && (
           <Program
@@ -307,35 +346,7 @@ const Create: React.FC = () => {
         )}
       </div>
       <div className="w-16"></div>
-      <div>
-        <Steps
-          className="w-24 h-48 mt-8 sticky top-8"
-          direction="vertical"
-          progressDot
-          status={stepStatus}
-          current={currentStep}
-          items={[
-            { title: '题目', description: '' },
-            { title: '程序', description: '' },
-            { title: '结果', description: '' },
-          ]}
-        ></Steps>
-        {/* <Button type="dashed" onClick={() => setOpenUploadModal(true)}>
-          上传题目
-        </Button> */}
-        <div className="fixed bottom-16 right-4">
-          <Button
-            type="dashed"
-            style={{
-              height: '4rem',
-              width: '4rem',
-            }}
-            onClick={() => setOpenUploadModal(true)}
-          >
-            <CloudUploadOutlined style={{ fontSize: '2rem' }} />
-          </Button>
-        </div>
-      </div>
+      {!isMobile && renderSteps()}
 
       <UploadProblemModal
         openUploadModal={openUploadModal}

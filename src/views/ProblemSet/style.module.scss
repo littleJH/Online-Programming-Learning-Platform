@@ -1,0 +1,24 @@
+.root {
+  width: 100%;
+  height: max-content;
+  position: relative;
+  @media screen and (max-width: 768px) {
+  }
+
+  .header {
+    position: sticky;
+    top: 0;
+  }
+
+  .body {
+    width: 100%;
+    height: max-content;
+  }
+
+  .listCtn {
+    width: 800px;
+    @media screen and (max-width: 768px) {
+      width: 100%;
+    }
+  }
+}

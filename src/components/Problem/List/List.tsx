@@ -43,6 +43,7 @@ import utils from '@/tool/myUtils/utils'
 import MyTag from '@/components/Label/MyTag'
 import MyCollapse from '@/components/Collapse/MyCollapse'
 import myHooks from '@/tool/myHooks/myHooks'
+import style from '../style.module.scss'
 
 interface ITag {
   label: string
@@ -50,7 +51,7 @@ interface ITag {
 }
 interface IProps {
   mode: 'select' | 'default'
-  width: number
+  // width?: number
   selectedProblems?: {
     key: string
     title: string
@@ -69,7 +70,7 @@ const setFirst = (bool: boolean) => {
 }
 
 const ProblemList: React.FC<IProps> = (props) => {
-  const { mode, width, setSelectedProblems, selectedRowKeys } = props
+  const { mode, setSelectedProblems, selectedRowKeys } = props
   const nav = myHooks.useNavTo()
   const { Search } = Input
   const [querys, setQuerys] = useSearchParams()
@@ -86,6 +87,8 @@ const ProblemList: React.FC<IProps> = (props) => {
   const [fetchDone, setFetchDone] = useState(false)
   const [tableScrollHeight, setTableScrollHeight] = useState(0)
   const [collapseActiveKey, setCollapseActiveKey] = useState([topic_id])
+
+  useEffect(() => console.log('problem list ==> ', problemList), [problemList])
 
   useEffect(() => {
     if (!topic_id && !searchText.length && !labelGroup.length) {
@@ -347,124 +350,115 @@ const ProblemList: React.FC<IProps> = (props) => {
   }
 
   return (
-    <>
-      <div
-        className="flex h-full"
-        style={{
-          width: `${width}px`,
-        }}
-      >
-        <div className="grow w-full" style={{ width: '1px' }}>
-          <div className="py-4 w-full flex">
-            <div style={{ flexGrow: '1', width: '1/3' }}>
-              <Select
-                style={{
-                  width: '100%',
-                }}
-                allowClear
-                placeholder="选择题单"
-                value={selectedTopic?.id}
-                onChange={handleTopicChange}
-                options={topicOptions}
-              ></Select>
-            </div>
-            <div className="w-4"></div>
-            <div style={{ flexGrow: '1', width: '1/3' }}>
-              <Popover
-                overlayStyle={{
-                  maxWidth: '800px',
-                }}
-                trigger={'click'}
-                content={
-                  <div>
-                    {tagList.map((item: ITag, index) => (
-                      <span
-                        key={index}
-                        onClick={() => handleTagClick(index)}
-                        style={{
-                          margin: '0.25rem 0',
-                          display: 'inline-block',
-                        }}
-                      >
-                        <MyTag checkable checked={tagList[index].checked}>
-                          {item.label}
-                        </MyTag>
-                      </span>
-                    ))}
-                  </div>
-                }
-              >
-                <Select
-                  mode="multiple"
-                  showSearch={false}
-                  style={{ width: '100%' }}
-                  allowClear
-                  maxTagCount={3}
-                  placeholder="标签筛选"
-                  open={false}
-                  value={labelGroup}
-                  onDeselect={handleDeselect}
-                  onClear={handleClear}
-                ></Select>
-              </Popover>
-            </div>
-            <div className="w-4"></div>
-            <div style={{ flexGrow: '1', width: '1/3' }}>
-              <Search
-                style={{
-                  width: '100%',
-                }}
-                defaultValue={searchText}
-                placeholder="文本搜索"
-                enterButton
-                onSearch={handleSearch}
-                onChange={handleTextChange}
-              ></Search>
-            </div>
-          </div>
-          {selectedTopic && (
-            <MyCollapse
-              activeKey={collapseActiveKey}
-              onChange={handleCollapseChange}
+    <div className={style.problemList}>
+      <div className="w-full">
+        <div className={style.header}>
+          <div className={style.headerItem}>
+            <Select
               style={{
-                margin: '0 0 1rem 0',
+                width: '100%',
               }}
-              items={[
-                {
-                  key: selectedTopic.id,
-                  label: selectedTopic.title,
-                  children: (
-                    <>
-                      <Descriptions size="small" layout="vertical">
-                        <Descriptions.Item label={'创建者'}>
-                          <Space>
-                            <Avatar src={`${iconBaseUrl}/${selectedTopic.user?.icon}`}></Avatar>
-                            <NavLink to={''} className={'text-indigo-500 hover:text-indigo-500'}>
-                              {selectedTopic.user?.name}
-                            </NavLink>
-                          </Space>
+              allowClear
+              placeholder="选择题单"
+              value={selectedTopic?.id}
+              onChange={handleTopicChange}
+              options={topicOptions}
+            ></Select>
+          </div>
+          <div className="w-4"></div>
+          <div className={style.headerItem}>
+            <Popover
+              overlayClassName={style.labelPopover}
+              trigger={'click'}
+              content={
+                <div>
+                  {tagList.map((item: ITag, index) => (
+                    <span
+                      key={index}
+                      onClick={() => handleTagClick(index)}
+                      style={{
+                        margin: '0.25rem 0',
+                        display: 'inline-block',
+                      }}
+                    >
+                      <MyTag checkable checked={tagList[index].checked}>
+                        {item.label}
+                      </MyTag>
+                    </span>
+                  ))}
+                </div>
+              }
+            >
+              <Select
+                mode="multiple"
+                showSearch={false}
+                style={{ width: '100%' }}
+                allowClear
+                maxTagCount={3}
+                placeholder="标签筛选"
+                open={false}
+                value={labelGroup}
+                onDeselect={handleDeselect}
+                onClear={handleClear}
+              ></Select>
+            </Popover>
+          </div>
+          <div className="w-4"></div>
+          <div className={style.headerItem}>
+            <Search
+              style={{
+                width: '100%',
+              }}
+              defaultValue={searchText}
+              placeholder="文本搜索"
+              enterButton
+              onSearch={handleSearch}
+              onChange={handleTextChange}
+            ></Search>
+          </div>
+        </div>
+        {selectedTopic && (
+          <MyCollapse
+            activeKey={collapseActiveKey}
+            onChange={handleCollapseChange}
+            style={{
+              margin: '0 0 1rem 0',
+            }}
+            items={[
+              {
+                key: selectedTopic.id,
+                label: selectedTopic.title,
+                children: (
+                  <>
+                    <Descriptions size="small" layout="vertical">
+                      <Descriptions.Item label={'创建者'}>
+                        <Space>
+                          <Avatar src={`${iconBaseUrl}/${selectedTopic.user?.icon}`}></Avatar>
+                          <NavLink to={''} className={'text-indigo-500 hover:text-indigo-500'}>
+                            {selectedTopic.user?.name}
+                          </NavLink>
+                        </Space>
+                      </Descriptions.Item>
+                      <Descriptions.Item label={'创建时间'}>{selectedTopic.created_at}</Descriptions.Item>
+                      <Descriptions.Item label={'题目总数'}>{total}</Descriptions.Item>
+                      {selectedTopic.content !== '' && (
+                        <Descriptions.Item label="题单描述">
+                          <ReadOnly html={selectedTopic.content}></ReadOnly>
                         </Descriptions.Item>
-                        <Descriptions.Item label={'创建时间'}>{selectedTopic.created_at}</Descriptions.Item>
-                        <Descriptions.Item label={'题目总数'}>{total}</Descriptions.Item>
-                        {selectedTopic.content !== '' && (
-                          <Descriptions.Item label="题单描述">
-                            <ReadOnly html={selectedTopic.content}></ReadOnly>
-                          </Descriptions.Item>
-                        )}
-                      </Descriptions>
-                    </>
-                  ),
-                },
-              ]}
-            ></MyCollapse>
-          )}
+                      )}
+                    </Descriptions>
+                  </>
+                ),
+              },
+            ]}
+          ></MyCollapse>
+        )}
+        <div className={style.setCtn}>
           <ProblemTable
             mode={mode}
             problemList={problemList}
             pageNum={pageNum}
             pageSize={pageSize}
-            setPageNum={setPageNum}
-            setPageSize={setPageSize}
             total={total}
             fetchDone={fetchDone}
             setFetchDone={setFetchDone}
@@ -477,7 +471,7 @@ const ProblemList: React.FC<IProps> = (props) => {
           ></ProblemTable>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

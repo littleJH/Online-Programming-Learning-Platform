@@ -37,9 +37,6 @@ const Topic: React.FC = () => {
     })
   }
 
-  const handleDetail = (item: ITopic) => {
-    nav(`/community/article/${item.id}`)
-  }
   const handleUpdate = (item: ITopic) => {
     nav(`/creation/article?article_id=${item.id}`)
   }
@@ -48,7 +45,7 @@ const Topic: React.FC = () => {
     if (data.code === 200) {
       notification &&
         notification.success({
-          message: `文章“${item.title}”已删除`,
+          message: `题单“${item.title}”已删除`,
         })
       setTopicList((value) => [...value.slice(0, index), ...value.slice(index + 1)])
     }
@@ -75,7 +72,7 @@ const Topic: React.FC = () => {
               index={index}
               total={total}
               onDelete={handleDelete}
-              onDetail={handleDetail}
+              // onDetail={handleDetail}
               onUpdate={handleUpdate}
             ></TopicCollapse>
           </div>

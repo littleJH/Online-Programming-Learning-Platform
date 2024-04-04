@@ -23,8 +23,6 @@ interface IProps {
   mode?: 'default' | 'action'
 }
 
-const isMobile = utils.getIsMobile()
-
 const ArticleCard: React.FC<IProps> = (props) => {
   const { articleProp, onclick, mode = 'default' } = props
   const [article, setArticle] = useState<IArticle>(articleProp)
@@ -75,8 +73,8 @@ const ArticleCard: React.FC<IProps> = (props) => {
           <Avatar className="card-avatar" src={`${iconBaseUrl}/${article.user?.icon}`}></Avatar>
           <div className="card-username">{article.user?.name}</div>
           <div className="card-time">{ago}</div>
-          {article.labels && article.labels.length > 0 && !isMobile && (
-            <Space className="mx-8">
+          {article.labels && article.labels.length > 0 && (
+            <Space rootClassName={style.tags}>
               {article.labels.map((label) => (
                 <MyTag key={label.id}>{label.label}</MyTag>
               ))}

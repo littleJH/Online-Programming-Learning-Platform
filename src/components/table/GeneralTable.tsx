@@ -9,7 +9,7 @@ export interface GeneralTableProps {
     pageNum: number
     pageSize: number
     total: number
-    onPageChange: Function
+    onPageChange: (pageNum: number, pageSize: number) => void
   }
   loading?: boolean
   scroll?: TableProps<any>['scroll']

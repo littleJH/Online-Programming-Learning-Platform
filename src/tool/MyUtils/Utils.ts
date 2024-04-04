@@ -81,6 +81,8 @@ const getSideBarType = (path: string): TypeSideBar => {
   const pathArr = utils.getPathArray(path)
   const siderNavPath = [
     '/problemset/all',
+    '/problemset/topic',
+    '/problemset/form',
     '/competition/common/set',
     '/competition/random',
     '/competition/standard',
@@ -193,7 +195,7 @@ const formatFileSize = (bytes: number) => {
 }
 
 const getIsMobile = () => {
-  return window.matchMedia('(any-pointer:coarse)').matches || window.matchMedia('max-width: 760px').matches
+  return window.matchMedia('(any-pointer:coarse)').matches || window.matchMedia('max-width: 768px').matches
 }
 
 const utils = {

@@ -264,7 +264,7 @@ const Problem: React.FC = () => {
         </Button>
         <Button
           onClick={() => {
-            nav(`/competition/${competition_id}/overview`)
+            nav(`/competition/common/${competition_id}/overview`)
           }}
         >
           跳转比赛详情

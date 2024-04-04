@@ -7,7 +7,15 @@ import RecordTable from '@/components/Record/RecordTable'
 const Records: React.FC = () => {
   const [problem] = useOutletContext<[IProblem]>()
 
-  return <RecordTable mode="problem" problem={problem}></RecordTable>
+  return (
+    <div
+      style={{
+        margin: '1rem',
+      }}
+    >
+      <RecordTable mode="problem" problem={problem}></RecordTable>
+    </div>
+  )
 }
 
 export default Records

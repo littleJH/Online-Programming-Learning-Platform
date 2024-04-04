@@ -20,6 +20,7 @@ import { getEnterConditionApi } from '@/api/competitionMixture'
 import MyTag from '@/components/Label/MyTag'
 import Search from 'antd/es/input/Search'
 import myHooks from '@/tool/myHooks/myHooks'
+import style from '../../../style.module.scss'
 
 interface IDataSource {
   state: CompetitionState
@@ -120,7 +121,7 @@ const View: React.FC = () => {
       key: 'state',
       title: '状态',
       align: 'center',
-      width: 100,
+      // width: 100,
       dataIndex: 'state',
       filters: [
         { text: '未开始', value: 'notStart' },
@@ -254,9 +255,9 @@ const View: React.FC = () => {
   const handleSearch = () => {}
 
   return (
-    <div style={{ width: '800px' }}>
-      <div className="py-4 w-full flex">
-        <div style={{ flexGrow: '1' }}>
+    <div className={style.commonset}>
+      <div className={style.header}>
+        <div className={style.item}>
           <Search
             style={{
               width: '100%',
@@ -269,7 +270,7 @@ const View: React.FC = () => {
           ></Search>
         </div>
         <div className="w-8"></div>
-        <div style={{ flexGrow: '1' }}>
+        <div className={style.item}>
           <Search
             style={{
               width: '100%',
@@ -282,7 +283,7 @@ const View: React.FC = () => {
           ></Search>
         </div>
       </div>
-      <div>
+      <div className={style.content}>
         {loading && (
           <Skeleton
             active
@@ -291,7 +292,7 @@ const View: React.FC = () => {
             }}
           />
         )}
-        {!loading && <GeneralTable {...tableProps}></GeneralTable>}
+        <div className={style.table}>{!loading && <GeneralTable {...tableProps}></GeneralTable>}</div>
       </div>
     </div>
   )

@@ -57,3 +57,7 @@ export const getLeaderGroupListApi = (id: string, pageNum = 1, pageSize = 20) =>
 export const getMemberGroupListApi = (id: string, pageNum = 1, pageSize = 20) => {
   return request.get(`/member/list/${id}?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
+
+export const getIsEnterGroupApi = (id: string) => {
+  return request.get(`/member/${id}`, baseConfig())
+}

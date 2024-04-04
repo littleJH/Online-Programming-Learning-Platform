@@ -7,3 +7,53 @@
   border-radius: 0.1rem;
   font-size: small;
 }
+
+.craeteProblem {
+  display: flex;
+
+  @media screen and (max-width: 768px) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .main {
+    padding: 0 2rem;
+    margin: 1rem 0;
+    width: 768px;
+    @media screen and (max-width: 768px) {
+      padding: 0;
+      width: 100%;
+    }
+  }
+
+  .stepsBox {
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background-color: white;
+    .steps {
+      width: 6rem;
+      height: 12rem;
+      margin-top: 2rem;
+      flex-grow: 1;
+      @media screen and (max-width: 768px) {
+        width: auto;
+        height: auto;
+      }
+    }
+
+    .uploadBtnPar {
+      position: relative;
+      .uploadbtnBox {
+        position: absolute;
+        bottom: 4rem;
+        right: 1rem;
+        @media screen and (max-width: 768px) {
+          top: 1rem;
+        }
+      }
+    }
+  }
+}

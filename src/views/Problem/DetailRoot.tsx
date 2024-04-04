@@ -22,7 +22,7 @@ import ojmap from '@/assets/ojmap'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
 import myHooks from '@/tool/myHooks/myHooks'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { languageState, pathNameState } from '@/store/appStore'
+import { isMobileAtom, languageState, pathNameState } from '@/store/appStore'
 import utils from '@/tool/myUtils/utils'
 import { footerRightNode } from '@/store/nodeStore'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
@@ -49,6 +49,7 @@ let container: HTMLElement
 let ws: WebSocket
 
 export const Detail: React.FC = () => {
+  const isMobile = useRecoilValue(isMobileAtom)
   const { TextArea } = Input
   const nav = myHooks.useNavTo()
   const pathname = useRecoilValue(pathNameState)
@@ -70,6 +71,7 @@ export const Detail: React.FC = () => {
   const [codeHeight, setcodeHeight] = useState(0)
   const rightCtnRef = useRef(null as any)
   const consoleRef = useRef(null as any)
+  const bottomRef = useRef<HTMLDivElement>(null)
   const setFooterRight = useSetRecoilState(footerRightNode)
   const { token } = theme.useToken()
   const { connectWs } = myHooks.useWsConnect({
@@ -89,7 +91,7 @@ export const Detail: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    problem && setFooterRight(renderFooterRight())
+    problem && !isMobile && setFooterRight(renderFooterRight())
   }, [problem, code, language])
 
   useEffect(() => {
@@ -162,6 +164,13 @@ export const Detail: React.FC = () => {
     // })
   }
 
+  const scrollIntoBottom = () => {
+    console.log('handle footer click ...')
+    setTimeout(() => {
+      bottomRef.current && bottomRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' })
+    }, 0)
+  }
+
   const renderFooterRight = () => {
     const runCode = () => {
       setshowConsole(true)
@@ -202,12 +211,14 @@ export const Detail: React.FC = () => {
         setopenRecordModal(true)
       }
     }
+
     return (
       <div
         className="flex items-center justify-end px-2 h-12"
         style={{
           boxSizing: 'border-box',
         }}
+        onClick={scrollIntoBottom}
       >
         <Space>
           <Button
@@ -247,45 +258,37 @@ export const Detail: React.FC = () => {
     <>
       <div
         id="container"
-        className="flex h-full w-full"
+        className={style.root}
         style={{
           backgroundColor: token.colorBgBase,
         }}
       >
         {/* left */}
-        <div
-          className="w-1/2"
-          style={{
-            resize: 'horizontal',
-            minWidth: '256px',
-            // maxWidth: '768px'
-          }}
-        >
+        <div className={style.left_top}>
           <div className="h-full flex flex-col">
             {/* header */}
-            <div className={'w-full bg-slate-50'}>
-              <Menu
-                mode="horizontal"
-                style={{
-                  height: '3rem',
-                }}
-                items={[
-                  {
-                    label: '题目描述',
-                    key: 'description',
-                  },
-                  {
-                    label: '提交记录',
-                    key: 'records',
-                  },
-                ]}
-                onClick={(e) => {
-                  settabHeadMode(e.key)
-                  nav(`${e.key}`)
-                }}
-                selectedKeys={[tabHeadMode]}
-              ></Menu>
-            </div>
+            {!isMobile && (
+              <div className={'w-full bg-slate-50'}>
+                <Menu
+                  mode="horizontal"
+                  items={[
+                    {
+                      label: '题目描述',
+                      key: 'description',
+                    },
+                    {
+                      label: '提交记录',
+                      key: 'records',
+                    },
+                  ]}
+                  onClick={(e) => {
+                    settabHeadMode(e.key)
+                    nav(`${e.key}`)
+                  }}
+                  selectedKeys={[tabHeadMode]}
+                ></Menu>
+              </div>
+            )}
             {/* body */}
             <div className="grow overflow-scroll">
               <Outlet context={[problem, caseSamples]}></Outlet>
@@ -301,35 +304,26 @@ export const Detail: React.FC = () => {
           </div>
         </div>
         {/* resize */}
-        <div
-          id="resizebar"
-          className={`h-full w-3 bg-slate-50 flex flex-col justify-center  items-center  hover:bg-slate-300 hover:shadow transition-all duration-300 ${style.resizeBar}`}
-          onMouseDown={addResizeListener}
-          onMouseUp={removeResizeListener}
-          onMouseLeave={removeResizeListener}
-        >
-          <Space direction="vertical">
-            <MySvgIcon href="#icon-Scrollvertical"></MySvgIcon>
-            <MySvgIcon href="#icon-Scrollvertical"></MySvgIcon>
-            <MySvgIcon href="#icon-Scrollvertical"></MySvgIcon>
-          </Space>
-        </div>
+        {!isMobile && (
+          <div
+            id="resizebar"
+            className={`h-full w-3 bg-slate-50 flex flex-col justify-center  items-center  hover:bg-slate-300 hover:shadow transition-all duration-300 ${style.resizeBar}`}
+            onMouseDown={addResizeListener}
+            onMouseUp={removeResizeListener}
+            onMouseLeave={removeResizeListener}
+          >
+            <Space direction="vertical">
+              <MySvgIcon href="#icon-Scrollvertical"></MySvgIcon>
+              <MySvgIcon href="#icon-Scrollvertical"></MySvgIcon>
+              <MySvgIcon href="#icon-Scrollvertical"></MySvgIcon>
+            </Space>
+          </div>
+        )}
         {/* right */}
-        <div
-          className="w-1/2 h-full"
-          style={{
-            minWidth: '512px',
-          }}
-        >
-          <div ref={rightCtnRef} className="h-full flex flex-col">
+        <div className={style.right_bottom}>
+          <div ref={rightCtnRef} className={style.ctn}>
             {/* codeEditor */}
-            <div
-              style={{
-                height: '100px',
-                flexGrow: '1',
-                overflow: 'hidden',
-              }}
-            >
+            <div className={style.editor}>
               <CodeEditor
                 height={codeHeight}
                 value={code}
@@ -361,7 +355,10 @@ export const Detail: React.FC = () => {
                         key: 'result',
                       },
                     ]}
-                    onClick={(e) => setconsoleMode(e.key)}
+                    onClick={(e) => {
+                      setconsoleMode(e.key)
+                      scrollIntoBottom()
+                    }}
                   ></Menu>
                 </div>
                 <div className="w-full">
@@ -390,8 +387,10 @@ export const Detail: React.FC = () => {
                 </div>
               </div>
             )}
+            {isMobile && renderFooterRight()}
           </div>
         </div>
+        <div ref={bottomRef}></div>
       </div>
       {recordResponse && (
         <RecordModal

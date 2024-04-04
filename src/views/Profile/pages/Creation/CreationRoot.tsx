@@ -5,6 +5,7 @@ import { Descriptions } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
+import style from '../../style.module.scss'
 
 const CreationRoot: React.FC = () => {
   const info = useRecoilValue(userInfoState)
@@ -21,20 +22,14 @@ const CreationRoot: React.FC = () => {
     })
   }, [])
   return (
-    <div
-      style={{
-        width: '800px',
-      }}
-    >
+    <div className={style.creationRoot}>
       {/* <div>
         <Descriptions layout="vertical">
           <Descriptions.Item label="题目">{problemTotal}</Descriptions.Item>
           <Descriptions.Item label="文章">{articleTotal}</Descriptions.Item>
         </Descriptions>
       </div> */}
-      <div>
-        <Outlet></Outlet>
-      </div>
+      <Outlet></Outlet>
     </div>
   )
 }

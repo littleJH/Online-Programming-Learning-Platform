@@ -1,4 +1,4 @@
-import { loginStatusState, userInfoState } from '@/store/appStore'
+import { isMobileAtom, loginStatusState, userInfoState } from '@/store/appStore'
 import { Button, Col, Descriptions, Divider, Form, Input, Modal, Row, Space, Tooltip, notification } from 'antd'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
@@ -22,7 +22,7 @@ const Account: React.FC = () => {
   const { count, start } = myHooks.useCountdown(60, () => {
     setVerifyBtnDisable(false)
   })
-  const isMobile = utils.getIsMobile()
+  const isMobile = useRecoilValue(isMobileAtom)
 
   const updateEmail = () => {
     form3.validateFields().then((res) => {
