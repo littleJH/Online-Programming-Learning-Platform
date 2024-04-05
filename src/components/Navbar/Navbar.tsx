@@ -15,8 +15,10 @@ export default function Header(props: { headerNav: string }) {
   )
 
   const handleMenuClick = (e: any) => {
+    console.log('')
     navTo(`/${e.key}`)
   }
+
   return (
     <Menu
       style={{
@@ -25,13 +27,14 @@ export default function Header(props: { headerNav: string }) {
         userSelect: 'none',
         padding: '0 1rem',
         display: 'flex',
-        // justifyContent: 'center',
+        justifyContent: 'center',
         alignContent: 'center',
       }}
       selectedKeys={[selectedKey]}
       mode="horizontal"
       onClick={handleMenuClick}
       items={headerMenuItems}
+      onSelect={(info) => console.log('menu select info ==> ', info)}
     ></Menu>
   )
 }

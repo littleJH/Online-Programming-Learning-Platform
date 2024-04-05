@@ -9,19 +9,24 @@ import {
   updateArticleApi,
 } from '@/api/article'
 import utils from '@/tool/myUtils/utils'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import Dragger from 'antd/es/upload/Dragger'
 import { UploadFile } from 'antd/es/upload'
 import { uploadImgApi } from '@/api/img'
 import { getCategoryListApi } from '@/api/category'
 import TextEditor from '@/components/editor/TextEditor'
 import { imgGetBaseUrl } from '@/config/apiConfig'
+import myHooks from '@/tool/myHooks/myHooks'
+import style from '../style.module.scss'
+import { useRecoilValue } from 'recoil'
+import { isMobileAtom } from '@/store/appStore'
 
 const creation_article_title = localStorage.getItem('creation_article_title')
 const creation_article_content = localStorage.getItem('creation_article_content')
 
 const CreateArticle: React.FC = () => {
-  const nav = useNavigate()
+  const isMobile = useRecoilValue(isMobileAtom)
+  const nav = myHooks.useNavTo()
   const [querys, setQuerys] = useSearchParams()
   const [title, settitle] = useState('')
   const [content, setcontent] = useState('')
@@ -164,24 +169,9 @@ const CreateArticle: React.FC = () => {
     setIconUrl('')
   }
 
-  return (
-    <div className="h-full w-full p-4 flex">
-      <Card
-        size="small"
-        className="grow"
-        bodyStyle={{
-          padding: '0px',
-          height: '100%',
-        }}
-      >
-        <TextEditor
-          mode="richtext"
-          value={content}
-          htmlChange={(value: string) => htmlChange(value)}
-          placeholder="开始你的创作~~~"
-        ></TextEditor>
-      </Card>
-      <Card size="small" bordered={false} className="w-96 ml-8">
+  const renderFormCard = () => {
+    return (
+      <div className={style.formCard}>
         <Space className="w-full" direction="vertical" size={'large'}>
           <Input
             autoFocus
@@ -229,13 +219,47 @@ const CreateArticle: React.FC = () => {
               <div className="my-16">拖拽或点击上传“封面”</div>
             )}
           </Dragger>
-          <div className="flex justify-center">
-            <Button onClick={() => throttle([])} type="primary" size="large">
-              {article_id ? '更新' : '发布'}
-            </Button>
-          </div>
+          {!isMobile && (
+            <div className="flex justify-center">
+              <Button onClick={() => throttle([])} type="primary">
+                {article_id ? '更新' : '发布'}
+              </Button>
+            </div>
+          )}
         </Space>
+      </div>
+    )
+  }
+
+  return (
+    <div className={style.articleCreation}>
+      {isMobile && renderFormCard()}
+
+      <Card
+        size="small"
+        className={style.contentCard}
+        styles={{
+          body: {
+            padding: '0px',
+            height: '100%',
+          },
+        }}
+      >
+        <TextEditor
+          mode="richtext"
+          value={content}
+          htmlChange={(value: string) => htmlChange(value)}
+          placeholder="开始你的创作~~~"
+        ></TextEditor>
       </Card>
+      {!isMobile && <>{renderFormCard()}</>}
+      {isMobile && (
+        <div className="flex justify-center mt-8">
+          <Button onClick={() => throttle([])} type="primary">
+            {article_id ? '更新' : '发布'}
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

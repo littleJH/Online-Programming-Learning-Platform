@@ -145,7 +145,7 @@ const CreateTopic: React.FC = () => {
       <div className={style.body}>
         <div className={style.problemList}>
           <ProblemList
-            mode="select"
+            mode="checkbox"
             selectedProblems={selectedProblems}
             setSelectedProblems={setSelectedProblems}
             selectedRowKeys={selectedRowKeys}

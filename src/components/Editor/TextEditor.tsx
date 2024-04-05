@@ -39,6 +39,7 @@ const TextEditor: React.FC<{
 
   const editorConfig: Partial<IEditorConfig> = {
     placeholder: placeholder ? placeholder : 'markdown here ...',
+    autoFocus: false,
   }
 
   // 及时销毁editor

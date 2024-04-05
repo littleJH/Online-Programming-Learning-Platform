@@ -87,3 +87,7 @@ export const getArticleLabelsApi = (id: string) => {
 export const getArticleHotRankApi = (pageNum = 1, pageSize = 20) => {
   return request.get(`/hot/rank?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
+
+export const searchArticlesApi = (text: string, pageNum = 1, pageSize = 20) => {
+  return request.get(`/search/${text}?pageNum=${pageNum}&pageSize=${pageSize}`)
+}

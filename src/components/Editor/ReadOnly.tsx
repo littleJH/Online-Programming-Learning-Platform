@@ -12,7 +12,16 @@ interface Iprops {
 }
 
 const ReadOnly: React.FC<Iprops> = (props) => {
-  const { html, title, style, className, ctnClassName, borderd = false } = props
+  const {
+    html,
+    title,
+    style = {
+      fontSize: '1rem',
+    },
+    className,
+    ctnClassName,
+    borderd = false,
+  } = props
 
   return (
     <div className={ctnClassName}>
@@ -24,10 +33,7 @@ const ReadOnly: React.FC<Iprops> = (props) => {
         defaultHtml={html}
         mode="default"
         className={`rounded-md ${className} ${borderd ? 'border-1 border-solid border-gray-200' : ''}`}
-        style={{
-          ...style,
-          fontSize: '1rem',
-        }}
+        style={style}
       ></Editor>
     </div>
   )

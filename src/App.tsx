@@ -1,6 +1,6 @@
 import { BrowserRouter, HashRouter } from 'react-router-dom'
 import RouterWaiter from './router/router'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { ConfigProvider, message, notification, theme } from 'antd'
 import { isDarkState, isMobileAtom, notificationApi, sideBarTypeState, themeState } from './store/appStore'
 import { useEffect } from 'react'
@@ -18,13 +18,16 @@ function App() {
     maxCount: isMobile ? 1 : 3,
     duration: isMobile ? 1 : 3,
   })
-  const isDark = useRecoilValue(isDarkState)
+  const [isDark, setIsDark] = useRecoilState(isDarkState)
 
   useEffect(() => {
     setNotificationApi(api)
+    const themeMedia = window.matchMedia('(prefers-color-scheme: dark)')
+    themeMedia.addEventListener('change', handleThemeChange)
     window.addEventListener('resize', handleResize)
     return () => {
       window.removeEventListener('resize', handleResize)
+      window.removeEventListener('change', handleThemeChange)
     }
   }, [])
 
@@ -32,6 +35,11 @@ function App() {
     // console.log('handle window resize ==> ', e)
     const isSmallScreen = e?.target?.innerWidth <= 768
     setIsMobile(isSmallScreen)
+  }
+
+  const handleThemeChange = (e: any) => {
+    setIsDark(e.matches)
+    localStorage.setItem('isDark', e.matches)
   }
 
   return (

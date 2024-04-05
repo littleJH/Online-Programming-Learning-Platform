@@ -44,13 +44,15 @@ import MyTag from '@/components/Label/MyTag'
 import MyCollapse from '@/components/Collapse/MyCollapse'
 import myHooks from '@/tool/myHooks/myHooks'
 import style from '../style.module.scss'
+import { useRecoilValue } from 'recoil'
+import { isMobileAtom } from '@/store/appStore'
 
 interface ITag {
   label: string
   checked: boolean
 }
 interface IProps {
-  mode: 'select' | 'default'
+  mode: 'checkbox' | 'default' | 'action' | 'radio'
   // width?: number
   selectedProblems?: {
     key: string
@@ -71,6 +73,7 @@ const setFirst = (bool: boolean) => {
 
 const ProblemList: React.FC<IProps> = (props) => {
   const { mode, setSelectedProblems, selectedRowKeys } = props
+  const isMobile = useRecoilValue(isMobileAtom)
   const nav = myHooks.useNavTo()
   const { Search } = Input
   const [querys, setQuerys] = useSearchParams()
@@ -87,6 +90,8 @@ const ProblemList: React.FC<IProps> = (props) => {
   const [fetchDone, setFetchDone] = useState(false)
   const [tableScrollHeight, setTableScrollHeight] = useState(0)
   const [collapseActiveKey, setCollapseActiveKey] = useState([topic_id])
+
+  const size = useMemo(() => (isMobile ? 'middle' : 'large'), [isMobile])
 
   useEffect(() => console.log('problem list ==> ', problemList), [problemList])
 
@@ -358,6 +363,7 @@ const ProblemList: React.FC<IProps> = (props) => {
               style={{
                 width: '100%',
               }}
+              size={size}
               allowClear
               placeholder="选择题单"
               value={selectedTopic?.id}
@@ -368,10 +374,9 @@ const ProblemList: React.FC<IProps> = (props) => {
           <div className="w-4"></div>
           <div className={style.headerItem}>
             <Popover
-              overlayClassName={style.labelPopover}
               trigger={'click'}
               content={
-                <div>
+                <div className={style.labelPopover}>
                   {tagList.map((item: ITag, index) => (
                     <span
                       key={index}
@@ -390,6 +395,7 @@ const ProblemList: React.FC<IProps> = (props) => {
               }
             >
               <Select
+                size={size}
                 mode="multiple"
                 showSearch={false}
                 style={{ width: '100%' }}
@@ -406,6 +412,7 @@ const ProblemList: React.FC<IProps> = (props) => {
           <div className="w-4"></div>
           <div className={style.headerItem}>
             <Search
+              size={size}
               style={{
                 width: '100%',
               }}

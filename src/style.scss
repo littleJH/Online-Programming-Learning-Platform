@@ -37,6 +37,7 @@ body,
 
 *::-webkit-scrollbar {
   width: 0.5rem;
+  height: 0.5rem;
 }
 
 *::-webkit-scrollbar-track {
@@ -45,7 +46,7 @@ body,
 
 *::-webkit-scrollbar-thumb {
   @apply rounded-xl;
-  background-color: $colorBgBlur;
+  background-color: slategray;
 }
 
 // wangEditor theme config

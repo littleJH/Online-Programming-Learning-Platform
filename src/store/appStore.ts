@@ -179,7 +179,8 @@ export const notificationApi = atom<NotificationInstance | null>({
 export const isDarkState = atom<boolean>({
   key: 'isDarkState',
   default: (async () => {
-    let isDark = localStorage.getItem('isDark')
+    const themeMedia = window.matchMedia('(prefers-color-scheme: dark)')
+    let isDark = localStorage.getItem('isDark') || themeMedia.matches
     return Promise.resolve(isDark === 'true')
   })(),
   effects_UNSTABLE: [

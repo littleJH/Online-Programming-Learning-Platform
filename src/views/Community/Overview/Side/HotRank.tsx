@@ -1,9 +1,10 @@
 import { currentArticleState } from '@/store/appStore'
 import { getArticleApi, getArticleHotRankApi } from '@/api/article'
 import { IArticle } from '@/type'
-import { Skeleton, Space, Card, List, theme } from 'antd'
+import { Skeleton, Space, Card, List, theme, Menu, Segmented, Divider } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import myHooks from '@/tool/myHooks/myHooks'
+import MySvgIcon from '@/components/Icon/MySvgIcon'
 
 interface IArticleRank {
   Member: string
@@ -11,27 +12,66 @@ interface IArticleRank {
   article: IArticle
 }
 
-const HotRank: React.FC = () => {
-  const [articleRank, setarticleRank] = useState<IArticleRank[]>()
+interface IRank {
+  id: string
+  title: string
+  score: number
+  type: RankType
+}
+
+type RankType = 'article' | 'user' | 'comment' | 'post'
+
+const HotRank: React.FC<{ type: RankType }> = (props) => {
+  const { type } = props
+  const [rankList, setRankList] = useState<IRank[]>([])
   // const setcurrentArticle = useSetRecoilState(currentArticleState)
   const nav = myHooks.useNavTo()
   const { token } = theme.useToken()
 
   useEffect(() => {
-    getArticleHotRankApi(1, 10).then(async (res) => {
-      console.log(res.data)
-      const articles: IArticleRank[] = res.data.data.articles
-      let index = 0
-      for (let article of articles) {
-        const { data } = await getArticleApi(article.Member)
-        articles[index].article = data.data.article
-        index++
-      }
-      setarticleRank(articles)
-    })
-  }, [])
+    switch (type) {
+      case 'article':
+        fetchArticles()
+        break
+      case 'user':
+        fetchUserRank()
+        break
+      case 'comment':
+        fetchCommentRank()
+        break
+      case 'post':
+        fetchPostRank()
+        break
+      default:
+        break
+    }
+  }, [type])
 
-  const handleClick = (index: number) => articleRank && nav(`/community/article/${articleRank[index].Member}`)
+  const fetchArticles = async () => {
+    const res = await getArticleHotRankApi(1, 10)
+    const articles: IArticleRank[] = res.data.data.articles
+    let index = 0
+    for (let article of articles) {
+      const { data } = await getArticleApi(article.Member)
+      articles[index].article = data.data.article
+      index++
+    }
+    setRankList(
+      articles.map((article) => ({
+        title: article.article.title,
+        score: article.Score,
+        type: 'article',
+        id: article.Member,
+      }))
+    )
+  }
+
+  const fetchUserRank = async () => {}
+
+  const fetchCommentRank = async () => {}
+  const fetchPostRank = async () => {}
+
+  const handleClick = (index: number) => rankList && nav(`/community/${rankList[index].type}/${rankList[index].id}`)
 
   return (
     // <>
@@ -99,13 +139,13 @@ const HotRank: React.FC = () => {
     // </>
 
     <Space direction="vertical" className="w-full">
-      {!articleRank && <Skeleton active paragraph={{ rows: 9 }} className="px-4"></Skeleton>}
-      {articleRank &&
-        articleRank?.map((article, index) => (
+      {!rankList && <Skeleton active paragraph={{ rows: 9 }} className="px-4"></Skeleton>}
+      {rankList &&
+        rankList?.map((item, index) => (
           <Card
             size="small"
             hoverable
-            key={article.Member}
+            key={index}
             onClick={() => {
               handleClick(index)
             }}
@@ -135,7 +175,7 @@ const HotRank: React.FC = () => {
                   whiteSpace: 'nowrap',
                 }}
               >
-                {article.article.title}
+                {item.title}
               </span>
               <span className="w-12 flex items-center justify-center">
                 <span>
@@ -143,7 +183,7 @@ const HotRank: React.FC = () => {
                     <use href="#icon-fire"></use>
                   </svg>
                 </span>
-                <span className="text-right text-xs">{article.Score}</span>
+                <span className="text-right text-xs">{item.score}</span>
               </span>
             </div>
           </Card>

@@ -20,6 +20,7 @@ export default defineConfig({
   },
   server: {
     host: '172.29.186.11',
+    port: 5175,
     proxy: {
       '/api': {
         target: 'http://10.141.47.20:1000',

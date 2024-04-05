@@ -15,7 +15,7 @@ import utils from '@/tool/myUtils/utils'
 import style from '../style.module.scss'
 
 interface IProps {
-  mode: 'select' | 'default' | 'action'
+  mode: 'checkbox' | 'default' | 'action' | 'radio'
   problemList: IProblem[]
   pageNum: number
   pageSize: number
@@ -108,7 +108,7 @@ const ProblemTable: React.FC<IProps> = (props) => {
     }
     setFirst && setFirst(false)
     setDataSource(list)
-    console.log('before fetch done ...')
+    console.log('before fetch done ...', list)
     setFetchDone(true)
     flag = true
   }
@@ -251,24 +251,29 @@ const ProblemTable: React.FC<IProps> = (props) => {
       total,
       onPageChange,
     },
-    scroll:
-      mode === 'select'
-        ? {
-            y: tableScrollHeight,
-          }
-        : undefined,
+    // scroll:
+    //   mode === 'checkbox' || mode === 'radio'
+    //     ? {
+    //         y: tableScrollHeight,
+    //       }
+    //     : undefined,
     rowSelection:
-      mode === 'select' && setSelectedProblems
+      (mode === 'checkbox' || mode === 'radio') && setSelectedProblems
         ? {
+            type: mode,
             columnWidth: 64,
             selectedRowKeys: selectedRowKeys,
             onChange: (value: any, selectedRows: any, info: any) => {
-              if (info.type === 'all') {
-                value.length
-                  ? setSelectedProblems((prev: any) => [...prev, ...selectedRows])
-                  : setSelectedProblems((prev: IPrblemTableDataType[]) => [
-                      ...prev.filter((value) => dataSource.findIndex((val) => val.key === value.key) === -1),
-                    ])
+              if (mode === 'radio') {
+                setSelectedProblems(selectedRows)
+              } else {
+                if (info.type === 'all') {
+                  value.length
+                    ? setSelectedProblems((prev: any) => [...prev, ...selectedRows])
+                    : setSelectedProblems((prev: IPrblemTableDataType[]) => [
+                        ...prev.filter((value) => dataSource.findIndex((val) => val.key === value.key) === -1),
+                      ])
+                }
               }
             },
             onSelect: (record: any, selected: any) => {

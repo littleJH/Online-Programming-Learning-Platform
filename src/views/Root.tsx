@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useLayoutEffect, useMemo } from 'react'
-import { Layout, Button, Avatar, theme, Divider } from 'antd'
+import { Layout, Button, Avatar, theme, Divider, Popover } from 'antd'
 import { Outlet } from 'react-router-dom'
 import { iconBaseUrl } from '@/config/apiConfig'
 import { useRecoilState, useRecoilValue } from 'recoil'
@@ -25,6 +25,8 @@ import FileInfo from './File/component/FileInfo'
 import MobileFooterNavbar from '@/components/mobile/MobileFooterNavbar'
 import MobileHeaderNavbar from '@/components/mobile/MobileHeaderNavbar'
 import style from './style.module.scss'
+import UserInfo from '@/components/User/UserInfo'
+import UserCard from '@/components/User/UserCard'
 
 const fullPath = ['/creation/article', '/creation', '/file']
 
@@ -39,6 +41,7 @@ const Root: React.FC = () => {
   const sideBarType = useRecoilValue(sideBarTypeState)
   const myInfo = useRecoilValue(userInfoState)
   const loginStatus = useRecoilValue(loginStatusState)
+  const [openSelfCard, setOpenSelfCard] = useState(false)
   const nav = myHooks.useNavTo()
 
   useLayoutEffect(() => {
@@ -96,6 +99,9 @@ const Root: React.FC = () => {
       {/* {!isMobile && ( */}
       <Header className={style.header} style={headerStyle}>
         <div className={style.pc}>
+          <Button type="text" className="flex items-center h-16 p-full">
+            <MySvgIcon href="coding" size={8} color={token.colorPrimary}></MySvgIcon>
+          </Button>
           <Navbar headerNav={headerNav}></Navbar>
           <Button type="text" className="flex items-center h-12 p-2" onClick={() => setIsDark((value) => !value)}>
             <MySvgIcon
@@ -109,14 +115,23 @@ const Root: React.FC = () => {
               <MySvgIcon href="#icon-folder" size={2} color={token.colorWarning}></MySvgIcon>
             </Button>
           )}
-          <Button type="text" className="flex items-center h-12 p-2 mr-4">
-            <div className="h-full flex items-center" onClick={() => nav('/profile')}>
-              {loginStatus && (
-                <Avatar className="hover:cursor-pointer" alt="登录" src={`${iconBaseUrl}/${myInfo?.icon}`}></Avatar>
-              )}
-              {!loginStatus && <Button type="link">登录</Button>}
-            </div>
-          </Button>
+          {!loginStatus && (
+            <Button type="text" className="flex items-center h-12 p-2 mr-4">
+              <div className="h-full flex items-center" onClick={() => nav('/profile')}>
+                <Button type="link">登录</Button>
+              </div>
+            </Button>
+          )}
+
+          {loginStatus && myInfo && (
+            <Popover placement="left" content={<UserCard user={myInfo}></UserCard>}>
+              <Button type="text" className="flex items-center h-12 p-2 mr-4">
+                <div className="h-full flex items-center">
+                  <Avatar className="hover:cursor-pointer" alt="登录" src={`${iconBaseUrl}/${myInfo?.icon}`}></Avatar>
+                </div>
+              </Button>
+            </Popover>
+          )}
         </div>
         <div className={style.mobile}>
           <MobileHeaderNavbar></MobileHeaderNavbar>
@@ -131,11 +146,16 @@ const Root: React.FC = () => {
         }}
       >
         <Layout className="h-full" hasSider>
-          {!['login', 'problemdetail'].includes(headerNav) && (
+          {/* {!['login', 'problemdetail'].includes(headerNav) && (
             <Sider className={style.sider} style={siderStyle} collapsible trigger={null} width={sidebarWidth}>
               {sideBarType === 'nav' && <SubNavbar header={headerNav} mode="inline"></SubNavbar>}
               {sideBarType === 'directory' && <Directory></Directory>}
               {sideBarType === 'competitionRank' && <Rank mode="sider"></Rank>}
+            </Sider>
+          )} */}
+          {sideBarType === 'directory' && (
+            <Sider className={style.sider} style={siderStyle} collapsible trigger={null} width={sidebarWidth}>
+              <Directory></Directory>
             </Sider>
           )}
           <Content
@@ -146,16 +166,6 @@ const Root: React.FC = () => {
             }}
           >
             <div className={style.outletCtn} style={{ width: full ? '100%' : 'min-content' }}>
-              {!isMobile && !['creation'].includes(headerNav) && (
-                <>
-                  <SubNavbar header={headerNav} mode={'horizontal'}></SubNavbar>
-                  <Divider
-                    style={{
-                      margin: '1rem 0',
-                    }}
-                  ></Divider>
-                </>
-              )}
               <Outlet></Outlet>
             </div>
           </Content>

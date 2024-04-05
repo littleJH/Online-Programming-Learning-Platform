@@ -6,7 +6,7 @@ import { pathNameState } from '@/store/appStore'
 import myHooks from '@/tool/myHooks/myHooks'
 import { siderMenuItemsObj } from '@/router/router'
 
-const SubNavbar: React.FC<{ header: string; mode: 'horizontal' | 'inline' }> = (props) => {
+const SubNavbar: React.FC<{ header: string; mode: 'horizontal' | 'inline' | 'vertical' }> = (props) => {
   const { header, mode } = props
   const [current, setCurrent] = useState('')
   const [menuItem, setMenuItem] = useState([])
@@ -41,7 +41,7 @@ const SubNavbar: React.FC<{ header: string; mode: 'horizontal' | 'inline' }> = (
     if (header === 'problemdetail') {
       navTo(`/${header}/${patharr[1]}/${e.key}`)
     } else {
-      navTo(`/${header}/${e.key}`)
+      navTo(`/${e.key}`)
     }
   }
 
@@ -58,9 +58,17 @@ const SubNavbar: React.FC<{ header: string; mode: 'horizontal' | 'inline' }> = (
   return (
     <Menu
       style={{
+        // width: mode === 'vertical' ? '10rem' : '100%',
         height: mode === 'horizontal' ? '50px' : '100%',
         userSelect: 'none',
         padding: mode === 'horizontal' ? '0' : '0 1rem',
+        ...(mode === 'vertical'
+          ? {}
+          : {
+              display: 'flex',
+              justifyContent: 'center',
+              alignContent: 'center',
+            }),
       }}
       selectedKeys={[current]}
       mode={mode}

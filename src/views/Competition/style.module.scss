@@ -3,97 +3,101 @@
   height: max-content;
 }
 
-.commonset {
-  width: 800px;
+.commonRoot {
+  width: 1000px;
+  padding: 0 2rem;
   @media screen and (max-width: 768px) {
     width: 100%;
     padding: 0;
   }
 
-  .header {
+  .commonset {
     width: 100%;
-    display: flex;
-    margin-bottom: 1rem;
-    @media screen and (max-width: 768px) {
-      display: block;
-    }
 
-    .item {
-      flex-grow: 1;
-      @media screen and (max-width: 768px) {
-        margin: 1rem 0;
-      }
-    }
-  }
-
-  .content {
-    width: 100%;
-    overflow-x: auto;
-    .table {
+    .header {
       width: 100%;
-      @media screen and (max-width: 768px) {
-        width: max-content;
-      }
-    }
-  }
-}
-
-.commondetail {
-  width: 1000px;
-  @media screen and (max-width: 768px) {
-    width: 100%;
-  }
-
-  .header {
-    .info {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .countdown {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      height: max-content;
-    }
-  }
-
-  .content {
-    width: 100%;
-    margin: 1rem 0 0 0;
-    @media screen and (max-width: 768px) {
-    }
-    .contentCard {
-      flex-grow: 1;
-      width: 100%;
-      // padding: 1rem;
+      margin-bottom: 1rem;
+      padding: 2rem 0;
       @media screen and (max-width: 768px) {
-        // padding: 0;
+        padding: 0;
+        display: block;
       }
 
-      .answer {
-        padding: 2rem;
+      .item {
+        flex-grow: 1;
         @media screen and (max-width: 768px) {
-          padding: 0;
+          margin: 1rem 0;
         }
       }
+    }
 
-      .rank {
+    .content {
+      width: 100%;
+      overflow-x: auto;
+      .table {
         width: 100%;
-        overflow-x: auto;
+        @media screen and (max-width: 768px) {
+          width: max-content;
+        }
+      }
+    }
+  }
 
-        .rankItem {
-          display: flex;
-          justify-content: space-between;
-          width: 100%;
+  .commondetail {
+    width: 100%;
 
-          span {
+    .header {
+      .info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .countdown {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: max-content;
+      }
+    }
+
+    .content {
+      width: 100%;
+      margin: 1rem 0 0 0;
+      @media screen and (max-width: 768px) {
+      }
+      .contentCard {
+        flex-grow: 1;
+        width: 100%;
+        // padding: 1rem;
+        @media screen and (max-width: 768px) {
+          // padding: 0;
+        }
+
+        .answer {
+          padding: 2rem;
+          @media screen and (max-width: 768px) {
+            padding: 0;
           }
         }
-      }
 
-      .record {
+        .rank {
+          width: 100%;
+          overflow-x: auto;
+
+          .rankItem {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+
+            span {
+            }
+          }
+        }
+
+        .record {
+        }
       }
     }
   }

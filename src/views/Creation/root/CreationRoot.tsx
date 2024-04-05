@@ -11,7 +11,7 @@ const CreationRoot: React.FC = () => {
   const isMobile = useRecoilValue(isMobileAtom)
 
   const showNav = React.useMemo(() => pathname === '/creation', [pathname])
-  const full = React.useMemo(() => pathname === '/creation/article' || isMobile, [pathname, isMobile])
+  const full = React.useMemo(() => pathname === '/creation/article' && !isMobile, [pathname, isMobile])
 
   useEffect(() => console.log('is mobile ==> ', isMobile), [isMobile])
 
@@ -26,14 +26,14 @@ const CreationRoot: React.FC = () => {
       ) : (
         <Card
           style={{
-            // height: `${full ? '100%' : 'max-content'}`,
-            width: `${full ? '100%' : 'max-content'}`,
+            height: `${full ? '100%' : 'max-content'}`,
+            width: `${full || isMobile ? '100%' : 'max-content'}`,
             // margin: `${full ? '0 1rem' : '0'}`,
           }}
           styles={{
             body: {
-              // height: `${full ? '100%' : 'max-content'}`,
-              width: `${full ? '100%' : 'max-content'}`,
+              height: `${full ? '100%' : 'max-content'}`,
+              width: `${full || isMobile ? '100%' : 'max-content'}`,
               padding: isMobile ? '1rem' : '2rem',
             },
           }}

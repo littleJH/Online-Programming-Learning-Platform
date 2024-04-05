@@ -1,14 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import style from '../style.module.scss'
 import { Button, Form, Input, InputRef, Modal, Result, ResultProps } from 'antd'
 import TextEditor from '@/components/editor/TextEditor'
+import { createNoticeBoardApi, getNoticeBoardApi } from '@/api/noticeboard'
 import myHooks from '@/tool/myHooks/myHooks'
 import { useParams, useSearchParams } from 'react-router-dom'
-import { createCommentApi } from '@/api/comment'
-import ProblemList from '@/components/Problem/list/List'
-import { IPrblemTableDataType } from '@/type'
+import { getUserInfoApi } from '@/api/user'
 
-const CreateComment: React.FC = () => {
+const CreateNotice: React.FC = () => {
   const nav = myHooks.useNavTo()
   const [querys, setQuerys] = useSearchParams()
   const id = querys.get('id')
@@ -16,18 +15,23 @@ const CreateComment: React.FC = () => {
   const [content, setcontent] = useState<string>('')
   const [openResultModal, setOpenResultModal] = useState(false)
   const [result, setResult] = useState<ResultProps>()
-  const [selectedProblems, setSelectedProblems] = useState<IPrblemTableDataType[]>([])
-
-  const selectedRowKeys = useMemo(() => [...selectedProblems.map((value) => value.key)], [selectedProblems])
+  const titleInputRef = useRef<InputRef>(null)
 
   useEffect(() => {
-    console.log('selectedProblems ==> ', selectedProblems)
-    form.setFieldsValue({
-      title: selectedProblems[0]?.title,
-      id: selectedProblems[0]?.key,
-    })
-  }, [selectedProblems])
+    id && fetchNotice()
+  }, [id])
 
+  const fetchNotice = async () => {
+    if (!id) return
+    try {
+      const notice = (await getNoticeBoardApi(id)).data.data.notice
+      setcontent(notice.content)
+      form.setFieldsValue({
+        title: notice.title,
+        content: notice.content,
+      })
+    } catch {}
+  }
   const handleContentChange = (value: string) => {
     setcontent(value)
     form.setFieldValue('content', value === '<p><br></p>' || value === '' ? undefined : value)
@@ -38,11 +42,7 @@ const CreateComment: React.FC = () => {
       .validateFields()
       .then(async (values) => {
         try {
-          const res = (
-            await createCommentApi(values.id, {
-              content: values.content,
-            })
-          ).data
+          const res = (await createNoticeBoardApi(values)).data
           setResult({
             status: res.code === 200 ? 'success' : 'error',
             title: `创建${res.code === 200 ? '成功' : '失败'}`,
@@ -53,7 +53,7 @@ const CreateComment: React.FC = () => {
                     <Button
                       type="primary"
                       key={'detail'}
-                      onClick={() => nav(`/community/comment/${res.data.comment.id}`)}
+                      onClick={() => nav(`/community/notice/${res.data.notice.id}`)}
                     >
                       查看详情
                     </Button>,
@@ -79,16 +79,10 @@ const CreateComment: React.FC = () => {
   }
 
   return (
-    <div className={style.commentCreation}>
-      <ProblemList
-        mode="radio"
-        selectedProblems={selectedProblems}
-        setSelectedProblems={setSelectedProblems}
-        selectedRowKeys={selectedRowKeys}
-      ></ProblemList>
+    <div className={style.noticeCreation}>
       <Form
         form={form}
-        name="commentForm"
+        name="noticeForm"
         layout="vertical"
         scrollToFirstError
         initialValues={{
@@ -97,11 +91,8 @@ const CreateComment: React.FC = () => {
           pass_re: false,
         }}
       >
-        <Form.Item name={'title'} label="题目" rules={[{ required: true }]}>
-          <Input disabled></Input>
-        </Form.Item>
-        <Form.Item name={'id'} label="题目 ID" rules={[{ required: true }]}>
-          <Input disabled></Input>
+        <Form.Item name={'title'} label="标题：" rules={[{ required: true }]}>
+          <Input ref={titleInputRef}></Input>
         </Form.Item>
         <Form.Item name={'content'} label="描述" rules={[{ required: true }]}>
           <TextEditor value={content} mode="markdown" htmlChange={handleContentChange}></TextEditor>
@@ -132,4 +123,4 @@ const CreateComment: React.FC = () => {
   )
 }
 
-export default CreateComment
+export default CreateNotice

@@ -5,10 +5,12 @@
 
   .header {
     margin-bottom: 1rem;
+    padding: 2rem 0;
     width: 100%;
     display: flex;
 
     @media screen and (max-width: 768px) {
+      padding: 0;
       display: block;
     }
 
@@ -20,21 +22,21 @@
         margin: 1rem 0;
       }
     }
-
-    .labelPopover {
-      max-width: 500px;
-      max-height: 500px;
-      @media screen and (max-width: 768px) {
-        max-width: 80vw;
-        max-height: 100px;
-        overflow-y: scroll;
-      }
-    }
   }
 
   .setCtn {
     width: 100%;
     overflow-x: auto;
+  }
+}
+
+.labelPopover {
+  max-width: 50vw;
+  max-height: 50vh;
+  @media screen and (max-width: 768px) {
+    max-width: 80vw;
+    max-height: 50vh;
+    overflow-y: scroll;
   }
 }
 

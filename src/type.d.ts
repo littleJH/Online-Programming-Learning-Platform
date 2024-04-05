@@ -369,3 +369,15 @@ export interface IFile {
   openMenu?: boolean
 }
 
+export interface INotice {
+  title: string
+  content: string
+  res_long: string
+  res_short: string
+  created_at: string
+  updated_at: string
+  id: string
+  user_id: string
+  user?: User
+}
+

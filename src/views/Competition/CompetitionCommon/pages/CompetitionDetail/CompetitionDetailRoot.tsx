@@ -5,7 +5,7 @@ import { cancelEnterApi, enterCompetitionApi, getEnterListApi } from '@/api/comp
 import { getEnterConditionApi } from '@/api/competitionMixture'
 import dayjs from 'dayjs'
 import { CompetitionType, IGroup } from '@/type'
-import { Button, List, Menu, Modal, theme, Tooltip, Card, Space } from 'antd'
+import { Button, List, Menu, Modal, theme, Tooltip, Card, Space, Divider } from 'antd'
 import Update from '../../component/Update/Update'
 import { getUserInfoApi } from '@/api/user'
 import UserCard from '@/components/User/UserCard'
@@ -52,7 +52,7 @@ const Detail: React.FC = () => {
   const [enterGroups, setEnterGroups] = useState<IGroup[]>([])
   const [groupInfo, setgroupInfo] = useState<IGroup>()
   const notification = useRecoilValue(notificationApi)
-  const selectedKey = useMemo(() => utils.getPathArray(pathname)[2], [pathname])
+  const selectedKey = useMemo(() => utils.getPathArray(pathname)[3], [pathname])
 
   useEffect(() => {
     competition_id && fetch()
@@ -243,7 +243,7 @@ const Detail: React.FC = () => {
   return (
     <div className={style.commondetail}>
       {/* header */}
-      <Card>
+      <div>
         {competition && (
           <div className={style.header}>
             <div className={style.info}>
@@ -325,10 +325,12 @@ const Detail: React.FC = () => {
           </div>
         )}
         {!competition && <Loading></Loading>}
-      </Card>
+      </div>
+
+      <Divider></Divider>
 
       <div className={style.content}>
-        <Card size={isMobile ? 'small' : 'default'} className={style.contentCard}>
+        <div className={style.contentCard}>
           <Menu
             className="mb-8"
             selectedKeys={[selectedKey]}
@@ -354,7 +356,7 @@ const Detail: React.FC = () => {
             ]}
           ></Menu>
           <Outlet></Outlet>
-        </Card>
+        </div>
       </div>
       <Modal
         title={!isEnter ? '报名' : '取消报名'}

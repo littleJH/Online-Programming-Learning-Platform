@@ -7,32 +7,51 @@
   .left {
     flex-grow: 1;
     height: 100%;
-    width: 100%;
+    width: 1000px;
+    transition: all;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
+    @media screen and (max-width: 1440px) {
+      width: 800px;
+    }
     @media screen and (max-width: 768px) {
+      width: 100%;
     }
 
-    .gonggao {
+    .search {
+      margin-bottom: 1rem;
+    }
+
+    .notice {
       width: 100%;
-      margin: 1rem 0;
-      display: block;
+      padding: 0.5rem 0;
+      display: flex;
+      justify-content: space-between;
       @media screen and (max-width: 768px) {
-        display: none;
+      }
+
+      .item {
+        width: 33%;
+        flex-grow: 1;
       }
     }
-  }
 
-  .content {
-    width: 820px;
-    margin: auto;
-    @media screen and (max-width: 768px) {
-      width: 100%;
+    .recommand {
+      .title {
+        display: flex;
+        align-items: center;
+      }
+      .content {
+        width: 100%;
+        margin: auto;
+      }
     }
   }
 
   .right {
     display: block;
     margin: 0 2rem;
-    width: 16rem;
+    max-width: 24rem;
     @media screen and (max-width: 768px) {
       display: none;
     }
@@ -40,7 +59,10 @@
 
   .articleSet {
     width: 100%;
-    padding: 0 10px;
+    padding: 0;
+    @media screen and (max-width: 768px) {
+      padding: 0 1rem;
+    }
   }
 }
 
@@ -63,17 +85,33 @@
       }
     }
   }
+  .myImg {
+    width: 100%;
+  }
 
   .authorLine {
     line-height: 2rem;
-    font-size: 0.75rem;
   }
 
   .labelLine {
     line-height: 2rem;
     margin-left: 1rem;
     @media screen and (max-width: 768px) {
-      margin-left: 0;
+    }
+  }
+}
+
+.noticeDetail {
+  width: 100%;
+  .authorLine {
+    display: flex;
+    line-height: 2rem;
+    .editBox {
+      width: 1px;
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
     }
   }
 }

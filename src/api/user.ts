@@ -11,7 +11,7 @@ export const getVerifyApi = (id: string) => {
 }
 
 export const registerApi = (data: any) => {
-  return request.post('regist', data)
+  return request.post('/regist', data)
 }
 
 export const loginApi = (data: any) => {

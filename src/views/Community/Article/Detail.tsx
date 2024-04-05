@@ -1,5 +1,5 @@
 import { IArticle } from '@/type'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { currentArticleState, isMobileAtom, sideBarTypeState } from '@/store/appStore'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { useParams } from 'react-router-dom'
@@ -31,25 +31,36 @@ import myHooks from '@/tool/myHooks/myHooks'
 import style from '../style.module.scss'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
 import Directory from '@/components/directory/Directory'
+import { imgGetBaseUrl } from '@/config/apiConfig'
 
 const Detail: React.FC = () => {
   const isMobile = useRecoilValue(isMobileAtom)
-  const { article_id } = useParams() as { article_id: string }
+  const { article_id = '' } = useParams<string>()
   const [currentArticle, setcurrentArticle] = useRecoilState(currentArticleState)
   const [openRemarkModal, setopenRemarkModal] = useState(false)
   const [remarkContent, setremarkContent] = useState('')
   const [openDirectoryDrawer, setOpenDirectoryDrawer] = useState(false)
   const setDirectoryTree = useSetRecoilState(directoryDataState)
+  const setSidebarType = useSetRecoilState(sideBarTypeState)
   const { token } = theme.useToken()
+
+  const imgUrl = useMemo(
+    () =>
+      currentArticle &&
+      currentArticle.res_long &&
+      currentArticle.res_long !== '' &&
+      JSON.parse(currentArticle.res_long).img,
+    [currentArticle]
+  )
 
   // 监听content滚动
   myHooks.useListenContentScroll({ followScroll: true })
 
   useEffect(() => {
-    // setSidebarType('directory')
+    setSidebarType('directory')
     return () => {
       setcurrentArticle(null)
-      // setSidebarType('nav')
+      setSidebarType('none')
     }
   }, [])
 
@@ -236,6 +247,7 @@ const Detail: React.FC = () => {
                   currentArticle.labels.map((label, index) => <MyTag key={index}>{label.label}</MyTag>)}
               </Space>
             </div>
+            <img className={style.myImg} src={`${imgGetBaseUrl}/${imgUrl}`} alt="" />
             <Divider style={{ margin: '1rem' }}></Divider>
             {/* body */}
             <div id="article">

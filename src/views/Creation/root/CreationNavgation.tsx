@@ -46,6 +46,12 @@ const CreationNavgation: React.FC = () => {
       path: 'article',
     },
     {
+      title: '公告',
+      content: '点此创建公告',
+      svgHref: 'notice',
+      path: 'notice',
+    },
+    {
       title: '讨论',
       content: '点此创建讨论',
       svgHref: 'discuss',
@@ -76,6 +82,7 @@ const CreationNavgation: React.FC = () => {
             classNames={{
               body: style.cardBody,
             }}
+            key={index}
             id={item.path}
             className={style.item}
             onClick={() => item.path && handleClick(item.path)}

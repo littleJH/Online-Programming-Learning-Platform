@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Problem from './Problem'
-import { Button, Form, Modal, Result, Space, Steps, UploadFile } from 'antd'
+import { Button, Form, Modal, Result, Space, Steps, UploadFile, theme } from 'antd'
 import Program from './Program'
 import { createProgramApi } from '@/api/program'
 import {
@@ -45,6 +45,7 @@ const Create: React.FC = () => {
   const [uploadDone, setUploadDone] = useState(false)
   const [currentProblem, setCurrentProblem] = useRecoilState(currentProblemState)
   const notification = useRecoilValue(notificationApi)
+  const { token } = theme.useToken()
 
   useEffect(() => {
     if (id.current) {
@@ -218,8 +219,15 @@ const Create: React.FC = () => {
 
   const renderSteps = () => {
     return (
-      <div className={style.stepsBox}>
+      <div
+        className={style.stepsBox}
+        style={{
+          backgroundColor: token.colorBgBase,
+          // borderBottom: isMobile ? `1px solid ${token.colorBorder}` : '',
+        }}
+      >
         <Steps
+          size="small"
           className={style.steps}
           direction={isMobile ? 'horizontal' : 'vertical'}
           progressDot
@@ -239,12 +247,12 @@ const Create: React.FC = () => {
             <Button
               type="dashed"
               style={{
-                height: '4rem',
-                width: '4rem',
+                height: '6rem',
+                width: '6rem',
               }}
               onClick={() => setOpenUploadModal(true)}
             >
-              <CloudUploadOutlined style={{ fontSize: '1.5rem' }} />
+              <CloudUploadOutlined style={{ fontSize: '3rem' }} />
             </Button>
           </div>
         </div>

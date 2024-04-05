@@ -121,17 +121,13 @@ const useNavTo = (options?: { back: number }) => {
     const pathArr = utils.getPathArray(path)
     const shouldAuth = authPath.includes(pathArr[0])
 
-    if (options) {
-      window.history.go(-options.back)
+    if (shouldAuth && !loginStatus) {
+      nav('/login')
     } else {
-      if (shouldAuth && !loginStatus) {
-        nav('/login')
-      } else {
-        setSideBarType(isMobile ? 'none' : utils.getSideBarType(path))
-        nav(path)
-      }
-      setPathNameState(location.pathname)
+      setSideBarType(isMobile ? 'none' : utils.getSideBarType(path))
+      nav(path)
     }
+    setPathNameState(location.pathname)
   }
 
   return navTo

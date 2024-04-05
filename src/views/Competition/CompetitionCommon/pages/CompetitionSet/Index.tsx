@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   getComLabels,
   getCompetitionListApi,
@@ -21,6 +21,8 @@ import MyTag from '@/components/Label/MyTag'
 import Search from 'antd/es/input/Search'
 import myHooks from '@/tool/myHooks/myHooks'
 import style from '../../../style.module.scss'
+import { useRecoilValue } from 'recoil'
+import { isMobileAtom } from '@/store/appStore'
 
 interface IDataSource {
   state: CompetitionState
@@ -48,6 +50,7 @@ const getState = (start: string, end: string): CompetitionState => {
 }
 
 const View: React.FC = () => {
+  const isMobile = useRecoilValue(isMobileAtom)
   const nav = myHooks.useNavTo()
   const [loading, setLoading] = useState(false)
   const [querys, setQuerys] = useSearchParams()
@@ -60,6 +63,8 @@ const View: React.FC = () => {
     text: querys.get('text') || '',
     label: querys.get('label') || '',
   })
+
+  const size = useMemo(() => (isMobile ? 'middle' : 'large'), [isMobile])
 
   useEffect(() => {
     setdataSource([])
@@ -262,6 +267,7 @@ const View: React.FC = () => {
             style={{
               width: '100%',
             }}
+            size={size}
             defaultValue={filter.text}
             placeholder="名称搜索"
             enterButton
@@ -275,6 +281,7 @@ const View: React.FC = () => {
             style={{
               width: '100%',
             }}
+            size={size}
             defaultValue={filter.text}
             placeholder="标签搜索"
             enterButton
