@@ -16,12 +16,12 @@ interface IRank {
   id: string
   title: string
   score: number
-  type: RankType
+  type: Type
 }
 
-type RankType = 'article' | 'user' | 'comment' | 'post'
+type Type = 'articleset' | 'userset' | 'commentset' | 'postset'
 
-const HotRank: React.FC<{ type: RankType }> = (props) => {
+const HotRank: React.FC<{ type: Type }> = (props) => {
   const { type } = props
   const [rankList, setRankList] = useState<IRank[]>([])
   // const setcurrentArticle = useSetRecoilState(currentArticleState)
@@ -30,16 +30,16 @@ const HotRank: React.FC<{ type: RankType }> = (props) => {
 
   useEffect(() => {
     switch (type) {
-      case 'article':
+      case 'articleset':
         fetchArticles()
         break
-      case 'user':
+      case 'userset':
         fetchUserRank()
         break
-      case 'comment':
+      case 'commentset':
         fetchCommentRank()
         break
-      case 'post':
+      case 'postset':
         fetchPostRank()
         break
       default:
@@ -60,7 +60,7 @@ const HotRank: React.FC<{ type: RankType }> = (props) => {
       articles.map((article) => ({
         title: article.article.title,
         score: article.Score,
-        type: 'article',
+        type: 'articleset',
         id: article.Member,
       }))
     )
@@ -142,51 +142,52 @@ const HotRank: React.FC<{ type: RankType }> = (props) => {
       {!rankList && <Skeleton active paragraph={{ rows: 9 }} className="px-4"></Skeleton>}
       {rankList &&
         rankList?.map((item, index) => (
-          <Card
-            size="small"
-            hoverable
-            key={index}
-            onClick={() => {
-              handleClick(index)
-            }}
-            bordered={false}
-            styles={{
-              body: { padding: '0px' },
-            }}
-          >
-            <div className="flex items-center w-full p-1">
-              <span className="w-8 text-center">
-                {/* {index <= 2 && (
+          <div key={index}>
+            <Card
+              size="small"
+              hoverable
+              onClick={() => {
+                handleClick(index)
+              }}
+              bordered={false}
+              styles={{
+                body: { padding: '0px' },
+              }}
+            >
+              <div className="flex items-center w-full p-1">
+                <span className="w-8 text-center">
+                  {/* {index <= 2 && (
                   <svg className='icon'>
                     <use href={index === 0 ? '#icon-top-one' : index === 1 ? '#icon-top-two' : index === 2 ? '#icon-top-three' : ''}></use>
                   </svg>
                 )} */}
-                {/* {index > 2 && ( */}
-                <span className="w-8 flex justify-center">
-                  <div className="w-4 h-4 text-xs bg-slate-100 rounded-full">{index + 1}</div>
+                  {/* {index > 2 && ( */}
+                  <span className="w-8 flex justify-center">
+                    <div className="w-4 h-4 text-xs bg-slate-100 rounded-full">{index + 1}</div>
+                  </span>
+                  {/* )} */}
                 </span>
-                {/* )} */}
-              </span>
-              <span
-                className="w-36 mx-2 text-xs"
-                style={{
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {item.title}
-              </span>
-              <span className="w-12 flex items-center justify-center">
-                <span>
-                  <svg className="icon-small">
-                    <use href="#icon-fire"></use>
-                  </svg>
+                <span
+                  className="w-36 mx-2 text-xs"
+                  style={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {item.title}
                 </span>
-                <span className="text-right text-xs">{item.score}</span>
-              </span>
-            </div>
-          </Card>
+                <span className="w-12 flex items-center justify-center">
+                  <span>
+                    <svg className="icon-small">
+                      <use href="#icon-fire"></use>
+                    </svg>
+                  </span>
+                  <span className="text-right text-xs">{item.score}</span>
+                </span>
+              </div>
+            </Card>
+          </div>
         ))}
     </Space>
   )

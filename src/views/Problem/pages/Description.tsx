@@ -7,7 +7,7 @@ const Description: React.FC = () => {
   const [problem, caseSamples] = useOutletContext<[IProblem, ICaseSample[]]>()
 
   return (
-    <div className="px-8">
+    <div className="">
       <ProblemDetail mode="problem" problem={problem} caseSamples={caseSamples}></ProblemDetail>
     </div>
   )

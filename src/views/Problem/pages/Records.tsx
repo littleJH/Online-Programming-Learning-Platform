@@ -8,11 +8,7 @@ const Records: React.FC = () => {
   const [problem] = useOutletContext<[IProblem]>()
 
   return (
-    <div
-      style={{
-        margin: '1rem',
-      }}
-    >
+    <div>
       <RecordTable mode="problem" problem={problem}></RecordTable>
     </div>
   )

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
-import { Button, Card, Col, Divider, Statistic, Row, Space, Input, Select, Segmented } from 'antd'
+import { Outlet, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { Button, Card, Col, Divider, Statistic, Row, Space, Input, Select, Segmented, theme } from 'antd'
 import HotRank from './Overview/Side/HotRank'
 import { getArticleListApi } from '@/api/article'
 import { useRecoilValue } from 'recoil'
@@ -20,20 +20,27 @@ interface IStats {
   solve: number
 }
 
-type Type = 'article' | 'user' | 'comment' | 'post'
+type Type = 'articleset' | 'userset' | 'commentset' | 'postset'
 
 const CommunityRoot: React.FC = () => {
   const nav = myHooks.useNavTo()
-  const [querys, setQuerys] = useSearchParams()
   const pathname = useRecoilValue(pathNameState)
   const [noticeList, setNoticeList] = useState<INotice[]>([])
-  const [searchText, setSearchText] = useState('')
-  const [type, setType] = useState<Type>('article')
+  const [showAllNotice, setShowAllNotice] = useState(false)
+  const [searchText, setSearchText] = useState(utils.getQuerys(location.search)?.text || '')
   const [stats, setstats] = useState<IStats>({
     article: 0,
     comment: 0,
     solve: 0,
   })
+  const { token } = theme.useToken()
+
+  const type = useMemo(() => utils.getPathArray(pathname)[1], [pathname])
+
+  const visibleNotice = useMemo(
+    () => (showAllNotice ? noticeList : noticeList.slice(0, 3)),
+    [noticeList, showAllNotice]
+  )
 
   const showHeaderSider = useMemo(
     () => utils.getPathArray(pathname).length > 1 && utils.getPathArray(pathname)[1].includes('set'),
@@ -70,84 +77,100 @@ const CommunityRoot: React.FC = () => {
     })
   }
 
-  const handleSearch = () => {
-    setQuerys(() => (searchText ? [['text', searchText]] : []))
+  const handleSearch = (value: string) => {
+    setSearchText(value)
+    nav(`/community/${utils.getPathArray(pathname)[1]}?text=${value}`)
   }
   const handleSearchChange = (e: any) => {
-    setSearchText(e.target.value)
+    if (e.target.value === '') {
+      nav(`/community/${utils.getPathArray(pathname)[1]}`)
+      setSearchText('')
+    }
+  }
+
+  const handleSegmentedChange = (value: string) => {
+    nav(`/community/${value}`)
   }
 
   return (
     <div className={style.communityRoot}>
       {/* left */}
       <div className={style.left}>
-        <Input.Search
-          className={style.search}
-          size="large"
-          defaultValue={searchText}
-          placeholder="搜索用户、公告、文章、讨论、题解"
-          enterButton
-          onSearch={handleSearch}
-          onChange={handleSearchChange}
-        ></Input.Search>
+        {showHeaderSider && (
+          <Input.Search
+            className={style.search}
+            size="large"
+            defaultValue={searchText}
+            placeholder="搜索用户、公告、文章、讨论、题解"
+            enterButton
+            onSearch={handleSearch}
+            onChange={handleSearchChange}
+          ></Input.Search>
+        )}
         {/* 公告 */}
         {showHeaderSider && (
           <div className={style.notice}>
-            {noticeList.map((item, index) => (
-              <>
-                {index <= 2 && (
-                  <Card
-                    key={index}
-                    className={style.item}
+            {visibleNotice.map((item, index) => (
+              <div
+                className={style.item}
+                style={{
+                  marginRight: index === 2 ? '0px' : '1rem',
+                }}
+                key={index}
+              >
+                <Card
+                  styles={{
+                    body: {
+                      height: '6rem',
+                      padding: '0px',
+                      marginBottom: '1rem',
+                      overflow: 'hidden',
+                      boxSizing: 'border-box',
+                    },
+                  }}
+                  title={item.title}
+                  size="small"
+                  hoverable
+                  onClick={() => nav(`/community/notice/${item.id}`)}
+                >
+                  <ReadOnly
                     style={{
-                      marginRight: index === 2 ? '0px' : '0.5rem',
+                      fontSize: '0.8rem',
                     }}
-                    styles={{
-                      body: {
-                        height: '6rem',
-                        padding: '0px',
-                        marginBottom: '1rem',
-                        overflow: 'hidden',
-                        boxSizing: 'border-box',
-                      },
-                    }}
-                    title={item.title}
-                    size="small"
-                    hoverable
-                    onClick={() => nav(`/community/notice/${item.id}`)}
-                  >
-                    <ReadOnly
-                      style={{
-                        fontSize: '0.8rem',
-                      }}
-                      html={item.content}
-                    ></ReadOnly>
-                  </Card>
-                )}
-              </>
+                    html={item.content}
+                  ></ReadOnly>
+                </Card>
+              </div>
             ))}
           </div>
         )}
-        <Card
-          className={style.recommand}
-          title={
-            <div className={style.title}>
-              <span className="mr-2">每日推荐</span>
-              <MySvgIcon href="#icon-recommand" size={2}></MySvgIcon>
+
+        {showHeaderSider ? (
+          <Card
+            className={style.recommand}
+            title={
+              <div className={style.title}>
+                <MySvgIcon
+                  color={searchText === '' ? '' : token.colorPrimary}
+                  href={`${searchText === '' ? 'recommand' : 'search'}`}
+                  size={2}
+                ></MySvgIcon>
+                <span className="ml-2">{searchText === '' ? '每日推荐' : `搜索结果：${searchText}`}</span>
+              </div>
+            }
+            extra={
+              <Segmented defaultValue={type} options={recommandOptions} onChange={handleSegmentedChange}></Segmented>
+            }
+          >
+            <div className={style.content}>
+              <Outlet></Outlet>
             </div>
-          }
-          extra={
-            <Segmented
-              defaultValue={'article'}
-              options={recommandOptions}
-              onChange={(value) => setType(value as Type)}
-            ></Segmented>
-          }
-        >
+          </Card>
+        ) : (
           <div className={style.content}>
             <Outlet></Outlet>
           </div>
-        </Card>
+        )}
       </div>
       {/* right */}
       {showHeaderSider && (
@@ -179,7 +202,7 @@ const CommunityRoot: React.FC = () => {
               </h3>
             }
           >
-            <HotRank type={type}></HotRank>
+            <HotRank type={type as Type}></HotRank>
           </Card>
         </div>
       )}
@@ -191,19 +214,23 @@ export default CommunityRoot
 
 const recommandOptions = [
   {
-    value: 'article',
+    key: 'articleset',
+    value: 'articleset',
     label: '文章',
   },
   {
-    value: 'comment',
+    key: 'commentset',
+    value: 'commentset',
     label: '讨论',
   },
   {
-    value: 'post',
+    key: 'postset',
+    value: 'postset',
     label: '题解',
   },
   {
-    value: 'user',
+    key: 'userset',
+    value: 'userset',
     label: '用户',
   },
 ]

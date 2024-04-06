@@ -1,32 +1,48 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import style from '../style.module.scss'
-import { Button, Form, Input, InputRef, Modal, Result, ResultProps } from 'antd'
+import { Button, Drawer, Form, Input, InputRef, Modal, Result, ResultProps } from 'antd'
 import TextEditor from '@/components/editor/TextEditor'
 import myHooks from '@/tool/myHooks/myHooks'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { createCommentApi } from '@/api/comment'
 import ProblemList from '@/components/Problem/list/List'
 import { IPrblemTableDataType } from '@/type'
+import { showProblemApi } from '@/api/problem'
 
 const CreateComment: React.FC = () => {
   const nav = myHooks.useNavTo()
   const [querys, setQuerys] = useSearchParams()
-  const id = querys.get('id')
+  const problem_id = querys.get('problem_id')
   const [form] = Form.useForm()
   const [content, setcontent] = useState<string>('')
   const [openResultModal, setOpenResultModal] = useState(false)
   const [result, setResult] = useState<ResultProps>()
   const [selectedProblems, setSelectedProblems] = useState<IPrblemTableDataType[]>([])
+  const [openDrawer, setOpenDrawer] = useState(false)
 
   const selectedRowKeys = useMemo(() => [...selectedProblems.map((value) => value.key)], [selectedProblems])
 
   useEffect(() => {
-    console.log('selectedProblems ==> ', selectedProblems)
+    if (problem_id) fetchProblem()
+  }, [])
+
+  useEffect(() => {
     form.setFieldsValue({
-      title: selectedProblems[0]?.title,
+      problem: selectedProblems[0]?.title,
       id: selectedProblems[0]?.key,
     })
   }, [selectedProblems])
+
+  const fetchProblem = async () => {
+    if (!problem_id) return
+    try {
+      const problem = (await showProblemApi(problem_id)).data.data.problem
+      form.setFieldsValue({
+        title: problem.title,
+        id: problem.id,
+      })
+    } catch {}
+  }
 
   const handleContentChange = (value: string) => {
     setcontent(value)
@@ -53,7 +69,11 @@ const CreateComment: React.FC = () => {
                     <Button
                       type="primary"
                       key={'detail'}
-                      onClick={() => nav(`/community/comment/${res.data.comment.id}`)}
+                      onClick={() =>
+                        problem_id
+                          ? nav(`/problemdetail/${problem_id}/comment`)
+                          : nav(`/community/comment/${res.data.comment.id}`)
+                      }
                     >
                       查看详情
                     </Button>,
@@ -80,12 +100,14 @@ const CreateComment: React.FC = () => {
 
   return (
     <div className={style.commentCreation}>
-      <ProblemList
-        mode="radio"
-        selectedProblems={selectedProblems}
-        setSelectedProblems={setSelectedProblems}
-        selectedRowKeys={selectedRowKeys}
-      ></ProblemList>
+      <Drawer width={'50vw'} open={openDrawer} onClose={() => setOpenDrawer(false)}>
+        <ProblemList
+          mode="radio"
+          selectedProblems={selectedProblems}
+          setSelectedProblems={setSelectedProblems}
+          selectedRowKeys={selectedRowKeys}
+        ></ProblemList>
+      </Drawer>
       <Form
         form={form}
         name="commentForm"
@@ -98,7 +120,16 @@ const CreateComment: React.FC = () => {
         }}
       >
         <Form.Item name={'title'} label="题目" rules={[{ required: true }]}>
-          <Input disabled></Input>
+          <Input
+            disabled
+            suffix={
+              problem_id ? null : (
+                <Button type="primary" onClick={() => setOpenDrawer(true)}>
+                  选择题目
+                </Button>
+              )
+            }
+          ></Input>
         </Form.Item>
         <Form.Item name={'id'} label="题目 ID" rules={[{ required: true }]}>
           <Input disabled></Input>

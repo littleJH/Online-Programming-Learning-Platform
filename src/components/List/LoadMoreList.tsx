@@ -20,9 +20,13 @@ const LoadMoreList: React.FC<Iprops> = (props) => {
   const pageSize = useRef<number>(10)
   const { token } = theme.useToken()
 
+  useEffect(() => console.log('LoadmoreList datasource ==> ', dataSource), [dataSource])
+
   useEffect(() => {
+    pageNum.current = 1
+    pageSize.current = 10
     fetchFn(pageNum.current, pageSize.current, () => pageNum.current++)
-  }, [])
+  }, [fetchFn])
 
   // 监听content滚动触底，因此该LoadMoreList需要在content的底部
   myHooks.useListenContentScroll({

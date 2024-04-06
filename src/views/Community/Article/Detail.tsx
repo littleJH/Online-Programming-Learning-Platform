@@ -19,62 +19,23 @@ import {
 } from '@/api/article'
 import { createArticleRemarkApi, getArticleRemarkListApi } from '@/api/remark'
 import { getUserInfoApi } from '@/api/user'
-import ReadOnly from '@/components/editor/Readonly'
-import { Button, Divider, Modal, Space, Card, theme, Drawer } from 'antd'
-import MyTag from '@/components/Label/MyTag'
-import TextEditor from '@/components/editor/TextEditor'
-import RemarkCard from '@/components/Card/RemarkCard'
-import SideActionBar from '@/components/SideActionBar/SideActionBar'
-import utils from '@/tool/myUtils/utils'
-import { directoryDataState } from '@/components/directory/store'
-import myHooks from '@/tool/myHooks/myHooks'
-import style from '../style.module.scss'
-import MySvgIcon from '@/components/Icon/MySvgIcon'
-import Directory from '@/components/directory/Directory'
-import { imgGetBaseUrl } from '@/config/apiConfig'
+import GeneralDetail from '../GeneralDetail/GeneralDetail'
 
 const Detail: React.FC = () => {
-  const isMobile = useRecoilValue(isMobileAtom)
-  const { article_id = '' } = useParams<string>()
+  const { article_id = '' } = useParams()
   const [currentArticle, setcurrentArticle] = useRecoilState(currentArticleState)
-  const [openRemarkModal, setopenRemarkModal] = useState(false)
   const [remarkContent, setremarkContent] = useState('')
-  const [openDirectoryDrawer, setOpenDirectoryDrawer] = useState(false)
-  const setDirectoryTree = useSetRecoilState(directoryDataState)
-  const setSidebarType = useSetRecoilState(sideBarTypeState)
-  const { token } = theme.useToken()
-
-  const imgUrl = useMemo(
-    () =>
-      currentArticle &&
-      currentArticle.res_long &&
-      currentArticle.res_long !== '' &&
-      JSON.parse(currentArticle.res_long).img,
-    [currentArticle]
-  )
-
-  // 监听content滚动
-  myHooks.useListenContentScroll({ followScroll: true })
+  const [openRemarkModal, setopenRemarkModal] = useState(false)
 
   useEffect(() => {
-    setSidebarType('directory')
     return () => {
       setcurrentArticle(null)
-      setSidebarType('none')
     }
   }, [])
 
   useEffect(() => {
     typeof currentArticle?.likeNum !== 'number' && fetch()
     setArticleVisibleApi(article_id)
-  }, [currentArticle])
-
-  useEffect(() => {
-    const articleEl = document.getElementById('article')
-    if (currentArticle && articleEl) {
-      const toc = utils.generateTOC(articleEl)
-      setDirectoryTree(toc)
-    }
   }, [currentArticle])
 
   const fetch = async () => {
@@ -139,10 +100,6 @@ const Detail: React.FC = () => {
     currentArticle?.liked === 1 ? cancelLike() : like()
   }
 
-  const handleMenubtnClick = () => {
-    setOpenDirectoryDrawer(true)
-  }
-
   const handleCollectClick = () => {
     const collect = () => {
       collectArticleApi(article_id).then(async (res) => {
@@ -176,6 +133,7 @@ const Detail: React.FC = () => {
     }
     currentArticle?.collected ? cancelCollect() : collect()
   }
+
   const handleSubmitRemarkClick = () => {
     console.log(remarkContent)
     createArticleRemarkApi(
@@ -214,114 +172,16 @@ const Detail: React.FC = () => {
   }
 
   return (
-    <div className={style.articleDetail}>
-      {currentArticle && (
-        <div className={style.content}>
-          <div id="top"></div>
-          <Card size="small">
-            {/* header */}
-            <div
-              className={style.header}
-              style={{
-                backgroundColor: token.colorBgBase,
-              }}
-            >
-              <h1 className={style.title}>{currentArticle.title}</h1>
-              <Space
-                size={'large'}
-                className={style.authorLine}
-                style={{
-                  color: token.colorTextDescription,
-                }}
-              >
-                <span>{currentArticle.user?.name}</span>
-                <span>{currentArticle.created_at}</span>
-                <span className="flex items-center">
-                  <MySvgIcon href={'#icon-visible'} color={token.colorTextDescription}></MySvgIcon>
-                  <span className="ml-2">{currentArticle.visibleNum}</span>
-                </span>
-              </Space>
-
-              <Space className={style.labelLine}>
-                {currentArticle.labels &&
-                  currentArticle.labels.map((label, index) => <MyTag key={index}>{label.label}</MyTag>)}
-              </Space>
-            </div>
-            <img className={style.myImg} src={`${imgGetBaseUrl}/${imgUrl}`} alt="" />
-            <Divider style={{ margin: '1rem' }}></Divider>
-            {/* body */}
-            <div id="article">
-              <ReadOnly html={currentArticle.content} borderd={false}></ReadOnly>
-            </div>
-          </Card>
-          {/* remark */}
-          <div id="remark">
-            <div className="flex justify-center">
-              <Button type="dashed" className="shadow m-4" onClick={() => setopenRemarkModal(true)}>
-                #我有一言
-              </Button>
-            </div>
-            <div>
-              {currentArticle.remark &&
-                currentArticle.remark.remarks.map((remark) => (
-                  <RemarkCard remark={remark} key={remark.id}></RemarkCard>
-                ))}
-            </div>
-          </div>
-          {/* <div className='w-8'></div> */}
-          {/* <div className='w-64 h-96 shadow rounded '></div> */}
-
-          <div
-            className={`w-12 h-12 px-4 fixed top-1/3 right-0 flex flex-col`}
-            style={{
-              translate: '-50% -50%',
-            }}
-          >
-            <SideActionBar
-              onArrowupClick={handleArrowupClick}
-              onCollectClick={handleCollectClick}
-              onCommentClick={handleCommentClick}
-              onLikeClick={handleLikeClick}
-              onMenubtnClick={isMobile ? handleMenubtnClick : null}
-              likeNum={currentArticle?.likeNum || 0}
-              collectNum={currentArticle?.collectNum || 0}
-              remarkNum={currentArticle?.remark.total || 0}
-              liked={currentArticle?.liked || 0}
-              collected={currentArticle?.collected || false}
-            ></SideActionBar>
-          </div>
-          <Modal
-            open={openRemarkModal}
-            onCancel={() => setopenRemarkModal(false)}
-            footer={[
-              <Button key="submit" type="primary" onClick={handleSubmitRemarkClick}>
-                发布
-              </Button>,
-            ]}
-            title={'我有一言'}
-          >
-            <TextEditor
-              mode="markdown"
-              value={remarkContent}
-              htmlChange={(value: string) => setremarkContent(value)}
-              placeholder="发表我的看法~~~"
-            ></TextEditor>
-          </Modal>
-          <Drawer
-            open={openDirectoryDrawer}
-            placement="bottom"
-            onClose={() => setOpenDirectoryDrawer(false)}
-            closeIcon={false}
-            zIndex={9999999}
-            style={{
-              opacity: '0.9',
-            }}
-          >
-            <Directory></Directory>
-          </Drawer>
-        </div>
-      )}
-    </div>
+    <GeneralDetail
+      currentObject={currentArticle}
+      openRemarkModal={openRemarkModal}
+      setOpenRemarkModal={setopenRemarkModal}
+      onArrowupClick={handleArrowupClick}
+      onCollectClick={handleCollectClick}
+      onCommentClick={handleCommentClick}
+      onLikeClick={handleLikeClick}
+      onSubmitRemarkClick={handleSubmitRemarkClick}
+    ></GeneralDetail>
   )
 }
 

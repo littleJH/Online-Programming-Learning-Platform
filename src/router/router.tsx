@@ -2,7 +2,7 @@ import { Navigate, RouteObject, useLocation, useRoutes } from 'react-router-dom'
 import React, { ComponentType, ReactNode, Suspense, lazy } from 'react'
 import Loading from '@/components/Loading/Loading'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { isMobileAtom, pathNameState, sideBarTypeState } from '@/store/appStore'
+import { isMobileAtom, pathNameState, searchQueryState, sideBarTypeState } from '@/store/appStore'
 import Root from '@/views/Root'
 import utils from '@/tool/myUtils/utils'
 import {
@@ -70,6 +70,8 @@ const ProblemTopic = lazy(() => import('@/views/ProblemSet/topic/Topic'))
 const ProblemForm = lazy(() => import('@/views/ProblemSet/form/Form'))
 const ProblemDescription = lazy(() => import('@/views/Problem/pages/Description'))
 const ProblemSubmitrecord = lazy(() => import('@/views/Problem/pages/Records'))
+const ProblemComment = lazy(() => import('@/views/Problem/pages/Comment'))
+const ProblemPost = lazy(() => import('@/views/Problem/pages/Post'))
 const ProblemCreate = lazy(() => import('@/views/Creation/pages/CreateProblem/Create'))
 
 // 比赛
@@ -119,6 +121,7 @@ const CreateNotice = lazy(() => import('@/views/Creation/pages/CreateNotice'))
 // 详情
 const ArticleDetail = lazy(() => import('@/views/Community/Article/Detail'))
 const NoticeDetail = lazy(() => import('@/views/Community/Notice/NoticeDetail'))
+const PostDetail = lazy(() => import('@/views/Community/Post/PostDetail'))
 
 // 学习中心
 const LearnRoot = lazy(() => import('@/views/Learn/LearnRoot'))
@@ -232,6 +235,14 @@ const routes: MyRoute[] = [
             path: 'records',
             element: ProblemSubmitrecord,
           },
+          {
+            path: 'comment',
+            element: ProblemComment,
+          },
+          {
+            path: 'post',
+            element: ProblemPost,
+          },
         ],
       },
       // competition
@@ -303,6 +314,10 @@ const routes: MyRoute[] = [
           {
             path: 'notice/:notice_id',
             element: NoticeDetail,
+          },
+          {
+            path: 'post/:post_id',
+            element: PostDetail,
           },
         ],
       },
@@ -417,6 +432,7 @@ const transformRoutes = (routes: MyRoute[]) => {
 
 const RouterWaiter = () => {
   const setPathName = useSetRecoilState(pathNameState)
+  const setSearchQuery = useSetRecoilState(searchQueryState)
   const setSideBarType = useSetRecoilState(sideBarTypeState)
   const isMobile = useRecoilValue(isMobileAtom)
 
@@ -426,6 +442,7 @@ const RouterWaiter = () => {
     if (path) {
       setSideBarType(isMobile ? 'none' : utils.getSideBarType(path))
       setPathName(location.pathname)
+      setSearchQuery(location.search)
     }
   }
   return useRoutes(transformRoutes(routes))
@@ -451,11 +468,19 @@ export const siderMenuItemsObj: any = {
   problemdetailMenuItem: [
     {
       label: '题目描述',
-      key: 'problemdetail/description',
+      key: 'description',
     },
     {
       label: '提交记录',
-      key: 'problemdetail/records',
+      key: 'records',
+    },
+    {
+      label: '讨论',
+      key: 'comment',
+    },
+    {
+      label: '题解',
+      key: 'post',
     },
   ],
   competitionMenuItem: [

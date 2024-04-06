@@ -16,6 +16,7 @@ import {
 } from '@/api/article'
 import { getArticleRemarkListApi } from '@/api/remark'
 import MySvgIcon from '../Icon/MySvgIcon'
+import GeneralCard from './GeneralCard'
 
 interface IProps {
   articleProp: IArticle
@@ -66,73 +67,24 @@ const ArticleCard: React.FC<IProps> = (props) => {
   )
 
   const renderBody = () => (
-    <div className={style.articleCard}>
-      {/* left */}
-      <div className="grow" style={{ width: '100px' }}>
-        <div className="flex items-center">
-          <Avatar className="card-avatar" src={`${iconBaseUrl}/${article.user?.icon}`}></Avatar>
-          <div className="card-username">{article.user?.name}</div>
-          <div className="card-time">{ago}</div>
-          {article.labels && article.labels.length > 0 && (
-            <Space rootClassName={style.tags}>
-              {article.labels.map((label) => (
-                <MyTag key={label.id}>{label.label}</MyTag>
-              ))}
-            </Space>
-          )}
-        </div>
-        <div className="card-title">{article.title}</div>
-        <div
-          className="card-content"
-          style={{
-            width: '100%',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {article.content.replace(/<[^<>]+>/g, '')}
-        </div>
-
-        {/* footer */}
-        <div className="flex items-center mt-2">
-          <div className={`${style.footer} grow flex items-center`}>
-            <div>
-              <MySvgIcon
-                href={article.collected ? '#icon-collected' : '#icon-collect'}
-                color={article.collected ? token.colorPrimaryTextHover : token.colorTextDescription}
-              ></MySvgIcon>
-              <span>{article.collectNum}</span>
-            </div>
-            <div className="divider-vertical"></div>
-            <div>
-              <MySvgIcon
-                href={article.liked ? '#icon-liked' : '#icon-like'}
-                color={article.liked ? token.colorPrimaryTextHover : token.colorTextDescription}
-              ></MySvgIcon>
-              <span>{article.likeNum}</span>
-            </div>
-            <div className="divider-vertical"></div>
-            <div>
-              <MySvgIcon href={'#icon-comment'} color={token.colorTextDescription}></MySvgIcon>
-              <span>{article.remark?.total}</span>
-            </div>
-            <div className="divider-vertical"></div>
-            <div>
-              <MySvgIcon href={'#icon-visible'} color={token.colorTextDescription}></MySvgIcon>
-              <span>{article.visibleNum}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* right image */}
-      {imgUrl && (
-        <div className={style.imgctn}>
-          <img src={`${imgGetBaseUrl}/${imgUrl}`} alt="" />
-        </div>
-      )}
-    </div>
+    <GeneralCard
+      user={article.user}
+      content={article.content}
+      title={article.title}
+      img={imgUrl}
+      ago={ago}
+      labels={article.labels}
+      remarkCount={article.remark?.total}
+      liked={{
+        count: article.likeNum,
+        isLiked: article.liked,
+      }}
+      collected={{
+        count: article.collectNum,
+        isCollected: article.collected,
+      }}
+      viewCount={article.visibleNum}
+    ></GeneralCard>
   )
 
   return (

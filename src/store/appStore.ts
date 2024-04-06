@@ -1,5 +1,5 @@
 import { getCurrentUserinfo } from '@/api/user'
-import { IArticle, IProblem, IMonacoOptions, User, IToc, ICompetition, TypeSideBar } from '@/type'
+import { IArticle, IProblem, IMonacoOptions, User, IToc, ICompetition, TypeSideBar, IPost } from '@/type'
 import { atom, selector } from 'recoil'
 import utils from '@/tool/myUtils/utils'
 import { themeDefault, monacoOptionsDefault } from '@/config/config'
@@ -142,6 +142,11 @@ export const currentProblemState = atom<null | IProblem>({
   default: null,
 })
 
+export const currentPostState = atom<null | IPost>({
+  key: 'postState',
+  default: null,
+})
+
 export const pathNameState = atom<string>({
   key: 'pathNameState',
   default: location.pathname,
@@ -149,6 +154,18 @@ export const pathNameState = atom<string>({
     ({ onSet }) => {
       onSet((newValue) => {
         console.log('pathNameState ==> ', newValue)
+      })
+    },
+  ],
+})
+
+export const searchQueryState = atom<string>({
+  key: 'searchQueryState',
+  default: location.search,
+  effects: [
+    ({ onSet }) => {
+      onSet((newValue) => {
+        console.log('searchQueryState ==> ', newValue)
       })
     },
   ],

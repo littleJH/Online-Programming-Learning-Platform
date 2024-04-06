@@ -26,6 +26,7 @@ import { isMobileAtom, languageState, pathNameState } from '@/store/appStore'
 import utils from '@/tool/myUtils/utils'
 import { footerRightNode } from '@/store/nodeStore'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
+import { PlusOutlined } from '@ant-design/icons'
 
 interface IState extends IRecordState {
   case_id: number
@@ -92,36 +93,42 @@ export const Detail: React.FC = () => {
 
   useEffect(() => {
     problem && !isMobile && setFooterRight(renderFooterRight())
+    return () => {
+      setFooterRight('')
+    }
   }, [problem, code, language])
 
   useEffect(() => {
     window.addEventListener('resize', () => {
       setcodeHeight(resizeEditorHeight())
     })
-    if (id) {
-      Promise.all([
-        getProblemLikedApi(id),
-        getProblemLikeNumApi(id, 'true'),
-        getProblemLikeNumApi(id, 'false'),
-        getProblemCollectedApi(id),
-        getProblemCollectNumApi(id),
-        getProblemVisibleNumApi(id),
-        showProblemApi(id),
-      ]).then((res) => {
-        const data = res[6].data.data
-        setcaseSamples(data.caseSamples)
-        settestTextareaValue(data.caseSamples[0].input)
-        const problemObj = data.problem
-        problemObj.liked = res[0].data.data.like
-        problemObj.likeNum = res[1].data.data.total
-        problemObj.dislikeNum = res[2].data.data.total
-        problemObj.collected = res[3].data.data.collect
-        problemObj.collectNum = res[4].data.data.total
-        problemObj.visibleNum = res[5].data.data.total
-        setproblem(problemObj)
-      })
-    }
+    fetchDetail()
   }, [id])
+
+  const fetchDetail = () => {
+    if (!id) return
+    Promise.all([
+      getProblemLikedApi(id),
+      getProblemLikeNumApi(id, 'true'),
+      getProblemLikeNumApi(id, 'false'),
+      getProblemCollectedApi(id),
+      getProblemCollectNumApi(id),
+      getProblemVisibleNumApi(id),
+      showProblemApi(id),
+    ]).then((res) => {
+      const data = res[6].data.data
+      setcaseSamples(data.caseSamples)
+      settestTextareaValue(data.caseSamples[0].input)
+      const problemObj = data.problem
+      problemObj.liked = res[0].data.data.like
+      problemObj.likeNum = res[1].data.data.total
+      problemObj.dislikeNum = res[2].data.data.total
+      problemObj.collected = res[3].data.data.collect
+      problemObj.collectNum = res[4].data.data.total
+      problemObj.visibleNum = res[5].data.data.total
+      setproblem(problemObj)
+    })
+  }
 
   const resizeEditorHeight = () =>
     rightCtnRef.current.clientHeight - (consoleRef.current ? consoleRef.current.clientHeight : 0)
@@ -169,6 +176,10 @@ export const Detail: React.FC = () => {
     setTimeout(() => {
       bottomRef.current && bottomRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' })
     }, 0)
+  }
+
+  const handleAdd = () => {
+    nav(`/creation/${tabHeadMode}?problem_id=${utils.getPathArray(pathname)[1]}`)
   }
 
   const renderFooterRight = () => {
@@ -280,6 +291,14 @@ export const Detail: React.FC = () => {
                       label: '提交记录',
                       key: 'records',
                     },
+                    {
+                      label: '讨论',
+                      key: 'comment',
+                    },
+                    {
+                      label: '题解',
+                      key: 'post',
+                    },
                   ]}
                   onClick={(e) => {
                     settabHeadMode(e.key)
@@ -289,8 +308,8 @@ export const Detail: React.FC = () => {
                 ></Menu>
               </div>
             )}
-            {/* body */}
-            <div className="grow overflow-scroll">
+            {/* content */}
+            <div className={style.content}>
               <Outlet context={[problem, caseSamples]}></Outlet>
             </div>
             {/* footer */}
@@ -302,6 +321,13 @@ export const Detail: React.FC = () => {
               ></LeftFooter>
             )} */}
           </div>
+          {['comment', 'post'].includes(tabHeadMode) && (
+            <div className={style.add}>
+              <Button size="large" type="primary" shape="circle" onClick={handleAdd}>
+                <PlusOutlined />
+              </Button>
+            </div>
+          )}
         </div>
         {/* resize */}
         {!isMobile && (

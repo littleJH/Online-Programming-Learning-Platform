@@ -264,6 +264,51 @@ export interface IArticle {
   hot?: string | number
 }
 
+export interface IComment {
+  id: string
+  user_id: string
+  content: string
+  created_at: string
+  updated_at: string
+  res_short: string
+  res_long: string
+  user: User
+  visibleNum: number
+  liked: 1 | 0 | -1 = 0
+  likeNum: number
+  collected: boolean
+  collectNum: number
+  reply: {
+    replys: IReply[]
+    total: number
+  }
+  hot?: string | number
+}
+
+export interface IPost {
+  id: string
+  user_id: string
+  title: string
+  content: string
+  created_at: string
+  updated_at: string
+  res_short: string
+  res_long: string
+  category_id: string
+  user: User
+  visibleNum: number
+  liked: 1 | 0 | -1 = 0
+  likeNum: number
+  collected: boolean
+  collectNum: number
+  labels: IArticleLabel[]
+  remark: {
+    remarks: IRemark[]
+    total: number
+  }
+  hot?: string | number
+}
+
 export interface IArticleLabel {
   article_id: string
   created_at: string
@@ -288,6 +333,8 @@ export interface IRemark {
   collected: boolean
   collectNum: number
 }
+
+export interface IReply extends IRemark {}
 
 export interface ICategory {
   id: string

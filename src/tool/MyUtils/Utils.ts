@@ -40,6 +40,17 @@ const getPathArray = (path: string) => {
   return arr
 }
 
+const getQuerys = (path: string) => {
+  const index = path.indexOf('?')
+  const arr = path.slice(index + 1).split('&')
+  const obj: any = {}
+  arr.forEach((item) => {
+    const [key, value] = item.split('=')
+    obj[key] = value
+  })
+  return obj
+}
+
 const generateTOC = (container: HTMLElement) => {
   const headings = container.querySelectorAll('h1, h2, h3, h4, h5, h6')
   const toc: IToc[] = []
@@ -201,6 +212,7 @@ const getIsMobile = () => {
 const utils = {
   formatProblemJson,
   getPathArray,
+  getQuerys,
   generateTOC,
   getSideBarType,
   getDuration,

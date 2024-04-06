@@ -1,7 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { directorySelectKeysState } from '@/components/directory/store'
 import { useNavigate } from 'react-router-dom'
-import { headerNavState, isMobileAtom, loginStatusState, pathNameState, sideBarTypeState } from '@/store/appStore'
+import {
+  headerNavState,
+  isMobileAtom,
+  loginStatusState,
+  pathNameState,
+  searchQueryState,
+  sideBarTypeState,
+} from '@/store/appStore'
 import { useSetRecoilState, useRecoilValue } from 'recoil'
 import utils from '../myUtils/utils'
 import { RecoilState, useRecoilState } from 'recoil'
@@ -114,6 +121,7 @@ const useNavTo = (options?: { back: number }) => {
   const nav = useNavigate()
   const isMobile = useRecoilValue(isMobileAtom)
   const setPathNameState = useSetRecoilState(pathNameState)
+  const serSearchQuery = useSetRecoilState(searchQueryState)
   const loginStatus = useRecoilValue(loginStatusState)
   const setSideBarType = useSetRecoilState(sideBarTypeState)
   const navTo = (path: string) => {
@@ -128,6 +136,7 @@ const useNavTo = (options?: { back: number }) => {
       nav(path)
     }
     setPathNameState(location.pathname)
+    serSearchQuery(location.search)
   }
 
   return navTo

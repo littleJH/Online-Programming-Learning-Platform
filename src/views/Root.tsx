@@ -53,10 +53,10 @@ const Root: React.FC = () => {
 
   useEffect(() => {
     const body = document.getElementsByTagName('body')[0]
-    // body.style.setProperty('--colorBgBase', token.colorBgBase)
-    // body.style.setProperty('--colorTextBase', token.colorTextBase)
-    // body.style.setProperty('--colorBgBlur', token.colorBgBlur)
-    // body.style.setProperty('--colorBgBlur', token.colorBgBlur)
+    body.style.setProperty('--colorBgBase', token.colorBgBase)
+    body.style.setProperty('--colorTextBase', token.colorTextBase)
+    body.style.setProperty('--colorBgBlur', token.colorBgBlur)
+    body.style.setProperty('--colorBgBlur', token.colorBgBlur)
     body.style.setProperty('--colorBorder', token.colorBorder)
   }, [token])
 

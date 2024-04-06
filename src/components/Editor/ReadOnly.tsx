@@ -1,6 +1,8 @@
 import { Editor } from '@wangeditor/editor-for-react'
 import React, { useState } from 'react'
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
+import { theme } from 'antd'
+import moduleStyle from './style.module.scss'
 
 interface Iprops {
   html: string | undefined
@@ -22,6 +24,7 @@ const ReadOnly: React.FC<Iprops> = (props) => {
     ctnClassName,
     borderd = false,
   } = props
+  const { token } = theme.useToken()
 
   return (
     <div className={ctnClassName}>
@@ -32,7 +35,7 @@ const ReadOnly: React.FC<Iprops> = (props) => {
         }}
         defaultHtml={html}
         mode="default"
-        className={`rounded-md ${className} ${borderd ? 'border-1 border-solid border-gray-200' : ''}`}
+        className={`rounded-md ${className || ''} ${borderd ? moduleStyle.border : ''}`}
         style={style}
       ></Editor>
     </div>

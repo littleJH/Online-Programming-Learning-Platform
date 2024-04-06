@@ -12,6 +12,7 @@ $colorTextBase: var(--colorTextBase);
 $colorBgBlur: var(--colorBgBlur);
 $colorInfoBg: var(--colorInfoBg);
 $colorBorder: var(--colorBorder);
+$isDark: var(--isDark);
 
 @font-face {
   font-family: 'Canger';
@@ -46,7 +47,7 @@ body,
 
 *::-webkit-scrollbar-thumb {
   @apply rounded-xl;
-  background-color: slategray;
+  background-color: $colorBorder;
 }
 
 // wangEditor theme config
@@ -154,10 +155,10 @@ body,
     color: $colorPrimary;
   }
   .card-title {
-    @apply font-semibold;
+    @apply font-semibold mt-2 ml-2;
   }
   .card-content {
-    @apply mt-2 text-slate-500 text-sm;
+    @apply mt-2 ml-2 text-slate-500 text-sm;
   }
   .card-time {
     @apply text-xs text-slate-700 select-none;
