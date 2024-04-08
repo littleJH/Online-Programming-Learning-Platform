@@ -13,3 +13,8 @@ export const getFormApi = (id: string) => {
 export const getFormListApi = (pageNum: number = 1, pageSize: number = 20) => {
   return request.get(`/list?pageNum=${pageNum}&pageSize=${pageSize}`)
 }
+
+// hot
+export const getFormHotRankApi = (pageNum = 1, pageSize = 20) => {
+  return request.get(`/hot/rank?pageNum=${pageNum}&pageSize=${pageSize}`)
+}

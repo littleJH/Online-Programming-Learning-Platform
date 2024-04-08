@@ -40,7 +40,7 @@
 
     .subContent {
       position: relative;
-      overflow-y: auto;
+      overflow: auto;
       scroll-behavior: smooth;
       height: 100%;
       .outletCtn {

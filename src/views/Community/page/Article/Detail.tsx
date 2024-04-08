@@ -19,7 +19,7 @@ import {
 } from '@/api/article'
 import { createArticleRemarkApi, getArticleRemarkListApi } from '@/api/remark'
 import { getUserInfoApi } from '@/api/user'
-import GeneralDetail from '../GeneralDetail/GeneralDetail'
+import GeneralDetail from '../../components/GeneralDetail/GeneralDetail'
 
 const Detail: React.FC = () => {
   const { article_id = '' } = useParams()
@@ -174,13 +174,15 @@ const Detail: React.FC = () => {
   return (
     <GeneralDetail
       currentObject={currentArticle}
+      remarkContent={remarkContent}
       openRemarkModal={openRemarkModal}
-      setOpenRemarkModal={setopenRemarkModal}
       onArrowupClick={handleArrowupClick}
       onCollectClick={handleCollectClick}
       onCommentClick={handleCommentClick}
       onLikeClick={handleLikeClick}
       onSubmitRemarkClick={handleSubmitRemarkClick}
+      onRemarkChange={(value) => setremarkContent(value)}
+      onRemarkModalChange={(value) => setopenRemarkModal(value)}
     ></GeneralDetail>
   )
 }

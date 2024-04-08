@@ -38,7 +38,7 @@ const Element: React.FC<IProps> = (props) => {
       const clone = { ...postProps }
       const res = await Promise.all([
         getPostLikedApi(postProps.id),
-        getPostLikeNumApi(postProps.id),
+        getPostLikeNumApi(postProps.id, 'true'),
         getUserInfoApi(postProps.user_id),
       ])
       clone.liked = res[0].data.data.like

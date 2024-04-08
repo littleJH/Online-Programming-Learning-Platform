@@ -35,7 +35,7 @@ export const getCompetitionRankListApi = (id: string, pageNum = 1, pageSize = 20
 }
 
 export const rollingRanklistWs = (id: string) => {
-  return new WebSocket(`${wsBaseUrl}/competition/rolling/list/${id}`)
+  return `${wsBaseUrl}/competition/rolling/list/${id}`
 }
 
 // 搜索

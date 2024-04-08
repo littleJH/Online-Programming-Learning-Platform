@@ -52,3 +52,8 @@ export const searchProblemInTopicByTextLabelApi = (
     `/search/with/label/in/topic/${text}/${id}?labels=${labels}&pageNum=${pageNum}&pageSize=${pageSize}`
   )
 }
+
+// hot
+export const getTopicHotRankApi = (pageNum = 1, pageSize = 20) => {
+  return request.get(`/hot/rank?pageNum=${pageNum}&pageSize=${pageSize}`)
+}

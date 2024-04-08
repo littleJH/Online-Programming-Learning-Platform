@@ -100,13 +100,13 @@ const CompetitionCreate = lazy(() => import('@/views/Creation/pages/CreateCompet
 const CompetitionCreateDeclare = lazy(() => import('@/views/Creation/pages/createCompetition/pages/Declare'))
 const CompetitionCreateCompetition = lazy(() => import('@/views/Creation/pages/createCompetition/pages/Competition'))
 const CompetitionCreateProblem = lazy(() => import('@/views/Creation/pages/createCompetition/pages/Problem'))
+// const CompetitionRandomRoot = lazy(() => import('@/views/Competition/CompetitionRandom/CompetitionRandomRoot'))
 const CompetitionRandomRoot = lazy(() => import('@/views/Competition/CompetitionRandom/CompetitionRandomRoot'))
-const CompetitionRandom = lazy(() => import('@/views/Competition/CompetitionRandom/CompetitionRandom'))
 const CompetitionStandardRoot = lazy(() => import('@/views/Competition/CompetitionStandard/CompetitionStandardRoot'))
 
 // 社区
 const CommunityRoot = lazy(() => import('@/views/Community/CommunityRoot'))
-const ArticleSet = lazy(() => import('@/views/Community/Overview/RecommendSet/ArticleSet'))
+const ArticleSet = lazy(() => import('@/views/Community/page/RecommendSet/ArticleSet'))
 
 // 创作中心
 const CreationRoot = lazy(() => import('@/views/Creation/root/CreationRoot'))
@@ -119,9 +119,9 @@ const CreateForm = lazy(() => import('@/views/Creation/pages/CreateForm'))
 const CreateNotice = lazy(() => import('@/views/Creation/pages/CreateNotice'))
 
 // 详情
-const ArticleDetail = lazy(() => import('@/views/Community/Article/Detail'))
-const NoticeDetail = lazy(() => import('@/views/Community/Notice/NoticeDetail'))
-const PostDetail = lazy(() => import('@/views/Community/Post/PostDetail'))
+const ArticleDetail = lazy(() => import('@/views/Community/page/Article/Detail'))
+const NoticeDetail = lazy(() => import('@/views/Community/page/Notice/NoticeDetail'))
+const PostDetail = lazy(() => import('@/views/Community/page/Post/PostDetail'))
 
 // 学习中心
 const LearnRoot = lazy(() => import('@/views/Learn/LearnRoot'))
@@ -285,12 +285,12 @@ const routes: MyRoute[] = [
           {
             path: 'random',
             element: CompetitionRandomRoot,
-            children: [
-              {
-                path: ':competition_type',
-                element: CompetitionRandom,
-              },
-            ],
+            // children: [
+            //   {
+            //     path: ':competition_type',
+            //     element: CompetitionRandom,
+            //   },
+            // ],
           },
           {
             path: 'standard',
@@ -508,7 +508,7 @@ export const siderMenuItemsObj: any = {
     },
     {
       label: '题解',
-      key: 'community/solvingset',
+      key: 'community/postset',
     },
   ],
   // creationMenuItem: [
@@ -709,48 +709,82 @@ export const siderMenuItemsObj: any = {
   ],
 }
 
-export const headerMenuItems = (() => {
-  const items: any[] = [
-    {
-      label: '首页',
-      key: 'home',
-      icon: <HomeOutlined />,
-    },
-    {
-      label: '题库',
-      key: 'problemset',
-      icon: <CodeOutlined />,
-    },
-    {
-      label: '比赛',
-      key: 'competition',
-      icon: <TrophyOutlined />,
-    },
-    {
-      label: '社区',
-      key: 'community',
-      icon: <GlobalOutlined />,
-    },
+export const headerMenuItems = [
+  {
+    label: '首页',
+    key: 'home',
+    icon: <HomeOutlined />,
+  },
+  {
+    label: '题库',
+    key: 'problemset/all',
+    icon: <CodeOutlined />,
+  },
+  {
+    label: '比赛',
+    key: 'competition/common/set',
+    icon: <TrophyOutlined />,
+  },
+  {
+    label: '社区',
+    key: 'community/articleset',
+    icon: <GlobalOutlined />,
+  },
 
-    {
-      label: '发布中心',
-      key: 'creation',
-      icon: <BulbOutlined />,
-    },
-    // {
-    //   label: '个人中心',
-    //   key: 'profile',
-    //   icon: <UserOutlined />,
-    // },
-  ]
+  {
+    label: '发布中心',
+    key: 'creation',
+    icon: <BulbOutlined />,
+  },
+  // {
+  //   label: '个人中心',
+  //   key: 'profile',
+  //   icon: <UserOutlined />,
+  // },
+]
 
-  console.log(
-    'headerMenuItems ==> ',
-    items.map((item) => ({ ...item, children: siderMenuItemsObj[`${item.key}MenuItem`] }))
-  )
+// export const headerMenuItems = (() => {
+//   const items: any[] = [
+//     {
+//       label: '首页',
+//       key: 'home',
+//       icon: <HomeOutlined />,
+//     },
+//     {
+//       label: '题库',
+//       key: 'problemset',
+//       icon: <CodeOutlined />,
+//     },
+//     {
+//       label: '比赛',
+//       key: 'competition',
+//       icon: <TrophyOutlined />,
+//     },
+//     {
+//       label: '社区',
+//       key: 'community',
+//       icon: <GlobalOutlined />,
+//     },
 
-  return items.map((item) => ({ ...item, children: siderMenuItemsObj[`${item.key}MenuItem`] }))
-})()
+//     {
+//       label: '发布中心',
+//       key: 'creation',
+//       icon: <BulbOutlined />,
+//     },
+//     // {
+//     //   label: '个人中心',
+//     //   key: 'profile',
+//     //   icon: <UserOutlined />,
+//     // },
+//   ]
+
+//   console.log(
+//     'headerMenuItems ==> ',
+//     items.map((item) => ({ ...item, children: siderMenuItemsObj[`${item.key}MenuItem`] }))
+//   )
+
+//   return items.map((item) => ({ ...item, children: siderMenuItemsObj[`${item.key}MenuItem`] }))
+// })()
 
 export const footerMenuItems = [
   {

@@ -8,6 +8,7 @@ import PaginationList from '@/components/List/PaginationList'
 import TopicCollapse from '@/components/topic/TopicCollapse'
 import myHooks from '@/tool/myHooks/myHooks'
 import style from '../style.module.scss'
+import { getUserInfoApi } from '@/api/user'
 
 const Topic: React.FC = () => {
   const [querys, setQuerys] = useSearchParams()
@@ -26,14 +27,22 @@ const Topic: React.FC = () => {
     fetch()
   }, [pageNum, pageSize])
 
-  const fetch = () => {
+  const fetch = async () => {
     setLoading(true)
     setTopicList([])
-    getTopicListApi(pageNum, pageSize).then((res) => {
-      setTopicList(res.data.data.topics)
-      setTotal(res.data.data.total)
+    try {
+      const data = (await getTopicListApi(pageNum, pageSize)).data.data
+      const list: ITopic[] = []
+      for (let topic of data.topics) {
+        list.push({
+          ...topic,
+          user: (await getUserInfoApi(topic.user_id)).data.data.user,
+        })
+      }
+      setTopicList(list)
+      setTotal(data.total)
       setLoading(false)
-    })
+    } catch {}
   }
 
   const handlePageChange = (num: number, size: number) => {

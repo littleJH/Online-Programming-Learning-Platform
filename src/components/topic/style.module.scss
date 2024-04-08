@@ -1,3 +1,15 @@
+.topicTitleWrapper {
+  display: flex;
+  .title {
+  }
+
+  .extra {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
 .problemTable {
   width: 100%;
   overflow-x: auto;

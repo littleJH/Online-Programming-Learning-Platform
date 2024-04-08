@@ -12,9 +12,9 @@ export const getGroupChatsApi = (id: string) => {
 }
 
 export const enterGroupPublishChatWS = (id: string) => {
-  return new WebSocket(`${wsBaseUrl}/chat/receive/${id}?token=${localStorage.getItem('token')}`)
+  return `${wsBaseUrl}/chat/receive/${id}?token=${localStorage.getItem('token')}`
 }
 
 export const enterPublishChatWs = () => {
-  return new WebSocket(`${wsBaseUrl}/chat/receivelink?token=${localStorage.getItem('token')}`)
+  return `${wsBaseUrl}/chat/receivelink?token=${localStorage.getItem('token')}`
 }

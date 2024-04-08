@@ -1,10 +1,11 @@
 import { iconBaseUrl } from '@/config/apiConfig'
-import { Avatar, Space, theme } from 'antd'
+import { Avatar, Divider, Space, theme } from 'antd'
 import React from 'react'
 import MyTag from '../Label/MyTag'
 import MySvgIcon from '../Icon/MySvgIcon'
 import { User } from '@/type'
 import style from './style.module.scss'
+import MyAvatar from '../Avatar/MyAvatar'
 
 interface IProps {
   user?: User
@@ -56,7 +57,8 @@ const GeneralCard: React.FC<IProps> = (props) => {
     <div className={style.generalCard} onClick={onClick}>
       <div className="grow" style={{ width: '100px' }}>
         <div className="flex items-center">
-          <Avatar className="card-avatar" src={`${iconBaseUrl}/${user?.icon}`}></Avatar>
+          <MyAvatar user={user}></MyAvatar>
+          {/* <Avatar className="card-avatar" src={`${iconBaseUrl}/${user?.icon}`}></Avatar> */}
           <div className="card-username">{user?.name}</div>
           <div className="card-time">{ago}</div>
           {labels && labels.length > 0 && (
@@ -90,50 +92,39 @@ const GeneralCard: React.FC<IProps> = (props) => {
 
         {/* footer */}
         <div className="flex items-center mt-2">
-          <div className={`${style.footer} grow flex items-center`}>
+          <Space split={<Divider type="vertical"></Divider>} className={`${style.footer} grow flex items-center`}>
             {collected && (
-              <>
-                <div>
-                  <MySvgIcon
-                    href={collected?.isCollected ? '#icon-collected' : '#icon-collect'}
-                    color={collected?.isCollected ? token.colorPrimaryTextHover : token.colorTextDescription}
-                  ></MySvgIcon>
-                  <span>{collected?.count}</span>
-                </div>
-              </>
+              <div>
+                <MySvgIcon
+                  href={collected?.isCollected ? '#icon-collected' : '#icon-collect'}
+                  color={collected?.isCollected ? token.colorPrimaryTextHover : token.colorTextDescription}
+                ></MySvgIcon>
+                <span>{collected?.count}</span>
+              </div>
             )}
             {liked && (
-              <>
-                <div className="divider-vertical"></div>
-                <div>
-                  <MySvgIcon
-                    href={liked?.isLiked ? '#icon-liked' : '#icon-like'}
-                    color={liked?.isLiked ? token.colorPrimaryTextHover : token.colorTextDescription}
-                  ></MySvgIcon>
-                  <span>{liked?.count}</span>
-                </div>
-              </>
+              <div>
+                <MySvgIcon
+                  href={liked?.isLiked ? '#icon-liked' : '#icon-like'}
+                  color={liked?.isLiked ? token.colorPrimaryTextHover : token.colorTextDescription}
+                ></MySvgIcon>
+                <span>{liked?.count}</span>
+              </div>
             )}
-            {remarkCount && (
-              <>
-                <div className="divider-vertical"></div>
-                <div>
-                  <MySvgIcon href={'#icon-comment'} color={token.colorTextDescription}></MySvgIcon>
-                  <span>{remarkCount}</span>
-                </div>
-              </>
+            {typeof remarkCount === 'number' && (
+              <div>
+                <MySvgIcon href={'#icon-comment'} color={token.colorTextDescription}></MySvgIcon>
+                <span>{remarkCount}</span>
+              </div>
             )}
-            {viewCount && (
-              <>
-                <div className="divider-vertical"></div>
-                <div>
-                  <MySvgIcon href={'#icon-visible'} color={token.colorTextDescription}></MySvgIcon>
-                  <span>{viewCount}</span>
-                </div>
-              </>
+            {typeof viewCount === 'number' && (
+              <div>
+                <MySvgIcon href={'#icon-visible'} color={token.colorTextDescription}></MySvgIcon>
+                <span>{viewCount}</span>
+              </div>
             )}
             {footer && <div className="grow flex justify-end">{footer}</div>}
-          </div>
+          </Space>
         </div>
         {extra && <div className="p-4">{extra}</div>}
       </div>

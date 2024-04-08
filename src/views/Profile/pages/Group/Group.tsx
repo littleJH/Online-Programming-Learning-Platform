@@ -19,8 +19,8 @@ import TextArea from 'antd/es/input/TextArea'
 import CreateGroupForm from '@/components/Group/CreateGroupForm'
 import style from '../../style.module.scss'
 import utils from '@/tool/myUtils/utils'
+import myHooks from '@/tool/myHooks/myHooks'
 
-let ws: WebSocket
 const GroupRoot: React.FC = () => {
   const isMobile = useRecoilValue(isMobileAtom)
   const { Search } = Input
@@ -41,6 +41,13 @@ const GroupRoot: React.FC = () => {
   const { token } = theme.useToken()
   const groupRef = useRef<HTMLDivElement>(null)
 
+  myHooks.useWsConnect({
+    wsUrl: enterPublishChatWs(),
+    onOpen: (e) => handleChatWsOpen(e),
+    onMessage: (message) => handleChatWsMessage(message),
+    onClose: (e) => handleChatWsClose(e),
+  })
+
   const currentGroup = useMemo(() => groupList.find((item) => item.id === group_id), [group_id, groupList])
   const mode = useMemo<'default' | 'search'>(() => (searchText ? 'search' : 'default'), [searchText])
 
@@ -56,7 +63,6 @@ const GroupRoot: React.FC = () => {
   )
 
   useEffect(() => {
-    openChatWs()
     initGroupList()
   }, [])
 
@@ -85,24 +91,11 @@ const GroupRoot: React.FC = () => {
     })
   }
 
-  const openChatWs = () => {
-    ws = enterPublishChatWs()
-    ws.onopen = handleChatWsOpen
-    ws.onmessage = handleChatWsMessage
-    ws.onclose = handleChatWsClose
-  }
+  const handleChatWsOpen = (e: Event) => {}
 
-  const handleChatWsOpen = (e: Event) => {
-    console.log('chatWsOpen', e)
-  }
+  const handleChatWsMessage = (e: Event) => {}
 
-  const handleChatWsMessage = (e: Event) => {
-    console.log('chatWsMessage', e)
-  }
-
-  const handleChatWsClose = (e: Event) => {
-    console.log('chatWsClose', e)
-  }
+  const handleChatWsClose = (e: Event) => {}
 
   const handleMenuSelected = (info: any) => {
     if (isMobile && mode === 'search') {

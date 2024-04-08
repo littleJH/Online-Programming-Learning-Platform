@@ -1,23 +1,53 @@
 .root {
+  display: flex;
   width: 100%;
   height: max-content;
   position: relative;
   @media screen and (max-width: 768px) {
   }
 
-  .header {
-    position: sticky;
-    top: 0;
+  .left {
+    width: 100%;
+
+    .header {
+      position: sticky;
+      top: 0;
+      .search {
+        margin-bottom: 2rem;
+      }
+    }
+
+    .title {
+      display: flex;
+      align-items: center;
+    }
+    .content {
+      width: 100%;
+      margin: auto;
+    }
+
+    .body {
+      width: 100%;
+      height: max-content;
+    }
   }
 
-  .body {
-    width: 100%;
-    height: max-content;
+  .right {
+    display: block;
+    margin: 0 2rem;
+    max-width: max-content;
+    min-width: 20rem;
+    @media screen and (max-width: 768px) {
+      display: none;
+    }
   }
 
   .listCtn {
     width: 1000px;
     padding: 0 2rem;
+    @media screen and (max-width: 1440px) {
+      width: 800px;
+    }
     @media screen and (max-width: 768px) {
       width: 100%;
       padding: 0;

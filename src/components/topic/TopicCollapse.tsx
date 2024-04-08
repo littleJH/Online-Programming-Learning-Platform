@@ -1,6 +1,6 @@
 import { IProblem, ITopic } from '@/type'
 import React, { useEffect, useState } from 'react'
-import { Descriptions, Button, Popconfirm, Space, Avatar, Collapse } from 'antd'
+import { Descriptions, Button, Popconfirm, Space, Avatar, Collapse, Divider } from 'antd'
 import PaginationList from '../List/PaginationList'
 import ProblemTable from '../Problem/table/ProblemTable'
 import { NavLink } from 'react-router-dom'
@@ -11,6 +11,7 @@ import { getTopicProblemsApi } from '@/api/topic'
 import { showProblemApi } from '@/api/problem'
 import style from './style.module.scss'
 import Loading from '../Loading/Loading'
+import MyAvatar from '../Avatar/MyAvatar'
 
 interface IProps {
   topic: ITopic
@@ -94,14 +95,25 @@ const TopicCollapse: React.FC<IProps> = (props) => {
         items={[
           {
             key: topic.id,
-            label: topic.title,
+            label: (
+              <div className={style.topicTitleWrapper}>
+                <span className={style.title}>{topic.title}</span>
+                <div className={style.extra}>
+                  <Space split={<Divider type="vertical"></Divider>}>
+                    <span>题目总数：{total}</span>
+                    <span>{topic.updated_at}</span>
+                    <MyAvatar user={topic.user}></MyAvatar>
+                  </Space>
+                </div>
+              </div>
+            ),
             extra: <Space onClick={(e) => e.stopPropagation()}>{renderActions().map((item) => item)}</Space>,
             children: (
               <div>
                 <Descriptions size="small" layout="vertical">
                   <Descriptions.Item label={'创建者'}>
                     <Space>
-                      <Avatar src={`${iconBaseUrl}/${topic.user?.icon}`}></Avatar>
+                      <MyAvatar user={topic.user}></MyAvatar>
                       <NavLink to={''} className={'text-indigo-500 hover:text-indigo-500'}>
                         {topic.user?.name}
                       </NavLink>

@@ -1,4 +1,3 @@
-import ArticleCard from '@/components/card/ArticleCard'
 import React, { useMemo, useState } from 'react'
 import { currentArticleState, pathNameState, searchQueryState } from '@/store/appStore'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
@@ -8,7 +7,6 @@ import style from '../style.module.scss'
 import utils from '@/tool/myUtils/utils'
 import { IPost } from '@/type'
 import { getPostApi, getPostHotRankApi, getPostListApi } from '@/api/post'
-import { getProblemHotRankApi } from '@/api/problem'
 import PostCard from '@/components/Card/PostCard'
 import { Button, theme } from 'antd'
 

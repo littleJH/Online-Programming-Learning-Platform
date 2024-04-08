@@ -5,6 +5,7 @@ import {
   headerNavState,
   isMobileAtom,
   loginStatusState,
+  notificationApi,
   pathNameState,
   searchQueryState,
   sideBarTypeState,
@@ -190,45 +191,75 @@ const useUpdateState = function <K extends object>(store: RecoilState<K>) {
 // }
 
 const useWsConnect = (options: {
-  wsApi?: WebSocket | null
+  wsUrl?: string
   onMessage?: (message: any) => void
-  onOpen?: () => void
+  onOpen?: (e: Event) => void
+  onClose?: (e: Event) => void
   immediately?: boolean
+  onTimeout?: (retryTime: number) => void
+  onFail?: () => void
 }) => {
-  const { wsApi, onMessage, onOpen, immediately = true } = options
+  const { wsUrl, onMessage, onOpen, onClose, onTimeout, onFail, immediately = true } = options
+  const notification = useRecoilValue(notificationApi)
   let ws: WebSocket
+  // let retryTime = 0
 
   useEffect(() => {
-    immediately && wsApi && connectWs(wsApi)
-    const interval = setInterval(() => {
-      if (ws && ws.readyState === ws.CLOSED) {
-        console.log('reOpenWs...')
-        wsApi && connectWs(wsApi)
-      }
-    }, 5000)
+    immediately && connectWs()
     return () => {
-      clearInterval(interval)
-      ws && ws.close()
+      console.log('useWsConnect close', new Date())
+      closeWs()
     }
   }, [])
 
-  const connectWs = (wsApi: WebSocket) => {
-    ws = wsApi
+  const connectWs = (url?: string) => {
+    // if (ws && ws.readyState === ws.OPEN) return
+
+    ws = new WebSocket(url || wsUrl || '')
+
     ws.onopen = (e: Event) => {
-      console.log('chatWsOpen...')
-      onOpen && onOpen()
+      console.log('chatWsOpen...', new Date())
+      onOpen && onOpen(e)
     }
-    ws.onmessage = async (e: MessageEvent) => {
+    ws.onmessage = (e: MessageEvent) => {
       const message = JSON.parse(e.data)
-      console.log('chatWsMessage ==> ', message)
+      console.log('chatWsMessage ==> ', message, new Date())
       onMessage && onMessage(message)
     }
     ws.onclose = (e: Event) => {
-      console.log('chatWsClose...')
+      console.log('chatWsClose...', new Date())
+      onClose && onClose(e)
+      // retryTime++
+      // if (retryTime < 3) {
+      //   notification &&
+      //     notification.warning({
+      //       message: '连接超时',
+      //       description: `正在为您第${retryTime}次重连中 ...`,
+      //       duration: 3,
+      //     })
+      //   connectWs()
+      // } else {
+      //   onFail && onFail()
+      //   notification &&
+      //     notification.error({
+      //       message: '连接失败',
+      //       description: '请刷新页面重试',
+      //     })
+      // }
+    }
+    ws.onerror = (e: Event) => {
+      console.log('chatWsError...')
+      // onClose && onClose(e)
     }
   }
 
-  return { connectWs }
+  const closeWs = () => {
+    console.log('before websocket close ==> ', ws)
+    ws && ws.close()
+    // retryTime = 0
+  }
+
+  return { connectWs, closeWs }
 }
 
 const myHooks = {

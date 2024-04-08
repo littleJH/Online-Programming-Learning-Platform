@@ -8,25 +8,25 @@ import { siderMenuItemsObj } from '@/router/router'
 import SubNavbar from '../Navbar/SubNavbar'
 
 interface Iprops {
-  user: User
+  user: User | undefined | null
+  showMenu?: boolean
   id?: string
 }
 
 const UserCard: React.FC<Iprops> = (props) => {
-  const { user } = props
-  const currentUser = useRecoilValue(userInfoState)
+  const { user, showMenu } = props
   return (
     <div className="rounded p-2">
       <div className="flex ">
         <div className="flex items-center mx-2">
-          <Avatar src={`${imgGetBaseUrl}/${user.icon}`} size={'large'}></Avatar>
+          <Avatar src={`${imgGetBaseUrl}/${user?.icon}`} size={'large'}></Avatar>
         </div>
         <div className="">
           <div>{props.user?.name}</div>
           <div>{props.user?.email}</div>
         </div>
       </div>
-      {currentUser?.id === user.id && (
+      {showMenu && (
         <div className="">
           <Divider></Divider>
           <SubNavbar mode="vertical" header="profile"></SubNavbar>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import style from '../style.module.scss'
+import style from '@/views/Community/style.module.scss'
 import { useParams } from 'react-router-dom'
 import { INotice } from '@/type'
 import ReadOnly from '@/components/editor/Readonly'

@@ -11,5 +11,5 @@ export const getLettersApi = (id: string) => {
 }
 
 export const enterPublishLetterWS = (id: string) => {
-  return new WebSocket(`${wsBaseUrl}/letter/receive/${id}?token=${localStorage.getItem('token')}`)
+  return `${wsBaseUrl}/letter/receive/${id}?token=${localStorage.getItem('token')}`
 }

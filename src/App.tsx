@@ -21,6 +21,11 @@ function App() {
   const [isDark, setIsDark] = useRecoilState(isDarkState)
 
   useEffect(() => {
+    message.config({
+      top: 100,
+      maxCount: isMobile ? 1 : 3,
+      duration: isMobile ? 1 : 3,
+    })
     setNotificationApi(api)
     const themeMedia = window.matchMedia('(prefers-color-scheme: dark)')
     themeMedia.addEventListener('change', handleThemeChange)
@@ -28,6 +33,7 @@ function App() {
     return () => {
       window.removeEventListener('resize', handleResize)
       window.removeEventListener('change', handleThemeChange)
+      message.destroy()
     }
   }, [])
 

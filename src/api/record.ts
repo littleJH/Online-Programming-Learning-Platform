@@ -50,5 +50,5 @@ export const hackRecordApi = (id: string, data: any) => {
 }
 
 export const enterPublishRecordWs = (id: string) => {
-  return new WebSocket(`${wsBaseUrl}/record/publish/${id}`)
+  return `${wsBaseUrl}/record/publish/${id}`
 }

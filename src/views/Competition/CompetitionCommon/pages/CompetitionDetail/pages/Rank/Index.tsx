@@ -29,7 +29,7 @@ const Rank: React.FC<{ mode?: 'default' | 'sider' }> = (props) => {
   // const spanClass = `${mode === 'default' ? 'w-1/5' : 'w-1/3'} text-center`
 
   myHooks.useWsConnect({
-    wsApi: competition?.id ? rollingRanklistWs(competition.id) : null,
+    wsUrl: competition?.id ? rollingRanklistWs(competition.id) : '',
     onMessage: onWsMessage,
   })
 

@@ -1,0 +1,17 @@
+.hotrank {
+  .item {
+    .title {
+      width: 10rem;
+      margin: 0 1rem;
+      font-size: 0.75rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex-grow: 1;
+      &:hover {
+        cursor: pointer;
+        color: var(--colorPrimary);
+      }
+    }
+  }
+}

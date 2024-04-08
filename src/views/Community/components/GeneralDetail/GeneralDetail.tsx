@@ -1,24 +1,7 @@
 import { IArticle, IPost } from '@/type'
 import React, { useEffect, useMemo, useState } from 'react'
 import { isMobileAtom, sideBarTypeState } from '@/store/appStore'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { useParams } from 'react-router-dom'
-import {
-  collectArticleApi,
-  deleteCollectArticleApi,
-  deleteLikeArticleApi,
-  getArticleApi,
-  getArticleCollectNumApi,
-  getArticleCollectedApi,
-  getArticleLabelsApi,
-  getArticleLikeNumApi,
-  getArticleLikedApi,
-  getArticleVisibleNumApi,
-  likeArticleApi,
-  setArticleVisibleApi,
-} from '@/api/article'
-import { createArticleRemarkApi, getArticleRemarkListApi } from '@/api/remark'
-import { getUserInfoApi } from '@/api/user'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import ReadOnly from '@/components/editor/Readonly'
 import { Button, Divider, Modal, Space, Card, theme, Drawer } from 'antd'
 import MyTag from '@/components/Label/MyTag'
@@ -28,52 +11,59 @@ import SideActionBar from '@/components/SideActionBar/SideActionBar'
 import utils from '@/tool/myUtils/utils'
 import { directoryDataState } from '@/components/directory/store'
 import myHooks from '@/tool/myHooks/myHooks'
-import style from '../style.module.scss'
+import style from '@/views/Community/style.module.scss'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
 import Directory from '@/components/directory/Directory'
 import { imgGetBaseUrl } from '@/config/apiConfig'
+import { siderNodeState } from '../../communityStore'
+import UserInfo from '@/components/User/UserInfo'
 
 interface IProps {
   currentObject: IArticle | IPost | null
   openRemarkModal: boolean
-  setOpenRemarkModal: (value: boolean) => void
+  remarkContent: string
+  onRemarkChange: (value: string) => void
   onArrowupClick: () => void
   onCollectClick: () => void
   onCommentClick: () => void
   onLikeClick: () => void
   onSubmitRemarkClick: () => void
+  onRemarkModalChange: (value: boolean) => void
 }
 
 const GeneralDetail: React.FC<IProps> = (props) => {
   const {
     currentObject,
     openRemarkModal,
-    setOpenRemarkModal,
+    remarkContent,
+    onRemarkChange,
     onArrowupClick,
     onCollectClick,
     onCommentClick,
     onLikeClick,
     onSubmitRemarkClick,
+    onRemarkModalChange,
   } = props
   const isMobile = useRecoilValue(isMobileAtom)
-  const [remarkContent, setremarkContent] = useState('')
   const [openDirectoryDrawer, setOpenDirectoryDrawer] = useState(false)
   const setDirectoryTree = useSetRecoilState(directoryDataState)
-  const setSidebarType = useSetRecoilState(sideBarTypeState)
+  // const setSidebarType = useSetRecoilState(sideBarTypeState)
+  const setSiderNode = useSetRecoilState(siderNodeState)
   const { token } = theme.useToken()
 
   // 监听content滚动
   myHooks.useListenContentScroll({ followScroll: true })
 
   useEffect(() => {
-    setSidebarType('directory')
+    // setSidebarType('directory')
     const articleEl = document.getElementById('article')
     if (currentObject && articleEl) {
       const toc = utils.generateTOC(articleEl)
       setDirectoryTree(toc)
+      setSiderNode(renderSider(toc))
     }
     return () => {
-      setSidebarType('none')
+      // setSidebarType('none')
     }
   }, [currentObject])
 
@@ -86,8 +76,26 @@ const GeneralDetail: React.FC<IProps> = (props) => {
     [currentObject]
   )
 
+  const renderSider = (toc: any[]) => {
+    return currentObject ? (
+      <>
+        <Card size="small">
+          <UserInfo user={currentObject.user}></UserInfo>
+        </Card>
+
+        {toc.length > 0 && (
+          <Card className={style.directory}>
+            <Directory></Directory>
+          </Card>
+        )}
+      </>
+    ) : (
+      ''
+    )
+  }
+
   return (
-    <div className={style.articleDetail}>
+    <div className={style.generalDetail}>
       {currentObject && (
         <div className={style.content}>
           <div id="top"></div>
@@ -130,7 +138,7 @@ const GeneralDetail: React.FC<IProps> = (props) => {
           {/* remark */}
           <div id="remark">
             <div className="flex justify-center">
-              <Button type="dashed" className="shadow m-4" onClick={() => setOpenRemarkModal(true)}>
+              <Button type="dashed" className="shadow m-4" onClick={() => onRemarkModalChange(true)}>
                 #我有一言
               </Button>
             </div>
@@ -146,6 +154,7 @@ const GeneralDetail: React.FC<IProps> = (props) => {
             className={`w-12 h-12 px-4 fixed top-1/3 right-0 flex flex-col`}
             style={{
               translate: '-50% -50%',
+              zIndex: 999,
             }}
           >
             <SideActionBar
@@ -153,7 +162,7 @@ const GeneralDetail: React.FC<IProps> = (props) => {
               onCollectClick={onCollectClick}
               onCommentClick={onCommentClick}
               onLikeClick={onLikeClick}
-              onMenubtnClick={() => isMobile && setOpenDirectoryDrawer(true)}
+              onMenubtnClick={isMobile ? () => setOpenDirectoryDrawer(true) : null}
               likeNum={currentObject?.likeNum || 0}
               collectNum={currentObject?.collectNum || 0}
               remarkNum={currentObject?.remark?.total || 0}
@@ -163,7 +172,7 @@ const GeneralDetail: React.FC<IProps> = (props) => {
           </div>
           <Modal
             open={openRemarkModal}
-            onCancel={() => setOpenRemarkModal(false)}
+            onCancel={() => onRemarkModalChange(false)}
             footer={[
               <Button
                 key="submit"
@@ -180,7 +189,7 @@ const GeneralDetail: React.FC<IProps> = (props) => {
             <TextEditor
               mode="markdown"
               value={remarkContent}
-              htmlChange={(value: string) => setremarkContent(value)}
+              htmlChange={(value: string) => onRemarkChange(value)}
               placeholder="发表我的看法~~~"
             ></TextEditor>
           </Modal>

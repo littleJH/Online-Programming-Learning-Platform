@@ -103,7 +103,83 @@
   }
 }
 
-.random {
+.randomRoot {
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1000px;
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    padding: 0;
+  }
+
+  .enterButton {
+    .icon {
+    }
+    .button {
+      width: max-content;
+      height: max-content;
+      display: flex;
+      align-items: center;
+      padding: 1rem 2rem;
+    }
+  }
+
+  .matchBox {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .matchCtn {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+  }
+
+  .rotate {
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+    animation: rotate 3s linear infinite;
+  }
+
+  .move {
+    translate: all 2s linear;
+  }
+
+  @keyframes rotate {
+    25% {
+      transform: rotate(90deg) scale(0.75);
+    }
+    50% {
+      transform: rotate(180deg) scale(1);
+    }
+    75% {
+      transform: rotate(270deg) scale(1.25);
+    }
+    100% {
+      transform: rotate(360deg) scale(1);
+    }
+  }
+
+  @keyframes move {
+  }
+
+  .memberList {
+    position: relative;
+    .memberItem {
+      position: absolute;
+      border-radius: 50%;
+      height: min-content;
+      width: min-content;
+      opacity: 0;
+    }
+  }
 }
 
 .standard {

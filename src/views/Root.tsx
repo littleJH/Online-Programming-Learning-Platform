@@ -124,7 +124,7 @@ const Root: React.FC = () => {
           )}
 
           {loginStatus && myInfo && (
-            <Popover placement="left" content={<UserCard user={myInfo}></UserCard>}>
+            <Popover placement="left" content={<UserCard user={myInfo} showMenu></UserCard>}>
               <Button type="text" className="flex items-center h-12 p-2 mr-4">
                 <div className="h-full flex items-center">
                   <Avatar className="hover:cursor-pointer" alt="登录" src={`${iconBaseUrl}/${myInfo?.icon}`}></Avatar>
@@ -153,11 +153,11 @@ const Root: React.FC = () => {
               {sideBarType === 'competitionRank' && <Rank mode="sider"></Rank>}
             </Sider>
           )} */}
-          {sideBarType === 'directory' && (
+          {/* {sideBarType === 'directory' && (
             <Sider className={style.sider} style={siderStyle} collapsible trigger={null} width={sidebarWidth}>
               <Directory></Directory>
             </Sider>
-          )}
+          )} */}
           <Content
             id="content"
             className={style.subContent}

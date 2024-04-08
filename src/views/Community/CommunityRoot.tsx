@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Outlet, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Button, Card, Col, Divider, Statistic, Row, Space, Input, Select, Segmented, theme } from 'antd'
-import HotRank from './Overview/Side/HotRank'
+import CommunityHotRank from './components/Side/CommunityHotRank'
 import { getArticleListApi } from '@/api/article'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { pathNameState } from '@/store/appStore'
 import utils from '@/tool/myUtils/utils'
 import myHooks from '@/tool/myHooks/myHooks'
@@ -13,6 +13,8 @@ import ReadOnly from '@/components/editor/Readonly'
 import { INotice } from '@/type'
 import Search from 'antd/es/transfer/search'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
+import { siderNodeState } from './communityStore'
+import CommunityStatistic from './components/Side/CommunityStatistic'
 
 interface IStats {
   article: number
@@ -27,6 +29,7 @@ const CommunityRoot: React.FC = () => {
   const pathname = useRecoilValue(pathNameState)
   const [noticeList, setNoticeList] = useState<INotice[]>([])
   const [showAllNotice, setShowAllNotice] = useState(false)
+  const [siderNode, setSiderNode] = useRecoilState(siderNodeState)
   const [searchText, setSearchText] = useState(utils.getQuerys(location.search)?.text || '')
   const [stats, setstats] = useState<IStats>({
     article: 0,
@@ -49,17 +52,22 @@ const CommunityRoot: React.FC = () => {
 
   useEffect(() => {
     if (pathname === '/community') nav('/community/articleset')
+    onPopState()
   }, [pathname])
 
   useEffect(() => {
-    fetchNoticeList()
     fetchStats()
-    window.addEventListener('popstate', fetchNoticeList)
+    window.addEventListener('popstate', onPopState)
     return () => {
-      window.removeEventListener('popstate', fetchNoticeList)
+      window.removeEventListener('popstate', onPopState)
     }
   }, [])
 
+  const onPopState = () => {
+    const isSet = utils.getPathArray(pathname).length > 1 && utils.getPathArray(pathname)[1].includes('set')
+    isSet && setSiderNode(renderSider())
+    fetchNoticeList()
+  }
   const fetchNoticeList = async () => {
     try {
       const res = (await getNoticeBoardListApi(1, 999999)).data.data
@@ -90,6 +98,15 @@ const CommunityRoot: React.FC = () => {
 
   const handleSegmentedChange = (value: string) => {
     nav(`/community/${value}`)
+  }
+
+  const renderSider = () => {
+    return (
+      <>
+        <CommunityStatistic stats={stats}></CommunityStatistic>
+        <CommunityHotRank type={type as Type}></CommunityHotRank>
+      </>
+    )
   }
 
   return (
@@ -173,39 +190,7 @@ const CommunityRoot: React.FC = () => {
         )}
       </div>
       {/* right */}
-      {showHeaderSider && (
-        <div className={style.right}>
-          <Card hoverable className="my-4 flex flex-col justify-center text-xs">
-            <div className="font-medium text-base mb-2">全站统计</div>
-            <Statistic></Statistic>
-            <Space size={'large'}>
-              <Space size={6} direction="vertical">
-                <div>文章：{stats?.article}</div>
-                <div>讨论：10154</div>
-                <div>题解：1325</div>
-              </Space>
-              <Space size={6} direction="vertical">
-                <div>题目：{stats?.article}</div>
-                <div>比赛：10154</div>
-                <div>用户：1325</div>
-              </Space>
-            </Space>
-          </Card>
-          <Card
-            size="small"
-            title={
-              <h3 className="">
-                <span>热榜</span>
-                <span>
-                  <MySvgIcon href="#icon-fire" size={1.5}></MySvgIcon>
-                </span>
-              </h3>
-            }
-          >
-            <HotRank type={type as Type}></HotRank>
-          </Card>
-        </div>
-      )}
+      {siderNode && <div className={style.right}>{siderNode}</div>}
     </div>
   )
 }

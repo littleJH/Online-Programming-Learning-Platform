@@ -21,5 +21,9 @@ export const getEnterRandomCompetitionListApi = (type: CompetitionType | string)
 }
 
 export const enterPublishWs = () => {
-  return new WebSocket('ws://10.60.37.43:2000/competition/random/single/enter/publish')
+  return new WebSocket(`${wsBaseUrl}/competition/random/single/enter/publish`)
+}
+
+export const getCompetitionRandomEnterPublishWs = () => {
+  return `${wsBaseUrl}/competition/random/single/enter/publish`
 }

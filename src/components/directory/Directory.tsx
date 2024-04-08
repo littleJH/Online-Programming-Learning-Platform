@@ -2,6 +2,7 @@ import React from 'react'
 import { Tree } from 'antd'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { directoryDataState, directorySelectKeysState } from './store'
+import NoData from '../empty/NoData'
 
 const Directory: React.FC = () => {
   const treeData = useRecoilValue(directoryDataState)
@@ -25,6 +26,10 @@ const Directory: React.FC = () => {
     <>
       {treeData.length > 0 && (
         <Tree
+          style={{
+            minWidth: '18rem',
+            height: '100%',
+          }}
           treeData={treeData}
           defaultExpandAll={true}
           selectedKeys={directorySelectKeys}

@@ -1,7 +1,6 @@
 import ProblemList from '@/components/Problem/list/List'
 import React from 'react'
 import style from '../style.module.scss'
-import { Menu } from 'antd'
 
 const All: React.FC = () => {
   return (
