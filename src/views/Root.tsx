@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useLayoutEffect, useMemo } from 'react'
-import { Layout, Button, Avatar, theme, Divider, Popover } from 'antd'
+import { Layout, Button, Avatar, theme, Divider, Popover, Space } from 'antd'
 import { Outlet } from 'react-router-dom'
 import { iconBaseUrl } from '@/config/apiConfig'
 import { useRecoilState, useRecoilValue } from 'recoil'
@@ -53,6 +53,11 @@ const Root: React.FC = () => {
 
   useEffect(() => {
     const body = document.getElementsByTagName('body')[0]
+    body.style.setProperty('--colorPrimary', token.colorPrimary)
+    body.style.setProperty('--colorSuccess', token.colorSuccess)
+    body.style.setProperty('--colorWarning', token.colorWarning)
+    body.style.setProperty('--colorError', token.colorError)
+    body.style.setProperty('--colorInfo', token.colorInfo)
     body.style.setProperty('--colorBgBase', token.colorBgBase)
     body.style.setProperty('--colorTextBase', token.colorTextBase)
     body.style.setProperty('--colorBgBlur', token.colorBgBlur)
@@ -88,18 +93,12 @@ const Root: React.FC = () => {
     transition: 'all 500',
   }
 
-  const footerStyle: React.CSSProperties = {
-    padding: '0',
-    position: 'sticky',
-    bottom: '0',
-  }
-
   return (
     <Layout className={style.layout}>
       {/* {!isMobile && ( */}
       <Header className={style.header} style={headerStyle}>
         <div className={style.pc}>
-          <Button type="text" className="flex items-center h-16 p-full">
+          <Button type="text" className="flex items-center h-12 p-2">
             <MySvgIcon href="coding" size={8} color={token.colorPrimary}></MySvgIcon>
           </Button>
           <Navbar headerNav={headerNav}></Navbar>
@@ -172,25 +171,22 @@ const Root: React.FC = () => {
         </Layout>
       </Content>
 
-      <Footer className={style.footer} style={footerStyle}>
+      <Footer className={style.footer}>
         <div className={style.pc}>
           {/* left */}
-          <div
-            className="w-1/2"
-            style={{
-              display: 'inline-block',
-              minHeight: '2rem',
-            }}
-          ></div>
-          {/* right */}
-          <div
-            className="w-1/2 flex items-center"
-            style={{
-              display: 'inline-block',
-            }}
-          >
-            {footerRight}
+          <div className="w-1/3"></div>
+          <div className={style.center} style={{}}>
+            <Space split={<Divider type="vertical"></Divider>}>
+              {!loginStatus && (
+                <Button type="link" onClick={() => nav('/login')}>
+                  登录 · 注册
+                </Button>
+              )}
+              <Button type="link">@XXX · 联系我们 · 2024</Button>
+            </Space>
           </div>
+          {/* right */}
+          <div className="w-1/3 flex items-center">{footerRight}</div>
         </div>
         <div className={style.mobile}>
           <MobileFooterNavbar></MobileFooterNavbar>

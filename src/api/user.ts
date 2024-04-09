@@ -41,3 +41,35 @@ export const updatePasswordApi = (data: any) => {
 export const findPasswordApi = (data: any) => {
   return request.put('/security', data, formConfig())
 }
+
+export const updateUserLevelApi = (id: string, level: number) => {
+  return request.put(`/update/level/${id}/${level}`, {}, baseConfig())
+}
+
+export const getAcRankApi = (pageNum: number = 1, pageSize: number = 20) => {
+  return request.get(`/accept/rank/list?pageNum=${pageNum}&pageSize=${pageSize}`, baseConfig())
+}
+
+export const getLikeRankApi = (pageNum: number = 1, pageSize: number = 20) => {
+  return request.get(`/like/rank?pageNum=${pageNum}&pageSize=${pageSize}`, baseConfig())
+}
+
+export const getUnlikeRankApi = (pageNum: number = 1, pageSize: number = 20) => {
+  return request.get(`/unlike/rank?pageNum=${pageNum}&pageSize=${pageSize}`, baseConfig())
+}
+
+export const getCollectRankApi = (pageNum: number = 1, pageSize: number = 20) => {
+  return request.get(`/collect/rank?pageNum=${pageNum}&pageSize=${pageSize}`, baseConfig())
+}
+
+export const getVisitRankApi = (pageNum: number = 1, pageSize: number = 20) => {
+  return request.get(`/visit/rank?pageNum=${pageNum}&pageSize=${pageSize}`, baseConfig())
+}
+
+export const getUserRankApi = (pageNum: number = 1, pageSize: number = 20) => {
+  return request.get(`/hot/rank/list?pageNum=${pageNum}&pageSize=${pageSize}`, baseConfig())
+}
+
+export const getUserScoreRankApi = (pageNum: number = 1, pageSize: number = 20) => {
+  return request.get(`/score/rank/list?pageNum=${pageNum}&pageSize=${pageSize}`, baseConfig())
+}

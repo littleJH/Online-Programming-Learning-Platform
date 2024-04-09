@@ -12,12 +12,13 @@ import myHooks from '@/tool/myHooks/myHooks'
 const App: React.FC<{
   setmode: Function
 }> = (props) => {
-  const goBack = myHooks.useNavTo({ back: 1 })
   const setUserInfo = useSetRecoilState(userInfoState)
   const [openFindpassModal, setOpenFindpassModal] = useState(false)
   const notification = useRecoilValue(notificationApi)
+  const [loading, setLoading] = useState(false)
 
   const onFinish = (values: any) => {
+    setLoading(true)
     const form = new FormData()
     form.append('Email', values.Email)
     form.append('Password', values.Password)
@@ -47,16 +48,17 @@ const App: React.FC<{
             description: '',
           })
       })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   return (
     <div className="w-full h-full flex justify-center items-center">
       <div className={style.login}>
-        <div className="text-end my-4">
-          <Button type="link" icon={<RightOutlined />} onClick={() => props.setmode('Register')}>
-            注册
-          </Button>
-        </div>
+        <Button type="link" icon={<RightOutlined />} onClick={() => props.setmode('Register')} className="my-4">
+          注册
+        </Button>
         <Form size="large" className={style.form} name="normal_login" onFinish={onFinish}>
           <Form.Item
             name="Email"
@@ -86,7 +88,7 @@ const App: React.FC<{
             </Button>
           </Form.Item>
           <Form.Item className="text-center">
-            <Button type="primary" htmlType="submit">
+            <Button loading={loading} type="primary" htmlType="submit">
               登录
             </Button>
           </Form.Item>

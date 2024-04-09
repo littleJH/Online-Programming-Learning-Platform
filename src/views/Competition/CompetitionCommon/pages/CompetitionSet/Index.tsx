@@ -154,7 +154,7 @@ const View: React.FC = () => {
       dataIndex: ['title', 'label'],
       render: (value: string, record: IDataSource) => {
         return (
-          <div>
+          <div className={style.title}>
             <span>{value}</span>
             <span>
               {record.labels?.map((item, index) => <span key={index}>{index <= 1 && <MyTag>{item}</MyTag>}</span>)}

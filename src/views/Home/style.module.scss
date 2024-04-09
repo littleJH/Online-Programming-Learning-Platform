@@ -1,0 +1,117 @@
+.homeRoot {
+  height: 100%;
+  display: flex;
+
+  .left {
+    width: 1000px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    @media screen and (max-width: 1440px) {
+      width: 800px;
+    }
+
+    @media screen and (max-width: 768px) {
+      width: 100vw;
+    }
+    header {
+      width: 100%;
+      height: max-content;
+      margin: auto;
+      margin-bottom: 2rem;
+      position: relative;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      border-radius: 0.5rem;
+      background: var(--colorBgBase);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      h1 {
+        font-size: 48px;
+        color: #333;
+        text-align: center;
+        background: -webkit-linear-gradient(45deg, #6a11cb 30%, #2575fc 90%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0;
+        padding: 0;
+      }
+      p {
+        font-size: 20px;
+        color: #666;
+        text-align: center;
+        margin-top: 10px;
+      }
+
+      img {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+    }
+
+    section {
+      height: auto;
+      flex-grow: 1;
+
+      .navCard {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 1rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 0.5rem;
+        background: linear-gradient(145deg, var(--colorBgBase), var(--colorPrimary));
+        padding: 1rem;
+
+        @media screen and (max-width: 768px) {
+          grid-template-columns: repeat(2, 1fr);
+          padding: 1rem 0.5rem;
+        }
+
+        .item {
+          width: auto;
+          flex-grow: 1;
+          margin: 0.5rem;
+          opacity: 0.9;
+        }
+      }
+    }
+
+    footer {
+      display: flex;
+      justify-content: center;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      header {
+        background: #333; /* 深色背景 */
+        color: #e0e0e0; /* 浅色文字 */
+        box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1); /* 亮色阴影 */
+
+        h1,
+        p {
+          color: #e0e0e0; /* 浅色文字 */
+        }
+
+        h1 {
+          background: -webkit-linear-gradient(45deg, #6a11cb 30%, #2575fc 90%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+      }
+    }
+  }
+
+  .right {
+    display: block;
+    width: fit-content;
+    margin-left: 2rem;
+    @media screen and (max-width: 768px) {
+      display: none;
+    }
+    .rankBox {
+      width: 20rem;
+    }
+  }
+}

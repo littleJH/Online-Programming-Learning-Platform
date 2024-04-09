@@ -168,9 +168,7 @@ const ProblemTable: React.FC<IProps> = (props) => {
           //   </Popover>
           // </div>
           <div className={style.title} onClick={() => onLineClick(record)}>
-            <span className="cursor-pointer" onClick={handleTitleClick}>
-              {value}
-            </span>
+            <span onClick={handleTitleClick}>{value}</span>
           </div>
         ),
       },

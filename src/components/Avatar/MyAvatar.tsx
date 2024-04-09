@@ -24,8 +24,12 @@ const MyAvatar: React.FC<Iprops> = (props) => {
           alt="登录"
           src={`${iconBaseUrl}/${user?.icon || ''}`}
         ></Avatar>
-        <div className={`${style.pulse} ${style.pulse1}`}></div>
-        <div className={`${style.pulse} ${style.pulse2}`}></div>
+        {active && (
+          <>
+            <div className={`${style.pulse} ${style.pulse1}`}></div>
+            <div className={`${style.pulse} ${style.pulse2}`}></div>
+          </>
+        )}
       </div>
     </Popover>
   )

@@ -65,7 +65,7 @@ const Info: React.FC = () => {
     if (code === 200) {
       file.status = 'done'
       file.url = `${imgGetBaseUrl}/${data.Icon}`
-      setIconUrl(`${imgGetBaseUrl}/${data.Icon}`)
+      setIconUrl(`${data.Icon}`)
       setFileList([file])
     }
   }

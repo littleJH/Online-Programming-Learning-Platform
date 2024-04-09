@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import myHooks from '@/tool/myHooks/myHooks'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
 import style from '@/views/Community/style.module.scss'
-import HotRank from '@/components/Rank/HotRank'
+import HotRank from '@/components/Rank/GeneralRank'
 
 interface IArticleRank {
   Member: string

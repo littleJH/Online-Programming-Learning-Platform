@@ -15,7 +15,7 @@ export const userInfoAtomState = atom<User | null>({
       else return null
     })
     .catch(() => {
-      if (['/login'].includes(location.pathname)) return
+      if (['/login', '/home', '/'].includes(location.pathname)) return
       const a = document.createElement('a')
       a.href = '/login'
       a.click()

@@ -40,6 +40,13 @@
         @media screen and (max-width: 768px) {
           width: max-content;
         }
+
+        .title {
+          cursor: pointer;
+          &:hover {
+            color: var(--colorPrimary);
+          }
+        }
       }
     }
   }

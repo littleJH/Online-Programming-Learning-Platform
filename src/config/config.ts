@@ -7,7 +7,7 @@ export const themeDefault: ITheme = {
   colorWarning: '#f59e0b',
   colorError: '#ef4444',
   colorInfo: '#3b82f6',
-  // colorBgBase: '#f6ffed',
+  // colorBgBase: '#f1f5f9',
   // colorTextBase: '#000'
 }
 

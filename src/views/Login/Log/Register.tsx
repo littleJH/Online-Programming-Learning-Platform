@@ -1,17 +1,25 @@
 import React, { useCallback, useState } from 'react'
-import { Form, Select, Button, Input, Row, Col, message, Upload, Space } from 'antd'
+import { Form, Select, Button, Input, Row, Col, message, Upload, Space, UploadFile } from 'antd'
 import { LoadingOutlined, PlusOutlined, LeftOutlined } from '@ant-design/icons'
 import myHooks from '@/tool/myHooks/myHooks'
 import { registerApi, getVerifyApi } from '@/api/user'
 import style from '../style.module.scss'
 import { useNavigate } from 'react-router-dom'
+import { useRecoilValue } from 'recoil'
+import { notificationApi } from '@/store/appStore'
+import { uploadImgApi } from '@/api/img'
+import { imgGetBaseUrl } from '@/config/apiConfig'
 
 const Register: React.FC<{
   setmode: Function
 }> = (props) => {
+  const notification = useRecoilValue(notificationApi)
   const [verifyed, setverifyed] = useState(false)
+  const [verifying, setVerifying] = useState(false)
   const [verifyText, setverifyText] = useState('获取验证码')
   const [loading, setLoading] = useState(false)
+  const [registering, setRegistering] = useState(false)
+  const [iconFile, setIconFile] = useState<UploadFile[]>([])
   const [imageUrl, setImageUrl] = useState<string>()
   const [form] = Form.useForm()
   const { Option } = Select
@@ -28,17 +36,55 @@ const Register: React.FC<{
     </div>
   )
 
-  const getVerify = () => {
-    getVerifyApi(form.getFieldsValue().Email)
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+  const beforeIconUpload = async (file: UploadFile) => {
+    file.status = 'uploading'
+    setIconFile([file])
+    const formdata = new FormData()
+    formdata.append('file', file as any)
+    try {
+      const { code, data, msg } = (await uploadImgApi(formdata)).data
+      if (code === 200) {
+        file.status = 'done'
+        file.url = `${imgGetBaseUrl}/${data.Icon}`
+        setImageUrl(`${data.Icon}`)
+        setIconFile([file])
+        form.setFieldValue('icon', data.Icon)
+      }
+    } catch {}
+  }
+  const handleRemoveIcon = () => {
+    setImageUrl('')
+    setIconFile([])
+    form.setFieldValue('icon', '')
   }
 
-  const onFinish = useCallback((form: any) => {
+  const handleVerifyBtnClick = () => {
+    const email = form.getFieldValue('Email')
+    if (!email) {
+      form.setFields([{ name: 'Email', errors: ['请输入邮箱地址'] }])
+      form.scrollToField('Email')
+    } else {
+      setVerifying(true)
+      getVerifyApi(email)
+        .then((res) => {
+          if (res.data.code === 200) {
+            start()
+            setverifyed(true)
+            notification &&
+              notification.success({
+                message: '验证码获取成功',
+                description: `验证码已发送至您的邮箱 ${email}`,
+              })
+          }
+        })
+        .finally(() => {
+          setVerifying(false)
+        })
+    }
+  }
+
+  const onFinish = (form: any) => {
+    setRegistering(true)
     console.log(form)
     const data = new FormData()
     data.append('Email', form.Email)
@@ -46,19 +92,24 @@ const Register: React.FC<{
     data.append('Name', form.Name)
     data.append('Verify', form.Verify)
 
-    registerApi(data).then((res) => {
-      console.log(res)
-      if (res.data.code === 200) {
-        const data = new FormData()
-        data.append('name', form.Name)
-        data.append('email', form.Email)
-        data.append('blog', form.blog)
-        data.append('sex', form.sex)
-        data.append('address', form.address)
-        data.append('icon', form.icon)
-      }
-    })
-  }, [])
+    registerApi(data)
+      .then((res) => {
+        console.log(res)
+        if (res.data.code === 200) {
+          const data = new FormData()
+          data.append('name', form.Name)
+          data.append('email', form.Email)
+          data.append('blog', form.blog)
+          data.append('sex', form.sex)
+          data.append('address', form.address)
+          data.append('icon', form.icon)
+        }
+      })
+      .finally(() => {
+        setRegistering(false)
+      })
+  }
+
   return (
     <div className={style.register}>
       <Button type="link" icon={<LeftOutlined />} onClick={() => props.setmode('Login')} className="my-4">
@@ -129,9 +180,20 @@ const Register: React.FC<{
         <Form.Item name={'address'} label="地址：">
           <Input></Input>
         </Form.Item>
-        <Form.Item name={'icon'} label="头像：">
-          <Upload name="icon" listType="picture-card" showUploadList={false}>
-            {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+        <Form.Item label="头像：">
+          <Upload
+            beforeUpload={beforeIconUpload}
+            onRemove={handleRemoveIcon}
+            fileList={iconFile}
+            name="icon"
+            listType="picture-card"
+            showUploadList={false}
+          >
+            {imageUrl ? (
+              <img src={`${imgGetBaseUrl}/${imageUrl}`} alt="头像" style={{ width: '100%' }} />
+            ) : (
+              uploadButton
+            )}
           </Upload>
         </Form.Item>
         <Form.Item name={'Verify'} label="验证码：">
@@ -142,14 +204,7 @@ const Register: React.FC<{
               </Form.Item>
             </Col>
             <Col span={10}>
-              <Button
-                style={{ fontSize: '12px', width: '100%' }}
-                onClick={() => {
-                  start()
-                  setverifyed(true)
-                  getVerify()
-                }}
-              >
+              <Button loading={verifying} style={{ fontSize: '12px', width: '100%' }} onClick={handleVerifyBtnClick}>
                 {verifyed && `${count}s 后重新获取`}
                 {!verifyed && verifyText}
               </Button>
@@ -157,7 +212,7 @@ const Register: React.FC<{
           </Row>
         </Form.Item>
         <Form.Item className="text-center">
-          <Button size="middle" style={{}} htmlType="submit" type="primary">
+          <Button loading={registering} size="middle" style={{}} htmlType="submit" type="primary">
             注册
           </Button>
         </Form.Item>

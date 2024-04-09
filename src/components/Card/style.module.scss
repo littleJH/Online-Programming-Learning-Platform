@@ -116,3 +116,40 @@
     }
   }
 }
+
+.cardBox {
+  .cardBody {
+    padding: 2rem;
+    @media screen and (max-width: 768px) {
+      padding: 1rem;
+    }
+  }
+
+  .navCard {
+    width: 100%;
+    height: 100%;
+    .icon {
+      height: 2rem;
+      display: flex;
+      align-items: center;
+
+      @media screen and (max-width: 768px) {
+      }
+    }
+    .title {
+      height: 2rem;
+      font-weight: 600;
+    }
+    .desc {
+      height: 3rem;
+      width: 100%;
+      // overflow: hidden;
+      // text-overflow: ellipsis;
+      // white-space: nowrap;
+
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
+    }
+  }
+}
