@@ -6,7 +6,7 @@ import {
   searchComByTextAndLabelApi,
   searchComByTextApi,
 } from '@/api/competition'
-import { Skeleton, Table, theme } from 'antd'
+import { Select, Skeleton, Table, theme } from 'antd'
 import { CompetitionState, CompetitionType, ICompetition } from '@/type'
 import dayjs from 'dayjs'
 import Column from 'antd/es/table/Column'
@@ -23,6 +23,13 @@ import myHooks from '@/tool/myHooks/myHooks'
 import style from '../../../style.module.scss'
 import { useRecoilValue } from 'recoil'
 import { isMobileAtom } from '@/store/appStore'
+
+const type = [
+  { text: '个人赛', value: 'single' },
+  { text: 'OI赛', value: 'OI' },
+  { text: '组队赛', value: 'group' },
+  { text: '匹配赛', value: 'match' },
+]
 
 interface IDataSource {
   state: CompetitionState
@@ -62,6 +69,7 @@ const View: React.FC = () => {
     pageSize: Number(querys.get('pageSize')) || 20,
     text: querys.get('text') || '',
     label: querys.get('label') || '',
+    type: '',
   })
 
   const size = useMemo(() => (isMobile ? 'middle' : 'large'), [isMobile])
@@ -73,13 +81,13 @@ const View: React.FC = () => {
 
   const fetch = async () => {
     setLoading(true)
-    const { text, label, pageNum, pageSize } = filter
+    const { text, label, pageNum, pageSize, type } = filter
     let competitions: ICompetition[] = []
     let total = 0
     let result
     const list: IDataSource[] = []
     if (!text && !label) {
-      result = await getCompetitionListApi(pageNum, pageSize)
+      result = await getCompetitionListApi(type, pageNum, pageSize)
     } else if (text && !label) {
       result = await searchComByTextApi(text, pageNum, pageSize)
     } else if (!text && label) {
@@ -167,12 +175,7 @@ const View: React.FC = () => {
       key: 'type',
       title: '比赛类型',
       dataIndex: 'type',
-      filters: [
-        { text: '个人赛', value: 'single' },
-        { text: 'OI赛', value: 'OI' },
-        { text: '组队赛', value: 'group' },
-        { text: '匹配赛', value: 'match' },
-      ],
+      filters: type,
       onFilter: (value: string, record: IDataSource) => value.toLowerCase() === record.type.toLowerCase(),
       render: (value: CompetitionType) => {
         return (
@@ -269,7 +272,7 @@ const View: React.FC = () => {
             }}
             size={size}
             defaultValue={filter.text}
-            placeholder="名称搜索"
+            placeholder="名称"
             enterButton
             onSearch={handleSearch}
             onChange={(e) => handleTextChange(e.target.value)}
@@ -283,11 +286,29 @@ const View: React.FC = () => {
             }}
             size={size}
             defaultValue={filter.text}
-            placeholder="标签搜索"
+            placeholder="标签"
             enterButton
             onSearch={fetch}
             onChange={(e) => handleLabelChange(e.target.value)}
           ></Search>
+        </div>
+        <div className="w-8"></div>
+        <div className={style.item}>
+          <Select
+            size={size}
+            placeholder="类型"
+            style={{
+              width: '100%',
+            }}
+            options={[
+              {
+                value: '',
+                label: '全部',
+              },
+              ...type.map((item) => ({ label: item.text, value: item.value })),
+            ]}
+            onChange={(value) => setFilter((pre) => ({ ...pre, type: value }))}
+          ></Select>
         </div>
       </div>
       <div className={style.content}>

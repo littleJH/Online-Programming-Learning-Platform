@@ -1,4 +1,4 @@
-import { iconBaseUrl } from '@/config/apiConfig'
+import { iconBaseUrl, imgGetBaseUrl } from '@/config/apiConfig'
 import { Avatar, Divider, Space, theme } from 'antd'
 import React from 'react'
 import MyTag from '../Label/MyTag'
@@ -57,12 +57,21 @@ const GeneralCard: React.FC<IProps> = (props) => {
     <div className={style.generalCard} onClick={onClick}>
       <div className="grow" style={{ width: '100px' }}>
         <div className="flex items-center">
-          <MyAvatar user={user}></MyAvatar>
-          {/* <Avatar className="card-avatar" src={`${iconBaseUrl}/${user?.icon}`}></Avatar> */}
-          <div className="card-username">{user?.name}</div>
-          <div className="card-time">{ago}</div>
+          {user && (
+            <>
+              <MyAvatar user={user}></MyAvatar>
+              <span className="card-username">{user?.name}</span>
+            </>
+          )}
+          {ago && <div className="card-time">{ago}</div>}
           {labels && labels.length > 0 && (
-            <Space rootClassName={style.tags}>
+            <Space
+              style={{
+                margin: !user && !ago ? '0' : '0 1rem',
+              }}
+              align="start"
+              rootClassName={style.tags}
+            >
               {labels.map((label) => (
                 <MyTag key={label.id}>{label.label}</MyTag>
               ))}
@@ -128,6 +137,11 @@ const GeneralCard: React.FC<IProps> = (props) => {
         </div>
         {extra && <div className="p-4">{extra}</div>}
       </div>
+      {img && (
+        <div className={style.imgctn}>
+          <img src={`${imgGetBaseUrl}/${img}`} className={`${style.img}`} alt=""></img>
+        </div>
+      )}
     </div>
   )
 }

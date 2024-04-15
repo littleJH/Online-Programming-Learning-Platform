@@ -1,11 +1,12 @@
 import React from 'react'
-import { Avatar, Divider, Menu } from 'antd'
+import { Avatar, Button, Divider, Menu, Space } from 'antd'
 import { User } from '@/type'
 import { imgGetBaseUrl } from '@/config/apiConfig'
 import { useRecoilValue } from 'recoil'
 import { userInfoState } from '@/store/appStore'
 import { siderMenuItemsObj } from '@/router/router'
 import SubNavbar from '../Navbar/SubNavbar'
+import style from './style.module.scss'
 
 interface Iprops {
   user: User | undefined | null
@@ -16,16 +17,17 @@ interface Iprops {
 const UserCard: React.FC<Iprops> = (props) => {
   const { user, showMenu } = props
   return (
-    <div className="rounded p-2">
-      <div className="flex ">
+    <div className={style.usercard}>
+      <div className="flex w-full">
         <div className="flex items-center mx-2">
           <Avatar src={`${imgGetBaseUrl}/${user?.icon}`} size={'large'}></Avatar>
         </div>
-        <div className="">
-          <div>{props.user?.name}</div>
-          <div>{props.user?.email}</div>
+        <div className={style.content}>
+          <div className={style.name}>{props.user?.name}</div>
+          <div className={style.email}>{props.user?.email}</div>
         </div>
       </div>
+
       {showMenu && (
         <div className="">
           <Divider></Divider>

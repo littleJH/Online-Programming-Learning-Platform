@@ -115,9 +115,9 @@ const Root: React.FC = () => {
             </Button>
           )}
           {!loginStatus && (
-            <Button type="text" className="flex items-center h-12 p-2 mr-4">
+            <Button type="link" className="flex items-center h-12 p-2 mr-4">
               <div className="h-full flex items-center" onClick={() => nav('/profile')}>
-                <Button type="link">登录</Button>
+                登录
               </div>
             </Button>
           )}
@@ -186,7 +186,7 @@ const Root: React.FC = () => {
             </Space>
           </div>
           {/* right */}
-          <div className="w-1/3 flex items-center">{footerRight}</div>
+          <div className="w-1/3 flex items-center justify-end">{footerRight}</div>
         </div>
         <div className={style.mobile}>
           <MobileFooterNavbar></MobileFooterNavbar>

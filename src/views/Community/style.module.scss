@@ -51,8 +51,7 @@
   .right {
     display: block;
     margin: 0 2rem;
-    max-width: max-content;
-    min-width: 20rem;
+    width: 20rem;
     @media screen and (max-width: 768px) {
       display: none;
     }

@@ -154,10 +154,10 @@ const routes: MyRoute[] = [
             // element: ProfileFriend,
             element: StayTuned,
           },
-          // {
-          //   path: 'message',
-          //   element: ProfileMessage,
-          // },
+          {
+            path: 'message',
+            element: ProfileMessage,
+          },
           {
             path: 'email',
             // element: ProfileEmail,
@@ -578,11 +578,11 @@ export const siderMenuItemsObj: any = {
     //   icon: <UserOutlined />,
     // },
 
-    // {
-    //   key: 'message',
-    //   label: '留言板',
-    //   icon: <MessageOutlined />,
-    // },
+    {
+      key: 'profile/message',
+      label: '留言板',
+      icon: <MessageOutlined />,
+    },
     // {
     //   key: 'email',
     //   label: '邮箱',

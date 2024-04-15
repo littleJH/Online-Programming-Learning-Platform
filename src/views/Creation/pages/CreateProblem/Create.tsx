@@ -33,7 +33,7 @@ const Create: React.FC = () => {
   const [stepStatus, setstepStatus] = useState<'wait' | 'process' | 'finish' | 'error'>('process')
   const nav = useNavigate()
   const [form] = Form.useForm()
-  const [codeLanguage, setcodeLanguage] = useState('C')
+  const [codeLanguage, setcodeLanguage] = useState('C++11')
   const [code1, setcode1] = useState('')
   const [code2, setcode2] = useState('')
   const [openUploadModal, setOpenUploadModal] = useState(false)
@@ -77,11 +77,11 @@ const Create: React.FC = () => {
 
   const nextStep1 = useCallback(async () => {
     const data1 = JSON.stringify({
-      language: 'C++11',
+      language: codeLanguage,
       code: code1,
     })
     const data2 = JSON.stringify({
-      language: 'java',
+      language: codeLanguage,
       code: code2,
     })
 
@@ -115,22 +115,23 @@ const Create: React.FC = () => {
     submit()
   }, [code1, code2, programMode, form, codeLanguage])
 
-  const submit = useCallback(() => {
-    const result = Object.assign({}, form.getFieldsValue(true))
+  const submit = async () => {
+    const result = { ...form.getFieldsValue(true) }
     Object.keys(result).forEach((key: string) => {
       if (key === 'sample_case') {
-        if (result.sample_case_expand) {
-          result.sample_case = [result.sample_case, ...(result.sample_case_expand as any)]
+        if (result['sample_case_expand']?.length > 0) {
+          result[key] = [result[key], ...result['sample_case_expand']]
         } else {
-          result.sample_case = [result.sample_case]
+          result[key] = [result[key]]
         }
       }
 
       if (key === 'test_case') {
-        if (result.test_case_expand) {
-          result.test_case = [result.test_case, ...(result.test_case_expand as any)]
+        console.log(result[key], result['test_case_expand'])
+        if (result['test_case_expand']?.length > 0) {
+          result[key] = [result[key], ...result['test_case_expand']]
         } else {
-          result.test_case = [result.test_case]
+          result[key] = [result[key]]
         }
       }
 
@@ -145,26 +146,23 @@ const Create: React.FC = () => {
       if (['memory_limit', 'time_limit'].includes(key)) {
         result[key] = Number(result[key])
       }
-
-      delete result.sample_case_expand
-      delete result.test_case_expand
     })
-    console.log(result)
-    createProblemApi(JSON.stringify(result)).then((res) => {
-      console.log(res.data)
-      setcurrentStep((currentStep) => currentStep + 1)
-      if (res.data.code === 200) {
-        // localStorage.removeItem('problemForm')
-        // localStorage.removeItem('code1')
-        // localStorage.removeItem('code2')
-        setstepStatus('finish')
-        setCurrentProblem(res.data.data.problem)
-      } else {
-        setfailMessage(res.data.msg)
-        setstepStatus('error')
-      }
-    })
-  }, [form])
+    delete result.sample_case_expand
+    delete result.test_case_expand
+    const res = await createProblemApi(JSON.stringify(result))
+    console.log(res.data)
+    setcurrentStep((currentStep) => currentStep + 1)
+    if (res.data.code === 200) {
+      // localStorage.removeItem('problemForm')
+      // localStorage.removeItem('code1')
+      // localStorage.removeItem('code2')
+      setstepStatus('finish')
+      setCurrentProblem(res.data.data.problem)
+    } else {
+      setfailMessage(res.data.msg)
+      setstepStatus('error')
+    }
+  }
 
   const handleNextClick = () => {
     switch (currentStep) {

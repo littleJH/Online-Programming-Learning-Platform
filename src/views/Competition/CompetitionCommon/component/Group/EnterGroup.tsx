@@ -1,5 +1,5 @@
 import { CompetitionType, ICompetition, IGroup } from '@/type'
-import { Button, Space, Steps, Form, Input, Switch, Result, List, Modal } from 'antd'
+import { Button, Space, Steps, Form, Input, Switch, Result, List, Modal, InputNumber } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import React, { Fragment, useEffect, useState } from 'react'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
@@ -17,7 +17,7 @@ import CreateGroupForm from '@/components/Group/CreateGroupForm'
 import { useRecoilValue } from 'recoil'
 import { notificationApi } from '@/store/appStore'
 
-type Mode = 'create' | 'enter' | 'undetermined' | 'already'
+type Mode = 'create' | 'enter' | 'undetermined' | 'already' | 'createStandard'
 
 interface IDataSource {
   key: string
@@ -30,6 +30,7 @@ const EnterGroup: React.FC<{
   onEnterSuccess: Function
 }> = (props) => {
   const [form] = Form.useForm()
+  // const [standardForm] = Form.useForm()
   const { competition, type, onEnterSuccess } = props
   const [currentStep, setcurrentStep] = useState(0)
   const [mode, setmode] = useState<Mode>('undetermined')
@@ -245,45 +246,26 @@ const EnterGroup: React.FC<{
             >
               已有用户组
             </Button>
-            <Button
+            {/* <Button
               onClick={() => {
-                setmode('create')
+                setmode('createStandard')
                 setcurrentStep((value) => value + 1)
               }}
             >
               创建标准用户组
-            </Button>
+            </Button> */}
           </Space>
         </div>
       )}
       {currentStep === 1 && mode === 'create' && (
-        <div>
-          <CreateGroupForm
-            form={form}
-            doneCallback={(group: IGroup) => {
-              setgroup(group)
-              setcurrentStep((value) => value + 1)
-            }}
-            preFooter={[<Button onClick={() => setcurrentStep(0)}>上一步</Button>]}
-          ></CreateGroupForm>
-          {/* <div className='flex justify-center mt-8'>
-            <Space>
-              <Button
-                onClick={() => {
-                  setcurrentStep(0)
-                }}
-              >
-                上一步
-              </Button>
-              <Button
-                type='primary'
-                onClick={createGroup}
-              >
-                创建
-              </Button>
-            </Space>
-          </div> */}
-        </div>
+        <CreateGroupForm
+          form={form}
+          doneCallback={(group: IGroup) => {
+            setgroup(group)
+            setcurrentStep((value) => value + 1)
+          }}
+          preFooter={[<Button onClick={() => setcurrentStep(0)}>上一步</Button>]}
+        ></CreateGroupForm>
       )}
       {currentStep === 1 && mode === 'enter' && (
         <div>
@@ -353,6 +335,15 @@ const EnterGroup: React.FC<{
           </div>
         </>
       )}
+      {/* {currentStep === 1 && mode === 'createStandard' && (
+        <div>
+          <Form form={standardForm}>
+            <Form.Item name={'num'} label="用户组成员数">
+              <InputNumber min={1}></InputNumber>
+            </Form.Item>
+          </Form>
+        </div>
+      )} */}
       {currentStep === 2 && (
         <div>
           {mode === 'create' && (

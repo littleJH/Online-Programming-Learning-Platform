@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import Login from '@/views/Login/log/Login'
 import Register from '@/views/Login/log/Register'
-import LoginPic from '@/assets/Login.svg'
-import loginPic from '@/assets/login1.svg'
 import style from './style.module.scss'
 import { Divider } from 'antd'
 

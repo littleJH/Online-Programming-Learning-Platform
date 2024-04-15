@@ -7,6 +7,7 @@ const baseUrlObj: {
   iconBaseUrl: 'http://icon.mgaronya.com',
   imgBaseUrl: 'http://api_img.mgaronya.com',
   imgGetBaseUrl: 'http://img.mgaronya.com',
+  gptBaseUrl: 'http://api_chatgpt.mgaronya.com',
   wsBaseUrl: 'ws://10.141.47.20:1000',
   baseURL: import.meta.env.DEV ? '/api' : 'http://10.141.47.20:1000',
   testBaseUrl: import.meta.env.DEV ? '/test' : 'http://test_oj.mgaronya.com/test',

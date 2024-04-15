@@ -34,6 +34,7 @@ export interface ChangeOptions {
 interface IProps {
   problem_id: string
   onStateChange: (options: ChangeOptions) => void
+  onSubmited: (id: string) => void
 }
 
 const initTestState: IRecordState = {
@@ -46,7 +47,7 @@ const Answer: React.FC<IProps> = (props) => {
   const isMobile = useRecoilValue(isMobileAtom)
   const nav = useNavigate()
   const competition = useRecoilValue(currentCompetitionAtom)
-  const { problem_id, onStateChange } = props
+  const { problem_id, onStateChange, onSubmited } = props
   const [problem, setproblem] = useState<IProblem>()
   const [caseSamples, setcaseSamples] = useState<ICaseSample[]>([])
   const [code, setcode] = useState<string>('')
@@ -122,14 +123,15 @@ const Answer: React.FC<IProps> = (props) => {
       setrunResult(res.data.data)
     })
   }
-  const craeteRecord = () => {
+  const craeteRecord = async () => {
     if (!competition) return
     const data = {
       language: 'C++11',
       code: code,
       problem_id: problem_id,
     }
-    createRecordApi(competition.type, competition.id, JSON.stringify(data)).then((res) => {
+    try {
+      const res = await createRecordApi(competition.type, competition.id, JSON.stringify(data))
       console.log(res.data)
       if (res.data.code !== 200 || res.data.msg === '未报名') {
         notification &&
@@ -138,12 +140,13 @@ const Answer: React.FC<IProps> = (props) => {
           })
         // nav(`/competition/${competition.id}/record`)
       } else {
+        onSubmited(problem_id)
         notification &&
           notification.success({
             message: res.data.msg,
           })
       }
-    })
+    } catch {}
   }
 
   const scrollToEnd = () => {
@@ -223,7 +226,7 @@ const Answer: React.FC<IProps> = (props) => {
       </div>
       {/* </div> */}
       {/* footer */}
-      <div className="flex items-center py-1" onClick={scrollToEnd}>
+      <div className="flex items-center py-1">
         {/* <div className="flex-grow flex items-center">
           <Switch
             checked={switchChecked}
@@ -231,7 +234,7 @@ const Answer: React.FC<IProps> = (props) => {
           ></Switch>
           <span>自定义测试用例</span>
         </div> */}
-        <div className="flex-grow my-4">
+        <div className="flex-grow my-4" onClick={scrollToEnd}>
           <Switch
             checkedChildren={'控制台'}
             unCheckedChildren={'控制台'}
@@ -240,7 +243,13 @@ const Answer: React.FC<IProps> = (props) => {
           ></Switch>
         </div>
         <div className="">
-          <Button size="small" onClick={runCode}>
+          <Button
+            size="small"
+            onClick={() => {
+              runCode()
+              scrollToEnd()
+            }}
+          >
             执行代码
           </Button>
           <Button size="small" onClick={craeteRecord} className="mx-1" type="primary">

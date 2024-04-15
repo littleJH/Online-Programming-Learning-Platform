@@ -42,7 +42,9 @@ const Problem: React.FC<Iprops> = (props) => {
   }
 
   const handleFormChange = () => {
-    localStorage.setItem('problemForm', JSON.stringify(form.getFieldsValue()))
+    const values = form.getFieldsValue()
+    console.log('form cahnge ==> ', values)
+    localStorage.setItem('problemForm', JSON.stringify(values))
   }
 
   return (

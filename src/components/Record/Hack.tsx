@@ -12,10 +12,11 @@ interface Iprops {
   sethackInput: Function
   userInfo: User
   submit: Function
+  loading: boolean
 }
 
 const Hack: React.FC<Iprops> = (props) => {
-  const { record, hackInput, sethackInput, userInfo, submit } = props
+  const { record, hackInput, sethackInput, userInfo, submit, loading } = props
 
   return (
     <div>
@@ -28,7 +29,7 @@ const Hack: React.FC<Iprops> = (props) => {
       </div>
       <TextArea value={hackInput} onChange={(e) => sethackInput(e.target.value)}></TextArea>
       <div className="flex justify-center mt-8">
-        <Button type="primary" onClick={() => submit()}>
+        <Button loading={loading} type="primary" onClick={() => submit()}>
           Hack
         </Button>
       </div>

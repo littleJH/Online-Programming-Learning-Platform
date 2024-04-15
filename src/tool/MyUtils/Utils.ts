@@ -2,6 +2,9 @@ import { IToc, TypeSideBar } from '@/type'
 import { RcFile } from 'antd/es/upload'
 import dayjs from 'dayjs'
 import copy from 'copy-to-clipboard'
+import { Marked } from 'marked'
+import { markedHighlight } from 'marked-highlight'
+import hljs from './highlight'
 
 const formatProblemJson = async (file: RcFile) => {
   const text = await file.text()
@@ -209,6 +212,22 @@ const getIsMobile = () => {
   return window.matchMedia('(any-pointer:coarse)').matches || window.matchMedia('max-width: 768px').matches
 }
 
+const getHtmlFromMd = (text: string) => {
+  const marked = new Marked(
+    markedHighlight({
+      langPrefix: 'hljs language-',
+      highlight(code, lang, info) {
+        console.log(code, lang, info)
+
+        const language = hljs.getLanguage(lang) ? lang : 'plaintext'
+        return hljs.highlight(code, { language }).value
+      },
+    })
+  )
+  console.log(marked.parse(text))
+  return marked.parse(text)
+}
+
 const utils = {
   formatProblemJson,
   getPathArray,
@@ -222,6 +241,7 @@ const utils = {
   throttle,
   formatFileSize,
   getIsMobile,
+  getHtmlFromMd,
 }
 
 export default utils

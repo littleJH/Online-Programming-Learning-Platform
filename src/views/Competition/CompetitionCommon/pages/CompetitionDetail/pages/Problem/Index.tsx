@@ -34,7 +34,11 @@ const Element: React.FC = () => {
         key: item.key,
         label: item.title,
         children: (
-          <Answer problem_id={item.key} onStateChange={(options) => answerStateChange(options, index)}></Answer>
+          <Answer
+            problem_id={item.key}
+            onSubmited={(id: string) => handleSubmited(id)}
+            onStateChange={(options) => answerStateChange(options, index)}
+          ></Answer>
         ),
         extra: item.state,
         style: {
@@ -54,7 +58,6 @@ const Element: React.FC = () => {
   }
 
   const fetch = async () => {
-    console.log('competition ==> ', competition)
     if (!competition) return
     const res = await getProblemNewListApi(competition.id)
     const problemIds = res.data.data.problemIds
@@ -76,6 +79,24 @@ const Element: React.FC = () => {
         },
       ])
     }
+  }
+
+  const handleSubmited = async (id: string) => {
+    if (!competition) return
+    const index = problems.findIndex((item) => item.key === id)
+    try {
+      const res = await getRecordListApi(competition?.type, competition?.id, {
+        problm_id: id,
+      })
+      setproblems((prev) => [
+        ...prev.slice(0, index),
+        {
+          ...prev[index],
+          state: <ProblemStateLabel problem={prev[index]} records={res.data.data.records}></ProblemStateLabel>,
+        },
+        ...prev.slice(index + 1),
+      ])
+    } catch {}
   }
 
   const handleCollapseChange = (key: string | string[]) => {}

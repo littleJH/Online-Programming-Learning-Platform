@@ -20,10 +20,6 @@ import {
 import React, { useCallback, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { ManOutlined, WomanOutlined } from '@ant-design/icons'
-import diamond from '@/assets/diamond.svg'
-import gold from '@/assets/gold.svg'
-import sliver from '@/assets/sliver.svg'
-import copper from '@/assets/copper.svg'
 import { uploadImgApi } from '@/api/img'
 import copy from 'copy-to-clipboard'
 import { getCurrentUserinfo, updateInfoApi } from '@/api/user'
@@ -196,7 +192,17 @@ const Info: React.FC = () => {
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item name={'blog'} label="个人网站">
+        <Form.Item
+          name={'blog'}
+          label="个人网站"
+          validateTrigger={'onBlur'}
+          rules={[
+            {
+              type: 'url',
+              message: '请输入正确的网址',
+            },
+          ]}
+        >
           <Input defaultValue={info?.blog}></Input>
         </Form.Item>
         <Form.Item name={'res_long'} label="个人介绍">

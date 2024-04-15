@@ -166,25 +166,7 @@ const Chat: React.FC<IProps> = (props) => {
             />
           </span>
         </div>
-        <div
-          className="h-full grow px-8 overflow-auto"
-          // style={{
-          //   transform: 'rotate(180deg)',
-          //   direction: 'rtl'
-          // }}
-          // onScrollCapture={handleChatScroll}
-        >
-          {/* {chatList.map((item, index) => (
-            <div
-              style={{
-                transform: 'rotate(180deg)',
-                direction: 'ltr'
-              }}
-              key={`${item.created_at}${index}`}
-            >
-              {renderMessageCard(item)}
-            </div>
-          ))} */}
+        <div className="h-full grow px-8 overflow-auto">
           <div ref={chatBox}>
             <List
               loading={loading}

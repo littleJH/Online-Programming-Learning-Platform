@@ -16,6 +16,20 @@
   }
 }
 
+.message {
+  width: 1000px;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+
+  .messageList {
+    height: auto;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 0 1rem;
+  }
+}
+
 .info {
   width: 768px;
   padding: 1 10rem;

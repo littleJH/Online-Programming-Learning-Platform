@@ -18,8 +18,8 @@ export const deleteCompetitionApi = (id: string) => {
   return request.delete(`/delete/${id}`, jsonConfig())
 }
 
-export const getCompetitionListApi = (pageNum = 1, pageSize = 20) => {
-  return request.get(`/list?pageNum=${pageNum}&pageSize=${pageSize}`)
+export const getCompetitionListApi = (type: string, pageNum = 1, pageSize = 20) => {
+  return request.get(`/list?type=${type}&pageNum=${pageNum}&pageSize=${pageSize}`)
 }
 
 export const getMemberRankApi = (competition_id: string, member_id: string) => {

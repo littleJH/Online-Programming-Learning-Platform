@@ -18,7 +18,7 @@ import { IRecordState, IRunResult, ICaseSample, IRecord, IProblem } from '@/type
 import RecordModal from '../../components/Record/RecordModal'
 import CodeEditor from '@/components/Editor/CodeEditor'
 import { recordStates } from '@/assets/recordStates'
-import ojmap from '@/assets/ojmap'
+import ojmap from '@/components/Editor/ojmap'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
 import myHooks from '@/tool/myHooks/myHooks'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
@@ -357,7 +357,7 @@ export const Detail: React.FC = () => {
                   localStorage.setItem(`code-${id}`, value)
                   setcode(value)
                 }}
-                oj={ojmap.get(id?.slice(0, id.indexOf('-')))}
+                oj={id?.slice(0, id.indexOf('-')).includes('000000') ? ojmap.get(id?.slice(0, id.indexOf('-'))) : ''}
               ></CodeEditor>
             </div>
             {/* console */}

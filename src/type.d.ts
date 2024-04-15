@@ -147,7 +147,7 @@ export interface User {
   level?: number
   like_num?: number
   name: string
-  score?: string
+  score?: number
   sex: boolean
   unlike_num?: number
   visit_num?: number

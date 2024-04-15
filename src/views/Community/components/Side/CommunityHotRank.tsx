@@ -16,7 +16,7 @@ interface IArticleRank {
 
 interface IRank {
   id: string
-  title: string
+  title: React.ReactNode
   score: number
   type: Type
 }
@@ -60,7 +60,7 @@ const CommunityHotRank: React.FC<{ type: Type }> = (props) => {
     }
     setRankList(
       articles.map((article) => ({
-        title: article.article.title,
+        title: <div style={{ padding: '0.75rem 0' }}>{article.article.title}</div>,
         score: article.Score,
         type: 'articleset',
         id: article.Member,
@@ -76,7 +76,7 @@ const CommunityHotRank: React.FC<{ type: Type }> = (props) => {
   const handleClick = (index: number) =>
     rankList && nav(`/community/${rankList[index].type.replace('set', '')}/${rankList[index].id}`)
 
-  return <HotRank rankList={rankList} onClick={(index: number) => handleClick(index)}></HotRank>
+  return <HotRank rankList={rankList} onClick={(index: number) => handleClick(index)} icon={'fire'}></HotRank>
 }
 
 export default CommunityHotRank

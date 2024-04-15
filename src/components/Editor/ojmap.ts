@@ -1,4 +1,6 @@
-const oj: any = {
+const oj: {
+  [key: string]: string
+} = {
   POJ: '00000001',
   HDU: '00000002',
   SPOJ: '00000003',

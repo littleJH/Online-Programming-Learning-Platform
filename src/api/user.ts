@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios'
 import { baseConfig, jsonConfig, formConfig, createRequest } from '../config/apiConfig'
 
 const request = createRequest({ baseURL: 'user' })
@@ -66,10 +67,22 @@ export const getVisitRankApi = (pageNum: number = 1, pageSize: number = 20) => {
   return request.get(`/visit/rank?pageNum=${pageNum}&pageSize=${pageSize}`, baseConfig())
 }
 
-export const getUserRankApi = (pageNum: number = 1, pageSize: number = 20) => {
+export const getHotRankApi = (pageNum: number = 1, pageSize: number = 20) => {
   return request.get(`/hot/rank/list?pageNum=${pageNum}&pageSize=${pageSize}`, baseConfig())
 }
 
-export const getUserScoreRankApi = (pageNum: number = 1, pageSize: number = 20) => {
+export const getScoreRankApi = (pageNum: number = 1, pageSize: number = 20) => {
   return request.get(`/score/rank/list?pageNum=${pageNum}&pageSize=${pageSize}`, baseConfig())
+}
+
+export const userRankApis: {
+  [key: string]: () => Promise<AxiosResponse>
+} = {
+  getAcRankApi,
+  getLikeRankApi,
+  getUnlikeRankApi,
+  getCollectRankApi,
+  getVisitRankApi,
+  getHotRankApi,
+  getScoreRankApi,
 }

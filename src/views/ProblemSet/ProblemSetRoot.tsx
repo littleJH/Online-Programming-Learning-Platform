@@ -8,7 +8,7 @@ import { isMobileAtom, pathNameState } from '@/store/appStore'
 import utils from '@/tool/myUtils/utils'
 import HotRank from '@/components/Rank/GeneralRank'
 import MySvgIcon from '@/components/Icon/MySvgIcon'
-import { getProblemHotRankApi, showProblemApi } from '@/api/problem'
+import { getProblemHotRankApi, getProblemListApi, showProblemApi } from '@/api/problem'
 import { getTopicApi, getTopicHotRankApi } from '@/api/topic'
 import { getFormApi, getFormHotRankApi } from '@/api/form'
 
@@ -38,11 +38,19 @@ const ProblemSetRoot: React.FC = () => {
     try {
       switch (type) {
         case 'all':
-          const problems = (await getProblemHotRankApi()).data.data.problems
+          const problems = (await getProblemListApi()).data.data.problems
           for (let problem of problems) {
             const data = (await showProblemApi(problem.id)).data.data
             list.push({
-              title: data.problem.title,
+              title: (
+                <div
+                  style={{
+                    padding: '0.5rem 0',
+                  }}
+                >
+                  {data.problem.title}
+                </div>
+              ),
               score: problem.Score,
               type: type,
               id: problem.id,
@@ -125,7 +133,7 @@ const ProblemSetRoot: React.FC = () => {
               ></MySvgIcon>
               <span className="ml-2">
                 {searchText === ''
-                  ? `全部${recommandOptions.find((item) => item.value === type)?.label}`
+                  ? `${recommandOptions.find((item) => item.value === type)?.label}推荐`
                   : `搜索结果：${searchText}`}
               </span>
             </div>
@@ -139,7 +147,7 @@ const ProblemSetRoot: React.FC = () => {
         </Card>
       </div>
       <div className={style.right}>
-        <HotRank rankList={rankList} onClick={(index: number) => handleRankClick(index)}></HotRank>
+        <HotRank icon="fire" rankList={rankList} onClick={(index: number) => handleRankClick(index)}></HotRank>
       </div>
     </div>
   )

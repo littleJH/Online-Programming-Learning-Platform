@@ -13,6 +13,8 @@ import { getPagination } from '@/config/config'
 import GeneralTable from '../../table/GeneralTable'
 import utils from '@/tool/myUtils/utils'
 import style from '../style.module.scss'
+import LoadMoreList from '@/components/List/LoadMoreList'
+import ProblemCard from '@/components/Card/ProblemCard'
 
 interface IProps {
   mode: 'checkbox' | 'default' | 'action' | 'radio'
@@ -308,6 +310,14 @@ const ProblemTable: React.FC<IProps> = (props) => {
         />
       )}
       {fetchDone && <GeneralTable {...getTableProps()}></GeneralTable>}
+      {/* {fetchDone && (
+        <LoadMoreList
+          dataSource={dataSource}
+          total={total}
+          itemRender={(item: any) => <ProblemCard problemProps={item}></ProblemCard>}
+          fetchFn={() => {}}
+        ></LoadMoreList>
+      )} */}
     </div>
   )
 }

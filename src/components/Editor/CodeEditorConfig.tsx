@@ -6,10 +6,11 @@ import MySvgIcon from '../Icon/MySvgIcon'
 interface IProps {
   monacoOptions: IMonacoOptions
   setMonacoOptions: Function
+  onChange?: Function
 }
 
 const CodeEditorConfig: React.FC<IProps> = (props) => {
-  const { monacoOptions, setMonacoOptions } = props
+  const { monacoOptions, setMonacoOptions, onChange } = props
   const [form] = Form.useForm<IMonacoOptions>()
 
   const handleFormChange = () => {
@@ -23,11 +24,7 @@ const CodeEditorConfig: React.FC<IProps> = (props) => {
 
   return (
     <Form form={form} name="monacoOptions" onValuesChange={handleFormChange} scrollToFirstError layout="vertical">
-      <h6 className="label"></h6>
-      <Form.Item label={'编辑器主题'}>
-        <MySvgIcon href={``}></MySvgIcon>
-      </Form.Item>
-      <h6 className="label">字体</h6>
+      <h5 className="label">字体</h5>
       <Row gutter={32}>
         <Col span={12}>
           <Form.Item name={'fontSize'} label="字体大小">
@@ -40,7 +37,7 @@ const CodeEditorConfig: React.FC<IProps> = (props) => {
           </Form.Item>
         </Col>
       </Row>
-      <h6 className="label">间距</h6>
+      <h5 className="label">间距</h5>
       <Row gutter={32}>
         <Col span={8}>
           <Form.Item name={'lineHeight'} label="行高">
@@ -68,7 +65,7 @@ const CodeEditorConfig: React.FC<IProps> = (props) => {
         </Row>
       </Form.Item>
 
-      <h6 className="label">滚轮/滚动</h6>
+      <h5 className="label">滚轮/滚动</h5>
       <Row gutter={32}>
         <Col>
           <Form.Item name={'mouseWheelScrollSensitivity'} label="鼠标滚轮灵敏度">
@@ -87,7 +84,7 @@ const CodeEditorConfig: React.FC<IProps> = (props) => {
         </Col>
       </Row>
 
-      <h6 className="label">其它</h6>
+      <h5 className="label">其它</h5>
       <Form.Item name={'emptySelectionClipboard'} label="无选择复制时复制当前行" valuePropName="checked">
         <Switch defaultChecked={monacoOptions.emptySelectionClipboard}></Switch>
       </Form.Item>

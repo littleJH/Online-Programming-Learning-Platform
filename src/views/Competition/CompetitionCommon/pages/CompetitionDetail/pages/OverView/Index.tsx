@@ -11,6 +11,7 @@ import { ICompetition, User } from '@/type'
 import dayjs from 'dayjs'
 import myHooks from '@/tool/myHooks/myHooks'
 import MyTag from '@/components/Label/MyTag'
+import Similarity from '@/components/Similarity/Similarity'
 
 const Overview: React.FC = () => {
   const navTo = myHooks.useNavTo()
@@ -19,6 +20,7 @@ const Overview: React.FC = () => {
   const [founder, setFounder] = useState<User>()
   const [duration, setDuration] = useState('')
   const notification = useRecoilValue(notificationApi)
+  const [openSimilarityModal, setOpenSimilarityModal] = useState(false)
 
   useEffect(() => {
     if (!competition) return
@@ -59,9 +61,14 @@ const Overview: React.FC = () => {
           <Space>
             {founder?.name || ''}
             {founder?.name === userInfo?.name && (
-              <Button size="small" type="dashed" danger onClick={toEdit}>
-                修改比赛
-              </Button>
+              <>
+                <Button size="small" type="dashed" danger onClick={toEdit}>
+                  修改比赛
+                </Button>
+                <Button size="small" type="primary" onClick={() => setOpenSimilarityModal(true)}>
+                  相似度查询
+                </Button>
+              </>
             )}
           </Space>
         ),
@@ -84,6 +91,10 @@ const Overview: React.FC = () => {
     return items
   }
 
+  const handleOpenChange = (open: boolean) => {
+    if (!open) return
+  }
+
   return (
     <div>
       {competition && (
@@ -100,6 +111,15 @@ const Overview: React.FC = () => {
           ></Descriptions>
         </div>
       )}
+      <Modal
+        width={'1000px'}
+        open={openSimilarityModal}
+        footer={null}
+        onCancel={() => setOpenSimilarityModal(false)}
+        afterOpenChange={handleOpenChange}
+      >
+        <Similarity></Similarity>
+      </Modal>
     </div>
   )
 }

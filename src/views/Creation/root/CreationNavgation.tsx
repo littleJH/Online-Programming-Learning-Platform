@@ -79,7 +79,13 @@ const CreationNavgation: React.FC = () => {
     <div className={style.navgationBox}>
       <div className={style.gridLine}>
         {items.map((item, index) => (
-          <NavgationCard title={item.title} content={item.content} icon={item.svgHref} path={item.path}></NavgationCard>
+          <NavgationCard
+            key={index}
+            title={item.title}
+            content={item.content}
+            icon={item.svgHref}
+            path={item.path}
+          ></NavgationCard>
         ))}
       </div>
     </div>

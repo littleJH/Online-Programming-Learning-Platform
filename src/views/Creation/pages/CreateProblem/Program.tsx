@@ -78,6 +78,7 @@ const Program: React.FC<Iprops> = (props) => {
             localStorage.setItem('code1', value)
           }}
           height={512}
+          onLanguageChange={(value: any) => setcodeLanguage(value)}
         ></CodeEditor>
       </Fragment>
 

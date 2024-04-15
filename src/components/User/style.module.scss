@@ -1,0 +1,44 @@
+.usercard {
+  padding: 0.5rem;
+  width: 100%;
+
+  .content {
+    width: auto;
+    flex-grow: 1;
+    .email,
+    .name {
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.userinfo {
+  width: 100%;
+  .header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    p {
+      width: 100%;
+      margin: 0.5rem 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      .icon {
+        margin-right: 1rem;
+      }
+    }
+
+    .email {
+    }
+
+    .statics {
+    }
+  }
+}

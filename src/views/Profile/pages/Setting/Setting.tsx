@@ -1,21 +1,34 @@
-import { Button, ColorPicker, Divider, Form, notification, theme } from 'antd'
-import React, { useCallback, useState } from 'react'
+import { Button, ColorPicker, Divider, Form, Input, Switch, notification, theme } from 'antd'
+import React, { useCallback, useEffect, useState } from 'react'
 import CodeEditorConfig from '@/components/Editor/CodeEditorConfig'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { monacoOptionsState, notificationApi, themeState, userInfoState } from '@/store/appStore'
 import { getCurrentUserinfo, updateInfoApi } from '@/api/user'
 import { Color } from 'antd/es/color-picker'
 import { themeDefault } from '@/config/config'
+import { deleteMessageAiApi, getMessageAiApi, setMessageAiApi, updateMessageAiApi } from '@/api/message'
 
 const Setting: React.FC = () => {
   const [form] = Form.useForm()
+  const [messageForm] = Form.useForm()
   const [monacoOptions, setMonacoOptions] = useRecoilState(monacoOptionsState)
   const [info, setInfo] = useRecoilState(userInfoState)
   const [theme, setTheme] = useRecoilState(themeState)
+  const [isDisable, setIsDisable] = useState(true)
   const notification = useRecoilValue(notificationApi)
 
-  const handleClick = () => {
-    updateConfig()
+  useEffect(() => {
+    fetchMessageSetting()
+  }, [])
+
+  const fetchMessageSetting = async () => {
+    try {
+      const res = await getMessageAiApi()
+      if (res.data.code === 200) {
+        messageForm.setFieldsValue(res.data.data.ai)
+        setIsDisable(false)
+      }
+    } catch {}
   }
 
   const updateConfig = () => {
@@ -48,19 +61,43 @@ const Setting: React.FC = () => {
     form.resetFields()
   }
 
+  const submitMessageSetting = async () => {
+    if (isDisable) {
+      await deleteMessageAiApi()
+      messageForm.resetFields()
+    } else {
+      const values = messageForm.getFieldsValue(['characters', 'prologue', 'reply'])
+      const res = messageForm.getFieldValue('user_id')
+        ? await updateMessageAiApi(values)
+        : await setMessageAiApi(values)
+      if (res.data.code === 200) {
+        notification &&
+          notification.success({
+            message: '保存成功',
+          })
+      }
+    }
+  }
+
   return (
     <div style={{ width: '100%' }}>
-      <h3 className="label flex items-center">
-        主题设置
-        <Button
-          size="small"
-          style={{ fontSize: '0.75rem', marginLeft: '1rem' }}
-          type="dashed"
-          onClick={handleResetClick}
-        >
-          重置
+      <div className="flex justify-between items-center">
+        <h3 className="label flex items-center">
+          主题设置
+          <Button
+            size="small"
+            style={{ fontSize: '0.75rem', marginLeft: '1rem' }}
+            type="dashed"
+            onClick={handleResetClick}
+          >
+            重置
+          </Button>
+        </h3>
+        <Button type="primary" size="small" onClick={updateConfig}>
+          保存
         </Button>
-      </h3>
+      </div>
+
       <Divider></Divider>
       <Form form={form}>
         <Form.Item name={'colorPrimary'} label="主题色">
@@ -114,14 +151,44 @@ const Setting: React.FC = () => {
           ></ColorPicker>
         </Form.Item> */}
       </Form>
-      <h3 className="label">代码编辑器设置</h3>
-      <Divider></Divider>
-      <CodeEditorConfig monacoOptions={monacoOptions} setMonacoOptions={setMonacoOptions}></CodeEditorConfig>
-      <div className="text-end">
-        <Button type="primary" onClick={handleClick}>
+      <div className="flex justify-between items-center">
+        <h3 className="label">留言板设置</h3>
+        <Button type="primary" size="small" onClick={submitMessageSetting}>
           保存
         </Button>
       </div>
+      <Form
+        layout="vertical"
+        labelCol={{
+          span: 8,
+        }}
+        form={messageForm}
+        style={{
+          width: '50%',
+        }}
+      >
+        <Form.Item name={'isAi'} label="是否开启AI回复">
+          <Switch checked={!isDisable} onChange={(value) => setIsDisable(!value)}></Switch>
+        </Form.Item>
+        <Form.Item name="characters" label="人设" shouldUpdate>
+          <Input placeholder="请输入人设" disabled={isDisable}></Input>
+        </Form.Item>
+        <Form.Item name="prologue" label="开场白">
+          <Input placeholder="请输入开场白" disabled={isDisable}></Input>
+        </Form.Item>
+        <Form.Item name="reply" label="是否回复自己">
+          <Switch disabled={isDisable}></Switch>
+        </Form.Item>
+      </Form>
+      <Divider></Divider>
+      <div className="flex justify-between items-center">
+        <h3 className="label">代码编辑器设置</h3>
+        <Button type="primary" size="small" onClick={updateConfig}>
+          保存
+        </Button>
+      </div>
+      <Divider></Divider>
+      <CodeEditorConfig monacoOptions={monacoOptions} setMonacoOptions={setMonacoOptions}></CodeEditorConfig>
     </div>
   )
 }

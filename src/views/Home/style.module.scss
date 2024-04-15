@@ -76,6 +76,27 @@
           opacity: 0.9;
         }
       }
+
+      .languages {
+        width: 100%;
+        padding: 1rem;
+        margin-top: 2rem;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-gap: 1rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 0.5rem;
+        background: linear-gradient(145deg, var(--colorBgBase), var(--colorPrimary));
+      }
+
+      .ojPlatform {
+        width: 100%;
+        margin-top: 2rem;
+        padding: 1rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 0.5rem;
+        background: linear-gradient(145deg, var(--colorBgBase), var(--colorPrimary));
+      }
     }
 
     footer {

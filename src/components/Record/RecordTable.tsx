@@ -29,6 +29,9 @@ import { getProblemTestNumApi } from '@/api/problem'
 import { getProblemNewApi } from '@/api/problemNew'
 import GeneralTable, { GeneralTableProps } from '../table/GeneralTable'
 import style from './style.module.scss'
+import MySvgIcon from '../Icon/MySvgIcon'
+import { useRecoilValue } from 'recoil'
+import { notificationApi } from '@/store/appStore'
 
 interface IProps {
   mode: 'problem' | 'competition'
@@ -43,6 +46,7 @@ interface Filter {
 
 const RecordTable: React.FC<IProps> = (props) => {
   const { mode, problem, competition } = props
+  const notification = useRecoilValue(notificationApi)
   const [userInfo, setuserInfo] = useState<User>()
   const recordList = useRef<IRecord[]>([])
   const [recordsDatasource, setRecordsDatasource] = useState<IRecordTableDataSource[]>([])
@@ -55,6 +59,7 @@ const RecordTable: React.FC<IProps> = (props) => {
   const [currentState, setCurrentState] = useState<IRecordState>()
   const [currentCaseList, setCurrentCaseList] = useState<ICaseTest[]>([])
   const [totalTest, setTotalTest] = useState()
+  const [hackLoading, setHackLoading] = useState(false)
   const [filters, setfilters] = useState<Filter[]>([])
 
   useEffect(() => {
@@ -164,14 +169,21 @@ const RecordTable: React.FC<IProps> = (props) => {
   }, [currentCaseList])
 
   const submit = () => {
+    setHackLoading(true)
     const data = JSON.stringify({
       input: hackInput,
     })
-    mode === 'problem' && currentRecord && hackProRecordApi(currentRecord.id, data).then(cb)
+    mode === 'problem' &&
+      currentRecord &&
+      hackProRecordApi(currentRecord.id, data)
+        .then(cb)
+        .finally(() => setHackLoading(false))
     mode === 'competition' &&
       currentRecord &&
       competition &&
-      hackCptRecordApi(competition?.type, currentRecord.id, data).then(cb)
+      hackCptRecordApi(competition?.type, currentRecord.id, data)
+        .then(cb)
+        .finally(() => setHackLoading(false))
 
     function cb(res: any) {
       if (res.data.code === 200) {
@@ -212,7 +224,7 @@ const RecordTable: React.FC<IProps> = (props) => {
           <div
             className="hover:cursor-pointer"
             onClick={() => {
-              setcurrentRecord(recordList.current[record.index])
+              setcurrentRecord(recordList.current.find((item) => (item.id = record.key)))
               setopenRecordDetailModal(true)
             }}
           >
@@ -256,13 +268,11 @@ const RecordTable: React.FC<IProps> = (props) => {
                 className="hover:cursor-pointer"
                 onClick={(e) => {
                   e.stopPropagation()
-                  setcurrentRecord(recordList.current[record.index])
+                  setcurrentRecord(recordList.current.find((item) => (item.id = record.key)))
                   setopenHackModal(true)
                 }}
               >
-                <svg className="icon">
-                  <use href="#icon-hackster"></use>
-                </svg>
+                <MySvgIcon href="hackster" size={2}></MySvgIcon>
               </div>
             )
           case 'hacked':
@@ -271,19 +281,12 @@ const RecordTable: React.FC<IProps> = (props) => {
                 className="hover:cursor-pointer"
                 onClick={(e) => {
                   e.stopPropagation()
-                  setcurrentRecord(recordList.current[record.index])
+                  console.log(record)
+                  setcurrentRecord(recordList.current.find((item) => (item.id = record.key)))
                   setopenHackDetailModal(true)
                 }}
               >
-                <svg
-                  className="icon"
-                  style={{
-                    width: '1.5rem',
-                    height: '1.5rem',
-                  }}
-                >
-                  <use href="#icon-choose"></use>
-                </svg>
+                <MySvgIcon href="choose" size={1.5}></MySvgIcon>
               </div>
             )
           default:
@@ -333,7 +336,13 @@ const RecordTable: React.FC<IProps> = (props) => {
     <div className={style.recordTable}>
       <div></div>
       <GeneralTable {...tableProps} />
-      <Modal title={'骇客'} open={openHackModal} footer={[]} onCancel={() => setopenHackModal(false)}>
+      <Modal
+        width={'800px'}
+        title={'骇客提交'}
+        open={openHackModal}
+        footer={[]}
+        onCancel={() => setopenHackModal(false)}
+      >
         {userInfo && currentRecord && (
           <Hack
             record={currentRecord}
@@ -341,13 +350,15 @@ const RecordTable: React.FC<IProps> = (props) => {
             sethackInput={sethackInput}
             userInfo={userInfo}
             submit={submit}
+            loading={hackLoading}
           ></Hack>
         )}
       </Modal>
       <Modal
         centered
-        title={'骇客'}
+        title={'骇客详情'}
         open={openHackDetailModal}
+        width={'800px'}
         footer={[]}
         onCancel={() => setopenHackDetailModal(false)}
       >
