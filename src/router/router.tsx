@@ -38,13 +38,12 @@ interface MyRoute {
   }
 }
 
-const homepageModule = import.meta.glob<{ default: ComponentType }>('../views/Home/HomeRoot.tsx')
 // const Root = lazy(() => import('@/views/Root'))
 // const Root = await import('@/views/Root')
 // const Root = import.meta.glob('@/views/Root')
 const ErrorPage = lazy(() => import('@/components/error-page'))
 const StayTuned = lazy(() => import('@/components/Empty/StayTuned'))
-const Homepage = lazy(homepageModule['../views/Home/HomeRoot.tsx'])
+const Homepage = lazy(() => import('@/views/Home/HomeRoot'))
 const LoginRoot = lazy(() => import('@/views/Login/LoginRoot'))
 
 // 个人中心

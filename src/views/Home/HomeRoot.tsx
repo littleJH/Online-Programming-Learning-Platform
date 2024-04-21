@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Button, Card, Divider, Popover, Segmented, Select, Space, theme } from 'antd'
+import { Button, Card, Divider, Modal, Popover, Progress, Segmented, Select, Space, theme } from 'antd'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { sideBarTypeState, userInfoState } from '@/store/appStore'
 import style from './style.module.scss'
@@ -14,11 +14,50 @@ import UserCard from '@/components/User/UserCard'
 import MyAvatar from '@/components/Avatar/MyAvatar'
 import { ojLanguagesObject } from '@/components/Editor/LanguageList'
 import OjPlatform from './components/OjPlatform'
+import { getHeartPercentageApi } from '@/api/heart'
+import * as echarts from 'echarts/core'
+import {
+  TitleComponent,
+  ToolboxComponent,
+  TooltipComponent,
+  GridComponent,
+  DataZoomComponent,
+} from 'echarts/components'
+import { LineChart } from 'echarts/charts'
+import { UniversalTransition } from 'echarts/features'
+import { CanvasRenderer } from 'echarts/renderers'
+
+echarts.use([
+  TitleComponent,
+  ToolboxComponent,
+  TooltipComponent,
+  GridComponent,
+  DataZoomComponent,
+  LineChart,
+  CanvasRenderer,
+  UniversalTransition,
+])
+
+// const heartList = [
+//   {
+//     name: '主容器',
+//     percent: 87,
+//   },
+//   {
+//     name: '判题机1',
+//     percent: 93,
+//   },
+//   {
+//     name: '判题机2',
+//     percent: 85,
+//   },
+// ]
 
 export default function Homepage() {
   const setSidebarType = useSetRecoilState(sideBarTypeState)
   const currentUser = useRecoilValue(userInfoState)
   const [rankList, setRankList] = useState<User[]>([])
+  const [openHeartModal, setOpenHeartModal] = useState(false)
   const { token } = theme.useToken()
   const nav = myHooks.useNavTo()
 
@@ -61,6 +100,7 @@ export default function Homepage() {
   useEffect(() => {
     setSidebarType('none')
     fetchRankList('Hot')
+    fetchHeart()
   }, [])
 
   const fetchRankList = async (type: string) => {
@@ -73,6 +113,65 @@ export default function Homepage() {
 
   const handleSelectChange = (value: string) => {
     fetchRankList(value)
+  }
+
+  const fetchHeart = async () => {
+    const res = await getHeartPercentageApi()
+  }
+
+  const initCharts = () => {
+    // 生成横坐标数据
+    const minutes = Array.from({ length: 100 }, (_, i) => i)
+    // 生成纵坐标数据
+    const heartRates = minutes.map(() => Math.floor(Math.random() * (60 - 40 + 1)) + 40)
+
+    // Echarts配置
+    const options = {
+      title: {
+        text: '近100分钟主容器心跳次数监测',
+      },
+      tooltip: {
+        trigger: 'axis',
+      },
+      xAxis: {
+        type: 'category',
+        data: minutes,
+        boundaryGap: false,
+        name: '时间（分钟）',
+      },
+      yAxis: {
+        type: 'value',
+        name: '心跳次数',
+        min: 0,
+        max: 60,
+      },
+      series: [
+        {
+          name: '心跳次数',
+          data: heartRates,
+          type: 'line',
+          symbol: 'none',
+          sampling: 'lttb',
+          itemStyle: {
+            color: 'rgb(255, 70, 131)',
+          },
+          areaStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'rgb(255, 158, 68)',
+              },
+              {
+                offset: 1,
+                color: 'rgb(255, 70, 131)',
+              },
+            ]),
+          },
+        },
+      ],
+    }
+    const myChart = echarts.init(document.getElementById('lineChartBox'))
+    options && myChart.setOption(options)
   }
 
   const navItems = [
@@ -162,6 +261,33 @@ export default function Homepage() {
           <div className={style.ojPlatform}>
             <OjPlatform></OjPlatform>
           </div>
+          {/* <div className="my-8">
+            <Space size={'large'}>
+              {heartList.map((item, index) => (
+                <Card size="small" key={index} hoverable onClick={() => setOpenHeartModal(true)}>
+                  <Progress
+                    type="dashboard"
+                    percent={item.percent}
+                    size={150}
+                    format={(percent) => (
+                      <div
+                        style={{
+                          fontSize: '1rem',
+                        }}
+                      >
+                        <p>{item.name}</p>
+                        <p>{`近一分钟${percent}%`}</p>
+                      </div>
+                    )}
+                    strokeColor={{
+                      '0%': token.colorBgBase,
+                      '100%': token.colorSuccess,
+                    }}
+                  ></Progress>
+                </Card>
+              ))}
+            </Space>
+          </div> */}
         </section>
         <footer></footer>
       </div>
@@ -214,6 +340,20 @@ export default function Homepage() {
           ></GeneralRank>
         </div>
       </div>
+      <Modal
+        width={'90vw'}
+        open={openHeartModal}
+        onCancel={() => setOpenHeartModal(false)}
+        footer={[]}
+        afterOpenChange={(open) => open && initCharts()}
+      >
+        <div
+          id="lineChartBox"
+          style={{
+            height: '300px',
+          }}
+        ></div>
+      </Modal>
     </div>
   )
 }
