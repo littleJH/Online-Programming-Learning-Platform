@@ -1,0 +1,622 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{CJKutf8}
+\usepackage[left=2.5cm,right=2.0cm,top=2.5cm,bottom=2.0cm]{geometry}
+\usepackage{graphicx}
+\usepackage{times} % 使用 Times New Roman 字体
+\usepackage{indentfirst}
+\setlength{\parindent}{2em} % 首行缩进
+\linespread{1.5} % 行间距
+\usepackage{titlesec}
+\usepackage{minted}
+\usepackage{mdframed}
+\usepackage{longtable}
+\usepackage[colorlinks,linkcolor=black,anchorcolor=blue,citecolor=green]{hyperref}
+\usepackage{titlesec} % 引入titlesec宏包
+
+% 设置section、subsection、subsubsection标题居中
+\titleformat*{\section}{\Large\bfseries\centering}
+\titleformat*{\subsection}{\large\bfseries\centering}
+\titleformat*{\subsubsection}{\normalsize\bfseries\centering}
+
+\renewcommand{\abstractname}{摘要}
+\renewcommand{\contentsname}{目录}
+\renewcommand{\refname}{参考文献}
+
+\begin{document}
+\begin{CJK*}{UTF8}{gbsn}
+
+\title{\Huge 综合性在线编程学习平台的网页前端设计与实现\\[2ex]
+\huge Design and Implementation of the Frontend for a Comprehensive Online Programming Learning Platform}
+
+\author{\Large 张嘉豪\\[2ex]
+指导教师：陈夏铭\\[2ex]
+学院：数学与计算机学院\\
+专业：计算机科学与技术}
+\date{\Large\today}
+\maketitle
+
+\newpage
+\title{\Huge 综合性在线编程学习平台的网页前端设计与实现}
+\begin{abstract}
+\noindent 
+\hspace{2em}
+随着编程教育的普及和在线学习平台的迅速发展，为编程学习者提供高效、互动的学习环境变得尤为重要。既往校级编程平台老旧、功能不完善等问题导致局限性较大，为学习者提供一个综合性的在线编程学习平台变得愈发重要。本文旨在设计并实现一个综合性在线编程学习平台的前端界面，该平台集刷题竞赛、知识分享、在线交流于一体，以增强学习效率和用户体验。本文首先分析了当前在线编程学习平台的需求和挑战，然后详细介绍了本平台的前端系统设计和技术实现，最后通过集成测试和性能测试，验证了平台的可用性和效果。
+
+\vspace{1em}
+\noindent \textbf{关键词：}在线编程学习平台，网页前端设计，前端架构，软件测试
+\end{abstract}
+
+\newpage
+\title{\Huge Design and Implementation of the Frontend for a Comprehensive Online Programming Learning Platform}
+\begin{abstract}
+\renewcommand{\abstractname}{摘要}
+\noindent 
+\hspace{2em}
+With the popularization of programming education and the rapid development of online learning platforms, providing an efficient and interactive learning environment for programming learners has become particularly important. The outdated and incomplete nature of the previous school-level programming platforms has led to significant limitations, making it increasingly important to provide learners with a comprehensive online programming learning platform. This article aims to design and implement the frontend interface of a comprehensive online programming learning platform, integrating question competitions, knowledge sharing, and online communication to enhance learning efficiency and user experience. The article first analyzes the requirements and challenges of current online programming learning platforms, then provides a detailed introduction to the frontend system design and technical implementation of this platform, and finally validates the platform's usability and effectiveness through integrated testing and performance testing.
+
+\vspace{1em}
+\noindent \textbf{Keywords:}Online programming learning platform, web frontend design, frontend architecture, software testing
+\end{abstract}
+
+\newpage
+\tableofcontents
+
+\newpage
+\section{引言}
+\subsection{背景}
+既往校级编程平台老旧、功能不完善等问题导致局限性较大，为学习者提供一个综合性的在线编程学习平台变得愈发重要。
+\subsection{研究意义}
+该项目的实现将为编程学习提供一站式解决方案，整合了多种学习工具。理论上，这有助于深化对编程学习过程的理解；实际上，它为学生和专业人士提供了更便捷的学习途径，促进了编程技能的提升。
+\subsection{目标}
+本选题基于对当前在线学习工具的分析，旨在设计并实现一个网页前端，将在线评测、编程竞赛、即时通讯和知识分享等功能集成于一体，为编程学习者提供更全面、便捷的学习体验。
+\subsection{主要内容}
+本文首先分析了当前在线编程学习平台的需求和挑战，然后详细介绍了本平台的设计原则、架构设计和前端技术实现，最后通过用户反馈和性能测试，验证了平台的可用性和效果。
+\subsection{相关工作}
+在设计和实现本在线编程平台之前，我对现有校内和国内外 Online Judge 进行了调研，包括但不限于LeetCode、洛谷、CodeForces等。此外，我们还研究了即时通讯和在线匹配系统在其他领域（如在线游戏）的应用，以及个性化主题和文件资源管理器的实现技术。这些帮助我在设计本平台时，更好地理解用户需求和技术可行性。为我的设计提供了重要的参考和灵感。
+
+\section{系统设计}
+
+\subsection{界面设计}
+当今数字化时代，界面设计对于提升用户体验和互动性起着至关重要的作用。正如Garett(2010)在其著作《用户体验的要素：面向Web及更广领域的用户中心设计》中所强调的，一个成功的用户界面不仅仅是美观的外表，更重要的是能够满足用户的需求，提供直观、易用的交互方式\cite{example2}。进一步的，随着移动端设备的普及，响应式网页设计成为了界面设计的一个重要方向。Marcotte (2011) 在《响应式网页设计》一书中介绍了如何通过灵活的网页布局、图片和CSS媒体查询等技术，使网站能够自适应不同设备的屏幕尺寸。\cite{example3}基于Garett和Marcotee的理论，本研究在界面设计方面采取以下策略：
+\begin{enumerate}
+    \item 响应式布局
+        响应式布局指的是同一网页在不同屏幕尺寸下有不同的布局，即开发一套界面，通过CSS的@Media screen and (max-width: xxx px)媒体查询检测视口分辨率针对不同客户端来展示不同的布局和内容。
+        
+        通过对不同品牌型号手机的主流浏览器（系统和浏览器、Chrome、Edge、QQ浏览器、UC浏览器）的调研，主要适配三种屏幕宽度：移动端（<=768px），低分辨率桌面显示器（<=1440px）,高分辨率桌面显示器（>1440px）。由于本平台主要面向PC端，故采取PC优先的策略。
+    \item 视觉与交互设计
+        视觉和交互设计时是界面设计的关键组成部分，对用户的情感和行为有着十分的影响。美感因人而异，因此本平台提供偏好自定义功能，用户可自行切换明暗主题、主题色、代码/文本编辑器的编辑偏好等。
+        
+\end{enumerate}
+
+
+
+\subsection{功能设计}
+\subsubsection{社区功能}
+\begin{itemize}
+  \item 文章、问答与题解：用户可发布、编辑、删除文章、问答和题解，并进行点赞、收藏。应提供富文本编辑器，支持插入图片、代码等内容。
+  \item 公告：管理员发布公告，用户可订阅和查看。设计专门的公告板块，以突出显示重要信息。
+\end{itemize}
+\subsubsection{聊天功能}
+\begin{itemize}
+    \item 支持私信和群聊功能，用户可以在个人之间进行私信交流，也可以在群组内发起群聊。聊天界面设计简洁，支持发送文本、图片和表情。
+\end{itemize}
+\subsubsection{题目与比赛功能}
+\begin{itemize}
+  \item 题目管理：允许有权限的用户创建和管理题目。提供详细的题目编辑界面，支持设置题目描述、输入输出样例和测试数据。
+  \item 比赛功能：用户可以创建和参加各种类型的编程比赛。设计比赛创建向导，帮助用户设置比赛规则、题目和时间等。
+\end{itemize}
+\subsubsection{其他功能}
+\begin{itemize}
+  \item 邮件系统：支持向其他用户发送邮件或群发比赛通知等。设计邮件模板，简化邮件发送流程。
+  \item 行为统计：提供徽章系统，用户可以查看和获得徽章作为成就的标识。设计直观的徽章展示界面，激励用户参与社区活动。
+\end{itemize}
+\subsubsection{用户与用户组功能}
+\begin{itemize}
+  \item  注册与登录、找回密码、个人信息设置、查看信息、搜索用户、用户列表、用户留言与好友、管理用户组、申请加入与黑名单、点赞/踩、收藏与标签以及搜索用户组等功能。
+\end{itemize}
+
+
+在现代Web应用开发中，优化前端架构设计对于提高应用性能、确保可维护性和优化用户体验至关重要。本节将基于最新前端技术和理论，详细介绍本项目的前端架构设计。
+
+\section{技术架构}
+
+\subsection{技术栈选择}
+选择合适的技术栈是构建有效前端架构的第一步，也是最重要的一步。根据Fain和Moiseev (2019) 的建议\cite{fain2019proangular}，本文选择了React作为前端框架的选择。配套的有 React Router 作为路由管理，Recoil 作为状态管理，Ant-Design 作为基础组件库。此外，我还采用了TypeScript作为开发语言，以利用其静态类型特性，提高代码的可读性和可维护性。
+
+\begin{itemize}
+    \item React 是一个用于构建用户界面的JavaScript库，由Facebook在2013年开源。React V16+摒弃了传统的递归遍历虚拟DOM，转而引入了一种机制 fiber。fiber是React中用于实现协调更新的核心算法。它的核心思想是增量渲染， 即将渲染工作分割成一系列小任务，各个任务之间可以随时被中断、或重新安排优先级。这一新技术大大提升了React的响应性和性能。
+    \item 在单页面应用程序中，一次性加载 html,js,css 等资源，所有页面都在一个容器下，页面切换实质是组件的切换。React-Router 允许开发者定义路由和组件之间的映射关系，使得用户在应用中导航时，可以动态的地加载和渲染响应组件而无需重新加载页面。
+    \item Recoil 通过引入原子（Atoms）和选择器（Selector）的概念来管理React应用状态。原子是最小的状态单元，人和组件都可以任何组件都可以订阅并更新这些原子，实现状态的共享。选择器则用于派生出基于原子或其他选择器的状态，支持同步和异步操作。Recoil 利用 React的上下文（Context）来跨组件传递状态，同时结合React hooks实现组件对状态的订阅和更新。
+    \item Ant-Design是由蚂蚁集团开发并维护的一套企业级的UI设计语言和React组件库。它提供了一整套高质量的React UI组件，覆盖了从按钮、输入框到表格、导航等多种界面元素，以及丰富的交互模式和实用工具。
+\end{itemize}
+\subsection{组件化/Hooks开发}
+在探现代Web应用的组件化设计时，不得不提熊俊漉在其2018年的论文《基于React的Web前端组件化研究与应用》\cite{xiongjunlucomponentization}中的贡献。熊俊漉通过深入研究React框架，展示了组件化设计在提高前端开发效率、增强应用可维护性以及优化用户体验方面的重要作用。该论文不仅阐述了React组件化开发的理念和技术实现，还通过具体案例分析了组件化设计在实际项目中的应用效果和优势。
+
+组件化设计作为一种现代前端开发的主流方法，其核心在于将界面拆分成一些列独立、可复用的组件。每个组件负责渲染应用的一部分UI，并且拥有自己的状态和逻辑。这种方法不仅使代码更加模块化、易于理解和维护，也使得团队成员能够并行工作，提高了项目的开发效率。
+
+熊俊漉的研究进一步证明了，通过采用React等现代前端技术实现组件化设计，开发者可以轻松构建出高性能、高可维护性的Web应用。特别是在处理大型复杂应用时，组件化设计能够有效地管理应用状态，简化数据流管理，从而提升整个应用的性能和用户体验。
+
+而自定义Hooks允许开发者提取组件中可复用的逻辑到单独的函数中。与高阶组件(HOC)或渲染属性(props)不同，自定义Hooks更关注与逻辑的复用，而非组件结构的复用，这使得逻辑的共享变得更加灵活和轻量。
+
+基于组件化和自定义Hooks的开发思想，为了实现多个页面列表滚动至底部加载的功能，我设计了一个名为"LoadMoreList"的自定义组件。该组件在Ant-Design的List组件基础上，加入了加载骨架和滚动触底更新功能，并具备请求数据和管理数据的功能。滚动触底更新功能通过自定义Hook useListenContentScroll实现了两个主要功能：一是根据滚动位置更新目录选中状态（如果启用了 followScroll），二是当用户滚动到页面底部附近时，自动加载更多内容（如果提供了 loadMoreFn 函数）。为了实现这些功能，使用了React的useEffect和useRef Hooks，并引入了节流函数来优化性能。
+
+\begin{mdframed}
+\begin{minted}[breaklines]{typescript}
+// 定义一个自定义Hook，用于监听内容滚动
+const useListenContentScroll = (options: { followScroll?: boolean; loadMoreFn?: () => void }) => {
+  // 从options解构出followScroll和loadMoreFn
+  const { followScroll, loadMoreFn } = options;
+  // 使用Recoil的useSetRecoilState来设置目录选中的状态
+  const setKeys = useSetRecoilState(directorySelectKeysState);
+  // 使用useRef来持久化对标题元素的引用
+  const headings = useRef<NodeListOf<HTMLElement>>();
+  // 使用useRef来持久化对内容元素的引用
+  const contentElRef = useRef<HTMLElement>();
+  // 使用useRef来持久化加载锁的状态
+  let loadLock = useRef<boolean>(false);
+
+  // 使用useEffect来添加和清除事件监听器
+  useEffect(() => {
+    // 尝试获取内容元素，并存储其引用
+    contentElRef.current = document.getElementById('content') || undefined;
+    if (contentElRef.current) {
+      // 如果启用了followScroll，则为内容元素添加滚动监听器，绑定handler1
+      followScroll && contentElRef.current.addEventListener('scroll', handler1);
+      // 如果提供了loadMoreFn，则为内容元素添加滚动监听器，绑定handler2
+      loadMoreFn && contentElRef.current.addEventListener('scroll', handler2);
+    }
+    // 清除函数：当组件卸载时，移除之前添加的事件监听器
+    return () => {
+      if (contentElRef.current) {
+        followScroll && contentElRef.current.removeEventListener('scroll', handler1);
+        loadMoreFn && contentElRef.current.removeEventListener('scroll', handler2);
+      }
+    };
+  }, []);
+
+  // 定义处理滚动跟踪的函数
+  const handler1 = (e: any) => {
+    if (followScroll && contentElRef.current) {
+      // 如果还未获取标题元素的引用，则获取并存储
+      if (!headings.current)
+        headings.current = contentElRef.current?.querySelectorAll<HTMLElement>('h1, h2, h3, h4, h5, h6');
+      // 根据当前滚动位置更新目录选中状态
+      setDirectoryKeys([e.target.scrollTop]);
+    }
+  };
+
+  // 定义处理加载更多内容的函数
+  const handler2 = (e: any) => {
+    // 检查是否滚动到接近内容底部，并且未处于加载状态
+    if (loadMoreFn && e.target.scrollTop + e.target.clientHeight + 100 > e.target.scrollHeight) {
+      if (!loadLock.current) {
+        // 调用loadMoreFn加载更多内容，并设置加载锁
+        loadMoreFn();
+        loadLock.current = true;
+        // 3秒后解锁，允许再次加载更多内容
+        setTimeout(() => {
+          loadLock.current = false;
+        }, 3000);
+      }
+    }
+  };
+
+  // 定义一个函数，使用节流优化性能，根据滚动位置更新目录选中状态
+  const setDirectoryKeys = utils.throttle((scrollTop: number) => {
+    if (headings.current) {
+      let index = 1;
+      // 遍历标题元素，找到第一个位于滚动位置下方的元素
+      for (let item of headings.current) {
+        if (item.offsetTop >= scrollTop + 14 + 24) {
+          // 更新目录选中状态为该标题的ID
+          setKeys([headings.current[index - 1].id]);
+          break;
+        }
+        index++;
+      }
+    }
+  }, 0);
+}
+
+\end{minted}   
+\end{mdframed}
+
+
+
+
+
+\subsection{状态管理}
+状态管理是构建高效、可维护的应用程序的关键。随着应用规模的扩大和功能逻辑的复杂化，传统的状态管理方法（如直接在组件内管理状态或使用Context上下文）逐渐显露出局限性。为了解决这些问题，我们在项目中采用了Recoil。如前文介绍，Recoil通过对状态进行原子化管理，提供了更灵活和可扩展的状态管理解决方案。
+
+为了实现全局共享的状态，例如用户信息、登录状态和全局主题等，可以创建一个全局存储状态机来存储这些状态。该状态机首先使用Recoil的Atom原子异步加载用户信息，随后通过Selector根据接口返回的用户信息派生出用于全局通向的用户信息、登录状态和全局主题等状态。通过Selector派生出的状态可以在状态更新时记录日志或更新原始Atom状态，从而实现数据流向的单向传递。
+
+在 Recoil 中，状态的更新和使用遵循单向数据流模式。这意味着数据从状态（state）流向 UI 组件，并且任何状态的更新都会导致 UI 的重新渲染。这种方式确保了数据变化的透明性和可追踪性，。
+
+各个需要这些状态的组件可以通过 useRecoilValue Hook订阅原始或派生状态，通过useSetRecoilState Hook修改派生状态。
+
+以下是全局状态机的部分实现：
+\begin{mdframed}
+\begin{minted}[breaklines]{typescript}
+// 用户信息初始化
+export const userInfoAtomState = atom<User | null>({
+  key: 'userInfoAtomState',
+  default: getCurrentUserinfo()  // 异步加载用户信息
+    .then((res) => {
+      if (res.data.code === 200) return Promise.resolve(res.data.data.user)
+      else return null
+    })
+    // 若获取不到信息，则说明用户未登录，重定向至登录页
+    .catch(() => {
+      if (['/login', '/home', '/'].includes(location.pathname)) return
+      const a = document.createElement('a')
+      a.href = '/login'
+      a.click()
+    }),
+})
+
+// 用户信息
+export const userInfoState = selector<User | null>({
+  key: 'userInfoState',
+  get: ({ get }) => get(userInfoAtomState),
+  set: ({ set }, newValue) => {
+    console.log('userInfo newValue ==> ', newValue)  // 记录日志
+    set(userInfoAtomState, newValue)
+  },
+})
+\end{minted}
+\end{mdframed}
+
+\subsection{路由管理}
+为了实现路由鉴权机制、提高应用安全性，我引入了路由守卫(Guard)机制。
+
+路由守卫能够有效控制用户访问权限，防止权限等级低的用户访问到需要高权限的页面，例如：全站比赛管理和文件资源管理等需要最高等级权限的功能。同时能够基于用户的登录状态或角色重定向到指定的页面，从而提升用户体验。最重要的是，通过前端路由守卫作为应用安全的第一道防线，虽然不能完全代替后端安全措施，但能有效减少不必要的服务请求和潜在的安全风险。
+
+以下是路由守卫的实现细节：
+
+Guard 是一个React函数组件，它接收两个props：element 和 meta。element 是需要渲染的React元素，而meta是一个包含路由元数据的对象，这些元数据包括标题(title)、是否需要登录(needLogin)和重定向地址(redirect)。在Guard组件内部，首先通过useLocation钩子获取当前的路径名(pathname)。然后，如果meta对象指明了该路由需要登录(needLogin)并且当前路径不是/login，组件会检查本地存储（localStorage）中是否有token。如果没有token，则将element替换为一个导向/login页面的<Navigate>元素，实现了一个简单的路由守卫逻辑。
+
+load函数用于动态加载组件。它接收两个参数：Result和meta。Result是需要被懒加载的组件，而meta是与该组件相关的元数据。在load函数内部，使用<Suspense>包裹了Result组件，以支持React的懒加载特性。如果Result组件还未加载完成，则会显示<Loading>组件作为占位符。最后，load函数返回一个使用Guard组件包裹的element，并传入了相应的meta数据。
+
+transformRoutes函数用于转换路由配置数组。它接收一个MyRoute[]类型的数组作为参数，并返回一个RouteObject[]类型的数组。该函数遍历每个路由配置项，对每个项使用load函数处理其element属性，以实现动态加载。如果路由配置项包含子路由(children)，则递归调用transformRoutes函数处理子路由。最终，返回一个包含处理后路由配置的数组。
+\begin{mdframed}
+\begin{minted}[breaklines]{typescript}
+const Guard: React.FC<{
+  element: any
+  meta: { title: string; needLogin: boolean; redirect: string }
+}> = (props) => {
+  let { element, meta } = props
+  const { pathname } = useLocation()
+  if (meta && meta.needLogin && pathname !== '/login') {
+    if (!localStorage.getItem('token')) element = <Navigate to={'/login'} replace={true}></Navigate>
+  }
+
+  return element
+}
+
+const load = (Result: any, meta: any) => {
+  const element = (
+    <Suspense fallback={<Loading></Loading>}>
+      <Result></Result>
+    </Suspense>
+  )
+  return <Guard element={element} meta={meta}></Guard>
+}
+
+const transformRoutes = (routes: MyRoute[]) => {
+  const list: RouteObject[] = []
+  routes.forEach((item) => {
+    const obj = { ...item }
+    if (!obj.path) return
+    obj.element = load(obj.element, obj.meta)
+    if (obj.children) obj.children = transformRoutes(obj.children) as any
+    list.push(obj)
+  })
+  return list
+}
+\end{minted} 
+\end{mdframed}
+
+
+为了提升应用性能和优化资源利用，我引入了路由懒加载机制。
+
+路由懒加载可以按需加载页面资源，减少应用初始化时间。用户只需加载他们实际访问的页面资源，从而提升了应用的加载速度和性能。
+
+React.lazy是一个函数，允许开发者定义一个动态导入作为一个普通组件。动态导入(import()语法)是JavaScript的一个特性，它允许在需要的时候才加载模块。当使用React.lazy定义一个懒加载组件时，这个组件在第一次渲染时并不会被加载，只有当组件需要在UI中被渲染时才会被加载。
+
+Suspense组件是React提供的一个内置组件，用于包裹懒加载组件。它允许开发者在组件的代码被加载和渲染过程中显示一个加载指示器(fallback)。一旦代码加载并渲染完成，加载指示器就会被替换成实际的组件。
+
+以下是一个懒加载的组件示例：
+\begin{mdframed}
+\begin{minted}[breaklines]{javascript}
+const ProfileRoot = lazy(() => import('@/views/Profile/ProfileRoot'))
+
+<Suspense fallback={<Loading></Loading>}>
+    <ProfileRoot></ProfileRoot>
+</Suspense>
+\end{minted}  
+\end{mdframed}
+
+
+
+\subsection{交互与动态数据}
+交互指的是用户与应用界面之间的互动行为，如点击、滑动、输入等方式与应用进行沟通的所有行为。动态数据是指应用中随着时间变化或因用户交互而变化的数据，是根据服务端数据库的更新、用户输入或其它交互行为实时变化的。
+
+为了与服务端进行数据通信，我们主要使用了Axios库来进行HTTP数据的发送和接收，同时也使用WebSocket与服务端建立持久连接，以实现实时双向数据传输。
+
+通过Axios支持的响应拦截器实现了对HTTP请求的处理。当服务端返回状态码为201时，会检查用户登录状态，以便检测用户是否登录过期，以及请求服务错误时提醒用户。
+
+以下是响应拦截器的实现细节：
+\begin{mdframed}
+\begin{minted}[breaklines]{javascript}
+//响应拦截器
+  request.interceptors.response.use(
+    (response) => {
+      const { data, request, config, headers, status, statusText } = response
+      switch (data.code) {
+        case 200:
+          break
+        case 201:
+          if (!localStorage.getItem('token') && location.pathname !== '/login') {
+            const a = document.createElement('a')
+            a.href = '/login'
+            a.click()
+          } else {
+            message.error(data.msg)
+          }
+          break
+        default:
+          message.error(`${data.msg}`)
+          break
+      }
+      return response
+    },
+    (error) => {
+      const { code = '请求错误' } = error
+      message.error(`${code}`)
+      return Promise.reject(error)
+    }
+  )
+\end{minted}
+\end{mdframed}
+
+为了支持即时通讯和比赛的在线匹配，我使用了WebSocket来进行消息的实时传递。WebSocket是一种提供全双工通信渠道的协议，能够在单个连接上实现双向通信。它允许服务器与客户端之间建立持久连接，实现实时的消息传递。然而，WebSocket协议存在一定的局限性。例如在网络不稳定的情况下，可能会出现断开或连接超时的情况，并且不会自动重连\cite{zhihu1}。为了解决这一问题，我实现了对WebSocket的心跳检测和超时重连机制。
+
+具体实现细节如下：
+\begin{mdframed}
+\begin{minted}[breaklines]{typescript}
+// 定义自定义Hook，用于管理WebSocket连接
+export const useWsConnect = (options: {
+  wsUrl?: string; // WebSocket连接的URL
+  onMessage?: (message: any) => void; // 接收到消息时的回调函数
+  onOpen?: (e: Event) => void; // 连接成功打开时的回调函数
+  onClose?: (e: Event) => void; // 连接关闭时的回调函数
+  immediately?: boolean; // 是否立即建立连接，默认为true
+  onTimeout?: (retryTime: number) => void; // 尝试重连时的回调函数
+  onFail?: () => void; // 连接失败时的回调函数（未在代码中使用）
+  heartbeatInterval?: number; // 心跳间隔时间，单位毫秒，默认30秒
+  reconnectTimeout?: number; // 重连超时时间，单位毫秒，默认5秒
+}) => {
+  // 从options解构所需的参数
+  const {
+    wsUrl,
+    onMessage,
+    onOpen,
+    onClose,
+    immediately = true,
+    onTimeout,
+    onFail,
+    heartbeatInterval = 30000, // 默认30秒发送一次心跳
+    reconnectTimeout = 5000, // 默认5秒后尝试重连
+  } = options;
+
+  // WebSocket连接实例
+  let ws: WebSocket | null = null;
+  // 心跳定时器
+  let heartbeatTimer: any = null;
+  // 重连定时器
+  let reconnectTimer: any = null;
+
+  // 组件挂载或参数变化时执行
+  useEffect(() => {
+    // 如果立即连接，则调用connectWs函数建立连接
+    immediately && connectWs();
+    // 组件卸载时的清理函数
+    return () => {
+      console.log('useWsConnect close', new Date());
+      closeWs(); // 关闭WebSocket连接
+    };
+  }, []);
+
+  // 建立WebSocket连接的函数
+  const connectWs = (url?: string) => {
+    ws = new WebSocket(url || wsUrl || ''); // 创建WebSocket连接
+
+    // 监听连接打开事件
+    ws.onopen = (e: Event) => {
+      console.log('chatWsOpen...', new Date());
+      onOpen && onOpen(e); // 调用onOpen回调
+      startHeartbeat(); // 开始心跳检测
+    };
+    // 监听消息事件
+    ws.onmessage = (e: MessageEvent) => {
+      const message = JSON.parse(e.data); // 解析消息
+      console.log('chatWsMessage ==> ', message, new Date());
+      onMessage && onMessage(message); // 调用onMessage回调
+    };
+    // 监听连接关闭事件
+    ws.onclose = (e: Event) => {
+      console.log('chatWsClose...', new Date());
+      onClose && onClose(e); // 调用onClose回调
+      stopHeartbeat(); // 停止心跳检测
+      scheduleReconnect(); // 计划重连
+    };
+    // 监听错误事件
+    ws.onerror = (e: Event) => {
+      console.log('chatWsError...');
+      ws?.close(); // 发生错误时尝试关闭连接
+    };
+  };
+
+  // 关闭WebSocket连接的函数
+  const closeWs = () => {
+    console.log('before websocket close ==> ', ws);
+    stopHeartbeat(); // 停止心跳检测
+    clearTimeout(reconnectTimer); // 清除重连定时器
+    ws && ws.close(); // 关闭WebSocket连接
+    ws = null;
+  };
+
+  // 开始心跳检测的函数
+  const startHeartbeat = () => {
+    stopHeartbeat(); // 先停止之前的心跳检测
+    heartbeatTimer = setInterval(() => {
+      if (ws?.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: 'heartbeat' })); // 发送心跳消息
+      }
+    }, heartbeatInterval);
+  };
+
+  // 停止心跳检测的函数
+  const stopHeartbeat = () => {
+    if (heartbeatTimer) {
+      clearInterval(heartbeatTimer); // 清除心跳定时器
+      heartbeatTimer = null;
+    }
+  };
+
+  // 计划重连的函数
+  const scheduleReconnect = () => {
+    if (reconnectTimer) {
+      clearTimeout(reconnectTimer); // 清除之前的重连定时器
+      reconnectTimer = null;
+    }
+    reconnectTimer = setTimeout(() => {
+      console.log('Attempting to reconnect...', new Date());
+      connectWs(); // 尝试重新连接
+      onTimeout && onTimeout(reconnectTimeout); // 调用onTimeout回调
+    }, reconnectTimeout);
+  };
+
+  // 返回用于手动控制连接的函数
+  return { connectWs, closeWs };
+};
+\end{minted}
+\end{mdframed}
+
+\subsection{安全性考虑}
+考虑到网络安全的复杂性和重要性，我采用了Adam Shostack在其著作《Threat Modeling: Designing for Security》中介绍的威胁建模方法。这是一种系统性的方法，用于识别、评估和硬度软件开发过程中可能遇到的安全威胁。
+
+根据Adam Shostack的建议，实施了一系列安全措施来保护平台和用户数据。例如：通过强化输入验证和清理机制，减少了XSS和SQL注入的风险。同时，采用了加密的手段保护了用户的账号安全。此外，还引入了基于用户权限等级的访问控制，确保只有权限等级足够的用户才能访问敏感信息和功能。
+
+针对XSS攻击和SQL注入的措施：
+\begin{itemize}
+    \item 输入验证：对所有用户输入进行严格的格式验证。例如，如果期望的输入时电子邮箱地址，则通过正则表达式验证其合法性。
+    \item 白名单验证：只允许输入预定义的安全字符集，拒绝所有其它输入，例如：不允许输入完整的HTML标签。
+    \item 输出编码：在将用户输入回显到页面上时，对特殊字符进行HTML编码，例如，将<转换为\&lt;，>转换为\&gt;等，防止浏览器将这些内容解释为HTML代码或JavaScript代码。
+\end{itemize}
+
+针对SQL注入问题，需要服务端进行一定的处理，比如使用参数化查询、ORM（对象关系映射）框架、最小权限原则等。本文仅讨论前端部分的设计与实现，不涉及后端部分。
+
+\subsection{测试与部署}
+\subsubsection{测试}
+首先，鉴于项目的复杂性和开发时间的限制，我优先考虑了对用户体验和系统稳定性最大的测试类型。集成测试使我能够验证不同模块之间的交互是否符合预期，而性能测试则确保了平台能够在高负载情况下保持良好的响应速度和稳定性。
+
+其次，考虑到我的前端框架和库的选择具有较高的可靠性和社区支持，这些工具和库本身已经经过了广泛的单元测试。因此，将注意力集中在集成测试和性能测试上，对于确保平台的整体质量更为关键。
+
+\begin{itemize}
+    \item 集成测试：集成测试用于验证各个模块或组件之间的交互是否正确。在这一阶段，我们使用Cypress进行端到端的自动化测试，模拟用户的实际操作流程，如登录、提交表单、页面跳转等，确保整个应用的流程和交互逻辑的正确性。
+    \item 性能测试：性能测试主要评估系统在高负载情况下的响应速度和稳定性。使用Google Lighthouse和WebPageTest等工具，对网站的首屏加载时间、交互响应时间、以及资源消耗等关键指标进行测试，从而找出性能瓶颈并进行优化。
+\end{itemize}
+\subsubsection{部署}
+关于部署，由于本项目规模较小，并非企业级项目，且并未达到需要自动化部署的程度，因此我选择了手动部署。为了提高部署的便捷性，避免在服务器上进行手动操作，我设计并完成了用于管理服务器上前端文件的文件资源管理器。该文件资源管理器在样式和功能上借鉴了Windows文件资源管理器，实现了大部分其功能。
+
+对于前进后退功能，需要通过两个栈结构来维护。一个栈用于存放用户执行的前进操作，另一个栈用于存储用户执行的后退操作以下是基本的算法：
+\begin{itemize}
+    \item 当用户进入一个新的文件夹时，将当前文件夹路径压入前进栈，并清空后退栈。
+    \item 当用户点击“后退”按钮时，将当前文件夹路径从前进栈中弹出，并压入后退栈。
+    \item 当用户点击“前进”按钮时，将当前文件夹路径从后退栈中弹出，并压入前进栈。
+\end{itemize}
+
+\section{测试与评估}
+\subsection{测试用例设计}
+
+\begin{longtable}{|l|l|p{5cm}|p{3cm}|}
+\caption{集成测试用例及结果} \label{tab:integration_test_cases_results} \\
+\hline
+\textbf{用例编号} & \textbf{测试功能} & \textbf{测试描述} & \textbf{测试结果} \\ \hline
+\endfirsthead
+
+\multicolumn{4}{c}%
+{{\bfseries \tablename\ \thetable{} -- 续前页}} \\
+\hline
+\textbf{用例编号} & \textbf{测试功能} & \textbf{测试描述} & \textbf{测试结果} \\ \hline
+\endhead
+
+\hline \multicolumn{4}{|r|}{{接下一页}} \\ \hline
+\endfoot
+
+\hline
+\endlastfoot
+
+1 & 响应式布局 & 在不同分辨率的设备上访问网站（移动端、低分辨率桌面显示器、高分辨率桌面显示器），检查布局和内容是否正确调整。 & 通过 \\ \hline
+2 & 响应式布局 & 在支持旋转的设备上（如平板、手机），旋转设备检查布局是否自适应。 & 通过 \\ \hline
+3 & 视觉与交互设计 & 用户切换明暗主题、主题色，检查界面元素是否正确反应用户偏好。 & 未通过，暗主题下某些文本不可见 \\ \hline
+4 & 视觉与交互设计 & 用户在代码/文本编辑器中切换编辑偏好，检查编辑器行为是否符合用户设置。 & 通过 \\ \hline
+5 & 社区功能 & 用户发布、编辑、删除文章，检查文章是否正确显示在社区中。 & 通过 \\ \hline
+6 & 社区功能 & 用户对文章进行点赞、收藏，检查点赞和收藏状态是否正确更新。 & 通过 \\ \hline
+7 & 社区功能 & 管理员发布公告，用户订阅和查看公告，检查公告是否正确显示。 & 未通过，订阅功能异常 \\ \hline
+8 & 聊天功能 & 用户之间发送私信，检查私信是否能够正确发送和接收。 & 通过 \\ \hline
+9 & 聊天功能 & 用户在群聊中发送消息，检查群聊消息是否正确显示给所有群成员。 & 通过 \\ \hline
+10 & 题目与比赛功能 & 创建和管理题目，检查题目信息是否正确显示。 & 通过 \\ \hline
+11 & 题目与比赛功能 & 创建和参加编程比赛，检查比赛信息和用户参与状态是否正确处理。 & 通过 \\ \hline
+12 & 其它功能 & 发送邮件给其他用户，检查邮件是否正确发送和接收。 & 未通过，附件发送功能故障 \\ \hline
+13 & 其它功能 & 用户获得徽章，检查徽章展示界面是否正确显示徽章信息。 & 通过 \\ \hline
+\end{longtable}
+
+
+\subsection{测试结果评估}
+对以上测试用例进行分析，可以得出以下结论：
+\begin{itemize}
+    \item 优点：系统的核心功能（如响应式布局、社区互动、题目与比赛管理）大体上运行良好，能够满足用户基本需求。这位用户提供了一个稳定的平台，可以进行文章分享、问题解答、编程练习和比赛参加等活动。
+    \item 待改进：暗主题下文本可见性问题、公告订阅功能异常和邮件发送故障是测试中发现的主要问题。这些问题可能会影响用户体验，但是对主题流程无太大影响。
+\end{itemize}
+
+系统整体表现良好，但仍存在一些具体问题需要解决。针对这些问题进行有针对性的解决，可以进一步提升系统的稳定性和用户体验。然而，由于时间限制，这些遗留问题最终可能无法得到解决。
+
+
+\section{结论与展望}
+
+\subsection{结论}
+
+本研究成功设计并实现了一个综合性在线编程学习平台的网页前端。通过对当前在线编程学习平台的需求和挑战的深入分析，本文详细介绍了前端系统的设计原则、架构设计以及技术实现。通过采用React、Recoil、Ant-Design等现代前端技术栈，本平台实现了响应式布局、即时通讯、个性化主题设置等功能，为编程学习者提供了一个高效、互动的学习环境。
+
+在测试与评估阶段，通过集成测试和性能测试，验证了平台的可用性和效果。尽管在暗主题下文本可见性、公告订阅功能异常以及邮件附件发送功能方面存在一些问题，但这些问题并不影响平台的核心功能。整体而言，本平台的实现提高了用户的学习效率和用户体验，为编程学习者提供了一站式的学习解决方案。
+
+\subsection{展望}
+
+虽然本研究已经取得了一定的成果，但在未来的工作中，仍有许多值得进一步探索和改进的地方：
+
+\begin{enumerate}
+    \item \textbf{功能完善与优化：} 对于测试阶段发现的问题，如暗主题下文本可见性问题、公告订阅功能异常和邮件附件发送功能故障，需要进行进一步的调查和修复，以提升系统的稳定性和用户体验。
+    
+    \item \textbf{移动端优化：} 虽然本平台已实现响应式布局，但在移动端的用户体验仍有改善空间。未来可以进一步优化移动端界面设计和交互流程，以满足移动端用户的需求。
+    
+    \item \textbf{安全性增强：} 网络安全是在线学习平台不可忽视的方面。未来的工作中，可以引入更加严格的安全措施，如增强的输入验证、安全的数据传输协议等，以保护用户数据和隐私安全。
+    
+    \item \textbf{智能化发展：} 随着人工智能技术的不断进步，未来可以探索将AI技术应用于在线编程学习平台，如智能代码辅助、个性化学习路径推荐等，以进一步提高学习效率和个性化学习体验。
+    
+    \item \textbf{社区生态建设：} 构建一个活跃的编程学习社区对于提升用户的学习动力和促进知识分享具有重要意义。未来可以通过举办在线编程比赛、增加用户互动功能等措施，进一步丰富社区生态，激励用户参与和贡献。
+\end{enumerate}
+
+总之，本研究的成果为编程学习者提供了一个功能丰富、用户友好的在线学习平台，对于推动编程教育的发展具有一定的意义。未来的工作将继续在功能完善、用户体验优化、安全性增强等方面进行努力，以期构建更加完善、智能化、安全的在线编程学习环境。
+
+\newpage
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+
+
+\end{CJK*}
+\end{document}
