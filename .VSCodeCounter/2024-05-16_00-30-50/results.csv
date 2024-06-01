@@ -1,0 +1,253 @@
+"filename", "language", "JSON", "HTML", "Ignore", "JavaScript", "JSON with Comments", "TypeScript", "SCSS", "BibTeX", "LaTeX", "TypeScript JSX", "XML", "comment", "blank", "total"
+"d:\projectCode\online-programming-learning-platform\.prettierignore", "Ignore", 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7
+"d:\projectCode\online-programming-learning-platform\.prettierrc.cjs", "JavaScript", 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 14, 1, 32
+"d:\projectCode\online-programming-learning-platform\README\main.tex", "LaTeX", 0, 0, 0, 0, 0, 0, 0, 0, 511, 0, 0, 1, 111, 623
+"d:\projectCode\online-programming-learning-platform\README\references.bib", "BibTeX", 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 10, 79
+"d:\projectCode\online-programming-learning-platform\index.html", "HTML", 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 22
+"d:\projectCode\online-programming-learning-platform\package-lock.json", "JSON", 3717, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3718
+"d:\projectCode\online-programming-learning-platform\package.json", "JSON", 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 67
+"d:\projectCode\online-programming-learning-platform\postcss.config.cjs", "JavaScript", 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6
+"d:\projectCode\online-programming-learning-platform\public\fav.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1
+"d:\projectCode\online-programming-learning-platform\server\index.cjs", "JavaScript", 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15
+"d:\projectCode\online-programming-learning-platform\server\package.json", "JSON", 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9
+"d:\projectCode\online-programming-learning-platform\src\App.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 81, 0, 1, 7, 89
+"d:\projectCode\online-programming-learning-platform\src\api\CompetitionRandom.ts", "TypeScript", 0, 0, 0, 0, 0, 22, 0, 0, 0, 0, 0, 0, 8, 30
+"d:\projectCode\online-programming-learning-platform\src\api\Letter.ts", "TypeScript", 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 5, 16
+"d:\projectCode\online-programming-learning-platform\src\api\article.ts", "TypeScript", 0, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 7, 22, 95
+"d:\projectCode\online-programming-learning-platform\src\api\category.ts", "TypeScript", 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 6, 23
+"d:\projectCode\online-programming-learning-platform\src\api\chat.ts", "TypeScript", 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 6, 21
+"d:\projectCode\online-programming-learning-platform\src\api\chatGPT.ts", "TypeScript", 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 6, 20
+"d:\projectCode\online-programming-learning-platform\src\api\comment.ts", "TypeScript", 0, 0, 0, 0, 0, 26, 0, 0, 0, 0, 0, 1, 10, 37
+"d:\projectCode\online-programming-learning-platform\src\api\competition.ts", "TypeScript", 0, 0, 0, 0, 0, 53, 0, 0, 0, 0, 0, 3, 17, 73
+"d:\projectCode\online-programming-learning-platform\src\api\competitionMixture.ts", "TypeScript", 0, 0, 0, 0, 0, 55, 0, 0, 0, 0, 0, 0, 10, 65
+"d:\projectCode\online-programming-learning-platform\src\api\competitionStandardMixture.ts", "TypeScript", 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 6, 22
+"d:\projectCode\online-programming-learning-platform\src\api\file.ts", "TypeScript", 0, 0, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 12, 44
+"d:\projectCode\online-programming-learning-platform\src\api\form.ts", "TypeScript", 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 1, 6, 21
+"d:\projectCode\online-programming-learning-platform\src\api\friend.ts", "TypeScript", 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 2, 4, 14
+"d:\projectCode\online-programming-learning-platform\src\api\group.ts", "TypeScript", 0, 0, 0, 0, 0, 44, 0, 0, 0, 0, 0, 3, 17, 64
+"d:\projectCode\online-programming-learning-platform\src\api\hack.ts", "TypeScript", 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 3, 8
+"d:\projectCode\online-programming-learning-platform\src\api\heart.ts", "TypeScript", 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 5, 18
+"d:\projectCode\online-programming-learning-platform\src\api\img.ts", "TypeScript", 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 3, 8
+"d:\projectCode\online-programming-learning-platform\src\api\message.ts", "TypeScript", 0, 0, 0, 0, 0, 23, 0, 0, 0, 0, 0, 0, 9, 32
+"d:\projectCode\online-programming-learning-platform\src\api\noticeboard.ts", "TypeScript", 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 7, 24
+"d:\projectCode\online-programming-learning-platform\src\api\post.ts", "TypeScript", 0, 0, 0, 0, 0, 56, 0, 0, 0, 0, 0, 6, 21, 83
+"d:\projectCode\online-programming-learning-platform\src\api\problem.ts", "TypeScript", 0, 0, 0, 0, 0, 91, 0, 0, 0, 0, 0, 8, 34, 133
+"d:\projectCode\online-programming-learning-platform\src\api\problemNew.ts", "TypeScript", 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 8, 28
+"d:\projectCode\online-programming-learning-platform\src\api\program.ts", "TypeScript", 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 6, 20
+"d:\projectCode\online-programming-learning-platform\src\api\record.ts", "TypeScript", 0, 0, 0, 0, 0, 47, 0, 0, 0, 0, 0, 0, 8, 55
+"d:\projectCode\online-programming-learning-platform\src\api\remark.ts", "TypeScript", 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 2, 9, 31
+"d:\projectCode\online-programming-learning-platform\src\api\reply.ts", "TypeScript", 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 1, 8, 29
+"d:\projectCode\online-programming-learning-platform\src\api\tag.ts", "TypeScript", 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 5, 16
+"d:\projectCode\online-programming-learning-platform\src\api\test.ts", "TypeScript", 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 3, 8
+"d:\projectCode\online-programming-learning-platform\src\api\thread.ts", "TypeScript", 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 1, 7, 28
+"d:\projectCode\online-programming-learning-platform\src\api\topic.ts", "TypeScript", 0, 0, 0, 0, 0, 45, 0, 0, 0, 0, 0, 2, 13, 60
+"d:\projectCode\online-programming-learning-platform\src\api\translator.ts", "TypeScript", 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 3, 8
+"d:\projectCode\online-programming-learning-platform\src\api\user.ts", "TypeScript", 0, 0, 0, 0, 0, 68, 0, 0, 0, 0, 0, 0, 21, 89
+"d:\projectCode\online-programming-learning-platform\src\assets\Login.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1
+"d:\projectCode\online-programming-learning-platform\src\assets\copper.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 459, 0, 55, 514
+"d:\projectCode\online-programming-learning-platform\src\assets\diamond.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 318, 0, 38, 356
+"d:\projectCode\online-programming-learning-platform\src\assets\gold.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 359, 0, 42, 401
+"d:\projectCode\online-programming-learning-platform\src\assets\iconfont\iconfont.js", "JavaScript", 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 0, 0, 1, 67
+"d:\projectCode\online-programming-learning-platform\src\assets\login1.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 61977, 0, 1, 61978
+"d:\projectCode\online-programming-learning-platform\src\assets\logo.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 301, 0, 33, 334
+"d:\projectCode\online-programming-learning-platform\src\assets\louti.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 117, 1, 17, 135
+"d:\projectCode\online-programming-learning-platform\src\assets\medal\ac_1.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 272, 0, 32, 304
+"d:\projectCode\online-programming-learning-platform\src\assets\medal\ac_2.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 217, 0, 26, 243
+"d:\projectCode\online-programming-learning-platform\src\assets\medal\ac_3.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 267, 0, 31, 298
+"d:\projectCode\online-programming-learning-platform\src\assets\medal\ac_4.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 242, 0, 29, 271
+"d:\projectCode\online-programming-learning-platform\src\assets\package.json", "JSON", 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6
+"d:\projectCode\online-programming-learning-platform\src\assets\react.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1
+"d:\projectCode\online-programming-learning-platform\src\assets\recordStates.ts", "TypeScript", 0, 0, 0, 0, 0, 103, 0, 0, 0, 0, 0, 0, 1, 104
+"d:\projectCode\online-programming-learning-platform\src\assets\sliver.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 269, 0, 32, 301
+"d:\projectCode\online-programming-learning-platform\src\components\Avatar\MyAvatar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 0, 0, 3, 39
+"d:\projectCode\online-programming-learning-platform\src\components\Avatar\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 6, 47
+"d:\projectCode\online-programming-learning-platform\src\components\Card\ArticleCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 94, 0, 0, 9, 103
+"d:\projectCode\online-programming-learning-platform\src\components\Card\ChatMessageCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 2, 4, 27
+"d:\projectCode\online-programming-learning-platform\src\components\Card\CommentCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 120, 0, 0, 10, 130
+"d:\projectCode\online-programming-learning-platform\src\components\Card\CompetitionCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 3, 8
+"d:\projectCode\online-programming-learning-platform\src\components\Card\GeneralCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 142, 0, 1, 7, 150
+"d:\projectCode\online-programming-learning-platform\src\components\Card\IMCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 224, 0, 5, 14, 243
+"d:\projectCode\online-programming-learning-platform\src\components\Card\NavgationCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 61, 0, 2, 5, 68
+"d:\projectCode\online-programming-learning-platform\src\components\Card\PostCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 72, 0, 1, 7, 80
+"d:\projectCode\online-programming-learning-platform\src\components\Card\ProblemCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 29, 0, 0, 6, 35
+"d:\projectCode\online-programming-learning-platform\src\components\Card\RemarkCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 104, 0, 0, 10, 114
+"d:\projectCode\online-programming-learning-platform\src\components\Card\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 132, 0, 0, 0, 0, 7, 17, 156
+"d:\projectCode\online-programming-learning-platform\src\components\Collapse\MyCollapse.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 4, 28
+"d:\projectCode\online-programming-learning-platform\src\components\Community\Comment.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 2, 3, 25
+"d:\projectCode\online-programming-learning-platform\src\components\Editor\CodeEditor.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 383, 0, 1, 19, 403
+"d:\projectCode\online-programming-learning-platform\src\components\Editor\CodeEditorConfig.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 165, 0, 0, 11, 176
+"d:\projectCode\online-programming-learning-platform\src\components\Editor\Highlight.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 0, 0, 5, 27
+"d:\projectCode\online-programming-learning-platform\src\components\Editor\LanguageList.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 83, 0, 1, 10, 94
+"d:\projectCode\online-programming-learning-platform\src\components\Editor\ReadOnly.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 48, 0, 0, 6, 54
+"d:\projectCode\online-programming-learning-platform\src\components\Editor\TextEditor.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 85, 0, 1, 11, 97
+"d:\projectCode\online-programming-learning-platform\src\components\Editor\ojmap.ts", "TypeScript", 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 4, 24
+"d:\projectCode\online-programming-learning-platform\src\components\Editor\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 1, 4
+"d:\projectCode\online-programming-learning-platform\src\components\Editor\types.d.ts", "TypeScript", 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 1, 4, 21
+"d:\projectCode\online-programming-learning-platform\src\components\Empty\NoData.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 3, 15
+"d:\projectCode\online-programming-learning-platform\src\components\Empty\NoPage.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 3, 8
+"d:\projectCode\online-programming-learning-platform\src\components\Empty\NotStart.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 3, 15
+"d:\projectCode\online-programming-learning-platform\src\components\Empty\StayTuned.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 3, 14
+"d:\projectCode\online-programming-learning-platform\src\components\Group\CreateGroupForm.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 90, 0, 0, 6, 96
+"d:\projectCode\online-programming-learning-platform\src\components\Group\GroupInfo.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 0, 3, 7, 122
+"d:\projectCode\online-programming-learning-platform\src\components\Group\GroupMember.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 47, 0, 0, 6, 53
+"d:\projectCode\online-programming-learning-platform\src\components\Group\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 1, 6
+"d:\projectCode\online-programming-learning-platform\src\components\Icon\IconFont.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 3, 9
+"d:\projectCode\online-programming-learning-platform\src\components\Icon\MySvgIcon.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 3, 27
+"d:\projectCode\online-programming-learning-platform\src\components\Label\MyTag.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 5, 37
+"d:\projectCode\online-programming-learning-platform\src\components\Label\ProblemLabel\AcPercentLabel.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 52, 0, 12, 7, 71
+"d:\projectCode\online-programming-learning-platform\src\components\List\IMList.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 3, 8
+"d:\projectCode\online-programming-learning-platform\src\components\List\LoadMoreList.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 99, 0, 1, 9, 109
+"d:\projectCode\online-programming-learning-platform\src\components\List\PaginationList.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 0, 0, 7, 96
+"d:\projectCode\online-programming-learning-platform\src\components\List\RollList.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 29, 0, 5, 4, 38
+"d:\projectCode\online-programming-learning-platform\src\components\Loading\Loading.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 3, 13
+"d:\projectCode\online-programming-learning-platform\src\components\Navbar\Navbar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 0, 0, 5, 41
+"d:\projectCode\online-programming-learning-platform\src\components\Navbar\PageNav.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 3, 8
+"d:\projectCode\online-programming-learning-platform\src\components\Navbar\SubNavbar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 69, 0, 7, 8, 84
+"d:\projectCode\online-programming-learning-platform\src\components\Problem\Detail\ProblemDetail.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 207, 0, 0, 7, 214
+"d:\projectCode\online-programming-learning-platform\src\components\Problem\List\List.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 440, 0, 15, 31, 486
+"d:\projectCode\online-programming-learning-platform\src\components\Problem\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 87, 0, 0, 0, 0, 4, 12, 103
+"d:\projectCode\online-programming-learning-platform\src\components\Problem\table\ProblemTable.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 0, 53, 18, 326
+"d:\projectCode\online-programming-learning-platform\src\components\Rank\GeneralRank.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 93, 0, 0, 4, 97
+"d:\projectCode\online-programming-learning-platform\src\components\Rank\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 18, 0, 0, 0, 0, 0, 1, 19
+"d:\projectCode\online-programming-learning-platform\src\components\Record\Hack.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 0, 0, 5, 41
+"d:\projectCode\online-programming-learning-platform\src\components\Record\HackDetail.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 46, 0, 0, 4, 50
+"d:\projectCode\online-programming-learning-platform\src\components\Record\RecordLabel.tsx\LanaugeLabel.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 3, 11
+"d:\projectCode\online-programming-learning-platform\src\components\Record\RecordLabel.tsx\RecordStateLabel.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 47, 0, 0, 5, 52
+"d:\projectCode\online-programming-learning-platform\src\components\Record\RecordModal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 80, 0, 7, 9, 96
+"d:\projectCode\online-programming-learning-platform\src\components\Record\RecordTable.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 387, 0, 0, 21, 408
+"d:\projectCode\online-programming-learning-platform\src\components\Record\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 1, 5
+"d:\projectCode\online-programming-learning-platform\src\components\SideActionBar\SideActionBar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 75, 0, 0, 4, 79
+"d:\projectCode\online-programming-learning-platform\src\components\SideActionBar\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 1, 4, 46
+"d:\projectCode\online-programming-learning-platform\src\components\Similarity\Similarity.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 109, 0, 5, 8, 122
+"d:\projectCode\online-programming-learning-platform\src\components\User\UserCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 0, 5, 42
+"d:\projectCode\online-programming-learning-platform\src\components\User\UserInfo.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 167, 0, 0, 6, 173
+"d:\projectCode\online-programming-learning-platform\src\components\User\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 38, 0, 0, 0, 0, 0, 7, 45
+"d:\projectCode\online-programming-learning-platform\src\components\countDown\CountDown.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 0, 1, 7, 122
+"d:\projectCode\online-programming-learning-platform\src\components\directory\Directory.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 39, 0, 12, 5, 56
+"d:\projectCode\online-programming-learning-platform\src\components\directory\store.ts", "TypeScript", 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 1, 3, 21
+"d:\projectCode\online-programming-learning-platform\src\components\error-page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 2, 16
+"d:\projectCode\online-programming-learning-platform\src\components\mobile\MobileFooterNavbar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 43, 0, 0, 6, 49
+"d:\projectCode\online-programming-learning-platform\src\components\mobile\MobileHeaderNavbar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 3, 12
+"d:\projectCode\online-programming-learning-platform\src\components\modal\RemarkModal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 3, 28
+"d:\projectCode\online-programming-learning-platform\src\components\table\GeneralTable.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 68, 0, 0, 5, 73
+"d:\projectCode\online-programming-learning-platform\src\components\topic\TopicCollapse.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 144, 0, 0, 9, 153
+"d:\projectCode\online-programming-learning-platform\src\components\topic\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 3, 17
+"d:\projectCode\online-programming-learning-platform\src\components\upload\uploadProblem\UploadItem.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 0, 8, 6, 44
+"d:\projectCode\online-programming-learning-platform\src\components\upload\uploadProblem\UploadProblemModal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 149, 0, 62, 13, 224
+"d:\projectCode\online-programming-learning-platform\src\config\apiConfig.ts", "TypeScript", 0, 0, 0, 0, 0, 91, 0, 0, 0, 0, 0, 2, 8, 101
+"d:\projectCode\online-programming-learning-platform\src\config\config.ts", "TypeScript", 0, 0, 0, 0, 0, 42, 0, 0, 0, 0, 0, 3, 5, 50
+"d:\projectCode\online-programming-learning-platform\src\main.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 3, 11
+"d:\projectCode\online-programming-learning-platform\src\router\router.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 602, 0, 188, 30, 820
+"d:\projectCode\online-programming-learning-platform\src\store\appStore.ts", "TypeScript", 0, 0, 0, 0, 0, 188, 0, 0, 0, 0, 0, 22, 20, 230
+"d:\projectCode\online-programming-learning-platform\src\store\nodeStore.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 3, 16
+"d:\projectCode\online-programming-learning-platform\src\style.scss", "SCSS", 0, 0, 0, 0, 0, 0, 205, 0, 0, 0, 0, 10, 19, 234
+"d:\projectCode\online-programming-learning-platform\src\tool\MyUtils\Utils.ts", "TypeScript", 0, 0, 0, 0, 0, 223, 0, 0, 0, 0, 0, 1, 24, 248
+"d:\projectCode\online-programming-learning-platform\src\tool\MyUtils\highlight.ts", "TypeScript", 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 4, 13
+"d:\projectCode\online-programming-learning-platform\src\tool\myHooks\myHooks.ts", "TypeScript", 0, 0, 0, 0, 0, 203, 0, 0, 0, 0, 0, 25, 31, 259
+"d:\projectCode\online-programming-learning-platform\src\type.d.ts", "TypeScript", 0, 0, 0, 0, 0, 388, 0, 0, 0, 0, 0, 1, 42, 431
+"d:\projectCode\online-programming-learning-platform\src\views\Community\CommunityRoot.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 201, 0, 3, 18, 222
+"d:\projectCode\online-programming-learning-platform\src\views\Community\communityStore.ts", "TypeScript", 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 2, 8
+"d:\projectCode\online-programming-learning-platform\src\views\Community\components\GeneralDetail\GeneralDetail.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 194, 0, 9, 12, 215
+"d:\projectCode\online-programming-learning-platform\src\views\Community\components\Side\CommunityHotRank.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 70, 0, 1, 12, 83
+"d:\projectCode\online-programming-learning-platform\src\views\Community\components\Side\CommunityStatistic.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 4, 32
+"d:\projectCode\online-programming-learning-platform\src\views\Community\page\Article\Detail.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 179, 0, 0, 12, 191
+"d:\projectCode\online-programming-learning-platform\src\views\Community\page\Comment\Detail.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 3, 8
+"d:\projectCode\online-programming-learning-platform\src\views\Community\page\Notice\NoticeDetail.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 87, 0, 0, 6, 93
+"d:\projectCode\online-programming-learning-platform\src\views\Community\page\Post\PostDetail.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 180, 0, 0, 8, 188
+"d:\projectCode\online-programming-learning-platform\src\views\Community\page\RecommendSet\ArticleSet.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 47, 0, 0, 6, 53
+"d:\projectCode\online-programming-learning-platform\src\views\Community\page\RecommendSet\CommentSet.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 41, 0, 12, 6, 59
+"d:\projectCode\online-programming-learning-platform\src\views\Community\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 122, 0, 0, 0, 0, 0, 16, 138
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionCommon\CompetitionCommonRoot.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 3, 3, 19
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionCommon\component\Group\EnterGroup.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 361, 0, 37, 16, 414
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionCommon\component\Group\GroupInfo.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 0, 0, 3, 53
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionCommon\component\Group\group.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 1, 2, 8
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionCommon\component\Label\CompetitionTypeLabel.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 44, 0, 0, 4, 48
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionCommon\component\Label\ProblemStateLabel.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 7, 48
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionCommon\component\SideBar\Sidebar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 0, 7, 7, 103
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionCommon\component\SideBar\sidebar.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 3, 13
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionCommon\component\Update\Competition.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 134, 0, 0, 10, 144
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionCommon\component\Update\Problem.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 186, 0, 1, 13, 200
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionCommon\component\Update\Update.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 56, 0, 0, 4, 60
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionCommon\pages\CompetitionDetail\CompetitionDetailRoot.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 420, 0, 14, 14, 448
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionCommon\pages\CompetitionDetail\pages\OverView\Index.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 118, 0, 0, 10, 128
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionCommon\pages\CompetitionDetail\pages\Problem\Index.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 102, 0, 0, 11, 113
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionCommon\pages\CompetitionDetail\pages\Problem\component\Answer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 0, 81, 15, 317
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionCommon\pages\CompetitionDetail\pages\Rank\Index.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 105, 0, 21, 15, 141
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionCommon\pages\CompetitionDetail\pages\Record\Index.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 4, 18
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionCommon\pages\CompetitionSet\Index.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 310, 0, 1, 19, 330
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionRandom\CompetitionRandomRoot.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 217, 0, 37, 25, 279
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionRandom\component\MatchWindow.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 1, 4, 13
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionRoot.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 46, 0, 3, 8, 57
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\CompetitionStandard\CompetitionStandardRoot.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 3, 8
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\competitionStore.ts", "TypeScript", 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 4, 18
+"d:\projectCode\online-programming-learning-platform\src\views\Competition\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 194, 0, 0, 0, 0, 2, 29, 225
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\pages\CreateArticle.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 248, 0, 1, 19, 268
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\pages\CreateComment.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 157, 0, 0, 10, 167
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\pages\CreateCompetition\Create.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 6, 60
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\pages\CreateCompetition\pages\Competition.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 253, 0, 10, 13, 276
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\pages\CreateCompetition\pages\Declare.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 42, 0, 0, 4, 46
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\pages\CreateCompetition\pages\Problem.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 257, 0, 8, 17, 282
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\pages\CreateCompetition\pages\ProblemNew.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 272, 0, 0, 10, 282
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\pages\CreateCompetition\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 30, 0, 0, 0, 0, 0, 3, 33
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\pages\CreateForm.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 523, 0, 0, 28, 551
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\pages\CreateNotice.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 120, 0, 0, 7, 127
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\pages\CreatePost.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 161, 0, 0, 10, 171
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\pages\CreateProblem\Create.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 348, 0, 10, 20, 378
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\pages\CreateProblem\Problem.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 236, 0, 0, 12, 248
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\pages\CreateProblem\Program.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 92, 0, 8, 8, 108
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\pages\CreateProblem\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 56, 0, 0, 0, 0, 4, 8, 68
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\pages\CreateProblem\submit.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 51, 0, 0, 5, 56
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\pages\CreateTopic.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 241, 0, 0, 18, 259
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\root\CreationNavgation.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 87, 0, 3, 6, 96
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\root\CreationRoot.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 44, 0, 10, 7, 61
+"d:\projectCode\online-programming-learning-platform\src\views\Creation\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 164, 0, 0, 0, 0, 0, 15, 179
+"d:\projectCode\online-programming-learning-platform\src\views\File\FileRoot.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 477, 0, 36, 22, 535
+"d:\projectCode\online-programming-learning-platform\src\views\File\component\FileInfo.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 49, 0, 0, 3, 52
+"d:\projectCode\online-programming-learning-platform\src\views\File\component\FileItem.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 312, 0, 10, 11, 333
+"d:\projectCode\online-programming-learning-platform\src\views\File\component\MyEmpty.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 0, 0, 3, 33
+"d:\projectCode\online-programming-learning-platform\src\views\File\fileStore.ts", "TypeScript", 0, 0, 0, 0, 0, 80, 0, 0, 0, 0, 0, 0, 4, 84
+"d:\projectCode\online-programming-learning-platform\src\views\File\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 86, 0, 0, 0, 0, 1, 8, 95
+"d:\projectCode\online-programming-learning-platform\src\views\Home\HomeRoot.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 299, 0, 48, 13, 360
+"d:\projectCode\online-programming-learning-platform\src\views\Home\components\OjPlatform.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 6, 70
+"d:\projectCode\online-programming-learning-platform\src\views\Home\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 122, 0, 0, 0, 0, 0, 17, 139
+"d:\projectCode\online-programming-learning-platform\src\views\Learn\LearnRoot.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 0, 13, 8, 45
+"d:\projectCode\online-programming-learning-platform\src\views\Login\Log\FindPass.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 123, 0, 0, 7, 130
+"d:\projectCode\online-programming-learning-platform\src\views\Login\Log\Login.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 98, 0, 0, 5, 103
+"d:\projectCode\online-programming-learning-platform\src\views\Login\Log\Register.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 215, 0, 0, 10, 225
+"d:\projectCode\online-programming-learning-platform\src\views\Login\Log\log.scss", "SCSS", 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 1, 13
+"d:\projectCode\online-programming-learning-platform\src\views\Login\LoginRoot.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 1, 3, 21
+"d:\projectCode\online-programming-learning-platform\src\views\Login\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 7, 48
+"d:\projectCode\online-programming-learning-platform\src\views\ProblemSet\ProblemSetRoot.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 149, 0, 11, 15, 175
+"d:\projectCode\online-programming-learning-platform\src\views\ProblemSet\form\Form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 2, 13
+"d:\projectCode\online-programming-learning-platform\src\views\ProblemSet\set\All.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 3, 14
+"d:\projectCode\online-programming-learning-platform\src\views\ProblemSet\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 50, 0, 0, 0, 0, 0, 7, 57
+"d:\projectCode\online-programming-learning-platform\src\views\ProblemSet\topic\Topic.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 67, 0, 0, 7, 74
+"d:\projectCode\online-programming-learning-platform\src\views\Problem\DetailRoot.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 389, 0, 24, 24, 437
+"d:\projectCode\online-programming-learning-platform\src\views\Problem\RunResult.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 77, 0, 1, 7, 85
+"d:\projectCode\online-programming-learning-platform\src\views\Problem\pages\Comment.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 0, 2, 7, 68
+"d:\projectCode\online-programming-learning-platform\src\views\Problem\pages\Description.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 4, 17
+"d:\projectCode\online-programming-learning-platform\src\views\Problem\pages\Post.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 57, 0, 2, 7, 66
+"d:\projectCode\online-programming-learning-platform\src\views\Problem\pages\Records.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 5, 18
+"d:\projectCode\online-programming-learning-platform\src\views\Problem\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 81, 0, 0, 0, 0, 0, 9, 90
+"d:\projectCode\online-programming-learning-platform\src\views\Profile\ProfileRoot.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 5, 6, 36
+"d:\projectCode\online-programming-learning-platform\src\views\Profile\pages\Account\Account.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 267, 0, 0, 10, 277
+"d:\projectCode\online-programming-learning-platform\src\views\Profile\pages\Creation\Article.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 79, 0, 0, 7, 86
+"d:\projectCode\online-programming-learning-platform\src\views\Profile\pages\Creation\CreationRoot.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 6, 4, 38
+"d:\projectCode\online-programming-learning-platform\src\views\Profile\pages\Creation\Group.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 77, 0, 0, 10, 87
+"d:\projectCode\online-programming-learning-platform\src\views\Profile\pages\Creation\Problem.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 72, 0, 4, 8, 84
+"d:\projectCode\online-programming-learning-platform\src\views\Profile\pages\Creation\Topic.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 78, 0, 1, 7, 86
+"d:\projectCode\online-programming-learning-platform\src\views\Profile\pages\Email\Email.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 3, 8
+"d:\projectCode\online-programming-learning-platform\src\views\Profile\pages\Friend\Friend.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 167, 0, 26, 17, 210
+"d:\projectCode\online-programming-learning-platform\src\views\Profile\pages\Group\Group.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 259, 0, 9, 20, 288
+"d:\projectCode\online-programming-learning-platform\src\views\Profile\pages\Info\Info.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 187, 0, 27, 8, 222
+"d:\projectCode\online-programming-learning-platform\src\views\Profile\pages\Message\Message.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 121, 0, 1, 9, 131
+"d:\projectCode\online-programming-learning-platform\src\views\Profile\pages\Setting\Setting.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 176, 0, 10, 11, 197
+"d:\projectCode\online-programming-learning-platform\src\views\Profile\pages\Star\Star.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 3, 8
+"d:\projectCode\online-programming-learning-platform\src\views\Profile\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 80, 0, 0, 0, 0, 14, 12, 106
+"d:\projectCode\online-programming-learning-platform\src\views\Root.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 169, 0, 17, 14, 200
+"d:\projectCode\online-programming-learning-platform\src\views\style.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 76, 0, 0, 0, 0, 4, 5, 85
+"d:\projectCode\online-programming-learning-platform\tailwind.config.cjs", "JavaScript", 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 41
+"d:\projectCode\online-programming-learning-platform\tsconfig.json", "JSON with Comments", 0, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 1, 26
+"d:\projectCode\online-programming-learning-platform\tsconfig.node.json", "JSON", 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10
+"d:\projectCode\online-programming-learning-platform\vite.config.ts", "TypeScript", 0, 0, 0, 0, 0, 59, 0, 0, 0, 0, 0, 1, 2, 62
+"Total", "-", 3806, 17, 7, 141, 25, 2337, 1717, 69, 511, 16836, 64801, 1090, 2413, 93770

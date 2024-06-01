@@ -35,6 +35,7 @@ interface MyRoute {
     title?: string
     needLogin?: boolean
     redirect?: string
+    level?: number
   }
 }
 
@@ -397,14 +398,15 @@ const routes: MyRoute[] = [
 
 const Guard: React.FC<{
   element: any
-  meta: { title: string; needLogin: boolean; redirect: string }
+  meta: { title: string; level?: number; needLogin: boolean; redirect: string }
 }> = (props) => {
   let { element, meta } = props
   const { pathname } = useLocation()
   if (meta && meta.needLogin && pathname !== '/login') {
     if (!localStorage.getItem('token')) element = <Navigate to={'/login'} replace={true}></Navigate>
+    if (!meta.level || Number(localStorage.getItem('level')) < meta?.level)
+      element = <Navigate to={meta.redirect} replace={true}></Navigate>
   }
-
   return element
 }
 

@@ -77,6 +77,12 @@ const Chat: React.FC<IProps> = (props) => {
     const resolveFn = (res: any) => {
       if (res.data.code === 200) {
         setText('')
+        setTimeout(() => {
+          chatBox.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end',
+          })
+        }, 0)
       }
     }
     group &&
@@ -222,9 +228,11 @@ const Chat: React.FC<IProps> = (props) => {
             }}
           ></Input.TextArea>
         </div>
-        <Button size="small" className="mr-4" type="primary" onClick={sendChat}>
-          发送
-        </Button>
+        <div className="h-full flex items-end">
+          <Button className="mr-4 mb-4" type="primary" onClick={sendChat}>
+            发送
+          </Button>
+        </div>
       </div>
       <Drawer
         placement={isMobile ? 'bottom' : 'right'}

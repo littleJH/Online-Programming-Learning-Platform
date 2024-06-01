@@ -27,7 +27,6 @@ export const userInfoState = selector<User | null>({
   key: 'userInfoState',
   get: ({ get }) => get(userInfoAtomState),
   set: ({ set }, newValue) => {
-    console.log('userInfo newValue ==> ', newValue)
     set(userInfoAtomState, newValue)
   },
 })

@@ -388,7 +388,7 @@ const FileRoot: React.FC = () => {
               onChange={(value: any) => setViewType(value)}
             ></Segmented>
           </div>
-          <Dropdown
+          {/* <Dropdown
             overlayStyle={{
               minWidth: '200px',
             }}
@@ -405,26 +405,26 @@ const FileRoot: React.FC = () => {
                 },
               ],
             }}
+          > */}
+          <div
+            ref={bodyCtnRef}
+            id="bodyCtn"
+            className={`${style.bodyCtn}`}
+            onClick={handleCtnClick}
+            onDrop={handleDrag}
+            onDragOver={handleDrag}
+            onDragLeave={handleDrag}
+            onDragEnter={handleDrag}
           >
-            <div
-              ref={bodyCtnRef}
-              id="bodyCtn"
-              className={`${style.bodyCtn}`}
-              onClick={handleCtnClick}
-              onDrop={handleDrag}
-              onDragOver={handleDrag}
-              onDragLeave={handleDrag}
-              onDragEnter={handleDrag}
-            >
-              {viewType === 'list' && (
-                <div className={style.listCtn}>
-                  <div className={style.listGridCtn}>
-                    {fileList.map((file: IFile, index: number) => (
-                      <div id={`fileitem${index}`} className={style.listItem} key={file.path + file.name}>
-                        <FileItem file={file} fetchFileList={fetchFileList}></FileItem>
-                      </div>
-                    ))}
-                    {/* <Skeleton.Node active>
+            {viewType === 'list' && (
+              <div className={style.listCtn}>
+                <div className={style.listGridCtn}>
+                  {fileList.map((file: IFile, index: number) => (
+                    <div id={`fileitem${index}`} className={style.listItem} key={file.path + file.name}>
+                      <FileItem file={file} fetchFileList={fetchFileList}></FileItem>
+                    </div>
+                  ))}
+                  {/* <Skeleton.Node active>
                     <FolderOpenOutlined
                       style={{
                         fontSize: fileIconSize,
@@ -433,77 +433,77 @@ const FileRoot: React.FC = () => {
                     />
                   </Skeleton.Node>
                   <Skeleton.Input active></Skeleton.Input> */}
-                  </div>
                 </div>
-              )}
-              {viewType === 'table' && (
-                <div className={style.tableCtn}>
-                  <GeneralTable
-                    scroll={{
-                      y: tableHeight,
-                    }}
-                    dataSource={tableDS}
-                    onRow={(record: IFile) => {
-                      return {
-                        onClick: (e: Event) => henldeRowClick(e, record),
-                        onDoubleClick: (e: Event) => henldeRowClick(e, record),
-                        onContextMenu: (e: Event) => henldeRowClick(e, record),
-                      }
-                    }}
-                    columns={[
-                      {
-                        title: '名称',
-                        dataIndex: 'name',
-                        key: 'name',
-                        render: (value: string, item: IFile) => (
-                          <div className="flex items-center">
-                            <MySvgIcon href={getFileHref(item)} size={2}></MySvgIcon>
-                            <span className="ml-4">
-                              {item.type === 'NEW_DIR' ? (
-                                <FileItem file={item} onlyNew={true}></FileItem>
-                              ) : (
-                                value.replace(/\.[^.]+$/, '')
-                              )}
-                            </span>
-                          </div>
-                        ),
-                      },
-                      {
-                        title: '修改日期',
-                        dataIndex: 'lastWriteTime',
-                        key: 'lastWriteTime',
-                        width: 200,
-                        render: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'),
-                      },
-                      {
-                        title: '类型',
-                        dataIndex: 'type',
-                        key: 'type',
-                        width: 100,
-                      },
-                      {
-                        title: '大小',
-                        dataIndex: 'size',
-                        key: 'size',
-                        width: 100,
-                        render: (value: number) => utils.formatFileSize(Number(value)),
-                      },
-                      {
-                        title: '',
-                        dataIndex: 'action',
-                        key: 'action',
-                        width: 80,
-                        render: (value: React.ReactNode, record: any) => (
-                          <>{record.type !== 'NEW_DIR' && <FileItem file={record} onlyMenu={true}></FileItem>}</>
-                        ),
-                      },
-                    ]}
-                    emptyText={<MyEmpty onUpload={() => setOpenUploadModal(true)} onMkdir={mkdir}></MyEmpty>}
-                  ></GeneralTable>
-                </div>
-              )}
-            </div>
-          </Dropdown>
+              </div>
+            )}
+            {viewType === 'table' && (
+              <div className={style.tableCtn}>
+                <GeneralTable
+                  scroll={{
+                    y: tableHeight,
+                  }}
+                  dataSource={tableDS}
+                  onRow={(record: IFile) => {
+                    return {
+                      onClick: (e: Event) => henldeRowClick(e, record),
+                      onDoubleClick: (e: Event) => henldeRowClick(e, record),
+                      onContextMenu: (e: Event) => henldeRowClick(e, record),
+                    }
+                  }}
+                  columns={[
+                    {
+                      title: '名称',
+                      dataIndex: 'name',
+                      key: 'name',
+                      render: (value: string, item: IFile) => (
+                        <div className="flex items-center">
+                          <MySvgIcon href={getFileHref(item)} size={2}></MySvgIcon>
+                          <span className="ml-4">
+                            {item.type === 'NEW_DIR' ? (
+                              <FileItem file={item} onlyNew={true}></FileItem>
+                            ) : (
+                              value.replace(/\.[^.]+$/, '')
+                            )}
+                          </span>
+                        </div>
+                      ),
+                    },
+                    {
+                      title: '修改日期',
+                      dataIndex: 'lastWriteTime',
+                      key: 'lastWriteTime',
+                      width: 200,
+                      render: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'),
+                    },
+                    {
+                      title: '类型',
+                      dataIndex: 'type',
+                      key: 'type',
+                      width: 100,
+                    },
+                    {
+                      title: '大小',
+                      dataIndex: 'size',
+                      key: 'size',
+                      width: 100,
+                      render: (value: number) => utils.formatFileSize(Number(value)),
+                    },
+                    {
+                      title: '',
+                      dataIndex: 'action',
+                      key: 'action',
+                      width: 80,
+                      render: (value: React.ReactNode, record: any) => (
+                        <>{record.type !== 'NEW_DIR' && <FileItem file={record} onlyMenu={true}></FileItem>}</>
+                      ),
+                    },
+                  ]}
+                  emptyText={<MyEmpty onUpload={() => setOpenUploadModal(true)} onMkdir={mkdir}></MyEmpty>}
+                ></GeneralTable>
+              </div>
+            )}
+          </div>
+          {/* </Dropdown> */}
         </Card>
       </div>
       <Modal
