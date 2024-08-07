@@ -10,29 +10,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # - name: Checkout code
-      #   uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      # - name: Set up Node.js
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: '20'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
 
-      # - name: Install dependencies
-      #   run: npm install --registry=https://registry.npmmirror.com/
+      - name: Install dependencies
+        run: npm install --registry=https://registry.npmmirror.com/
 
-      # - name: Log environment information
-      #   run: |
-      #     node -v
-      #     npm -v
-      #     echo $PATH
-      #     ls -la
+      - name: Log environment information
+        run: |
+          node -v
+          npm -v
+          echo $PATH
+          ls -la
 
-      # # - name: Run tests
-      # #   run: npm test
-
-      # - name: Build project
-      #   run: npm run build
+      - name: Build project
+        run: npm run build
 
       - name: Copy files via SSH
         uses: appleboy/scp-action@master
@@ -43,12 +40,12 @@ jobs:
           source: 'oj/*'
           target: '/www/wwwroot/doj.littlejh.cn'
 
-      # - name: Restart server
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.SERVER_IP }}
-      #     username: ${{ secrets.SERVER_USER }}
-      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
-      #     script: |
-      #       cd /www/wwwroot/doj.littlejh.cn
-      #       pm2 restart doj.littlejh.cn
+      - name: Restart server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /www/wwwroot/doj.littlejh.cn
+            pm2 restart doj.littlejh.cn
