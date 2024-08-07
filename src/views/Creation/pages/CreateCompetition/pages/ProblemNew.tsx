@@ -1,6 +1,5 @@
 import { Button, Form, Modal, Result, Steps, notification } from 'antd'
 import React, { Fragment, useLayoutEffect } from 'react'
-import { Descendant } from 'slate'
 import { ProgramMode } from '@/type'
 import { IProblem } from '@/type'
 import { createProgramApi } from '@/api/program'

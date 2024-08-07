@@ -2,7 +2,6 @@ import React, { useMemo } from 'react'
 import ReadOnly from '../../../../components/editor/Readonly'
 import { Table } from 'antd'
 import Column from 'antd/es/table/Column'
-import { string } from 'slate'
 
 interface DataSource {
   key: string

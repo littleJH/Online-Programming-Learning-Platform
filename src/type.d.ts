@@ -1,6 +1,5 @@
 /// <reference types="vite/client" />
 
-import { Descendant, string } from 'slate'
 import { ResultStatusType } from 'antd/es/result'
 
 export type TypeSideBar = 'nav' | 'directory' | 'competitionRank' | 'fileInfo' | 'none'
