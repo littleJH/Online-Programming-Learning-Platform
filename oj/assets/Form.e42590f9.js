@@ -1,0 +1,1 @@
+import{s}from"./style.module.c3d4c087.js";import t from"./StayTuned.1e948635.js";import{a as e}from"./index.5c064301.js";const o=()=>e("div",{className:s.listCtn,children:e(t,{})});export{o as default};

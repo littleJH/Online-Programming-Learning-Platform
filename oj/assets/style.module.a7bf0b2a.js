@@ -1,0 +1,1 @@
+const _={root:"_root_1q6dc_1",left_top:"_left_top_1q6dc_12",content:"_content_1q6dc_23",add:"_add_1q6dc_30",right_bottom:"_right_bottom_1q6dc_36",ctn:"_ctn_1q6dc_46",editor:"_editor_1q6dc_57",resizeBar:"_resizeBar_1q6dc_70",leftFooter:"_leftFooter_1q6dc_74"};export{_ as s};

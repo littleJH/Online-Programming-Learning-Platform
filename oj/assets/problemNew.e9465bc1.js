@@ -1,0 +1,1 @@
+import{c as e,b as a,aZ as s}from"./index.5c064301.js";const t=e({baseURL:"problem/new"}),o=e=>t.post("/create",e,s()),p=e=>t.get(`/show/${e}`,a()),$=(e,a)=>t.put(`/update/${e}`,a,s()),c=e=>t.delete(`/delete/${e}`,a()),d=(e,a=1,s=20)=>t.get(`/list/${e}?pageNum=${a}&pageSize=${s}`),g=(e,s,o)=>t.post(`/quote/${e}/${s}/${o}`,{},a());export{d as a,o as c,c as d,p as g,g as q,$ as u};

@@ -1,0 +1,1 @@
+import{c as t,b as a}from"./index.5c064301.js";const e=t({baseURL:"tag",type:"tag"}),s=(t,s=!0)=>e.get(`/auto/${s}?text=${t}`,a()),g=(t=1,a=20)=>e.get(`/list?pageNum=${t}&pageSize=${a}`);export{s as c,g};

@@ -1,0 +1,1 @@
+import{c as a,aZ as e}from"./index.5c064301.js";const s=a({baseURL:"set"}),t=a=>s.post("/create",a,e()),o=a=>s.get(`/show/${a}`),c=(a=1,e=20)=>s.get(`/hot/rank?pageNum=${a}&pageSize=${e}`);export{o as a,t as c,c as g};
