@@ -1,1 +1,0 @@
-import{c as e,b as a,aZ as s}from"./index.5c064301.js";const t=e({baseURL:"notice/board"}),o=e=>t.post("/create",e,s()),c=e=>t.get(`/show/${e}`,a()),d=e=>t.delete(`/delete/${e}`,a()),g=(e,a)=>t.get(`/list?pageNum=${e}&pageSize=${a}`,s());export{c as a,o as c,d,g};

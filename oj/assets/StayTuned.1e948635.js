@@ -1,1 +1,0 @@
-import{a as e,M as i}from"./index.5c064301.js";const s=s=>{const{size:n=10}=s;return e("div",{className:"w-full h-full flex justify-center items-center",children:e(i,{href:"#icon-jingqingqidai",size:n})})};export{s as default};

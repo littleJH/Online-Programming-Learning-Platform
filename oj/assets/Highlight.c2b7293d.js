@@ -1,1 +1,0 @@
-import{_ as e,cg as c,a as r}from"./index.5c064301.js";const s=s=>{const{code:o}=s,t=e.exports.useRef(null);return e.exports.useEffect((()=>{t.current&&c.highlightBlock(t.current)}),[o,t]),r("pre",{children:r("code",{className:"cpp code",ref:t,children:o})})};export{s as H};

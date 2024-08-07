@@ -21,8 +21,6 @@ import {
   HomeOutlined,
   BulbOutlined,
 } from '@ant-design/icons'
-import { MenuItemType } from 'antd/es/menu/hooks/useItems'
-import myHooks from '@/tool/myHooks/myHooks'
 // import Article from '@/views/Profile/Creation/Article/Article'
 
 interface MyRoute {

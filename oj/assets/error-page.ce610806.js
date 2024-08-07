@@ -1,1 +1,0 @@
-import{u as e,j as r,a as s}from"./index.5c064301.js";function c(){const c=e();return r("div",{id:"error-page",className:"h-full w-full flex flex-col justify-center items-center",children:[s("h1",{children:"Oops!"}),s("p",{children:"Sorry, an unexpected error has occurred."}),s("p",{children:s("i",{children:c.statusText||c.message})})]})}export{c as default};

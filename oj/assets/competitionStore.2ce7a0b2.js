@@ -1,1 +1,0 @@
-import{co as t}from"./index.5c064301.js";const e=t({key:"competitionStateAtom",default:null}),o=t({key:"currentCompetitionAtom",default:null}),a=t({key:"isEnterState",default:!1});export{o as a,e as c,a as i};

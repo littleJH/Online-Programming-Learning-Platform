@@ -1,1 +1,0 @@
-import{c as e,aZ as a,b as s}from"./index.5c064301.js";const t=e({baseURL:"comment"}),o=(e,s)=>t.post(`/create/${e}`,s,a()),g=e=>t.get(`/show/${e}`),$=e=>t.get(`/like/number/${e}`),c=e=>t.get(`/like/show/${e}`,s()),m=(e,a=1,s=20)=>t.get(`/hot/rank/${e}?pageNum=${a}&pageSize=${s}`);export{$ as a,m as b,g as c,o as d,c as g};

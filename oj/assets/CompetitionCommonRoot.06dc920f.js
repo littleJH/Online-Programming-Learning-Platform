@@ -1,1 +1,0 @@
-import{m as s,a as o,bE as a}from"./index.5c064301.js";import{s as e}from"./style.module.9ce82fca.js";const m=()=>(s.useNavTo(),o("div",{className:e.commonRoot,children:o(a,{})}));export{m as default};
