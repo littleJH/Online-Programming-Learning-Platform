@@ -25,12 +25,13 @@ jobs:
         run: |
           node -v
           npm -v
-          echo $PATH
-          ls -la
 
       - name: Build project
         run: npm run build
+  depoy:
+    runs-on: ubuntu-latest
 
+    steps:
       - name: Copy files via SSH
         uses: appleboy/scp-action@master
         with:
