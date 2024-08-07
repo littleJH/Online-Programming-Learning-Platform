@@ -10,6 +10,7 @@ lerna-debug.log*
 .workflow
 node_modules
 dist
+oj
 dist-ssr
 *.local
 *.zip
