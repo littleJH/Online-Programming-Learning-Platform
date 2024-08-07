@@ -49,7 +49,7 @@ const Similarity: React.FC = () => {
       }
     }
     console.log(nodes, edges)
-    const options = {
+    const options: any = {
       title: {
         text: '相似度',
       },
@@ -89,7 +89,7 @@ const Similarity: React.FC = () => {
               textStyle: {
                 fontSize: 12, // 边标签的字体大小
               },
-              formatter: function (params) {
+              formatter: function (params: any) {
                 // params是边的数据项
                 return params.data.weight // 返回边的权重值作为标签文本
               },

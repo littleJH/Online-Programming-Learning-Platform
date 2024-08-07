@@ -14,7 +14,7 @@ import { getFormApi, getFormHotRankApi } from '@/api/form'
 
 interface IRank {
   id: string
-  title: string
+  title: React.ReactNode
   score: number
   type: string
 }
@@ -34,7 +34,7 @@ const ProblemSetRoot: React.FC = () => {
   }, [type])
 
   const fetch = async (type: string) => {
-    let list = []
+    let list: IRank[] = []
     try {
       switch (type) {
         case 'all':

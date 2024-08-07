@@ -49,7 +49,7 @@ const LoginRoot = lazy(() => import('@/views/Login/LoginRoot'))
 
 // 个人中心
 const ProfileRoot = lazy(() => import('@/views/Profile/ProfileRoot'))
-const ProfileFriend = lazy(() => import('@/views/Profile/pages/Friend/Friend'))
+// const ProfileFriend = lazy(() => import('@/views/Profile/pages/Friend/Friend'))
 const ProfileMessage = lazy(() => import('@/views/Profile/pages/Message/Message'))
 const ProfileEmail = lazy(() => import('@/views/Profile/pages/Email/Email'))
 const ProfileGroup = lazy(() => import('@/views/Profile/pages/Group/Group'))

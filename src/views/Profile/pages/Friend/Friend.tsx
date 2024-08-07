@@ -17,6 +17,7 @@ import { enterPublishChatWs } from '@/api/chat'
 import TextArea from 'antd/es/input/TextArea'
 import CreateGroupForm from '@/components/Group/CreateGroupForm'
 import { applyAddFriendpApi, getFriendListApi } from '@/api/friend'
+import myHooks from '@/tool/myHooks/myHooks'
 
 let ws: WebSocket
 const Friend: React.FC = () => {
@@ -47,8 +48,14 @@ const Friend: React.FC = () => {
     [firendList]
   )
 
+  myHooks.useWsConnect({
+    wsUrl: enterPublishChatWs(),
+    onOpen: (e) => handleChatWsOpen(e),
+    onMessage: (message) => handleChatWsMessage(message),
+    onClose: (e) => handleChatWsClose(e),
+  })
+
   useEffect(() => {
-    openChatWs()
     initFriendList()
   }, [])
 
@@ -67,13 +74,6 @@ const Friend: React.FC = () => {
     //   setFirendList(list.reverse())
     // })
     const { data } = await getFriendListApi()
-  }
-
-  const openChatWs = () => {
-    ws = enterPublishChatWs()
-    ws.onopen = handleChatWsOpen
-    ws.onmessage = handleChatWsMessage
-    ws.onclose = handleChatWsClose
   }
 
   const handleChatWsOpen = (e: Event) => {
