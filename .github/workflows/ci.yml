@@ -29,6 +29,23 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-files
+          path: oj/ # 确保这是您构建后文件的正确路径
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: build-files
+          path: oj/
+
       - name: Copy files via SSH
         uses: appleboy/scp-action@master
         with:
