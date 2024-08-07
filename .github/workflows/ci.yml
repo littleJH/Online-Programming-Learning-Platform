@@ -1,4 +1,4 @@
-name: Deploy to Cloud Server
+name: CI/CD Pipeline
 
 on:
   push:
@@ -6,59 +6,28 @@ on:
       - master
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: windows-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '14'
-
-      - name: Cache Node.js modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          node-version: '20'
 
       - name: Install dependencies
         run: npm install
-
-      - name: Update package-lock.json
-        run: npm install --package-lock-only
-
-      - name: Fix vulnerabilities
-        run: npm audit fix
 
       - name: Log environment information
         run: |
           node -v
           npm -v
-          echo $PATH
-          ls -la
 
       - name: Build project
         run: npm run build
-
-      - name: List build directory
-        run: ls -la oj
-
-      - name: Check file permissions
-        run: ls -la oj
-
-      - name: Print working directory
-        run: pwd
-
-      - name: List all files
-        run: ls -la
-
-      - name: Print environment variables
-        run: printenv
 
       - name: Copy files via SSH
         uses: appleboy/scp-action@master
@@ -67,5 +36,14 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: 'oj/*'
-          target: '/www/www***/doj.littlejh.cn'
-          debug: true
+          target: '/www/wwwroot/doj.littlejh.cn'
+
+      - name: Restart server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /www/wwwroot/doj.littlejh.cn
+            pm2 restart doj.littlejh.cn
