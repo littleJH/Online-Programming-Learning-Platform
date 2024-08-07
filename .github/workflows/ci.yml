@@ -55,12 +55,12 @@ jobs:
           source: 'oj/*'
           target: '/www/wwwroot/doj.littlejh.cn'
 
-      - name: Restart server
+      - name: Clear Nginx cache (if necessary)
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /www/wwwroot/doj.littlejh.cn
-            pm2 restart doj.littlejh.cn
+            sudo nginx -s reload
+            echo "Deployment completed"
