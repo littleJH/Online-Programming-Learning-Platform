@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - master
+      - prod
 
 jobs:
   build:
@@ -40,7 +40,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build-files
-          path: oj/ # 确保这是您构建后文件的正确路径
+          path: oj/
 
   deploy:
     needs: build
