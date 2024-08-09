@@ -27,6 +27,7 @@ import MobileHeaderNavbar from '@/components/mobile/MobileHeaderNavbar'
 import style from './style.module.scss'
 import UserInfo from '@/components/User/UserInfo'
 import UserCard from '@/components/User/UserCard'
+import { getCurrentUserinfo } from '@/api/user'
 
 const fullPath = ['/creation/article', '/creation', '/file']
 
@@ -39,31 +40,22 @@ const Root: React.FC = () => {
   const footerRight = useRecoilValue(footerRightNode)
   const pathname = useRecoilValue(pathNameState)
   const sideBarType = useRecoilValue(sideBarTypeState)
-  const myInfo = useRecoilValue(userInfoState)
+  const [myInfo, setMyInfo] = useRecoilState(userInfoState)
   const loginStatus = useRecoilValue(loginStatusState)
   const [openSelfCard, setOpenSelfCard] = useState(false)
   const nav = myHooks.useNavTo()
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (pathname === '' || pathname === '/') nav('/home')
   }, [])
 
-  useEffect(() => console.log('headerNav ==> ', headerNav), [headerNav])
-  useEffect(() => console.log('sideBarType ==> ', sideBarType), [sideBarType])
+  useEffect(() => {
+    initCustomProperties()
+  }, [token])
 
   useEffect(() => {
-    const body = document.getElementsByTagName('body')[0]
-    body.style.setProperty('--colorPrimary', token.colorPrimary)
-    body.style.setProperty('--colorSuccess', token.colorSuccess)
-    body.style.setProperty('--colorWarning', token.colorWarning)
-    body.style.setProperty('--colorError', token.colorError)
-    body.style.setProperty('--colorInfo', token.colorInfo)
-    body.style.setProperty('--colorBgBase', token.colorBgBase)
-    body.style.setProperty('--colorTextBase', token.colorTextBase)
-    body.style.setProperty('--colorBgBlur', token.colorBgBlur)
-    body.style.setProperty('--colorBgBlur', token.colorBgBlur)
-    body.style.setProperty('--colorBorder', token.colorBorder)
-  }, [token])
+    fetchUserInfo()
+  }, [])
 
   const sidebarWidth = useMemo(() => {
     let width = 0
@@ -81,6 +73,32 @@ const Root: React.FC = () => {
   const full = React.useMemo(() => {
     return fullPath.includes(pathname) || pathname.includes('problemdetail') || isMobile
   }, [pathname, isMobile])
+
+  const fetchUserInfo = async () => {
+    try {
+      const res = await getCurrentUserinfo()
+      setMyInfo(res.data.data.user)
+    } catch (err) {
+      if (['/login', '/home', '/'].includes(location.pathname)) return
+      const a = document.createElement('a')
+      a.href = '/login'
+      a.click()
+    }
+  }
+
+  const initCustomProperties = () => {
+    const body = document.getElementsByTagName('body')[0]
+    body.style.setProperty('--colorPrimary', token.colorPrimary)
+    body.style.setProperty('--colorSuccess', token.colorSuccess)
+    body.style.setProperty('--colorWarning', token.colorWarning)
+    body.style.setProperty('--colorError', token.colorError)
+    body.style.setProperty('--colorInfo', token.colorInfo)
+    body.style.setProperty('--colorBgBase', token.colorBgBase)
+    body.style.setProperty('--colorTextBase', token.colorTextBase)
+    body.style.setProperty('--colorBgBlur', token.colorBgBlur)
+    body.style.setProperty('--colorBgBlur', token.colorBgBlur)
+    body.style.setProperty('--colorBorder', token.colorBorder)
+  }
 
   const headerStyle: React.CSSProperties = {
     backgroundColor: `${isDark ? '#141414' : '#ffffff'}`,
