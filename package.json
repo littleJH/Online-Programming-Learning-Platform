@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host",
     "build": "tsc && vite build",
-    "build:server": "tsc && vite build && http-server ./oj -o",
+    "build:server": "tsc && vite build && http-server ./dist -o",
     "preview": "vite preview",
     "format": "prettier --write src/**/*.**",
     "server": "node ./server/index.cjs"

@@ -33,14 +33,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build project
+      - name: Build prdistect
         run: npm run build
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: build-files
-          path: oj/
+          path: dist/
 
   deploy:
     needs: build
@@ -50,7 +50,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: build-files
-          path: oj/
+          path: dist/
 
       - name: Copy files via SSH
         uses: appleboy/scp-action@master
@@ -58,8 +58,8 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: 'oj/*'
-          target: '/www/wwwroot/8.134.249.72_111/oj'
+          source: 'dist/*'
+          target: '/www/wwwroot/doj.littlejh.cn'
 
       - name: Verify deployment
         uses: appleboy/ssh-action@master
@@ -68,7 +68,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            if [ -f /www/wwwroot/8.134.249.72_111/oj/index.html ]; then
+            if [ -f /www/wwwroot/doj.littlejh.cn/dist/index.html ]; then
               echo "Deployment successful: index.html found"
             else
               echo "Deployment may have failed: index.html not found"
