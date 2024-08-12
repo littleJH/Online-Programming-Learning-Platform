@@ -1,1 +1,0 @@
-const _={root:"_root_4bs89_1",left:"_left_4bs89_7",header:"_header_4bs89_10",search:"_search_4bs89_14",title:"_title_4bs89_17",content:"_content_4bs89_21",body:"_body_4bs89_25",right:"_right_4bs89_29",listCtn:"_listCtn_4bs89_40"};export{_ as s};
