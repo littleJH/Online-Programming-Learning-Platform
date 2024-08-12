@@ -1,1 +1,0 @@
-const _={root:"_root_ah463_1",account:"_account_ah463_14",message:"_message_ah463_23",messageList:"_messageList_ah463_29",info:"_info_ah463_36",group:"_group_ah463_47",right:"_right_ah463_59",groupList:"_groupList_ah463_67",space:"_space_ah463_78",creationRoot:"_creationRoot_ah463_85",creationArticle:"_creationArticle_ah463_93"};export{_ as s};
