@@ -59,7 +59,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: 'oj/*'
-          target: '/www/wwwroot/doj.littlejh.cn'
+          target: '/www/wwwroot/8.134.249.72_111/oj'
 
       - name: Verify deployment
         uses: appleboy/ssh-action@master
@@ -68,7 +68,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            if [ -f /www/wwwroot/doj.littlejh.cn/oj/index.html ]; then
+            if [ -f /www/wwwroot/8.134.249.72_111/oj/index.html ]; then
               echo "Deployment successful: index.html found"
             else
               echo "Deployment may have failed: index.html not found"
