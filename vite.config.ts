@@ -23,7 +23,7 @@ export default defineConfig({
     port: 5175,
     proxy: {
       '/api': {
-        target: 'http://10.141.47.20:1000',
+        target: 'http://106.53.120.252:2024',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
@@ -43,7 +43,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/translate_api/, ''),
       },
       '/file_api': {
-        target: 'http://10.141.47.20:1000',
+        target: 'http://106.53.120.252:2024',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/file_api/, ''),
       },

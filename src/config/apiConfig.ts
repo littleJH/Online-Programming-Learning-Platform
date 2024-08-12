@@ -8,12 +8,12 @@ const baseUrlObj: {
   imgBaseUrl: 'http://api_img.mgaronya.com',
   imgGetBaseUrl: 'http://img.mgaronya.com',
   gptBaseUrl: 'http://api_chatgpt.mgaronya.com',
-  wsBaseUrl: 'ws://10.141.47.20:1000',
-  baseURL: import.meta.env.DEV ? '/api' : 'http://10.141.47.20:1000',
+  wsBaseUrl: 'ws://106.53.120.252:2024',
+  baseURL: import.meta.env.DEV ? '/api' : 'http://106.53.120.252:2024',
   testBaseUrl: import.meta.env.DEV ? '/test' : 'http://test_oj.mgaronya.com/test',
   tagBaseUrl: import.meta.env.DEV ? '/tag_api' : 'http://api_tag.mgaronya.com',
   translateBaseUrl: import.meta.env.DEV ? '/translate_api' : 'http://api_translate.mgaronya.com/translator/translate',
-  fileBaseUrl: import.meta.env.Dev ? '/file_api' : 'http://10.141.47.20:1000',
+  fileBaseUrl: import.meta.env.Dev ? '/file_api' : 'http://106.53.120.252:2024',
 }
 
 export const wsBaseUrl = baseUrlObj.wsBaseUrl
