@@ -27,7 +27,7 @@ export const UploadProblemModal: React.FC<IProps> = (props) => {
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const [total, setTotal] = useState(0)
   const [loadCount, setLoadCount] = useState(0)
-  const percent = useMemo(() => Math.ceil((loadCount / total) * 100), [total, loadCount])
+  const percent = useMemo(() => Math.ceil((loadCount / total) * 100) || 0, [total, loadCount])
   const theme = useRecoilValue<ITheme>(themeState)
 
   useEffect(() => console.log('count, total, percent ==> ', loadCount, total, percent), [loadCount, total, percent])
@@ -40,7 +40,7 @@ export const UploadProblemModal: React.FC<IProps> = (props) => {
       data: { code, data: resData, msg },
     } = await uploadVjudgeProblemApi(JSON.stringify(data))
     if (code === 200) createTagAuto(resData)
-    setLoadCount((value) => value + 1)
+    setLoadCount((value) => (code === 200 ? value + 1 : value))
     setFileList((value) => [
       ...value,
       {
@@ -196,7 +196,6 @@ export const UploadProblemModal: React.FC<IProps> = (props) => {
         height={200}
         fileList={fileList}
         multiple={true}
-        directory={true}
         onRemove={handleRemove}
         beforeUpload={handleUpload}
         onDrop={handleDrop}

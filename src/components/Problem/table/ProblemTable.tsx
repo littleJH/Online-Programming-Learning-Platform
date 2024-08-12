@@ -65,6 +65,7 @@ const ProblemTable: React.FC<IProps> = (props) => {
   useEffect(() => {
     flag && problemList.length > 0 && fetchProblems(problemList)
     flag = true
+    if (problemList.length === 0) setFetchDone(true)
   }, [problemList])
 
   useEffect(() => console.log('fetch done ==> ', fetchDone), [fetchDone])
@@ -85,28 +86,32 @@ const ProblemTable: React.FC<IProps> = (props) => {
     // if (problems.length === 0) return
     let index = 0
     const list: IPrblemTableDataType[] = []
-    for (let problem of problems) {
-      const res = await Promise.all([
-        getRecordListApi({
-          problem_id: problem.id,
-        }),
-        getRecordListApi({
-          problem_id: problem.id,
-          condition: 'Accepted',
-        }),
-        getProblemLabelsApi(problem.id),
-      ])
-      list.push({
-        key: problem?.key || problem.id,
-        index: (pageNum - 1) * pageSize + index + 1,
-        title: problem.title,
-        description: problem.description,
-        totaRecords: res[0].data.data.total,
-        accpet: res[1].data.data.total,
-        acPerc: <AcPercentLabel total={res[0].data.data.total} accept={res[1].data.data.total}></AcPercentLabel>,
-        labels: res[2].data.data.problemLabels,
-      })
-      index++
+    try {
+      for (let problem of problems) {
+        const res = await Promise.all([
+          getRecordListApi({
+            problem_id: problem.id,
+          }),
+          getRecordListApi({
+            problem_id: problem.id,
+            condition: 'Accepted',
+          }),
+          getProblemLabelsApi(problem.id),
+        ])
+        list.push({
+          key: problem?.key || problem.id,
+          index: (pageNum - 1) * pageSize + index + 1,
+          title: problem.title,
+          description: problem.description,
+          totaRecords: res[0].data.data.total,
+          accpet: res[1].data.data.total,
+          acPerc: <AcPercentLabel total={res[0].data.data.total} accept={res[1].data.data.total}></AcPercentLabel>,
+          labels: res[2].data.data.problemLabels,
+        })
+        index++
+      }
+    } catch (err) {
+      console.error(err)
     }
     setFirst && setFirst(false)
     setDataSource(list)

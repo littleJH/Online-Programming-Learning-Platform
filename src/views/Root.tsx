@@ -28,6 +28,7 @@ import style from './style.module.scss'
 import UserInfo from '@/components/User/UserInfo'
 import UserCard from '@/components/User/UserCard'
 import { getCurrentUserinfo } from '@/api/user'
+import reactIcon from '@/assets/react.svg'
 
 const fullPath = ['/creation/article', '/creation', '/file']
 
@@ -127,11 +128,11 @@ const Root: React.FC = () => {
               color={`${isDark ? '#fff' : '#000'}`}
             ></MySvgIcon>
           </Button>
-          {myInfo?.level && myInfo?.level >= 4 && (
+          {myInfo?.level && myInfo?.level >= 4 ? (
             <Button type="text" className="flex items-center h-12 p-2" onClick={() => nav('/file')}>
               <MySvgIcon href="#icon-folder" size={2} color={token.colorWarning}></MySvgIcon>
             </Button>
-          )}
+          ) : null}
           {!loginStatus && (
             <Button type="link" className="flex items-center h-12 p-2 mr-4">
               <div className="h-full flex items-center" onClick={() => nav('/profile')}>
@@ -139,12 +140,11 @@ const Root: React.FC = () => {
               </div>
             </Button>
           )}
-
           {loginStatus && myInfo && (
             <Popover placement="left" content={<UserCard user={myInfo} showMenu></UserCard>}>
               <Button type="text" className="flex items-center h-12 p-2 mr-4">
                 <div className="h-full flex items-center">
-                  <Avatar className="hover:cursor-pointer" alt="登录" src={`${iconBaseUrl}/${myInfo?.icon}`}></Avatar>
+                  <Avatar className="hover:cursor-pointer" alt="登录" src={`${myInfo?.icon? `${iconBaseUrl}/${myInfo?.icon}` : reactIcon}`}></Avatar>
                 </div>
               </Button>
             </Popover>
