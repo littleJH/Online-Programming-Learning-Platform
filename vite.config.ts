@@ -1,11 +1,21 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { visualizer } from 'rollup-plugin-visualizer'
 import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '/',
-  plugins: [react()],
+  plugins: [
+    react(),
+    visualizer({
+      gzipSize: true,
+      brotliSize: true,
+      emitFile: false,
+      filename: 'test.html', //分析图生成的文件名
+      open: true, //如果存在本地服务端口，将在打包后自动展示
+    }),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -19,8 +29,7 @@ export default defineConfig({
     },
   },
   server: {
-    host: '172.29.186.11',
-    port: 5175,
+    open: true,
     proxy: {
       '/api': {
         target: 'http://106.53.120.252:2024',
