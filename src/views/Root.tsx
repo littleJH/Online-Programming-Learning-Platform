@@ -31,6 +31,7 @@ import { getCurrentUserinfo } from '@/api/user'
 import reactIcon from '@/assets/react.svg'
 
 const fullPath = ['/creation/article', '/creation', '/file']
+const icp = '粤ICP备2024297311号-1'
 
 const Root: React.FC = () => {
   const headerNav = useRecoilValue(headerNavState)
@@ -144,7 +145,11 @@ const Root: React.FC = () => {
             <Popover placement="left" content={<UserCard user={myInfo} showMenu></UserCard>}>
               <Button type="text" className="flex items-center h-12 p-2 mr-4">
                 <div className="h-full flex items-center">
-                  <Avatar className="hover:cursor-pointer" alt="登录" src={`${myInfo?.icon? `${iconBaseUrl}/${myInfo?.icon}` : reactIcon}`}></Avatar>
+                  <Avatar
+                    className="hover:cursor-pointer"
+                    alt="登录"
+                    src={`${myInfo?.icon ? `${iconBaseUrl}/${myInfo?.icon}` : reactIcon}`}
+                  ></Avatar>
                 </div>
               </Button>
             </Popover>
@@ -200,6 +205,9 @@ const Root: React.FC = () => {
                   登录 · 注册
                 </Button>
               )}
+              <Button type="link" onClick={() => window.open('https://beian.miit.gov.cn')}>
+                {icp}
+              </Button>
               <Button type="link">@XXX · 联系我们 · 2024</Button>
             </Space>
           </div>
