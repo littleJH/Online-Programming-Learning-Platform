@@ -3,7 +3,7 @@ import { Form, Select, Button, Input, Row, Col, message, Upload, Space, UploadFi
 import { LoadingOutlined, PlusOutlined, LeftOutlined } from '@ant-design/icons'
 import myHooks from '@/tool/myHooks/myHooks'
 import { registerApi, getVerifyApi } from '@/api/user'
-import style from '../style.module.scss'
+import style from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
 import { notificationApi } from '@/store/appStore'
@@ -12,6 +12,7 @@ import { imgGetBaseUrl } from '@/config/apiConfig'
 
 const Register: React.FC<{
   setmode: Function
+  setOpenModal: Function
 }> = (props) => {
   const notification = useRecoilValue(notificationApi)
   const [verifyed, setverifyed] = useState(false)
@@ -84,8 +85,8 @@ const Register: React.FC<{
   }
 
   const onFinish = (form: any) => {
+    console.log('🚀 ~ onFinish ~ form:', form)
     setRegistering(true)
-    console.log(form)
     const data = new FormData()
     data.append('Email', form.Email)
     data.append('Password', form.Password)
@@ -94,7 +95,7 @@ const Register: React.FC<{
 
     registerApi(data)
       .then((res) => {
-        console.log(res)
+        console.log('🚀 ~ .then ~ res:', res)
         if (res.data.code === 200) {
           const data = new FormData()
           data.append('name', form.Name)

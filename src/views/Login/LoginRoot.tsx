@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import Login from '@/views/Login/log/Login'
-import Register from '@/views/Login/log/Register'
+import Login from '@/components/Login/Login'
+import Register from '@/components/Login/Register'
 import style from './style.module.scss'
 import { Divider } from 'antd'
 

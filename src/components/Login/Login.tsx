@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
 import { LockOutlined, UserOutlined, RightOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input, Space } from 'antd'
-import '../Log/log.scss'
+import './log.scss'
 import { getCurrentUserinfo, loginApi } from '@/api/user'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { notificationApi, userInfoState } from '@/store/appStore'
 import FindPass from './FindPass'
-import style from '../style.module.scss'
+import style from './style.module.scss'
 import myHooks from '@/tool/myHooks/myHooks'
 
 const App: React.FC<{
   setmode: Function
+  setOpenModal: Function
 }> = (props) => {
   const setUserInfo = useSetRecoilState(userInfoState)
   const [openFindpassModal, setOpenFindpassModal] = useState(false)
@@ -31,13 +32,15 @@ const App: React.FC<{
           getCurrentUserinfo().then((res) => {
             console.log(res.data)
             setUserInfo(res.data.data.user)
+            props.setOpenModal(false)
           })
           notification &&
             notification.success({
               message: '欢迎',
               duration: 1,
             })
-          window.history.back()
+          // window.history.back()
+
           return Promise.resolve()
         }
       })

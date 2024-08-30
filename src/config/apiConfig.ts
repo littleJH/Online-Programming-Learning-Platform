@@ -75,13 +75,13 @@ export const createRequest = (options: { type?: string; baseURL: string }) => {
         case 200:
           break
         case 201:
-          if (!localStorage.getItem('token') && location.pathname !== '/login') {
-            const a = document.createElement('a')
-            a.href = '/login'
-            a.click()
-          } else {
-            message.error(data.msg)
-          }
+          // if (!localStorage.getItem('token') && location.pathname !== '/login') {
+          //   const a = document.createElement('a')
+          //   a.href = '/login'
+          //   a.click()
+          // } else {
+          //   message.error(data.msg)
+          // }
           break
         default:
           message.error(`${data.msg}`)

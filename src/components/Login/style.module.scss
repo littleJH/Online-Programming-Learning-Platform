@@ -1,0 +1,24 @@
+.login {
+  width: 100%;
+  @media screen and (max-width: 768px) {
+  }
+
+  .form {
+    // width: 28rem;
+    @media screen and (max-width: 768px) {
+      width: 100%;
+      padding: 0 2rem;
+    }
+  }
+}
+
+.register {
+  width: 100%;
+  .form {
+    // width: 28rem;
+    @media screen and (max-width: 768px) {
+      width: 100%;
+      padding: 0 2rem;
+    }
+  }
+}

@@ -16,22 +16,22 @@ interface Iprops {
 const MyAvatar: React.FC<Iprops> = (props) => {
   const { user, size, className, active = false } = props
   return (
-    <Popover content={<UserCard user={user}></UserCard>}>
-      <div className={style.avatarCtn}>
-        <Avatar
-          className={`hover:cursor-pointer card-avatar ${className} ${style.avatar}`}
-          size={size || 'default'}
-          alt="登录"
-          src={`${iconBaseUrl}/${user?.icon || ''}`}
-        ></Avatar>
-        {active && (
-          <>
-            <div className={`${style.pulse} ${style.pulse1}`}></div>
-            <div className={`${style.pulse} ${style.pulse2}`}></div>
-          </>
-        )}
-      </div>
-    </Popover>
+    // <Popover content={<UserCard user={user}></UserCard>}>
+    <div className={style.avatarCtn}>
+      <Avatar
+        className={`hover:cursor-pointer card-avatar ${className} ${style.avatar}`}
+        size={size || 'default'}
+        alt="登录"
+        src={`${iconBaseUrl}/${user?.icon || ''}`}
+      ></Avatar>
+      {active && (
+        <>
+          <div className={`${style.pulse} ${style.pulse1}`}></div>
+          <div className={`${style.pulse} ${style.pulse2}`}></div>
+        </>
+      )}
+    </div>
+    // </Popover>
   )
 }
 

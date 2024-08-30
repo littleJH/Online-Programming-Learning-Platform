@@ -67,6 +67,7 @@ export default function Homepage() {
         id: item.id,
         title: (
           <Popover
+            mouseEnterDelay={0.5}
             placement="left"
             content={
               <div
@@ -87,8 +88,8 @@ export default function Homepage() {
                 <span>
                   <MyAvatar user={item}></MyAvatar>
                 </span>
-                <span>{item.name}</span>
-              </Space>
+              </Space>{' '}
+              <span>{item.name}</span>
             </div>
           </Popover>
         ),
@@ -297,7 +298,7 @@ export default function Homepage() {
             title="今日排行"
             rankList={datasource}
             // extra={<Segmented options={['']}></Segmented>}
-            icon={<StarOutlined style={{ color: '#fadb14', marginRight: '4px' }} />}
+            icon={<StarOutlined style={{ color: '#fadb14', margin: '0 4px' }} />}
             onClick={() => {}}
             extra={
               <Select

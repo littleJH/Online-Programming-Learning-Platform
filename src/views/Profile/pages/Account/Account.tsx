@@ -6,7 +6,7 @@ import { EditOutlined } from '@ant-design/icons'
 import { findPasswordApi, getVerifyApi, updateInfoApi, updatePasswordApi } from '@/api/user'
 import myHooks from '@/tool/myHooks/myHooks'
 import { redirect, useNavigate } from 'react-router-dom'
-import FindPass from '@/views/Login/log/FindPass'
+import FindPass from '@/components/Login/FindPass'
 import style from '../../style.module.scss'
 import utils from '@/tool/myUtils/utils'
 
@@ -99,7 +99,7 @@ const Account: React.FC = () => {
   const handleLogoutClick = () => {
     localStorage.removeItem('token')
     setInfo(null)
-    nav('/login')
+    nav('/home')
   }
   return (
     <div className={style.account}>

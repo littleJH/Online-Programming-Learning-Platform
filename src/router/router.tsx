@@ -138,11 +138,10 @@ const routes: MyRoute[] = [
         path: 'home',
         element: Homepage,
       },
-
-      {
-        path: 'login',
-        element: LoginRoot,
-      },
+      // {
+      //   path: 'login',
+      //   element: LoginRoot,
+      // },
       //profile
       {
         path: 'profile',
