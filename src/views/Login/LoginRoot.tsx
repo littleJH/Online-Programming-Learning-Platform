@@ -10,8 +10,8 @@ const LoginRoot: React.FC = () => {
     <div className={style.root}>
       {/* <div className={style.left}></div> */}
       <div className={style.right}>
-        {mode === 'Login' && <Login setmode={setmode}></Login>}
-        {mode === 'Register' && <Register setmode={setmode}></Register>}
+        {/* {mode === 'Login' && <Login setmode={setmode}></Login>} */}
+        {/* {mode === 'Register' && <Register setmode={setmode}></Register>} */}
       </div>
     </div>
   )
