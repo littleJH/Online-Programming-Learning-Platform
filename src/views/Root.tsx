@@ -205,7 +205,7 @@ const Root: React.FC = () => {
             <div className={style.center} style={{}}>
               <Space split={<Divider type="vertical"></Divider>}>
                 {!loginStatus && (
-                  <Button type="link" onClick={() => nav('/login')}>
+                  <Button type="link" onClick={() => setOpenLoginModal(true)}>
                     登录 · 注册
                   </Button>
                 )}
